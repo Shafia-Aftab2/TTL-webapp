@@ -19,10 +19,10 @@ Vue.use(Router);
 export default [
   {
     path: '/',
-    name: 'home',
     component: AppLayout,
     children: [
       {
+        name: 'home',
         path: '',
         component: Home,
       },
