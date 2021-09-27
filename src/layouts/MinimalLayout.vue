@@ -1,6 +1,6 @@
 <template>
 <div>
-  <h1>App Layout</h1>
+  <h1>Minimal Layout</h1>
   <router-view></router-view>
 </div>
 

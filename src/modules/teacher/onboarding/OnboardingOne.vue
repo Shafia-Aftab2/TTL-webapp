@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Onboarding Start 1</h1>
+    <h1>Teacher Onboarding Start 1</h1>
 
     <p>
       <router-link :to="{ name: 'home' }">Home</router-link> |

@@ -6,6 +6,7 @@ import Router from 'vue-router';
  */
 // import AppLayout from '@/layouts/AppLayout';
 import PublicLayout from '@/layouts/PublicLayout';
+import MinimalLayout from '@/layouts/MinimalLayout';
 
 /**
  * Import Views
@@ -30,7 +31,7 @@ export default [
   },
   {
     path: '/teacher/start',
-    component: PublicLayout,
+    component: MinimalLayout,
     children: [
       {
         name: 'teacher-onboarding-1',
