@@ -15,7 +15,7 @@
     <br>
 
     <p>
-      <router-link to="/">Home</router-link>
+      <router-link :to="{ name: 'home' }">Home</router-link> |
     </p>
   </div>
 </template>

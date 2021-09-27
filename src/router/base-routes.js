@@ -4,15 +4,12 @@ import Router from 'vue-router';
 /**
  * Layouts
  */
-import AppLayout from '../layouts/AppLayout';
-import PublicLayout from '../layouts/PublicLayout';
+import AppLayout from '@/layouts/AppLayout';
 
 /**
  * Import views
  */
-import Home from '../views/Home';
-import Login from '../views/Login';
-
+import Home from '@/views/Home';
 
 Vue.use(Router);
 
@@ -25,16 +22,6 @@ export default [
         name: 'home',
         path: '',
         component: Home,
-      },
-    ],
-  },
-  {
-    path: '/login',
-    component: PublicLayout,
-    children: [
-      {
-        path: '',
-        component: Login,
       },
     ],
   },

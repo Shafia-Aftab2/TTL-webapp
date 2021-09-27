@@ -6,13 +6,18 @@ import Router from 'vue-router';
  * Do not add routes in this file
  * Add routes to folders in this route folder and import here
  */
+import teacherRoutes from '@/modules/teacher/teacher-routes';
+import studentRoutes from '@/modules/student/student-routes';
 import baseRoutes from './base-routes';
-import teacherRoutes from './teacher-routes';
-
 
 Vue.use(Router);
 
-const routes = baseRoutes.concat(teacherRoutes);
+// add routes to concat
+const routes = baseRoutes.concat(
+  teacherRoutes,
+  studentRoutes,
+);
+
 export default new Router({
   routes,
 });
