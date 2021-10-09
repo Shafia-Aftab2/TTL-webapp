@@ -3,6 +3,7 @@
   <div>
     <nav>
       <router-link :to="{ name: 'home' }">Home</router-link> |
+      <router-link :to="{ name: 'teacher-signup' }">Teacher Signup</router-link>
       <router-link :to="{ name: 'teacher-login' }">Teacher Login</router-link>
       <router-link :to="{ name: 'teacher-onboarding-1' }">Teacher Onboarding 1</router-link>
       <router-link :to="{ name: 'student-login' }">Student Login</router-link>

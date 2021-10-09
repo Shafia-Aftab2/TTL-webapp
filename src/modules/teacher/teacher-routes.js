@@ -12,6 +12,7 @@ import MinimalLayout from '@/layouts/MinimalLayout';
  * Import Views
  */
 import TeacherLogin from '@/modules/teacher/TeacherLogin';
+import TeacherSignup from '@/modules/teacher/TeacherSignup';
 import OnboardingTeacherOne from '@/modules/teacher/onboarding/OnboardingOne';
 
 
@@ -26,6 +27,17 @@ export default [
         name: 'teacher-login',
         path: '',
         component: TeacherLogin,
+      },
+    ],
+  },
+  {
+    path: '/teacher/signup',
+    component: PublicLayout,
+    children: [
+      {
+        name: 'teacher-signup',
+        path: '',
+        component: TeacherSignup,
       },
     ],
   },
