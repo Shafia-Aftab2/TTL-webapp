@@ -6,11 +6,11 @@
     <div class="right-container" >
     <h1>Teacher Login Page</h1>
     <div>
-      <input type="text" placeholder="email">
+      <input class="text-input" type="text" placeholder="email">
     </div>
     <br>
     <div>
-      <input type="password">
+      <input  class="text-input" type="password">
     </div>
     <br>
     <div class="align-center">
@@ -44,7 +44,7 @@ export default {
   width: 143px;
   height: 49px;
   margin-bottom: 10px;
-  background: $logo-color;
+   background: rgb(243, 243, 3);
   cursor: pointer;
   border-radius: 10px;
   font-weight: bold;
@@ -73,4 +73,16 @@ export default {
   align-items: center;
   text-align: center;
 }
+.text-input {
+    height: 33px;
+    width: 20vw;
+    font-size: 14px;
+    font-weight: 300;
+    border-radius: 5px;
+    border-style: none;
+    background-color:rgb(250, 244, 244);
+  }
+  h1{
+    font-size: 22px;
+  }
 </style>
