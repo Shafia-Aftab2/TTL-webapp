@@ -2,7 +2,7 @@
 <div class="section">
 <div class="left-container" >
   <h1 class="h1-topic">choose topics </h1>
-  <p class="p-topic"> Choose as many topics  for class.<br><br>This way we getto,tailor the quiz</p>
+  <p class="p-topic"> select as many topics as you want for class.<br><br>This way, we get to tailor the quizzes.</p>
   </div>
    <div class="right-container" >
        <h1 class="h1-topic">Beginners/Intermediate </h1>

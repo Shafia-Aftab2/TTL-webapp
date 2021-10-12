@@ -125,7 +125,7 @@ export default {
     border-radius: 5px;
     border-style: none;
     padding-left: 20px;
-    background-color:#F9F9F9
+    background-color:#F9F9F9;
   }
   h3{
     height: 28px;
@@ -135,10 +135,13 @@ export default {
   }
   .form-footer{
       list-style-type: none;
+      font-size: 15px;
   }
   a{
     font-weight: bold;
     color: black;
+    font-family: inter;
+    font-size: 15px;
   }
   a:visited{
       color: black;
