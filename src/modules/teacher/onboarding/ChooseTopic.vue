@@ -124,7 +124,7 @@ text-align: left;
   width: 143px;
   height: 49px;
   margin-bottom: 10px;
-  background: rgb(243, 243, 3);
+  background: #F7D41E;
   cursor: pointer;
   border-radius: 10px;
   font-weight: bold;

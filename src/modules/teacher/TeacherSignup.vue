@@ -4,7 +4,7 @@
          <img src="../../assets/Group 949.png" alt="" srcset="" />
     </div>
     <div class="right-container" >
-        <h1>Teacher Signup Page</h1>
+        <h3 >Create a teacher account</h3>
     <div>
       <input class ="text-input" type="text" placeholder="Your Name" v-model="firstName">
     </div>
@@ -18,11 +18,11 @@
     </div>
      <br>
      <div>
-      <input class ="text-input" type="text" placeholder="email id" v-model="email">
+      <input class ="text-input" type="text" placeholder="your email id" v-model="email">
     </div>
     <br>
     <div>
-      <input  class ="text-input" type="password" placeholder="password" v-model="password">
+      <input  class ="text-input" type="password" placeholder="Password" v-model="password">
     </div>
     <br>
     <div class="align-center">
@@ -31,7 +31,7 @@
     </div>
     <validationProvider>
           <div class="align-center">
-            <ul>
+            <ul class="form-footer">
               <li>
                 By signing up, you accept Talkie’s <br />
 
@@ -49,7 +49,7 @@
           </div>
         </validationProvider>
     <p>
-      <router-link :to="{ name: 'home' }">Home</router-link> |
+      Already have an account?<router-link :to="{ name: 'teacher-login' }"> Login </router-link>
     </p>
     </div>
   </div>
@@ -88,7 +88,7 @@ export default {
   width: 143px;
   height: 49px;
   margin-bottom: 10px;
-  background: rgb(243, 243, 3);
+  background: #F7D41E;
   cursor: pointer;
   border-radius: 10px;
   font-weight: bold;
@@ -118,12 +118,29 @@ export default {
   text-align: center;
 }
 .text-input {
-    height: 33px;
-    width: 20vw;
+    height: 63px;
+    width: 400px;
     font-size: 14px;
     font-weight: 300;
     border-radius: 5px;
     border-style: none;
-    background-color:rgb(250, 244, 244);
+    padding-left: 20px;
+    background-color:#F9F9F9
+  }
+  h3{
+    height: 28px;
+    width: 300px;
+    text-align: right;
+
+  }
+  .form-footer{
+      list-style-type: none;
+  }
+  a{
+    font-weight: bold;
+    color: black;
+  }
+  a:visited{
+      color: black;
   }
 </style>
