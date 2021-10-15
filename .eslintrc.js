@@ -25,6 +25,7 @@ module.exports = {
   },
   // add your custom rules here
   rules: {
+    'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-plusplus': 'off',
     // don't require .vue extension when importing

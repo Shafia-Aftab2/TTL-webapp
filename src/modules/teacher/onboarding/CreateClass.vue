@@ -1,15 +1,14 @@
 <template>
-<div>
-  <router-view></router-view>
-</div>
-
+  <h1>create a class </h1>
 </template>
 
 <script>
 export default {
-  name: 'PublicLayout',
+
 };
 </script>
 
 <style>
+
 </style>
+

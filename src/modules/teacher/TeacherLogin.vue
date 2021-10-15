@@ -1,22 +1,28 @@
 <template>
-  <div>
-    <h1>Teacher Login Page</h1>
+  <div class="section">
+    <div class="left-container">
+         <img src="../../assets/Group 949.png" alt="" srcset="" />
+    </div>
+    <div class="right-container" >
+    <h3>Teacher Login </h3>
     <div>
-      <input type="text" placeholder="email">
+      <input class="text-input" type="text" placeholder="Email">
     </div>
     <br>
     <div>
-      <input type="password">
+      <input  class="text-input" type="password" placeholder="Password">
     </div>
     <br>
-    <button type="submit">Login</button>
-
+    <div class="align-center">
+    <button class="btn" type="submit">Login</button>
+    </div>
     <br>
     <br>
 
     <p>
-      <router-link :to="{ name: 'home' }">Home</router-link> |
+      <router-link :to="{ name: 'home' }">Home</router-link>
     </p>
+    </div>
   </div>
 </template>
 
@@ -25,3 +31,65 @@ export default {
   name: 'login',
 };
 </script>
+
+<style  scoped>
+.section {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.btn {
+  width: 143px;
+  height: 49px;
+  margin-bottom: 10px;
+  background: #F7D41E;
+  cursor: pointer;
+  border-radius: 10px;
+  font-weight: bold;
+  align-items: center;
+  font-size: 15px;
+  outline: none;
+  border: 1px solid $logo-color;
+  position: relative;
+  margin: 10px 0;
+}
+.left-container {
+  width: 50vw;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2%;
+}
+.right-container {
+  display: flex;
+  flex-direction: column;
+  width: 39%;
+}
+.align-center {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.text-input {
+    height: 63px;
+    width: 400px;
+    font-size: 14px;
+    font-weight: 300;
+    border-radius: 5px;
+    border-style: none;
+    padding-left: 20px;
+    background-color:#F9F9F9
+  }
+  h1{
+    font-size: 22px;
+  }
+   h3{
+       height: 28px;
+    width: 300px;
+    text-align: center;
+
+  }
+</style>
