@@ -1,10 +1,6 @@
 <template>
   <div id="app">
-     <!-- <nav class="App__nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav> -->
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -15,8 +11,11 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Inter');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Inter', 'Roboto', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
