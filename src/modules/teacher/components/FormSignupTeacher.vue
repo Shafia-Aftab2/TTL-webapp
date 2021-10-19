@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="flex-end">
+    <!-- <h3>Create a teacher account</h3> -->
     <div>
       <input class="text-input" type="text" placeholder="Your Name" v-model="firstName" />
     </div>
@@ -24,15 +25,9 @@
       <button class="btn" type="submit" @click="createAccount">Create</button>
       <br />
     </div>
-    <div class="align-center">
-      <ul class="§rm-footer">
-        <li>
-          By signing up, you accept Talkie’s <br />
-          <a href="/terms" target="_blank"> Terms of Service </a>
-          and
-          <a href="/privacy" target="_blank"> Privacy Policy. </a>
-        </li>
-      </ul>
+    <div class="terms_conditions">
+      By signing up, you accept Talkie’s <a href="/terms" target="_blank"> Terms of Service </a> and
+      <a href="/privacy" target="_blank"> Privacy Policy. </a>
     </div>
   </div>
 </template>
@@ -58,13 +53,6 @@ export default {
 </script>
 
 <style scoped>
-.section {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
 .btn {
   width: 143px;
   height: 49px;
@@ -76,31 +64,33 @@ export default {
   align-items: center;
   font-size: 15px;
   outline: none;
-  border: 1px solid $logo-color;
+  border: 0px solid;
   position: relative;
   margin: 10px 0;
 }
-.left-container {
-  width: 50vw;
-  align-items: center;
-  justify-content: center;
-  margin-right: 2%;
+/* .signup-form {
+  align-content: center;
+} */
+.terms_conditions {
+  padding: 0 10% 0 10%;
 }
-.right-container {
-  display: flex;
-  flex-direction: column;
-  width: 39%;
+@media (min-width: 800px) {
+  .text-input {
+    width: 400px;
+  }
 }
-.align-center {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+@media (min-width: 500px) {
+  .text-input {
+    width: 500px;
+  }
+}
+@media (max-width: 500px) {
+  .text-input {
+    width: 200px;
+  }
 }
 .text-input {
   height: 63px;
-  width: 400px;
   font-size: 14px;
   font-weight: 300;
   border-radius: 5px;

@@ -1,14 +1,14 @@
 <template>
-  <div class="section">
-    <div class="left-container">
+  <section class="row">
+    <div class="hero-image">
       <img src="../../assets/Group 949.png" alt="" srcset="" />
     </div>
-    <div class="right-container">
+    <div class="  sign-up-content">
       <h3>Create a teacher account</h3>
       <FormSignupTeacher> </FormSignupTeacher>
       <p>Already have an account?<router-link :to="{ name: 'teacher-login' }"> Login </router-link></p>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -37,69 +37,57 @@ export default {
 </script>
 
 <style scoped>
-.section {
-  width: 100%;
+.row {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
 }
-.btn {
-  width: 143px;
-  height: 49px;
-  margin-bottom: 10px;
-  background: #f7d41e;
-  cursor: pointer;
-  border-radius: 10px;
-  font-weight: bold;
-  align-items: center;
-  font-size: 15px;
-  outline: none;
-  border: 1px solid $logo-color;
-  position: relative;
-  margin: 10px 0;
+
+
+img {
+  max-width: 100vw;
 }
-.left-container {
-  width: 50vw;
-  align-items: center;
-  justify-content: center;
-  margin-right: 2%;
+@media (max-width: 767px) {
+  .sign-up-content {
+    margin-top: 200px;
+  }
 }
-.right-container {
+
+.hero-image {
   display: flex;
   flex-direction: column;
-  width: 39%;
-}
-.align-center {
-  display: flex;
-  width: 100%;
-  justify-content: center;
   align-items: center;
-  text-align: center;
+  justify-content: center;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex: 1;
+  margin: auto;
 }
-.text-input {
-  height: 63px;
-  width: 400px;
-  font-size: 14px;
-  font-weight: 300;
-  border-radius: 5px;
-  border-style: none;
-  padding-left: 20px;
-  background-color: #f9f9f9;
+
+.sign-up-content {
+  display: flex;
+  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
 }
 h3 {
   height: 28px;
-  width: 300px;
-  text-align: right;
+  /* width: 100%; */
+  text-align: center;
 }
-.form-footer {
+/* .form-footer {
   list-style-type: none;
   font-size: 15px;
-}
+} */
 a {
   font-weight: bold;
   color: black;
-  font-family: inter;
+  font-family: Inter;
   font-size: 15px;
 }
 a:visited {
