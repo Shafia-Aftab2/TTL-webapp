@@ -11,11 +11,13 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Inter');
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'), url(./assets/fonts/Inter-Regular.ttf) format('truetype');
+}
 
 #app {
-  font-family: 'Inter', 'Roboto', Helvetica, Arial, sans-serif;
+  font-family: 'Inter', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

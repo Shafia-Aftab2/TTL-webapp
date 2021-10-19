@@ -1,21 +1,45 @@
 <template>
-  <div class="section">
-    <div class="left-container">
-      <img src="../../assets/Group 949.png" alt="" srcset="" />
+  <div>
+    <div>
+      <input class="text-input" type="text" placeholder="Your Name" v-model="firstName" />
     </div>
-    <div class="right-container">
-      <h3>Create a teacher account</h3>
-      <FormSignupTeacher> </FormSignupTeacher>
-      <p>Already have an account?<router-link :to="{ name: 'teacher-login' }"> Login </router-link></p>
+    <br />
+    <div>
+      <input class="text-input" type="text" placeholder="Your Display name" v-model="displayName" />
+    </div>
+    <br />
+    <div>
+      <input class="text-input" type="text" placeholder="School Name" v-model="schoolName" />
+    </div>
+    <br />
+    <div>
+      <input class="text-input" type="text" placeholder="your email id" v-model="email" />
+    </div>
+    <br />
+    <div>
+      <input class="text-input" type="password" placeholder="Password" v-model="password" />
+    </div>
+    <br />
+    <div class="align-center">
+      <button class="btn" type="submit" @click="createAccount">Create</button>
+      <br />
+    </div>
+    <div class="align-center">
+      <ul class="§rm-footer">
+        <li>
+          By signing up, you accept Talkie’s <br />
+          <a href="/terms" target="_blank"> Terms of Service </a>
+          and
+          <a href="/privacy" target="_blank"> Privacy Policy. </a>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-import FormSignupTeacher from './components/FormSignupTeacher';
-
 export default {
-  name: 'signup',
+  name: 'form-signup-teacher',
   data() {
     return {
       firstName: '',
@@ -29,9 +53,6 @@ export default {
     createAccount() {
       this.$router.push({ name: 'teacher-login' });
     },
-  },
-  components: {
-    FormSignupTeacher,
   },
 };
 </script>
