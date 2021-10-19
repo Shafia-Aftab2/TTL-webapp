@@ -28,6 +28,8 @@ module.exports = {
     'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-plusplus': 'off',
+    "vue/max-attributes-per-line": "off",
+    "max-line-length": [ false ],
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
       js: 'never',

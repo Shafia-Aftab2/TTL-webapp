@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+     <Talkieheader></Talkieheader>
      <!-- <nav class="App__nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
@@ -9,6 +10,7 @@
 </template>
 
 <script>
+// import TalkieHeader from '../layouts/Talkie-header.vue'
 export default {
   name: 'App',
 };
