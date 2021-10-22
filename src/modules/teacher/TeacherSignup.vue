@@ -1,18 +1,22 @@
 <template>
-  <section class="row">
-    <div class="hero-image">
-      <img src="../../assets/Group 949.png" alt="" srcset="" />
-    </div>
-    <div class="  sign-up-content">
-      <h3>Create a teacher account</h3>
-      <FormSignupTeacher> </FormSignupTeacher>
-      <p>Already have an account?<router-link :to="{ name: 'teacher-login' }"> Login </router-link></p>
-    </div>
-  </section>
+  <div>
+    <MainNavbar></MainNavbar>
+    <section class="row">
+      <div class="hero-image">
+        <img src="../../assets/Group 949.png" width="500px" height="400px" alt="" srcset="" />
+      </div>
+      <div class="sign-up-content">
+        <h3>Create a teacher account</h3>
+        <FormSignupTeacher> </FormSignupTeacher>
+        <p>Already have an account?<router-link :to="{ name: 'teacher-login' }"> Login </router-link></p>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
 import FormSignupTeacher from './components/FormSignupTeacher';
+import MainNavbar from '@/components/Navbar';
 
 export default {
   name: 'signup',
@@ -32,29 +36,20 @@ export default {
   },
   components: {
     FormSignupTeacher,
+    MainNavbar,
   },
 };
 </script>
 
 <style scoped>
 .row {
+  padding: 30px;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-
-img {
-  max-width: 100vw;
-}
-@media (max-width: 767px) {
-  .sign-up-content {
-    margin-top: 200px;
-  }
+  width: calc(100%-30px);
 }
 
 .hero-image {
+  width: calc(50vw - 50px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -67,6 +62,7 @@ img {
 
 .sign-up-content {
   display: flex;
+  width: 50vw;
   flex: 1;
   flex-grow: 1;
   flex-shrink: 0;
@@ -92,5 +88,15 @@ a {
 }
 a:visited {
   color: black;
+}
+
+@media (max-width: 870px) {
+  .hero-image{
+    display: none;
+  }
+  .sign-up-content{
+    padding: 0 30px;
+    width: 100%;
+  }
 }
 </style>

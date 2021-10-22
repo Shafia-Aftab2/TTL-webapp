@@ -1,36 +1,47 @@
 /* eslint-disable */
 <template>
-<div class="section">
-<div class="left-container" >
-  <h1 class="h1-topic">choose topics </h1>
+  <div>
+    <MainNavbar></MainNavbar>
+    <div class="section">
+      <div class="left-container" >
+        <div>
+          <h1 class="h1-topic">choose topics </h1>
+          <p class="p-topic"> select as many topics as you want for class.<br><br>This way, we get to tailor the quizzes.</p>
+        </div>
+      </div>
+        <div class="right-container" >
+          <div>
+            <h1 class="h1-topic">Beginners/Intermediate </h1>
+            <p class="p1-subjects">GCSE LEVEL </p>
+    
+            <div class="list-items">
+              <ul v-for="topic in gcse_level" :key="topic.id">
+                <li>
+                  <input type="checkbox"  >{{ topic.topic }}
+                </li>
+              </ul>
+            </div>
+            <br>
+            <h1 class="h1-topic">Beginners </h1>
+            <p class="p1-subjects">KS3 LEVEL </p>
+            <div class="list-items">
+              <ul v-for="topic in kse3_level" :key="topic.id">
+                <li>
+                  <input type="checkbox"  >{{ topic.topic }}
+                </li>
+              </ul>
+            </div>
+           <br>
+           <button class="btn" type="submit">Next</button>
+          </div>
+       </div>
+    </div>
   </div>
-   <div class="right-container" >
-       <h1 class="h1-topic">Beginners/Intermediate </h1>
-       <p class="p1-subjects">GCSE LEVEL </p>
-       <div class="list-items">
-        <ul v-for="topic in gcse_level" :key="topic.id">
-      <li>
-        <input type="checkbox"  >{{ topic.topic }}
-  </li>
-</ul>
-       </div>
-       <br>
-        <h1 class="h1-topic">Beginners </h1>
-        <p class="p1-subjects">KS3 LEVEL </p>
-        <div class="list-items">
-        <ul v-for="topic in kse3_level" :key="topic.id">
-      <li>
-        <input type="checkbox"  >{{ topic.topic }}
-  </li>
-</ul>
-       </div>
-       <br>
-       <button class="btn" type="submit">Next</button>
-   </div>
-</div>
 </template>
 
 <script>
+import MainNavbar from '@/components/Navbar'
+
 export default {
   name: 'choosetopic',
   data() {
@@ -38,19 +49,19 @@ export default {
       gcse_level: [
         {
           id: 1,
-          topic: 'free time activities',
+          topic: '⚽️free time activities',
         },
         {
           id: 2,
-          topic: 'Travel and Tourism',
+          topic: '✈️Travel and Tourism',
         },
         {
           id: 3,
-          topic: 'food and drink',
+          topic: '🍔food and drink',
         },
         {
           id: 4,
-          topic: 'science and technology',
+          topic: '📱science and technology',
         },
         {
           id: 5,
@@ -60,55 +71,78 @@ export default {
       kse3_level: [
         {
           id: 1,
-          topic: 'My family and friends',
+          topic: '🏡My family and friends',
         },
         {
           id: 2,
-          topic: 'Where i live',
+          topic: '🐶Where i live',
         },
         {
           id: 3,
-          topic: 'clothing',
+          topic: '🤸🏻clothing',
         },
         {
           id: 4,
-          topic: 'pets',
+          topic: '⛸pets',
         },
       ],
     });
   },
+  components: {
+    MainNavbar,
+  }
 };
 
 </script>
 
 <style scoped>
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .section {
   width: 100%;
+  padding: 20px 0;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
 }
 .right-container {
+  text-align: center;
   display: flex;
-  flex-direction: column;
-  width: 39%;
+  width: 60vw;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 40px;
+  height: calc(100vh - 40px);
+  text-align: start;
 }
 .left-container {
-  width: 50vw;
-  align-items: center;
+  width: 40vw;
+  display: flex;
   justify-content: center;
-  margin-right: 2%;
+  height: calc(100vh - 120px);
+  align-items: center;
+  padding-left:40px;
+  text-align: start;
 }
+
 .h1-topic{
- text-align: left;
- font-size: 20px;
- font-weight: bold;
+font-style: normal;
+font-weight: bold;
+font-size: 32px;
+line-height: 50px;
+color: #000000;
+text-align: start;
 }
 .p-topic{
-text-align: left;
-font-size: 12px;
-font-weight: bold;
+  margin-top: 15px;
+font-style: normal;
+font-weight: 500;
+font-size: 21px;
+line-height: 18px;
 }
 .p1-subjects{
  font-size: 10px;
@@ -119,6 +153,21 @@ text-align: left;
   font-size: 16px;
   font-weight: bold;
   text-align: left;
+  font-size: 17px;
+  line-height: 21px;
+}
+.list-items ul{
+  list-style: none;
+}
+.list-items ul li{
+  font-style: normal;
+font-weight: normal;
+font-size: 17px;
+line-height: 21px;
+margin-top: 15px;
+}
+.list-items ul li input{
+  margin-right: 10px;
 }
 .btn {
   width: 143px;
@@ -127,12 +176,20 @@ text-align: left;
   background: #F7D41E;
   cursor: pointer;
   border-radius: 10px;
+  border: none;
   font-weight: bold;
   align-items: center;
   font-size: 15px;
   outline: none;
-  border: 1px solid $logo-color;
   position: relative;
   margin: 10px 0;
+}
+@media (max-width:870px){
+  .left-container{
+    display: none;
+  }
+  .right-container{
+    width: 100%;
+  }
 }
 </style>

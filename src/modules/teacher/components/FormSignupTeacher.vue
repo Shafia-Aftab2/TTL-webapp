@@ -1,6 +1,5 @@
 <template>
   <div class="flex-end">
-    <!-- <h3>Create a teacher account</h3> -->
     <div>
       <input class="text-input" type="text" placeholder="Your Name" v-model="firstName" />
     </div>
@@ -33,23 +32,27 @@
 </template>
 
 <script>
-export default {
-  name: 'form-signup-teacher',
-  data() {
-    return {
-      firstName: '',
-      displayName: '',
-      schoolName: '',
-      email: '',
-      password: '',
-    };
-  },
-  methods: {
-    createAccount() {
-      this.$router.push({ name: 'teacher-login' });
+  import MainNavbar from '@/components/Navbar'
+  export default {
+    name: 'form-signup-teacher',
+    data() {
+      return {
+        firstName: '',
+        displayName: '',
+        schoolName: '',
+        email: '',
+        password: '',
+      };
     },
-  },
-};
+    methods: {
+      createAccount() {
+        this.$router.push({ name: 'teacher-login' });
+      },
+    },
+    components: {
+      MainNavbar,
+    },
+  };
 </script>
 
 <style scoped>
@@ -74,22 +77,8 @@ export default {
 .terms_conditions {
   padding: 0 10% 0 10%;
 }
-@media (min-width: 800px) {
-  .text-input {
-    width: 400px;
-  }
-}
-@media (min-width: 500px) {
-  .text-input {
-    width: 500px;
-  }
-}
-@media (max-width: 500px) {
-  .text-input {
-    width: 200px;
-  }
-}
 .text-input {
+  width: calc( 100% - 20px);
   height: 63px;
   font-size: 14px;
   font-weight: 300;

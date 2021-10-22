@@ -1,35 +1,42 @@
 <template>
-  <div class="section">
-    <div class="left-container">
-         <img src="../../assets/Group 949.png" alt="" srcset="" />
-    </div>
-    <div class="right-container" >
-    <h3>Teacher Login </h3>
-    <div>
-      <input class="text-input" type="text" placeholder="Email">
-    </div>
-    <br>
-    <div>
-      <input  class="text-input" type="password" placeholder="Password">
-    </div>
-    <br>
-    <div class="align-center">
-    <button class="btn" type="submit">Login</button>
-    </div>
-    <br>
-    <br>
-
-    <p>
-      <router-link :to="{ name: 'home' }">Home</router-link>
-    </p>
+  <div>
+    <Main-navbar></Main-navbar>
+    <div class="section">
+      <div class="left-container">
+           <img src="../../assets/Group 949.png" width="500px" height="400px" alt="" srcset="" />
+      </div>
+      <div class="right-container" >
+      <h3>Teacher Login </h3>
+      <div>
+        <input class="text-input" type="text" placeholder="Email">
+      </div>
+      <br>
+      <div>
+        <input  class="text-input" type="password" placeholder="Password">
+      </div>
+      <br>
+      <div class="align-center">
+      <button class="btn" type="submit">Login</button>
+      </div>
+      <br>
+      <br>
+  
+      <p>
+        <router-link :to="{ name: 'home' }">Home</router-link>
+      </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'login',
-};
+  import MainNavbar from '@/components/Navbar'
+  export default {
+    name: 'login',
+    components: {
+      MainNavbar
+    }
+  };
 </script>
 
 <style  scoped>
@@ -37,8 +44,8 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
 }
 .btn {
   width: 143px;
@@ -47,24 +54,25 @@ export default {
   background: #F7D41E;
   cursor: pointer;
   border-radius: 10px;
+  border: none;
   font-weight: bold;
   align-items: center;
   font-size: 15px;
   outline: none;
-  border: 1px solid $logo-color;
   position: relative;
   margin: 10px 0;
 }
 .left-container {
   width: 50vw;
+  height: calc(100vh - 76px);
+  display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 2%;
 }
 .right-container {
+  width: 50vw;
   display: flex;
   flex-direction: column;
-  width: 39%;
 }
 .align-center {
   display: flex;
@@ -87,9 +95,16 @@ export default {
     font-size: 22px;
   }
    h3{
-       height: 28px;
-    width: 300px;
+    height: 28px;
     text-align: center;
-
+  }
+  @media (max-width: 870px) {
+    .left-container{
+      display: none;
+    }
+    .right-container{
+      padding: 0;
+      width: 100%
+    }
   }
 </style>
