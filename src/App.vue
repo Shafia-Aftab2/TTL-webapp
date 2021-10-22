@@ -1,12 +1,10 @@
 <template>
   <div id="app">
-     <Talkieheader></Talkieheader>
     <router-view />
   </div>
 </template>
 
 <script>
-// import TalkieHeader from '../layouts/Talkie-header.vue'
 export default {
   name: 'App',
 };
