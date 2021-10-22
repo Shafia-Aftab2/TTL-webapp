@@ -6,7 +6,8 @@
   <br>
   <input class ="text-input" type="text" placeholder="Title(required)" v-model="title">
   <br>
-  <textarea class ="text-input m_line"   rows="4" cols="50" placeholder="Question text(optional)"  v-model="question">
+  <textarea class ="text-input m_line"   rows="4" cols="50"
+   placeholder="Question text(optional)"  v-model="question">
   </textarea>
   <br>
   <br>
