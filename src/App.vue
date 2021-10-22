@@ -1,11 +1,7 @@
 <template>
   <div id="app">
      <Talkieheader></Talkieheader>
-     <!-- <nav class="App__nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav> -->
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -17,8 +13,13 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'), url(./assets/fonts/Inter-Regular.ttf) format('truetype');
+}
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Inter', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
