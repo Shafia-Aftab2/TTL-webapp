@@ -6,14 +6,18 @@
       <div class="left-container" >
         <div>
           <h1 class="h1-topic">choose topics </h1>
-          <p class="p-topic"> select as many topics as you want for class.<br><br>This way, we get to tailor the quizzes.</p>
+          <p class="p-topic">
+            select as many topics as you want for class.
+            <br>
+            <br>
+            This way, we get to tailor the quizzes.
+          </p>
         </div>
       </div>
         <div class="right-container" >
           <div>
             <h1 class="h1-topic">Beginners/Intermediate </h1>
             <p class="p1-subjects">GCSE LEVEL </p>
-    
             <div class="list-items">
               <ul v-for="topic in gcse_level" :key="topic.id">
                 <li>
@@ -40,7 +44,7 @@
 </template>
 
 <script>
-import MainNavbar from '@/components/Navbar'
+import MainNavbar from '@/components/Navbar';
 
 export default {
   name: 'choosetopic',
@@ -90,7 +94,7 @@ export default {
   },
   components: {
     MainNavbar,
-  }
+  },
 };
 
 </script>

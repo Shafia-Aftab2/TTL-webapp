@@ -6,7 +6,9 @@
         <h2>Invite Your students</h2>
         <h3>Copy and Paste url Below</h3>
         <input class="text-input" type="text" v-model="studentUrl" placeholder="Url here"
-        onkeyup="if(this.value.length > 0) document.getElementById('start_button').disabled = false; else document.getElementById('start_button').disabled = true;" />
+        onkeyup="if(this.value.length > 0)
+        document.getElementById('start_button').disabled = false;
+        else document.getElementById('start_button').disabled = true;" />
         <button class="btn" type="submit">Copy</button>
         <input class="btn-dis" type="button" value="Next" id="start_button" disabled />
       </div>
@@ -15,14 +17,14 @@
 </template>
 
 <script>
-  import MainNavbar from '@/components/Navbar'
+import MainNavbar from '@/components/Navbar';
 
-  export default {
-    name: 'inviteStudents',
-    components: {
-      MainNavbar
-    }
-  }
+export default {
+  name: 'inviteStudents',
+  components: {
+    MainNavbar,
+  },
+};
 </script>
 
 <style scoped>
@@ -34,7 +36,6 @@
   justify-content: flex-start;
   align-items: center;
 }
-
 .align-center {
   padding: 0 30px;
   display: flex;
@@ -46,7 +47,6 @@
   font-size: 10px;
   font-weight: bold;
 }
-
 .text-input {
   height: 63px;
   width: 472px;
@@ -58,7 +58,6 @@
   background-color: #F9F9F9;
   margin: 60px 0 58px 0;
 }
-
 .btn {
   width: 143px;
   height: 49px;
@@ -75,12 +74,10 @@
   background: #F7D41E;
   color: #18191F;
 }
-
 .btn-white {
   background: #F4F4F4;
   color: #ADADAD;
 }
-
 h3 {
   height: 39px;
   width: 313px;
@@ -90,13 +87,11 @@ h3 {
   font-family: Inter;
   margin: 0;
 }
-
 p {
   height: 21px;
   width: 236px;
   text-align: center;
 }
-
 h2 {
   font-size: 32px;
   line-height: 39px;
@@ -104,7 +99,6 @@ h2 {
   font-family: Inter;
   margin-bottom: 16px;
 }
-
 .btn-dis:disabled {
   width: 143px;
   height: 49px;
@@ -120,7 +114,6 @@ h2 {
   margin: 10px 0;
   background-color: #E5E5E5;
 }
-
 .btn-dis {
   width: 143px;
   height: 49px;
@@ -136,7 +129,6 @@ h2 {
   margin: 10px 0;
   background-color: #E5E5E5;
 }
-
 @media (max-width: 500px) {
   .text-input {
     height: 40px;
@@ -148,3 +140,4 @@ h2 {
   }
 }
 </style>
+

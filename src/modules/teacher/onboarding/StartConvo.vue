@@ -12,10 +12,9 @@
         <option>Chocklate</option>
         <option>Pancakes</option>
     </select>
-    
       <input class ="text-input" type="text" placeholder="Title(required)" v-model="title">
       <br>
-      <textarea class ="text-input m_line"   rows="4" cols="50" placeholder="Question text(optional)"  v-model="question">
+      <textarea class ="text-input m_line" rows="4" cols="50" placeholder="Question text(optional)"  v-model="question">
       </textarea>
       </div>
       <div class="buttons">
@@ -31,7 +30,8 @@
 </template>
 
 <script>
-  import MainNavbar from '@/components/Navbar'
+import MainNavbar from '@/components/Navbar';
+
 export default {
   data() {
     return (
@@ -43,18 +43,15 @@ export default {
     );
   },
   components: {
-    MainNavbar
-  }
+    MainNavbar,
+  },
 };
-
 </script>
-
 <style>
 .big__section {
-flex-direction: column;
-height: 100vh;
-  }
-
+  flex-direction: column;
+  height: 100vh;
+}
 .section {
   position: relative;
   width: 100%;
@@ -65,40 +62,38 @@ height: 100vh;
   background: #E5E5E5;
 }
 h1 {
-font-style: normal;
-font-size: 32px;
-line-height: 39px;
-display: flex;
-align-items: center;
-text-align: center;
-font-weight:700;
-color: #000000;
+  font-style: normal;
+  font-size: 32px;
+  line-height: 39px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-weight:700;
+  color: #000000;
 }
-
 .input__box {
-margin-top: 51px;
-  }
-
+  margin-top: 51px;
+}
 h2{
-    font-size: 32px;
-    width: 409px;
-    height: 39px;
+  font-size: 32px;
+  width: 409px;
+  height: 39px;
 }
 .text-input {
-    width: 474px;
-    height: 61px;
-    font-weight: 400;
-    border-radius: 8px;
-    border-style: none;
-    padding-left: 40px;
-    background-color:#F9F9F9;
-    font-size: 17px;
-    line-height: 21px;
-    display: flex;
-    align-items: center;
-    color: #000000;
-    margin-bottom: 31px;
-  }
+  width: 474px;
+  height: 61px;
+  font-weight: 400;
+  border-radius: 8px;
+  border-style: none;
+  padding-left: 40px;
+  background-color:#F9F9F9;
+  font-size: 17px;
+  line-height: 21px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+  margin-bottom: 31px;
+}
 
 /* dropdown */
 
@@ -117,23 +112,19 @@ select {
   background-size: 20.12px 10.25px;
 }
 
-
-
-
 /* dropdown */
 
-
-  .m_line{
-   width: 474px;
+.m_line{
+  width: 474px;
   height: 160px;
-   padding: 20px;
-  }
- .align-center {
+  padding: 20px;
+}
+.align-center {
   margin-top: 114px;
   height: 644px;
   width: 50%;
   border-radius: 20px;
-   background: #fff;
+  background: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -143,111 +134,102 @@ select {
   font-weight: bold;
   padding-top: 66px;
 }
-
 .buttons {
-position: relative;
-bottom: -36px;
-  }
-
+  position: relative;
+  bottom: -36px;
+}
 button {
-border: none;
-background: transparent;
-  }
-
+  border: none;
+  background: transparent;
+}
 .redo{
-    width: 70px;
-    height: 70px;
-    padding: 40px;
+  width: 70px;
+  height: 70px;
+  padding: 40px;
 }
 .mic{
-    width: 120px;
-    height: 120px;
+  width: 120px;
+  height: 120px;
 }
 .send{
-    width: 70px;
-    height: 70px;
-    padding: 40px;
+  width: 70px;
+  height: 70px;
+  padding: 40px;
 }
-
 .link {
-margin-top: 124px;
-margin-bottom: 60px;
-  }
-
+  margin-top: 124px;
+  margin-bottom: 60px;
+}
 @media (max-width:1120px){
   .align-center {
     width: 80% !important;
-}
+  }
 }
 @media (max-width:720px){
   .input__box select{
     width: 343px !important;
-    }
+  }
   .text-input {
     width: 300px;
     margin: 25px auto;
+  }
+  .m_line{
+    width: 300px;
+  }
 }
-.m_line{
-  width: 300px;
-}
-}
-
 @media (max-width:600px){
-.redo, .send {
-  width: 40px;
-  height: 40px;
-  padding: 0 16px;
+  .redo, .send {
+    width: 40px;
+    height: 40px;
+    padding: 0 16px;
   }
   .mic {
     width: 60px;
     height: 60px;
+  }
+  .buttons {
+    bottom: -10px;
     }
-    .buttons {
-      bottom: -10px;
-      }
-      .link {
+  .link {
     margin-top: 60px;
     margin-bottom: 6px;
+  }
 }
+@media (max-width:500px){
+  h1{
+    font-size: 22px;
   }
-
-  @media (max-width:500px){
-h1{
-  font-size: 22px;
-  }
-  }
-
-  @media (max-width:435px){
-.input__box select{
+}
+@media (max-width:435px){
+  .input__box select{
     width: 266px !important;
-    }
-    .text-input {
-      width: 226px;
-      }
+  }
+  .text-input {
+    width: 226px;
+  }
 }
-
 @media (max-width:343px){
-h1 {
-  font-size: 18px;
+  h1 {
+    font-size: 18px;
   }
   .input__box select {
     width: 230px !important;
     }
-    .text-input {
-      width: 187px;
-      margin: 8px auto;
-}
+  .text-input {
+    width: 187px;
+    margin: 8px auto;
   }
-
-  @media (max-width:300px) {
-    .redo, .send {
+}
+@media (max-width:300px) {
+  .redo, .send {
     width: 30px;
     height: 30px;
     padding: 0px 8px;
-      }
-      .mic {
-        width: 40px;
-        height: 40px;
-      }
-    }
+  }
+  .mic {
+    width: 40px;
+    height: 40px;
+  }
+}
 </style>
+

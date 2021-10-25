@@ -30,31 +30,30 @@
       </div>
     </div>
   </template>
-  
-  <script>
-  import MainNavbar from '@/components/Navbar';
-  export default {
-    name: 'form-signup-teacher',
-    data() {
-      return {
-        firstName: '',
-        displayName: '',
-        schoolName: '',
-        email: '',
-        password: '',
-      };
+<script>
+import MainNavbar from '@/components/Navbar';
+
+export default {
+  name: 'form-signup-teacher',
+  data() {
+    return {
+      firstName: '',
+      displayName: '',
+      schoolName: '',
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    createAccount() {
+      this.$router.push({ name: 'teacher-login' });
     },
-    methods: {
-      createAccount() {
-        this.$router.push({ name: 'teacher-login' });
-      },
-    },
-    components: {
-      MainNavbar,
-    },
-  };
-  </script>
-  
+  },
+  components: {
+    MainNavbar,
+  },
+};
+</script>
   <style scoped>
   .btn {
     width: 143px;
@@ -106,4 +105,4 @@
     color: black;
   }
   </style>
-  
+

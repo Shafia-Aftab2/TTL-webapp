@@ -8,16 +8,15 @@
               <h1 class="text">iHola, Ms.Joyse!</h1>
               <p class="text-type">Lets's create your first class...</p>
           </div>
-          <div> 
-              <input  class="input" type="text" placeholder="Class ame"> 
-          </div> 
-          <div> 
-              <input  class="input-search" type="text" placeholder="I teach..."> 
-          </div> 
+          <div>
+              <input  class="input" type="text" placeholder="Class ame">
+          </div>
+          <div>
+              <input  class="input-search" type="text" placeholder="I teach...">
+          </div>
           <button class="btn">Next</button>
         </div>
       </div>
-      
       <div class="border-right">
           <div>
               <img src="./onboard_png/approveche.png" alt="">
@@ -31,14 +30,14 @@
     </div>
   </div>
 </template>
-
 <script>
-  import MainNavbar from '@/components/Navbar'
+import MainNavbar from '@/components/Navbar';
+
 export default {
   name: 'create-class',
   components: {
     MainNavbar,
-  }
+  },
 };
 </script>
 
@@ -67,17 +66,17 @@ export default {
     justify-content: center;
 }
 
-.input { 
+.input {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 450px;
     height: 63px;
-    font-size: 14px; 
-    font-weight: 300; 
-    border-radius: 5px; 
-    border-style: none; 
-    background-color:#F9F9F9; 
+    font-size: 14px;
+    font-weight: 300;
+    border-radius: 5px;
+    border-style: none;
+    background-color:#F9F9F9;
     margin-top: 20px;
     padding-left: 20px;
 }
@@ -86,12 +85,12 @@ export default {
     width: 450px;
     height: 63px;
     margin-top: 30px;
-    font-size: 14px; 
-    font-weight: 300; 
-    border-radius: 5px; 
-    border-style: none; 
-    background-color:#F9F9F9; 
-} 
+    font-size: 14px;
+    font-weight: 300;
+    border-radius: 5px;
+    border-style: none;
+    background-color:#F9F9F9;
+}
 .btn{
     display: flex;
     flex-direction: row;

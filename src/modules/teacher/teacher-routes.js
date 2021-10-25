@@ -18,6 +18,7 @@ import ChooseTopic from '@/modules/teacher/onboarding/ChooseTopic';
 import CreateClass from '@/modules/teacher/onboarding/CreateClass';
 import InviteStudent from '@/modules/teacher/onboarding/InviteStudent';
 import StartConvo from '@/modules/teacher/onboarding/StartConvo';
+import Home from '@/modules/teacher/onboarding/Home';
 
 
 Vue.use(Router);
@@ -35,7 +36,7 @@ export default [
     ],
   },
   {
-    path: '/teacher/signup',
+    path: '/teacher-signup',
     component: PublicLayout,
     children: [
       {
@@ -51,30 +52,34 @@ export default [
     children: [
       {
         name: 'teacher-onboarding-1',
-        path: '',
+        path: 'teacher-onboarding-1',
         component: OnboardingTeacherOne,
       },
       {
         name: 'choose-topic',
-        path: '',
+        path: 'choose-topic',
         component: ChooseTopic,
       },
       {
         name: 'create-class',
-        path: '',
+        path: 'create-class',
         component: CreateClass,
       },
       {
         name: 'invite-student',
-        path: '',
+        path: 'invite-student',
         component: InviteStudent,
       },
       {
         name: 'start-convo',
-        path: '',
+        path: 'start-convo',
         component: StartConvo,
       },
-
+      {
+        name: 'teacher-home',
+        path: 'teacher-home',
+        component: Home,
+      },
     ],
   },
 ];

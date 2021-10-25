@@ -20,7 +20,6 @@
       </div>
       <br>
       <br>
-  
       <p>
         <router-link :to="{ name: 'home' }">Home</router-link>
       </p>
@@ -30,13 +29,14 @@
 </template>
 
 <script>
-  import MainNavbar from '@/components/Navbar'
-  export default {
-    name: 'login',
-    components: {
-      MainNavbar
-    }
-  };
+import MainNavbar from '@/components/Navbar';
+
+export default {
+  name: 'login',
+  components: {
+    MainNavbar,
+  },
+};
 </script>
 
 <style  scoped>

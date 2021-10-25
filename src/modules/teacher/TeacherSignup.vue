@@ -16,7 +16,7 @@
 
 <script>
 import FormSignupTeacher from './components/FormSignupTeacher';
-import MainNavbar from '@/components/Navbar';
+import MainNavbar from '../../components/Navbar';
 
 export default {
   name: 'signup',
