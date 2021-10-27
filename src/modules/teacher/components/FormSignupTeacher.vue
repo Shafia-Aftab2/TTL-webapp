@@ -60,7 +60,6 @@ export default {
 .btn {
   width: 143px;
   height: 49px;
-  margin-bottom: 10px;
   background: #f7d41e;
   cursor: pointer;
   border-radius: 10px;
@@ -70,13 +69,13 @@ export default {
   outline: none;
   border: 0px solid;
   position: relative;
-  margin: 10px 0;
+  margin: 18px 0;
 }
 /* .signup-form {
   align-content: center;
 } */
 .terms_conditions {
-  padding: 0 10% 0 10%;
+  padding: 3% 21% 3% 21%;
 }
 .text-input {
   width: calc( 100% - 20px);
@@ -92,6 +91,7 @@ h3 {
   height: 28px;
   width: 300px;
   text-align: right;
+  padding: 1% 0;
 }
 .form-footer {
   list-style-type: none;

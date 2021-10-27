@@ -15,12 +15,12 @@
             <div class="right-section">
                 <div class="right-section-head">
                     <h3>10A Spanish</h3>
-                    <div>
+                    <div class="icons">
                         <span>
-                            <img width="30px" height="30px" src="../../../modules/Trophy.png" alt="">
+                            <img width="30px" class="head-icon head-icons" height="30px" src="../../../modules/Trophy.png" alt="">
                         </span>
                         <span>
-                            <img width="30px" height="30px" src="../../../modules/Settings.png" alt="">
+                            <img width="30px" class="head-icons" height="30px" src="../../../modules/Settings.png" alt="">
                         </span>
                     </div>
                 </div>
@@ -28,24 +28,30 @@
                     <button class="right-section-typs-btn active">Questions</button>
                     <button class="right-section-typs-btn">Students</button>
                 </div>
-                <br>
-                <br>
                 <div class="section-right-task">
                     <div class="custom-select">
-                        <select>
-                            <option value="0">Select car:</option>
+                        <select :style="{'background-image': 'url(' + require('@/assets/Vector.png') + ')'}">
+                            <option value="0">Filter by topic</option>
                         </select>
                     </div>
                     <button class="new-task">
                         + New task
                     </button>
                 </div>
-                <br>
                 <div class="question-card">
+                    <div class="card-in">
                     <div class="play-btn">
                         <img src="@/assets/Play.png" alt="">
                     </div>
-                    <div></div>
+                    <div class="card-text">
+                    <h3>Desert Island</h3>
+                    <p>Topic: 🎲 Miscellaneous</p>
+                    </div>
+                    </div>
+                    <div class="card-btn">
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,16 +72,57 @@ export default {
     .play-btn{
         width: 84px;
         height: 84px;
+        margin-right: 19px;
     }
     .question-card{
-        width: 445px;
-        height: 200px;
+        width: 400px;
+        height: 150px;
         background: #FFFFFF;
+        border-radius: 16px;
+        padding: 16px 23px 31px 23px;
+    }
+    .btn-edit{
+        background: #F0F0F0;
+    }
+    .btn-delete{
+        background: #F9E5D6;
+    }
+    .card-btn button{
+        padding: 12px 16px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 0px;
+        color: #18191F;
         border-radius: 10px;
+        border: none;
+        margin: 44px 31px 0 0;
+    }
+    .card-btn{
+        text-align: start;
+    }
+    .card-in{
+        display: flex;
+    }
+    .card-text h3{
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 18px;
+        color: #18191F;
+    }
+    .card-text p{
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 0px;
+        color: #18191F;
     }
     .section-right-task{
         display: flex;
+        align-items: center;
         justify-content: space-between;
+        margin: 75px 0 49px 0;
     }
     .new-task{
         background: #F7D41E;
@@ -83,48 +130,89 @@ export default {
         border: none;
         width: 143px;
         height: 49px;
+        font-style: normal;
+        font-weight: 500;
         font-size: 16px;
+        line-height: 19px;
+        color: #18191F;
     }
     .custom-select select{
         width: 445px;
+        height: 61px;
         border: none;
         background: none;
         position: relative;
+        font-weight: normal;
         font-size: 17px;
+        line-height: 21px;
+        color: #18191F;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-repeat: no-repeat;
+        background-size: 24px 12px;
+        background-position: 96% 24px;
+        outline: none;
+    }
+    .head-icon{
+        margin-right: 31px;
     }
     .right-section-typs-btn{
+        padding-bottom: 15px;
+        margin-right: 59px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 17px;
+        line-height: 21px;
+        color: #18191F;
         border: none;
         background: none;
     }
     .active{
-        border-bottom: 2px solid #F3D34B;
+        border-bottom: 3px solid #F3D34B;
     }
     .right-section-typs{
         text-align: left;
     }
+    .icons {
+        position: absolute;
+        right: 0;
+    }
     .sidebar{
+        padding-top: 228px;
         width: 382px;
         display: flex;
-        align-items: center;
         justify-content: center;
-        height: calc(100vh - 77px);
         background-color: white;
     }
     .right-section{
-        padding: 20px 40px;
+        padding: 56px 99px 40px 56px;
         width: 100%;
         height: calc(100vh - 77px);
         background-color: #F9F9F9;
     }
     .right-section-head{
+        position: relative;
+    }
+    .right-section-head h3{
+        margin-bottom: 0;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 32px;
+        line-height: 39px;
+        color: #1C1C1C;
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
+
     .home-section{
         display: flex;
     }
     .sidebar-title-text{
+        color: #18191F;
+        margin-bottom: 50px;
+        font-style: normal;
         font-weight: bold;
         font-size: 18px;
         line-height: 28px;
@@ -136,6 +224,73 @@ export default {
         background: #FFFFFF;
         border: 1px solid #F7D41E;
         border-radius: 10px;
+    }
+    h3{
+        text-align: start;
+    }
+    @media (max-width: 1200px){
+    .right-section{
+        padding: 4% 8% 40px 56px;
+    }
+    .custom-select select{
+        width: 40vw;
+    }
+    }
+    @media (max-width: 992px){
+    .right-section{
+        padding: 4% 8% 40px 56px;
+    }
+    .custom-select select{
+        width: 35vw;
+    }
+    }
+    @media (max-width: 480px){
+    .right-section{
+        padding: 4% 8% 40px 56px;
+    }
+    .custom-select select{
+        width: 70vw;
+    }
+    .section-right-task{
+        flex-direction: column;
+    }
+    .question-card{
+        width: 80vw;
+    }
+    @media (max-width: 400px){
+        .right-section-typs-btn{
+            font-size: 12px;
+            padding-bottom: 0;
+        }
+        .head-icons {
+            width: 25px;
+            height: 25px;
+        }
+    }
+    }
+    @media (max-width: 342px){
+        .card-text p{
+            font-size: 12px;
+        }
+        .play-btn img{
+            width: 50px;
+        }
+        .card-text h3 {
+            margin-top: 6px;
+        }
+        .card-btn button{
+            margin: 0;
+        }
+    }
+    @media (max-width: 950px){
+    .new-task{
+        margin-top: 18px;
+    }
+    }
+    @media (max-width: 720px){
+    .sidebar{
+        display: none;
+    }
     }
 </style>
 

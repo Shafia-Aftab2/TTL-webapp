@@ -106,5 +106,8 @@ export default {
       padding: 0;
       width: 100%
     }
+    .text-input{
+      width: calc(100% - 70px);
+    }
   }
 </style>

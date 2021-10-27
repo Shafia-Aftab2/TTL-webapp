@@ -44,6 +44,7 @@ export default {
 <style scoped>
 .row {
   padding: 30px;
+  margin-top: 12%;
   display: flex;
   width: calc(100%-30px);
 }
@@ -90,13 +91,21 @@ a:visited {
   color: black;
 }
 
-@media (max-width: 870px) {
-  .hero-image{
-    display: none;
+ @media (max-width: 1060px) {
+    .row{
+      flex-direction: column;
+    }
+    .hero-image {
+      padding-bottom: 18px;
+    }
+    .sign-up-content{
+      padding: 0 30px;
+    }
   }
-  .sign-up-content{
-    padding: 0 30px;
-    width: 100%;
+  @media (max-width: 545px) {
+    .hero-image img{
+      width: 300px;
+      height: 240px;
+    }
   }
-}
 </style>

@@ -1,33 +1,32 @@
 <template>
   <div>
     <MainNavbar></MainNavbar>
-    <div class="wrapper">
-      <div class="border-left">
-        <div>
-          <div class="">
+      <div class="wrapper">
+        <div class="border-left">
+          <div>
+            <div class="">
               <h1 class="text">iHola, Ms.Joyse!</h1>
               <p class="text-type">Lets's create your first class...</p>
+            </div>
+            <input  class="input" type="text" placeholder="Class ame">
+            <input  class="input-search" type="text" placeholder="I teach...">
+            <button class="btn">Next</button>
           </div>
-          <div>
-              <input  class="input" type="text" placeholder="Class ame">
-          </div>
-          <div>
-              <input  class="input-search" type="text" placeholder="I teach...">
-          </div>
-          <button class="btn">Next</button>
         </div>
-      </div>
       <div class="border-right">
-          <div>
-              <img src="./onboard_png/approveche.png" alt="">
-          <img src="./onboard_png/Man.png" alt="">
-          <img src="./onboard_png/profit.png" alt="">
-          <p class="btn_text">PS. You have 2 weeks to trial Talkie. You and your students <br>
-              get full access in these 2 weeks after which you have to <br>
-              upgrade to get them speaking for the year!</p>
-          </div>
+    <div>
+        <div class="right-img">
+        <img class="rotate" src="./onboard_png/approveche.png" alt="">
+        <img class="rotate1" src="./onboard_png/Man.png" alt="">
+        <img class="rotate2" src="./onboard_png/profit.png" alt="">
+        </div>
+        <p class="btn_text">PS. You have 2 weeks to trial Talkie. You and your students 
+              get full access in these 2 weeks after which you have to
+              upgrade to get them speaking for the year!
+        </p>
       </div>
     </div>
+  </div>
   </div>
 </template>
 <script>
@@ -43,10 +42,13 @@ export default {
 
 <style scoped>
 .wrapper{
+  text-align: start;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
 }
 .text{
     font-size: 32px;
@@ -54,23 +56,25 @@ export default {
 
 .text-type{
     font-size: 21px;
+    font-weight: 500;
+    color: #000;
 }
 .border-left{
-    width: 50vw;
+    width: 42vw;
     display: flex;
-    justify-content: center;
+    padding-left:81px;
 }
 .border-right{
-    width: 50vw;
+    width: 58vw;
     display: flex;
-    justify-content: center;
+   
 }
 
 .input {
     display: flex;
+    width: 472px;
     justify-content: center;
     align-items: center;
-    width: 450px;
     height: 63px;
     font-size: 14px;
     font-weight: 300;
@@ -82,7 +86,7 @@ export default {
 }
 .input-search{
     padding-left: 20px;
-    width: 450px;
+    width: 472px;
     height: 63px;
     margin-top: 30px;
     font-size: 14px;
@@ -91,6 +95,19 @@ export default {
     border-style: none;
     background-color:#F9F9F9;
 }
+
+@media (max-width: 560px) {
+    .input{
+       width: calc(100% - 20%)
+    }
+ }
+
+ @media (max-width: 560px) {
+    .input-search{
+       width: calc(100% - 20%)
+    }
+ }
+
 .btn{
     display: flex;
     flex-direction: row;
@@ -106,16 +123,45 @@ export default {
 }
 .border-right{
     margin-top: -50px;
+    min-width: 472px;
 }
 
 .btn_text{
+    width:550px;
     padding-top: 10px;
     font-style: normal;
     font-weight: 500;
     font-size: 21px;
     line-height: 28px;
     color: #000000;
+    padding-right: 90px;
+    padding-left: 61px;
 }
+
+.right-img{
+  padding-left:61px;
+}
+
+.rotate {
+  margin-left: 5px;
+  width: 190px;
+  transform: rotate(-14.04deg);
+}
+
+.rotate1 {
+  padding: 0 31px;
+}
+
+.rotate2 {
+  width: 190px;
+  transform: rotate(14.04deg);
+}
+
+@media (max-width: 486px) {
+    .btn_text{
+        width: calc(100% - 40%);
+    }
+ }
 
 @media (max-width: 1030px){
     .wrapper{
@@ -129,6 +175,7 @@ export default {
         width: 100%;
     }
 }
+
 @media (max-width: 486px) {
     .border-right img:not(:nth-child(2)){
         width: 160px;
