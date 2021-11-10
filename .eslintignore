@@ -2,3 +2,10 @@
 /config/
 /dist/
 /*.js
+/**/*.scss
+/yarn.lock
+/**/*.json
+/**/*.png
+/**/*.ttf
+/**/*.md
+

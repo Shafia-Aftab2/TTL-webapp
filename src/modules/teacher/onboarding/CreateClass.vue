@@ -20,7 +20,7 @@
         <img class="rotate1" src="./onboard_png/Man.png" alt="">
         <img class="rotate2" src="./onboard_png/profit.png" alt="">
         </div>
-        <p class="btn_text">PS. You have 2 weeks to trial Talkie. You and your students 
+        <p class="btn_text">PS. You have 2 weeks to trial Talkie. You and your students
               get full access in these 2 weeks after which you have to
               upgrade to get them speaking for the year!
         </p>
@@ -67,7 +67,7 @@ export default {
 .border-right{
     width: 58vw;
     display: flex;
-   
+
 }
 
 .input {
