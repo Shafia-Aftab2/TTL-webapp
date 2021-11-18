@@ -1,7 +1,11 @@
 <template>
   <button
     type="button"
-    :class="['talkie-chip', `talkie-chip-${size.toString()}`]"
+    :class="[
+      'talkie-chip',
+      `talkie-chip-${size.toString()}`,
+      `talkie-chip-${variant.toString()}`
+    ]"
     @click="onClick"
   >
     {{ label }}
@@ -21,6 +25,12 @@ export default {
       type: String,
       default: "medium",
       validator: val => ["small", "medium", "large"].includes(val)
+    },
+    variant: {
+      type: String,
+      default: "primary",
+      validator: val =>
+        ["primary", "secondary", "success", "danger", "neutral"].includes(val)
     },
     customClass: {
       type: String,
@@ -60,5 +70,23 @@ export default {
 .talkie-chip-large {
   --size: var(--t-space-10);
   font-size: var(--t-fs-body);
+}
+
+/* Color variants */
+.talkie-chip-primary {
+  background: var(--t-primary);
+}
+.talkie-chip-secondary {
+  background: var(--t-secondary);
+}
+.talkie-chip-success {
+  background: var(--t-green);
+  color: var(--t-white-100);
+}
+.talkie-chip-danger {
+  background: var(--t-orange);
+}
+.talkie-chip-neutral {
+  background: var(--t-white-200);
 }
 </style>
