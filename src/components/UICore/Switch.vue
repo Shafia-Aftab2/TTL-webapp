@@ -18,6 +18,12 @@
       />
       <label :for="key"></label>
     </div>
+    <span class="talkie-switch-text" v-if="checkLabel && isChecked">
+      {{ checkLabel }}
+    </span>
+    <span class="talkie-switch-text" v-if="uncheckLabel && !isChecked">
+      {{ uncheckLabel }}
+    </span>
   </div>
 </template>
 
@@ -35,6 +41,14 @@ export default {
     onToggle: { type: Function, default: () => {} },
     name: {
       type: String
+    },
+    checkLabel: {
+      type: String,
+      default: ""
+    },
+    uncheckLabel: {
+      type: String,
+      default: ""
     },
     variant: {
       type: String,
@@ -76,6 +90,10 @@ export default {
   --padding: var(--t-space-4);
   --ball-size: calc(var(--height) - (var(--padding) * 2));
 }
+.talkie-switch-text {
+  color: var(--background);
+  margin-left: var(--t-space-8);
+}
 
 /* Color variants */
 .talkie-switch-primary {
@@ -105,18 +123,21 @@ export default {
   --height: var(--t-space-18);
   --padding: var(--t-space-3);
   --ball-size: calc(var(--height) - (var(--padding) * 2));
+  font-size: var(--t-fs-small);
 }
 .talkie-switch-medium {
   --width: var(--t-space-50);
   --height: var(--t-space-24);
   --padding: var(--t-space-4);
   --ball-size: calc(var(--height) - (var(--padding) * 2));
+  font-size: var(--t-fs-base);
 }
 .talkie-switch-large {
   --width: var(--t-space-64);
   --height: var(--t-space-30);
   --padding: var(--t-space-5);
   --ball-size: calc(var(--height) - (var(--padding) * 2));
+  font-size: var(--t-fs-body);
 }
 
 /* Switch Function */
