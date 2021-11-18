@@ -1,5 +1,11 @@
 <template>
-  <div :class="['talkie-switch-wrapper', customClass.toString()]">
+  <div
+    :class="[
+      'talkie-switch-wrapper',
+      `talkie-switch-${variant.toString()}`,
+      customClass.toString()
+    ]"
+  >
     <div>
       <input
         :id="key"
@@ -28,6 +34,11 @@ export default {
     onToggle: { type: Function, default: () => {} },
     name: {
       type: String
+    },
+    variant: {
+      type: String,
+      default: "dark",
+      validator: val => ["primary", "secondary", "light", "dark"].includes(val)
     },
     customClass: {
       type: String,
@@ -58,6 +69,28 @@ export default {
   --height: var(--t-space-24);
   --padding: var(--t-space-4);
   --ball-size: calc(var(--height) - (var(--padding) * 2));
+}
+
+/* Color variants */
+.talkie-switch-primary {
+  --background: var(--t-primary);
+  --stale: var(--t-white-100);
+  --active: var(--t-black-100);
+}
+.talkie-switch-secondary {
+  --background: var(--t-secondary);
+  --stale: var(--t-white-100);
+  --active: var(--t-black-100);
+}
+.talkie-switch-light {
+  --background: var(--t-white-100);
+  --stale: var(--t-black-100);
+  --active: var(--t-green);
+}
+.talkie-switch-dark {
+  --background: var(--t-black-100);
+  --stale: var(--t-white-100);
+  --active: var(--t-green);
 }
 
 /* Switch Function */
