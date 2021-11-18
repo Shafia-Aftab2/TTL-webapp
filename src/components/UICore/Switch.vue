@@ -3,6 +3,7 @@
     :class="[
       'talkie-switch-wrapper',
       `talkie-switch-${variant.toString()}`,
+      `talkie-switch-${size.toString()}`,
       customClass.toString()
     ]"
   >
@@ -39,6 +40,11 @@ export default {
       type: String,
       default: "dark",
       validator: val => ["primary", "secondary", "light", "dark"].includes(val)
+    },
+    size: {
+      type: String,
+      default: "medium",
+      validator: val => ["small", "medium", "large"].includes(val)
     },
     customClass: {
       type: String,
@@ -91,6 +97,26 @@ export default {
   --background: var(--t-black-100);
   --stale: var(--t-white-100);
   --active: var(--t-green);
+}
+
+/* Size variants */
+.talkie-switch-small {
+  --width: var(--t-space-38);
+  --height: var(--t-space-18);
+  --padding: var(--t-space-3);
+  --ball-size: calc(var(--height) - (var(--padding) * 2));
+}
+.talkie-switch-medium {
+  --width: var(--t-space-50);
+  --height: var(--t-space-24);
+  --padding: var(--t-space-4);
+  --ball-size: calc(var(--height) - (var(--padding) * 2));
+}
+.talkie-switch-large {
+  --width: var(--t-space-64);
+  --height: var(--t-space-30);
+  --padding: var(--t-space-5);
+  --ball-size: calc(var(--height) - (var(--padding) * 2));
 }
 
 /* Switch Function */
