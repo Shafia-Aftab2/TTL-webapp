@@ -4,6 +4,7 @@
     :class="[
       'talkie-button',
       `talkie-button-${variant.toString()}`,
+      `talkie-button-${variant.toString()}-interaction`,
       `talkie-button-${size.toString()}`,
       outlined && `talkie-button-outlined`,
       fullWidth && `talkie-button-fullWidth`,
@@ -80,17 +81,29 @@ export default {
   background-color: var(--t-primary);
   border-color: var(--t-primary);
 }
+.talkie-button-primary-interaction:hover {
+  background: transparent;
+}
 .talkie-button-secondary {
   background-color: var(--t-secondary);
   border-color: var(--t-secondary);
+}
+.talkie-button-secondary-interaction:hover {
+  background: transparent;
 }
 .talkie-button-success {
   background-color: var(--t-green);
   border-color: var(--t-green);
 }
+.talkie-button-success-interaction:hover {
+  background: transparent;
+}
 .talkie-button-danger {
   background-color: var(--t-orange);
   border-color: var(--t-orange);
+}
+.talkie-button-danger-interaction:hover {
+  background: transparent;
 }
 .talkie-button-transparent {
   background-color: transparent;
