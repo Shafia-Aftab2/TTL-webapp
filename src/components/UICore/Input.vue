@@ -3,13 +3,15 @@
     <div
       :class="[
         'talkie-input-wrapper',
-        hint && hint.type && `talkie-input-${hint.type.toString()}-wrapper`
+        hint && hint.type && `talkie-input-${hint.type.toString()}-wrapper`,
+        disabled && `talkie-input-disabled-wrapper`
       ]"
     >
       <input
         :name="name"
         :value="value"
         :required="required"
+        :disabled="disabled"
         :placeholder="placeholder"
         @change="onChange"
         :type="type"
@@ -54,6 +56,10 @@ export default {
     },
     required: {
       type: Boolean
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     onChange: {
       type: Function,
@@ -147,5 +153,14 @@ export default {
 }
 .talkie-input-info-message {
   color: var(--t-black-100);
+}
+
+/* Disabled variant */
+.talkie-input-disabled-wrapper,
+.talkie-input-disabled-wrapper > input {
+  background: var(--t-white-300);
+  border-color: var(--t-white-300);
+  color: var(--t-gray-50);
+  cursor: not-allowed;
 }
 </style>
