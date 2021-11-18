@@ -1,0 +1,101 @@
+:root {
+  /******************************************* COLORS *******************************************/
+  --t-primary: #f7d41e; /* Primary | CTA's */
+  --t-secondary: #ffa15f; /* Secondary | Small Buttons */
+  --t-orange: #f9e5d6; /* Danger */
+  --t-gray: #6b6b6b; /* Subtle Text | Helper Text */
+  --t-gray-50: #808080; /* Overlays */
+  --t-black: #000000; /* General */
+  --t-black-50: #1c1c1c; /* Text | Body Text */
+  --t-black-100: #18191f; /* Dark | Overlays, Shadows, Headings */
+  --t-white: #ffffff; /* General */
+  --t-white-100: #f9f9f9; /* Light | Light Mode Backgrounds */
+  --t-white-200: #e5e5e5; /* Accent | Accent Color Hairlines */
+  --t-white-300: #f4f4f4; /* Disabled Input | Buttons | Non-Interactive areas */
+  --t-green: #28a745; /* Success Messages */
+  --t-red: #e14e0f; /* Error Messages */
+
+  /******************************************* SHADOWS *******************************************/
+  --t-shadow-dark: 0px 1px 0px rgba(17, 17, 17, 0.1); /* Primary | CTA's | Headers | Text */
+  --t-shadow-light: 0.5px 0.5px 60px 1px #e5e5e5; /* Cards | Overlays */
+
+  /******************************************* FONTS *******************************************/
+  /* Family */
+  --t-ff-regular: "Inter-Regular";
+  --t-ff-thin: "Inter-Thin";
+  --t-ff-medium: "Inter-Medium";
+  --t-ff-light: "Inter-Light";
+  --t-ff-extralight: "Inter-ExtraLight";
+  --t-ff-bold: "Inter-Bold";
+  --t-ff-semibold: "Inter-SemiBold";
+  --t-ff-extrabold: "Inter-ExtraBold";
+  --t-ff-black: "Inter-Black";
+
+  /* Sizes */
+  --t-fs-h1: 40px; /* Title/H1 */
+  --t-fs-h2: 32px; /* H2 */
+  --t-fs-h3: 23px; /* H3 */
+  --t-fs-sub: 20px; /* Subtitle */
+  --t-fs-body: 17px; /* Body */
+  --t-fs-base: 16px; /* Small Text | Buttons | Inputs | Caption */
+  --t-fs-small: 15px; /* Small Text | Info Text | Error Text */
+  --t-fs-overline: 10px; /* Links */
+
+  /******************************************* MARGIN/PADDING *******************************************/
+  --t-space-1: 1px;
+  --t-space-2: 2px;
+  --t-space-3: 3px;
+  --t-space-4: 4px;
+  --t-space-5: 5px;
+  --t-space-8: 8px;
+  --t-space-10: 10px;
+  --t-space-12: 12px;
+  --t-space-14: 14px;
+  --t-space-16: 16px;
+  --t-space-18: 18px;
+  --t-space-20: 20px;
+  --t-space-22: 22px;
+  --t-space-24: 24px;
+  --t-space-26: 26px;
+  --t-space-28: 28px;
+  --t-space-30: 30px;
+  --t-space-32: 32px;
+  --t-space-34: 34px;
+  --t-space-36: 36px;
+  --t-space-38: 38px;
+  --t-space-40: 40px;
+  --t-space-44: 44px;
+  --t-space-48: 48px;
+  --t-space-50: 50px;
+  --t-space-58: 58px;
+  --t-space-64: 64px;
+
+  /******************************************* Z-INDEX *******************************************/
+  --t-zindex-nv-50: -50;
+  --t-zindex-nv-30: -30;
+  --t-zindex-nv-20: -20;
+  --t-zindex-nv-10: -10;
+  --t-zindex-10: 10;
+  --t-zindex-20: 20;
+  --t-zindex-30: 30;
+  --t-zindex-50: 50;
+  --t-zindex-70: 70;
+  --t-zindex-90: 90;
+  --t-zindex-100: 100;
+
+  /******************************************* BORDERS *******************************************/
+  /* Radius */
+  --t-br-small: 8px; /* Inputs | Small Cards */
+  --t-br-medium: 10px; /* Buttons | Chips | Tags */
+  --t-br-large: 16px; /* Large Cards | Containers */
+
+  /* Width */
+  --t-bw-small: 1px;
+  --t-bw-medium: 2px;
+  --t-bw-large: 3px;
+
+  /******************************************* GRIDS *******************************************/
+  /* Sizes */
+  --t-grid-large: 1024px; /* Large Screens */
+  --t-grid-small: 414px; /* Responsive size | Center Cards */
+}
