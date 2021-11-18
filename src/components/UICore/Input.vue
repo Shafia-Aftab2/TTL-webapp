@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="['talkie-input-wrapper', customClass.toString()]">
+    <div :class="['talkie-input-wrapper']">
       <input
         :name="name"
         :value="value"
@@ -8,7 +8,11 @@
         :placeholder="placeholder"
         @change="onChange"
         :type="type"
-        class="talkie-input"
+        :class="[
+          'talkie-input',
+          `talkie-input-${size.toString()}`,
+          customClass.toString()
+        ]"
       />
     </div>
   </div>
@@ -38,7 +42,13 @@ export default {
       type: Boolean
     },
     onChange: {
-      type: Function
+      type: Function,
+      default: () => {}
+    },
+    size: {
+      type: String,
+      default: "medium",
+      validator: val => ["small", "medium", "large"].includes(val)
     },
     customClass: {
       type: String,
@@ -73,5 +83,17 @@ export default {
   font-family: var(--t-ff-regular);
   font-size: var(--t-fs-body);
   width: 100%;
+  padding: var(--size);
+}
+
+/* Size variants */
+.talkie-input-small {
+  --size: var(--t-space-12);
+}
+.talkie-input-medium {
+  --size: var(--t-space-16);
+}
+.talkie-input-large {
+  --size: var(--t-space-20);
 }
 </style>
