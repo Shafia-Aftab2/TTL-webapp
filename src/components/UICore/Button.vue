@@ -93,6 +93,7 @@ export default {
   font-family: var(--t-ff-regular);
   border-width: var(--t-bw-medium);
   border-style: solid;
+  padding: var(--size) calc(var(--size) * 3); /* size ratio  */
 }
 
 /* Color variants */
@@ -131,15 +132,15 @@ export default {
 
 /* Size variants */
 .talkie-button-small {
-  padding: var(--t-space-10) var(--t-space-30);
+  --size: var(--t-space-10);
   font-size: var(--t-fs-base);
 }
 .talkie-button-medium {
-  padding: var(--t-space-14) var(--t-space-40);
+  --size: var(--t-space-14);
   font-size: var(--t-fs-body);
 }
 .talkie-button-large {
-  padding: var(--t-space-16) var(--t-space-50);
+  --size: var(--t-space-16);
   font-size: var(--t-fs-sub);
 }
 
