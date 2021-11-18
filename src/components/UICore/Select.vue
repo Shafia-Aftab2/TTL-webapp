@@ -3,11 +3,13 @@
     <select
       :name="name"
       :required="required"
+      :disabled="disabled"
       @change="onChange"
       :class="[
         'talkie-select-wrapper',
         `talkie-select-${size.toString()}-wrapper`,
         hint && hint.type && `talkie-select-${hint.type.toString()}-wrapper`,
+        disabled && `talkie-select-disabled-wrapper`,
         customClass.toString()
       ]"
     >
@@ -46,6 +48,10 @@ export default {
     },
     required: {
       type: Boolean
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     onChange: {
       type: Function
@@ -124,6 +130,7 @@ export default {
 /* Hint variants */
 .talkie-select-message {
   margin-top: var(--t-space-3);
+  font-size: var(--t-fs-small);
 }
 .talkie-select-success-wrapper {
   border-color: var(--t-green) !important;
@@ -148,5 +155,13 @@ export default {
 }
 .talkie-select-info-message {
   color: var(--t-black-100);
+}
+
+/* Disabled variant */
+.talkie-select-disabled-wrapper {
+  background: var(--t-white-300);
+  border-color: var(--t-white-300);
+  color: var(--t-gray-50);
+  cursor: not-allowed;
 }
 </style>
