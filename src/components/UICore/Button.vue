@@ -1,7 +1,11 @@
 <template>
   <button
     :type="type"
-    :class="['talkie-button', customClass.toString()]"
+    :class="[
+      'talkie-button',
+      `talkie-button-${variant.toString()}`,
+      customClass.toString()
+    ]"
     @click="onClick"
   >
     <slot />
@@ -16,6 +20,14 @@ export default {
     type: {
       type: String,
       default: "submit"
+    },
+    variant: {
+      type: String,
+      default: "primary",
+      validator: val =>
+        ["primary", "secondary", "success", "danger", "transparent"].includes(
+          val
+        )
     },
     onClick: {
       type: Function,
@@ -43,6 +55,29 @@ export default {
   color: var(--t-black-100);
   border-radius: var(--t-br-medium);
   font-family: var(--t-ff-regular);
-  font-size: var(--t-fs-base);
+  border-width: var(--t-bw-medium);
+  border-style: solid;
+}
+
+/* Color variants */
+.talkie-button-primary {
+  background-color: var(--t-primary);
+  border-color: var(--t-primary);
+}
+.talkie-button-secondary {
+  background-color: var(--t-secondary);
+  border-color: var(--t-secondary);
+}
+.talkie-button-success {
+  background-color: var(--t-green);
+  border-color: var(--t-green);
+}
+.talkie-button-danger {
+  background-color: var(--t-orange);
+  border-color: var(--t-orange);
+}
+.talkie-button-transparent {
+  background-color: transparent;
+  border-color: transparent;
 }
 </style>
