@@ -4,7 +4,11 @@
       :name="name"
       :required="required"
       @change="onChange"
-      :class="['talkie-select-wrapper', customClass.toString()]"
+      :class="[
+        'talkie-select-wrapper',
+        `talkie-select-${size.toString()}-wrapper`,
+        customClass.toString()
+      ]"
     >
       <option class="talkie-select-option" value="">{{
         placeholder || "Choose an option"
@@ -40,6 +44,11 @@ export default {
       type: Array,
       default: []
     },
+    size: {
+      type: String,
+      default: "medium",
+      validator: val => ["small", "medium", "large"].includes(val)
+    },
     customClass: {
       type: String,
       default: ""
@@ -71,6 +80,8 @@ export default {
   background-image: url("../../assets/images/selectBoxIcon.png");
   background-position: 98%;
   background-repeat: no-repeat;
+  padding: var(--size);
+  background-size: calc(var(--size) + 4) calc(var(--size) - 4);
 }
 .talkie-select-wrapper:focus {
   border: var(--t-space-2) solid var(--t-black-100);
@@ -79,5 +90,16 @@ export default {
   color: var(--t-black-100);
   background-color: var(--t-white-100);
   text-transform: capitalize;
+}
+
+/* Size variants */
+.talkie-select-small-wrapper {
+  --size: var(--t-space-12);
+}
+.talkie-select-medium-wrapper {
+  --size: var(--t-space-16);
+}
+.talkie-select-large-wrapper {
+  --size: var(--t-space-20);
 }
 </style>
