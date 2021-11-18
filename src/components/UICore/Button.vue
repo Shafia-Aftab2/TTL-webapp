@@ -1,25 +1,35 @@
 <template>
   <button
     :type="type"
+    :disabled="loading"
     :class="[
       'talkie-button',
       `talkie-button-${variant.toString()}`,
-      `talkie-button-${variant.toString()}-interaction`,
+      !loading && `talkie-button-${variant.toString()}-interaction`,
       `talkie-button-${size.toString()}`,
       outlined && `talkie-button-outlined`,
       fullWidth && `talkie-button-fullWidth`,
+      loading && `talkie-button-loading`,
       customClass.toString()
     ]"
     @click="onClick"
   >
     <slot />
+    <talkie-loader
+      v-if="loading"
+      :variant="variant"
+      :size="size"
+      customClass="talkie-button-loader"
+    />
   </button>
 </template>
 
 <script>
+import TalkieLoader from "./Loader.vue";
+
 export default {
   name: "TalkieButton",
-  components: {},
+  components: { TalkieLoader },
   props: {
     type: {
       type: String,
@@ -43,6 +53,10 @@ export default {
       default: false
     },
     fullWidth: {
+      type: Boolean,
+      default: false
+    },
+    loading: {
       type: Boolean,
       default: false
     },
@@ -132,5 +146,16 @@ export default {
 /* Full width variant */
 .talkie-button-fullWidth {
   width: 100%;
+}
+
+/* Loading variant */
+.talkie-button-loading {
+  filter: opacity(0.8);
+  cursor: not-allowed;
+}
+/* Loader */
+.talkie-button-loader {
+  position: absolute;
+  margin: auto;
 }
 </style>
