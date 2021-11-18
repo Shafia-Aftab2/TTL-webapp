@@ -1,7 +1,7 @@
 <template>
   <button
     :type="type"
-    :disabled="loading"
+    :disabled="loading || disabled"
     :class="[
       'talkie-button',
       `talkie-button-${variant.toString()}`,
@@ -10,6 +10,7 @@
       outlined && `talkie-button-outlined`,
       fullWidth && `talkie-button-fullWidth`,
       loading && `talkie-button-loading`,
+      disabled && `talkie-button-disabled`,
       customClass.toString()
     ]"
     @click="onClick"
@@ -57,6 +58,10 @@ export default {
       default: false
     },
     loading: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     },
@@ -157,5 +162,18 @@ export default {
 .talkie-button-loader {
   position: absolute;
   margin: auto;
+}
+
+/* Disabled variant */
+.talkie-button-disabled {
+  background: var(--t-white-300);
+  border-color: var(--t-white-300);
+  color: var(--t-gray-50);
+  cursor: not-allowed;
+}
+.talkie-button-disabled:hover {
+  background: var(--t-white-300);
+  border-color: var(--t-white-300);
+  color: var(--t-gray-50);
 }
 </style>
