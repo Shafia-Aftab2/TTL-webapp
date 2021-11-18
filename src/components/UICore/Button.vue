@@ -6,6 +6,7 @@
       `talkie-button-${variant.toString()}`,
       `talkie-button-${size.toString()}`,
       outlined && `talkie-button-outlined`,
+      fullWidth && `talkie-button-fullWidth`,
       customClass.toString()
     ]"
     @click="onClick"
@@ -37,6 +38,10 @@ export default {
       validator: val => ["small", "medium", "large"].includes(val)
     },
     outlined: {
+      type: Boolean,
+      default: false
+    },
+    fullWidth: {
       type: Boolean,
       default: false
     },
@@ -109,5 +114,10 @@ export default {
 /* Outline variant */
 .talkie-button-outlined {
   background: transparent;
+}
+
+/* Full width variant */
+.talkie-button-fullWidth {
+  width: 100%;
 }
 </style>
