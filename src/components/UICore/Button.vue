@@ -4,6 +4,7 @@
     :class="[
       'talkie-button',
       `talkie-button-${variant.toString()}`,
+      `talkie-button-${size.toString()}`,
       customClass.toString()
     ]"
     @click="onClick"
@@ -28,6 +29,11 @@ export default {
         ["primary", "secondary", "success", "danger", "transparent"].includes(
           val
         )
+    },
+    size: {
+      type: String,
+      default: "medium",
+      validator: val => ["small", "medium", "large"].includes(val)
     },
     onClick: {
       type: Function,
@@ -79,5 +85,19 @@ export default {
 .talkie-button-transparent {
   background-color: transparent;
   border-color: transparent;
+}
+
+/* Size variants */
+.talkie-button-small {
+  padding: var(--t-space-10) var(--t-space-30);
+  font-size: var(--t-fs-base);
+}
+.talkie-button-medium {
+  padding: var(--t-space-14) var(--t-space-40);
+  font-size: var(--t-fs-body);
+}
+.talkie-button-large {
+  padding: var(--t-space-16) var(--t-space-50);
+  font-size: var(--t-fs-sub);
 }
 </style>
