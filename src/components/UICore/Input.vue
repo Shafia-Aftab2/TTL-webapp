@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div :class="['talkie-input-wrapper']">
+    <div
+      :class="[
+        'talkie-input-wrapper',
+        hint && hint.type && `talkie-input-${hint.type.toString()}-wrapper`
+      ]"
+    >
       <input
         :name="name"
         :value="value"
@@ -15,6 +20,15 @@
         ]"
       />
     </div>
+    <p
+      v-if="hint && hint.type && hint.message"
+      :class="[
+        `talkie-input-message`,
+        `talkie-input-${hint.type.toString()}-message`
+      ]"
+    >
+      {{ hint.message }}
+    </p>
   </div>
 </template>
 
@@ -50,6 +64,13 @@ export default {
       default: "medium",
       validator: val => ["small", "medium", "large"].includes(val)
     },
+    hint: {
+      type: Object,
+      default: {
+        type: null,
+        message: null
+      }
+    },
     customClass: {
       type: String,
       default: ""
@@ -71,17 +92,15 @@ export default {
   align-items: center;
   justify-content: space-between;
   font-family: var(--t-ff-regular);
-  font-size: var(--t-fs-body);
 }
 .talkie-input-wrapper:focus-within {
-  border: var(--t-space-2) solid var(--t-black-100);
+  border-color: var(--t-black-100);
 }
 .talkie-input {
   background: transparent;
   border: none;
   outline: none;
   font-family: var(--t-ff-regular);
-  font-size: var(--t-fs-body);
   width: 100%;
   padding: var(--size);
 }
@@ -89,11 +108,44 @@ export default {
 /* Size variants */
 .talkie-input-small {
   --size: var(--t-space-12);
+  font-size: var(--t-fs-base);
 }
 .talkie-input-medium {
   --size: var(--t-space-16);
+  font-size: var(--t-fs-body);
 }
 .talkie-input-large {
   --size: var(--t-space-20);
+  font-size: var(--t-fs-sub);
+}
+
+/* Hint variants */
+.talkie-input-message {
+  margin-top: var(--t-space-3);
+  font-size: var(--t-fs-small);
+}
+.talkie-input-success-wrapper {
+  border-color: var(--t-green) !important;
+}
+.talkie-input-success-message {
+  color: var(--t-green);
+}
+.talkie-input-error-wrapper {
+  border-color: var(--t-red) !important;
+}
+.talkie-input-error-message {
+  color: var(--t-red);
+}
+.talkie-input-warning-wrapper {
+  border-color: var(--t-primary) !important;
+}
+.talkie-input-warning-message {
+  color: var(--t-primary);
+}
+.talkie-input-info-wrapper {
+  border-color: var(--t-black-100) !important;
+}
+.talkie-input-info-message {
+  color: var(--t-black-100);
 }
 </style>
