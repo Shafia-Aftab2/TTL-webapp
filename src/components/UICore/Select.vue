@@ -7,6 +7,7 @@
       :class="[
         'talkie-select-wrapper',
         `talkie-select-${size.toString()}-wrapper`,
+        hint && hint.type && `talkie-select-${hint.type.toString()}-wrapper`,
         customClass.toString()
       ]"
     >
@@ -20,6 +21,15 @@
         >{{ option }}</option
       >
     </select>
+    <p
+      v-if="hint && hint.type && hint.message"
+      :class="[
+        `talkie-select-message`,
+        hint && hint.type && `talkie-select-${hint.type.toString()}-message`
+      ]"
+    >
+      {{ hint.message }}
+    </p>
   </div>
 </template>
 
@@ -49,6 +59,13 @@ export default {
       default: "medium",
       validator: val => ["small", "medium", "large"].includes(val)
     },
+    hint: {
+      type: Object,
+      default: {
+        type: null,
+        message: null
+      }
+    },
     customClass: {
       type: String,
       default: ""
@@ -64,12 +81,10 @@ export default {
   align-items: center;
   width: 100%;
   border: var(--t-space-2) solid transparent;
-  font-size: var(--t-fs-body);
   color: var(--t-black-100);
   background-color: var(--t-white-100);
   justify-content: space-between;
   text-transform: capitalize;
-  font-family: "Inter";
   cursor: pointer;
   border-radius: var(--t-br-small);
   /* Hide Default Right Icon */
@@ -95,11 +110,43 @@ export default {
 /* Size variants */
 .talkie-select-small-wrapper {
   --size: var(--t-space-12);
+  font-size: var(--t-fs-base);
 }
 .talkie-select-medium-wrapper {
   --size: var(--t-space-16);
+  font-size: var(--t-fs-body);
 }
 .talkie-select-large-wrapper {
   --size: var(--t-space-20);
+  font-size: var(--t-fs-sub);
+}
+
+/* Hint variants */
+.talkie-select-message {
+  margin-top: var(--t-space-3);
+}
+.talkie-select-success-wrapper {
+  border-color: var(--t-green) !important;
+}
+.talkie-select-success-message {
+  color: var(--t-green);
+}
+.talkie-select-error-wrapper {
+  border-color: var(--t-red) !important;
+}
+.talkie-select-error-message {
+  color: var(--t-red);
+}
+.talkie-select-warning-wrapper {
+  border-color: var(--t-primary) !important;
+}
+.talkie-select-warning-message {
+  color: var(--t-primary);
+}
+.talkie-select-info-wrapper {
+  border-color: var(--t-black-100) !important;
+}
+.talkie-select-info-message {
+  color: var(--t-black-100);
 }
 </style>
