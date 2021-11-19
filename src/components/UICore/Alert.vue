@@ -26,7 +26,7 @@
       />
     </div>
     <div :class="['talkie-alert-body-wrapper']">
-      <span>
+      <span :class="[animateEllipse && 'ellipses-animation']">
         {{ text }}
       </span>
     </div>
@@ -63,6 +63,10 @@ export default {
       type: String,
       default: "medium",
       validator: val => ["small", "medium", "large"].includes(val)
+    },
+    animateEllipse: {
+      type: Boolean,
+      default: false
     },
     customClass: {
       type: String,
@@ -138,5 +142,27 @@ export default {
 .talkie-alert-large-wrapper {
   padding: var(--t-space-5) var(--t-space-16);
   font-size: var(--t-fs-sub);
+}
+
+/* Ellipse Animation */
+.ellipses-animation::after {
+  display: inline-block;
+  animation: ellipses steps(1, end) 1s infinite;
+  content: "";
+}
+
+@keyframes ellipses {
+  0% {
+    content: ".";
+  }
+  25% {
+    content: "..";
+  }
+  50% {
+    content: "...";
+  }
+  100% {
+    content: "";
+  }
 }
 </style>
