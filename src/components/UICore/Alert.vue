@@ -85,15 +85,16 @@ export default {
   color: var(--t-white-100);
   font-family: "Inter";
   width: 100%;
+  font-size: var(--font-size);
+  padding: calc(var(--size)) calc((var(--size)) * 3);
 }
 .talkie-alert-icon-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0.9;
-  padding: var(--t-space-8) 0;
-  font-size: var(--t-space-22);
-  margin-right: var(--t-space-12);
+  padding: var(--size) 0;
+  margin-right: calc((var(--size) * 3) - (var(--size) / 1.2));
 }
 .talkie-alert-icon-wrapper > span {
   display: flex;
@@ -102,10 +103,10 @@ export default {
 }
 .talkie-alert-icon {
   fill: currentColor;
-  width: 1em;
-  height: 1em;
+  width: calc((var(--size)) * 4) !important;
+  height: calc((var(--size)) * 4) !important;
+  font-size: calc((var(--size)) * 4) !important;
   display: inline-block;
-  font-size: 1.5rem;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   flex-shrink: 0;
   user-select: none;
@@ -129,16 +130,16 @@ export default {
 
 /* Size variants */
 .talkie-alert-small-wrapper {
-  padding: var(--t-space-5) var(--t-space-16);
-  font-size: var(--t-fs-base);
+  --size: var(--t-space-5);
+  --font-size: var(--t-fs-small);
 }
 .talkie-alert-medium-wrapper {
-  padding: var(--t-space-5) var(--t-space-16);
-  font-size: var(--t-fs-body);
+  --size: var(--t-space-6);
+  --font-size: var(--t-fs-body);
 }
 .talkie-alert-large-wrapper {
-  padding: var(--t-space-5) var(--t-space-16);
-  font-size: var(--t-fs-sub);
+  --size: var(--t-space-7);
+  --font-size: var(--t-fs-sub);
 }
 
 /* Ellipse Animation */
