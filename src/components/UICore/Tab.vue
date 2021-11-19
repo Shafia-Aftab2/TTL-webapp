@@ -3,7 +3,9 @@
     type="button"
     :class="[
       'talkie-tab-wrapper',
+      `talkie-tab-${variant.toString()}`,
       `talkie-tab-${size.toString()}`,
+      active && `talkie-tab-${variant.toString()}-active`,
       customClass.toString()
     ]"
     @click="onClick"
@@ -23,6 +25,11 @@ export default {
     active: {
       type: Boolean,
       default: false
+    },
+    variant: {
+      type: String,
+      default: "primary",
+      validator: val => ["primary", "secondary"].includes(val)
     },
     size: {
       type: String,
@@ -55,7 +62,7 @@ export default {
   border-radius: var(--t-space-3);
   border-bottom: var(--t-bw-large) solid transparent;
   padding: var(--size) calc((var(--size) * 3) - (var(--size) / 2));
-  padding-bottom: calc((var(--size) * 3) - (var(--size) / 2));
+  padding-bottom: calc((var(--size) * 3) - var(--size));
   font-size: var(--font-size);
 }
 .talkie-tab-wrapper:hover {
@@ -74,5 +81,21 @@ export default {
 .talkie-tab-large {
   --size: var(--t-space-8);
   --font-size: var(--t-fs-sub);
+}
+
+/* Color variants */
+.talkie-tab-primary:hover {
+  border-bottom-color: var(--t-primary);
+}
+.talkie-tab-secondary:hover {
+  border-bottom-color: var(--t-secondary);
+}
+
+/* Active variants */
+.talkie-tab-primary-active {
+  border-bottom-color: var(--t-primary);
+}
+.talkie-tab-secondary-active {
+  border-bottom-color: var(--t-secondary);
 }
 </style>
