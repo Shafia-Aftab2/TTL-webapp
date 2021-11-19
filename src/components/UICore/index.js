@@ -6,6 +6,7 @@ import TalkieInput from "./Input.vue";
 import TalkieSelect from "./Select.vue";
 import TalkieChip from "./Chip.vue";
 import TalkieSwitch from "./Switch.vue";
+import TalkieTab from "./Tab.vue";
 
 export {
   TalkieBackDrop,
@@ -15,5 +16,6 @@ export {
   TalkieInput,
   TalkieSelect,
   TalkieChip,
-  TalkieSwitch
+  TalkieSwitch,
+  TalkieTab
 };
