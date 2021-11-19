@@ -2,7 +2,9 @@
   <div
     :class="[
       'talkie-alert-wrapper',
-      `talkie-alert-${variant.toString()}-wrapper`
+      `talkie-alert-${variant.toString()}-wrapper`,
+      `talkie-alert-${size.toString()}-wrapper`,
+      customClass.toString()
     ]"
   >
     <div :class="['talkie-alert-icon-wrapper']">
@@ -56,6 +58,15 @@ export default {
       type: String,
       default: "info",
       validator: val => ["success", "error", "warning", "info"].includes(val)
+    },
+    size: {
+      type: String,
+      default: "medium",
+      validator: val => ["small", "medium", "large"].includes(val)
+    },
+    customClass: {
+      type: String,
+      default: ""
     }
   }
 };
@@ -113,5 +124,19 @@ export default {
 .talkie-alert-info-wrapper {
   color: var(--t-black-100);
   background: var(--t-white-200);
+}
+
+/* Size variants */
+.talkie-alert-small-wrapper {
+  padding: var(--t-space-5) var(--t-space-16);
+  font-size: var(--t-fs-base);
+}
+.talkie-alert-medium-wrapper {
+  padding: var(--t-space-5) var(--t-space-16);
+  font-size: var(--t-fs-body);
+}
+.talkie-alert-large-wrapper {
+  padding: var(--t-space-5) var(--t-space-16);
+  font-size: var(--t-fs-sub);
 }
 </style>
