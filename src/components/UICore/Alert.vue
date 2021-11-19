@@ -1,5 +1,10 @@
 <template>
-  <div :class="['talkie-alert-wrapper']">
+  <div
+    :class="[
+      'talkie-alert-wrapper',
+      `talkie-alert-${variant.toString()}-wrapper`
+    ]"
+  >
     <div :class="['talkie-alert-icon-wrapper']">
       <alert-success-svg
         v-if="variant === 'success'"
@@ -92,5 +97,21 @@ export default {
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   flex-shrink: 0;
   user-select: none;
+}
+
+/* Color variants */
+.talkie-alert-success-wrapper {
+  background: var(--t-green);
+}
+.talkie-alert-error-wrapper {
+  background: var(--t-red);
+}
+.talkie-alert-warning-wrapper {
+  color: var(--t-black-100);
+  background: var(--t-primary);
+}
+.talkie-alert-info-wrapper {
+  color: var(--t-black-100);
+  background: var(--t-white-200);
 }
 </style>
