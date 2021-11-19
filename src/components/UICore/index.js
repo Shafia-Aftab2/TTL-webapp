@@ -8,6 +8,7 @@ import TalkieChip from "./Chip.vue";
 import TalkieSwitch from "./Switch.vue";
 import TalkieTab from "./Tab.vue";
 import TalkieCheckBox from "./CheckBox.vue";
+import TalkieModal from "./Modal.vue";
 
 export {
   TalkieBackDrop,
@@ -19,5 +20,6 @@ export {
   TalkieChip,
   TalkieSwitch,
   TalkieTab,
-  TalkieCheckBox
+  TalkieCheckBox,
+  TalkieModal
 };
