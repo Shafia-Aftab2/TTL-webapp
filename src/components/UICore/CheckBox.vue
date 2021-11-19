@@ -1,6 +1,9 @@
 <template>
   <div
-    :class="['talkie-checkbox-wrapper']"
+    :class="[
+      'talkie-checkbox-wrapper',
+      disabled && 'talkie-checkbox-wrapper-disabled'
+    ]"
     :key="Math.random() * 5616316256464"
   >
     <label>
@@ -9,9 +12,17 @@
         type="checkbox"
         :checked="isChecked"
         @click="handleToggle"
+        :disabled="disabled"
       />
-      <span :class="['talkie-checkbox-material']">
-        <span :class="['talkie-checkmark']"></span>
+      <span
+        :class="[
+          'talkie-checkbox-material',
+          disabled && 'talkie-checkbox-material-disabled'
+        ]"
+      >
+        <span
+          :class="['talkie-checkmark', disabled && 'talkie-checkmark-disabled']"
+        ></span>
         <span v-if="label">{{ label }}</span>
       </span>
     </label>
@@ -29,6 +40,10 @@ export default {
     onToggle: {
       type: Function,
       default: () => {}
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -68,6 +83,9 @@ export default {
 .talkie-checkbox-wrapper label {
   cursor: pointer;
   padding-left: 0;
+}
+.talkie-checkbox-wrapper-disabled label {
+  cursor: not-allowed;
 }
 .talkie-checkbox-wrapper input[type="checkbox"] {
   opacity: 0;
