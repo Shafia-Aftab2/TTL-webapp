@@ -8,22 +8,19 @@
     ]"
   >
     <div :class="['talkie-alert-icon-wrapper']">
-      <alert-success-svg
+      <AlertSuccessSVG
         v-if="variant === 'success'"
         customClass="talkie-alert-icon"
       />
-      <alert-error-svg
+      <AlertErrorSVG
         v-if="variant === 'error'"
         customClass="talkie-alert-icon"
       />
-      <alert-warning-svg
+      <AlertWarningSVG
         v-if="variant === 'warning'"
         customClass="talkie-alert-icon"
       />
-      <alert-info-svg
-        v-if="variant === 'info'"
-        customClass="talkie-alert-icon"
-      />
+      <AlertInfoSVG v-if="variant === 'info'" customClass="talkie-alert-icon" />
     </div>
     <div :class="['talkie-alert-body-wrapper']">
       <span :class="[animateEllipse && 'ellipses-animation']">
