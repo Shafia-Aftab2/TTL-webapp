@@ -70,24 +70,63 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: var(--t-white);
-  border-radius: var(--t-br-large);
   z-index: var(--t-zindex-70);
   max-width: 445px;
   width: 100%;
-  gap: var(--t-space-24);
-  padding: var(--t-space-36) var(--t-space-40);
 }
 
 /* Confirm Dialog */
 .talkie-confirm-modal-text {
-  line-height: 1.5;
-  font-size: var(--t-fs-h3);
-  word-spacing: var(--t-space-2);
   color: var(--t-black-100);
 }
 .talkie-confirm-modal-action-buttons {
   margin: auto;
   display: flex;
-  gap: var(--t-space-8);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-modal-content {
+    border-radius: var(--t-br-medium);
+    gap: var(--t-space-16);
+    padding: var(--t-space-30) var(--t-space-36);
+  }
+  .talkie-confirm-modal-text {
+    line-height: 1.3;
+    font-size: calc(var(--t-fs-h3) * 0.7);
+    word-spacing: var(--t-space-1);
+  }
+  .talkie-confirm-modal-action-buttons {
+    gap: var(--t-space-4);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-modal-content {
+    border-radius: var(--t-br-large);
+    gap: var(--t-space-20);
+    padding: var(--t-space-34) var(--t-space-38);
+  }
+  .talkie-confirm-modal-text {
+    line-height: 1.4;
+    font-size: calc(var(--t-fs-h3) * 0.9);
+    word-spacing: var(--t-space-1);
+  }
+  .talkie-confirm-modal-action-buttons {
+    gap: var(--t-space-6);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-modal-content {
+    gap: var(--t-space-24);
+    padding: var(--t-space-36) var(--t-space-40);
+  }
+  .talkie-confirm-modal-text {
+    line-height: 1.5;
+    font-size: var(--t-fs-h3);
+    word-spacing: var(--t-space-2);
+  }
+  .talkie-confirm-modal-action-buttons {
+    gap: var(--t-space-8);
+  }
 }
 </style>
