@@ -89,11 +89,8 @@ export default {
   align-items: center;
   transition: 0.1s ease;
   color: var(--t-black-100);
-  border-radius: var(--t-br-medium);
   font-family: var(--t-ff-regular);
-  border-width: var(--t-bw-medium);
   border-style: solid;
-  padding: var(--size) calc(var(--size) * 3); /* size ratio  */
 }
 
 /* Color variants */
@@ -133,15 +130,15 @@ export default {
 /* Size variants */
 .talkie-button-small {
   --size: var(--t-space-10);
-  font-size: var(--t-fs-base);
+  --font-size: var(--t-fs-base);
 }
 .talkie-button-medium {
   --size: var(--t-space-14);
-  font-size: var(--t-fs-body);
+  --font-size: var(--t-fs-body);
 }
 .talkie-button-large {
   --size: var(--t-space-16);
-  font-size: var(--t-fs-sub);
+  --font-size: var(--t-fs-sub);
 }
 
 /* Outline variant */
@@ -176,5 +173,29 @@ export default {
   background: var(--t-white-300);
   border-color: var(--t-white-300);
   color: var(--t-gray-50);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-button {
+    border-width: var(--t-bw-small);
+    border-radius: var(--t-br-small);
+    padding: calc(var(--size) / 2) calc((var(--size) / 2) * 3);
+    font-size: calc(var(--font-size) / 1.35);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-button {
+    border-width: var(--t-bw-medium);
+    border-radius: var(--t-br-medium);
+    padding: calc(var(--size) / 1.5) calc((var(--size) / 1.5) * 3);
+    font-size: calc(var(--font-size) / 1.2);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-button {
+    padding: calc(var(--size)) calc((var(--size)) * 3);
+    font-size: calc(var(--font-size));
+  }
 }
 </style>
