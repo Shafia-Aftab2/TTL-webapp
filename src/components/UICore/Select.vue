@@ -92,7 +92,6 @@ export default {
   justify-content: space-between;
   text-transform: capitalize;
   cursor: pointer;
-  border-radius: var(--t-br-small);
   /* Hide Default Right Icon */
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -101,8 +100,6 @@ export default {
   background-image: url("../../assets/images/selectBoxIcon.png");
   background-position: 98%;
   background-repeat: no-repeat;
-  padding: var(--size);
-  background-size: calc(var(--size) + 4) calc(var(--size) - 4);
 }
 .talkie-select-wrapper:focus {
   border: var(--t-space-2) solid var(--t-black-100);
@@ -116,15 +113,15 @@ export default {
 /* Size variants */
 .talkie-select-small-wrapper {
   --size: var(--t-space-12);
-  font-size: var(--t-fs-base);
+  --font-size: var(--t-fs-base);
 }
 .talkie-select-medium-wrapper {
   --size: var(--t-space-16);
-  font-size: var(--t-fs-body);
+  --font-size: var(--t-fs-body);
 }
 .talkie-select-large-wrapper {
   --size: var(--t-space-20);
-  font-size: var(--t-fs-sub);
+  --font-size: var(--t-fs-sub);
 }
 
 /* Hint variants */
@@ -163,5 +160,30 @@ export default {
   border-color: var(--t-white-300);
   color: var(--t-gray-50);
   cursor: not-allowed;
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-select-wrapper {
+    border-radius: calc(var(--t-br-small) * 0.7);
+    padding: calc(var(--size) / 1.75);
+    font-size: calc(var(--font-size) / 1.35);
+    background-size: var(--t-space-20) var(--t-space-10);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-select-wrapper {
+    border-radius: var(--t-br-small);
+    padding: calc(var(--size) / 1.5);
+    font-size: calc(var(--font-size) / 1.2);
+    background-size: var(--t-space-22) var(--t-space-11);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-select-wrapper {
+    padding: var(--size);
+    font-size: var(--font-size);
+    background-size: var(--t-space-24) var(--t-space-12);
+  }
 }
 </style>
