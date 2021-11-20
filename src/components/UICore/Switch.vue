@@ -84,11 +84,6 @@ export default {
   --background: var(--t-black-100);
   --stale: var(--t-white-100);
   --active: var(--t-green);
-  /* Default Size */
-  --width: var(--t-space-50);
-  --height: var(--t-space-24);
-  --padding: var(--t-space-4);
-  --ball-size: calc(var(--height) - (var(--padding) * 2));
 }
 .talkie-switch-text {
   color: var(--background);
@@ -117,27 +112,75 @@ export default {
   --active: var(--t-green);
 }
 
-/* Size variants */
-.talkie-switch-small {
-  --width: var(--t-space-38);
-  --height: var(--t-space-18);
-  --padding: var(--t-space-3);
-  --ball-size: calc(var(--height) - (var(--padding) * 2));
-  font-size: var(--t-fs-small);
+/* Responsive Size Variants */
+@media (max-width: 599px) {
+  .talkie-switch-small {
+    --width: var(--t-space-34);
+    --height: var(--t-space-14);
+    --padding: var(--t-space-2);
+    --ball-size: calc(var(--height) - (var(--padding) * 3));
+    font-size: calc(var(--t-fs-small) / 1.35);
+  }
+  .talkie-switch-medium {
+    --width: var(--t-space-40);
+    --height: var(--t-space-18);
+    --padding: var(--t-space-2);
+    --ball-size: calc(var(--height) - (var(--padding) * 3));
+    font-size: calc(var(--t-fs-base) / 1.35);
+  }
+  .talkie-switch-large {
+    --width: var(--t-space-50);
+    --height: var(--t-space-24);
+    --padding: var(--t-space-3);
+    --ball-size: calc(var(--height) - (var(--padding) * 2.5));
+    font-size: calc(var(--t-fs-body) / 1.35);
+  }
 }
-.talkie-switch-medium {
-  --width: var(--t-space-50);
-  --height: var(--t-space-24);
-  --padding: var(--t-space-4);
-  --ball-size: calc(var(--height) - (var(--padding) * 2));
-  font-size: var(--t-fs-base);
+@media (min-width: 600px) {
+  .talkie-switch-small {
+    --width: var(--t-space-36);
+    --height: var(--t-space-16);
+    --padding: var(--t-space-2);
+    --ball-size: calc(var(--height) - (var(--padding) * 2));
+    font-size: calc(var(--t-fs-small) / 1.2);
+  }
+  .talkie-switch-medium {
+    --width: var(--t-space-44);
+    --height: var(--t-space-20);
+    --padding: var(--t-space-3);
+    --ball-size: calc(var(--height) - (var(--padding) * 2));
+    font-size: calc(var(--t-fs-base) / 1.2);
+  }
+  .talkie-switch-large {
+    --width: var(--t-space-58);
+    --height: var(--t-space-28);
+    --padding: var(--t-space-4);
+    --ball-size: calc(var(--height) - (var(--padding) * 2));
+    font-size: calc(var(--t-fs-body) / 1.2);
+  }
 }
-.talkie-switch-large {
-  --width: var(--t-space-64);
-  --height: var(--t-space-30);
-  --padding: var(--t-space-5);
-  --ball-size: calc(var(--height) - (var(--padding) * 2));
-  font-size: var(--t-fs-body);
+@media (min-width: 1200px) {
+  .talkie-switch-small {
+    --width: var(--t-space-38);
+    --height: var(--t-space-18);
+    --padding: var(--t-space-3);
+    --ball-size: calc(var(--height) - (var(--padding) * 2));
+    font-size: var(--t-fs-small);
+  }
+  .talkie-switch-medium {
+    --width: var(--t-space-50);
+    --height: var(--t-space-24);
+    --padding: var(--t-space-4);
+    --ball-size: calc(var(--height) - (var(--padding) * 2));
+    font-size: var(--t-fs-base);
+  }
+  .talkie-switch-large {
+    --width: var(--t-space-64);
+    --height: var(--t-space-30);
+    --padding: var(--t-space-5);
+    --ball-size: calc(var(--height) - (var(--padding) * 2));
+    font-size: var(--t-fs-body);
+  }
 }
 
 /* Switch Function */
