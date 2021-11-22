@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import AppLayout from "../layouts/AppLayout.vue";
 import Home from "../views/Home.vue";
 // modular
-import teacherRoutes from "../modules/teacher/teacher-routes";
-import studentRoutes from "../modules/student/student-routes";
+// import teacherRoutes from "../modules/teacher/teacher-routes";
+// import studentRoutes from "../modules/student/student-routes";
 
 const routes = [
   {
@@ -12,7 +12,7 @@ const routes = [
     component: AppLayout,
     children: [
       {
-        name: "home",
+        name: "Home",
         path: "",
         component: Home,
       },
@@ -20,7 +20,7 @@ const routes = [
   },
 ];
 
-routes.concat(teacherRoutes, studentRoutes);
+// routes.concat(teacherRoutes, studentRoutes);
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
