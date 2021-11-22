@@ -45,14 +45,11 @@ export default {
   display: inline-block;
   color: var(--t-black-100);
   background: transparent;
-  border-radius: var(--t-br-large);
   width: fit-content;
   cursor: pointer;
   border: transparent;
   transition: 0.1s ease;
   text-transform: capitalize;
-  background: var(--t-primary);
-  padding: var(--size) calc(var(--size) * 2);
 }
 .talkie-chip:hover {
   filter: opacity(0.8);
@@ -61,15 +58,15 @@ export default {
 /* Size variants */
 .talkie-chip-small {
   --size: var(--t-space-5);
-  font-size: var(--t-fs-small);
+  --font-size: var(--t-fs-small);
 }
 .talkie-chip-medium {
   --size: var(--t-space-8);
-  font-size: var(--t-fs-base);
+  --font-size: var(--t-fs-base);
 }
 .talkie-chip-large {
   --size: var(--t-space-10);
-  font-size: var(--t-fs-body);
+  --font-size: var(--t-fs-body);
 }
 
 /* Color variants */
@@ -88,5 +85,27 @@ export default {
 }
 .talkie-chip-neutral {
   background: var(--t-white-200);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-chip {
+    padding: calc(var(--size) * 0.5) calc(((var(--size) * 0.5) * 1.5));
+    font-size: calc(var(--font-size) / 1.4);
+    border-radius: var(--t-br-medium);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-chip {
+    padding: calc(var(--size) * 0.8) calc(((var(--size) * 0.8) * 1.5));
+    font-size: calc(var(--font-size) / 1.2);
+    border-radius: var(--t-br-large);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-chip {
+    padding: var(--size) calc(var(--size) * 1.5);
+    font-size: calc(var(--font-size));
+  }
 }
 </style>

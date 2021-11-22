@@ -77,16 +77,13 @@ export default {
 .talkie-alert-wrapper {
   display: flex;
   align-items: center;
-  border-radius: var(--t-br-medium);
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.43;
   letter-spacing: 0.01071em;
   color: var(--t-white-100);
-  font-family: "Inter";
+  font-family: var(--t-ff-regular);
   width: 100%;
-  font-size: var(--font-size);
-  padding: calc(var(--size)) calc((var(--size)) * 3);
 }
 .talkie-alert-icon-wrapper {
   display: flex;
@@ -103,9 +100,6 @@ export default {
 }
 .talkie-alert-icon {
   fill: currentColor;
-  width: calc((var(--size)) * 4) !important;
-  height: calc((var(--size)) * 4) !important;
-  font-size: calc((var(--size)) * 4) !important;
   display: inline-block;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   flex-shrink: 0;
@@ -148,7 +142,6 @@ export default {
   animation: ellipses steps(1, end) 1s infinite;
   content: "";
 }
-
 @keyframes ellipses {
   0% {
     content: ".";
@@ -161,6 +154,43 @@ export default {
   }
   100% {
     content: "";
+  }
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-alert-wrapper {
+    padding: calc(var(--size) * 0.5) calc(((var(--size) * 0.5) * 3));
+    font-size: calc(var(--font-size) / 1.35);
+    border-radius: var(--t-br-small);
+  }
+  .talkie-alert-icon {
+    width: calc((var(--size)) * 3) !important;
+    height: calc((var(--size)) * 3) !important;
+    font-size: calc((var(--size)) * 3) !important;
+  }
+}
+@media (min-width: 600px) {
+  .talkie-alert-wrapper {
+    padding: calc(var(--size) * 0.8) calc(((var(--size) * 0.8) * 3));
+    font-size: calc(var(--font-size) / 1.2);
+    border-radius: var(--t-br-medium);
+  }
+  .talkie-alert-icon {
+    width: calc((var(--size)) * 3.5) !important;
+    height: calc((var(--size)) * 3.5) !important;
+    font-size: calc((var(--size)) * 3.5) !important;
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-alert-wrapper {
+    padding: var(--size) calc(var(--size) * 3);
+    font-size: calc(var(--font-size));
+  }
+  .talkie-alert-icon {
+    width: calc((var(--size)) * 4) !important;
+    height: calc((var(--size)) * 4) !important;
+    font-size: calc((var(--size)) * 4) !important;
   }
 }
 </style>

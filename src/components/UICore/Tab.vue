@@ -60,10 +60,8 @@ export default {
   transition: 0.1s ease;
   text-transform: capitalize;
   border-radius: var(--t-space-3);
-  border-bottom: var(--t-bw-large) solid transparent;
-  padding: var(--size) calc((var(--size) * 3) - (var(--size) / 2));
-  padding-bottom: calc((var(--size) * 3) - var(--size));
-  font-size: var(--font-size);
+  border-style: solid;
+  border-color: transparent;
 }
 .talkie-tab-wrapper:hover {
   filter: opacity(0.8);
@@ -97,5 +95,30 @@ export default {
 }
 .talkie-tab-secondary-active {
   border-bottom-color: var(--t-secondary);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-tab-wrapper {
+    border-bottom-width: var(--t-bw-medium);
+    padding: var(--size) calc((var(--size) * 1.5) - (var(--size) / 1.2));
+    padding-bottom: calc((var(--size) * 1.5) - var(--size));
+    font-size: calc(var(--font-size) * 0.8);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-tab-wrapper {
+    border-bottom-width: var(--t-bw-large);
+    padding: var(--size) calc((var(--size) * 2) - (var(--size) / 1.5));
+    padding-bottom: calc((var(--size) * 2) - var(--size));
+    font-size: calc(var(--font-size) * 0.9);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-tab-wrapper {
+    padding: var(--size) calc((var(--size) * 3) - (var(--size) / 2));
+    padding-bottom: calc((var(--size) * 3) - var(--size));
+    font-size: var(--font-size);
+  }
 }
 </style>

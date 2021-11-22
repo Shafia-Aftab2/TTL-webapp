@@ -91,7 +91,6 @@ export default {
   display: block;
   color: var(--t-black-100);
   background: var(--t-white-100);
-  border-radius: var(--t-br-small);
   width: 100%;
   border: var(--t-space-2) solid transparent;
   display: flex;
@@ -108,28 +107,23 @@ export default {
   outline: none;
   font-family: var(--t-ff-regular);
   width: 100%;
-  padding: var(--size);
 }
 
 /* Size variants */
 .talkie-input-small {
   --size: var(--t-space-12);
-  font-size: var(--t-fs-base);
+  --font-size: var(--t-fs-base);
 }
 .talkie-input-medium {
   --size: var(--t-space-16);
-  font-size: var(--t-fs-body);
+  --font-size: var(--t-fs-body);
 }
 .talkie-input-large {
   --size: var(--t-space-20);
-  font-size: var(--t-fs-sub);
+  --font-size: var(--t-fs-sub);
 }
 
 /* Hint variants */
-.talkie-input-message {
-  margin-top: var(--t-space-3);
-  font-size: var(--t-fs-small);
-}
 .talkie-input-success-wrapper {
   border-color: var(--t-green) !important;
 }
@@ -162,5 +156,39 @@ export default {
   border-color: var(--t-white-300);
   color: var(--t-gray-50);
   cursor: not-allowed;
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-input-wrapper {
+    border-radius: calc(var(--t-br-small) * 0.7);
+  }
+  .talkie-input {
+    padding: calc(var(--size) / 1.75);
+    font-size: calc(var(--font-size) / 1.35);
+  }
+  .talkie-input-message {
+    margin-top: var(--t-space-2);
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-input-wrapper {
+    border-radius: var(--t-br-small);
+  }
+  .talkie-input {
+    padding: calc(var(--size) / 1.5);
+    font-size: calc(var(--font-size) / 1.2);
+  }
+  .talkie-input-message {
+    margin-top: var(--t-space-3);
+    font-size: var(--t-fs-small);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-input {
+    padding: var(--size);
+    font-size: var(--font-size);
+  }
 }
 </style>
