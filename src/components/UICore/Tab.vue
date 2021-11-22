@@ -6,7 +6,7 @@
       `talkie-tab-${variant.toString()}`,
       `talkie-tab-${size.toString()}`,
       active && `talkie-tab-${variant.toString()}-active`,
-      customClass.toString()
+      customClass.toString(),
     ]"
     @click="onClick"
   >
@@ -20,31 +20,31 @@ export default {
   props: {
     label: {
       type: String,
-      default: "Tab"
+      default: "Tab",
     },
     active: {
       type: Boolean,
-      default: false
+      default: false,
     },
     variant: {
       type: String,
       default: "primary",
-      validator: val => ["primary", "secondary"].includes(val)
+      validator: (val) => ["primary", "secondary"].includes(val),
     },
     size: {
       type: String,
       default: "medium",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     onClick: {
       type: Function,
-      default: () => {}
+      default: () => {},
     },
     customClass: {
       type: String,
-      default: ""
-    }
-  }
+      default: "",
+    },
+  },
 };
 </script>
 
