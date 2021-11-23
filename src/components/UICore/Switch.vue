@@ -4,7 +4,7 @@
       'talkie-switch-wrapper',
       `talkie-switch-${variant.toString()}`,
       `talkie-switch-${size.toString()}`,
-      customClass.toString()
+      customClass.toString(),
     ]"
   >
     <div>
@@ -34,44 +34,45 @@ export default {
   data() {
     return {
       isChecked: false,
-      key: `talkie-switch-${Math.floor(Math.random() * 1234567890)}`
+      key: `talkie-switch-${Math.floor(Math.random() * 1234567890)}`,
     };
   },
   props: {
     onToggle: { type: Function, default: () => {} },
     name: {
-      type: String
+      type: String,
     },
     checkLabel: {
       type: String,
-      default: ""
+      default: "",
     },
     uncheckLabel: {
       type: String,
-      default: ""
+      default: "",
     },
     variant: {
       type: String,
       default: "dark",
-      validator: val => ["primary", "secondary", "light", "dark"].includes(val)
+      validator: (val) =>
+        ["primary", "secondary", "light", "dark"].includes(val),
     },
     size: {
       type: String,
       default: "medium",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     customClass: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
   methods: {
     async handleSwitchToggle(e) {
       const checkStatus = e.target.checked;
       this.isChecked = checkStatus;
       if (this.onToggle) await this.onToggle(!!checkStatus);
-    }
-  }
+    },
+  },
 };
 </script>
 

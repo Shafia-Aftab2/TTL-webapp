@@ -3,7 +3,7 @@
     :class="[
       `talkie-loader`,
       `talkie-loader-${size.toString()}`,
-      customClass.toString()
+      customClass.toString(),
     ]"
   ></div>
 </template>
@@ -16,13 +16,13 @@ export default {
     size: {
       type: String,
       default: "small",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     customClass: {
       type: String,
-      default: ""
-    }
-  }
+      default: "",
+    },
+  },
 };
 </script>
 

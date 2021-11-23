@@ -4,7 +4,7 @@
       :class="[
         'talkie-input-wrapper',
         hint && hint.type && `talkie-input-${hint.type.toString()}-wrapper`,
-        disabled && `talkie-input-disabled-wrapper`
+        disabled && `talkie-input-disabled-wrapper`,
       ]"
     >
       <input
@@ -18,7 +18,7 @@
         :class="[
           'talkie-input',
           `talkie-input-${size.toString()}`,
-          customClass.toString()
+          customClass.toString(),
         ]"
       />
     </div>
@@ -26,7 +26,7 @@
       v-if="hint && hint.type && hint.message"
       :class="[
         `talkie-input-message`,
-        `talkie-input-${hint.type.toString()}-message`
+        `talkie-input-${hint.type.toString()}-message`,
       ]"
     >
       {{ hint.message }}
@@ -40,49 +40,49 @@ export default {
   components: {},
   props: {
     name: {
-      type: String
+      type: String,
     },
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     placeholder: {
-      type: String
+      type: String,
     },
     type: {
       type: String,
       default: "text",
-      validator: val => ["text", "password", "email"].includes(val)
+      validator: (val) => ["text", "password", "email"].includes(val),
     },
     required: {
-      type: Boolean
+      type: Boolean,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     onChange: {
       type: Function,
-      default: () => {}
+      default: () => {},
     },
     size: {
       type: String,
       default: "medium",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     hint: {
       type: Object,
-      default: {
+      default: () => ({
         type: null,
-        message: null
-      }
+        message: null,
+      }),
     },
     customClass: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
-  methods: {}
+  methods: {},
 };
 </script>
 

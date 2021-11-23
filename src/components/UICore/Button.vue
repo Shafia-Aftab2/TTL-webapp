@@ -11,7 +11,7 @@
       fullWidth && `talkie-button-fullWidth`,
       loading && `talkie-button-loading`,
       disabled && `talkie-button-disabled`,
-      customClass.toString()
+      customClass.toString(),
     ]"
     @click="onClick"
   >
@@ -34,46 +34,46 @@ export default {
   props: {
     type: {
       type: String,
-      default: "submit"
+      default: "submit",
     },
     variant: {
       type: String,
       default: "primary",
-      validator: val =>
+      validator: (val) =>
         ["primary", "secondary", "success", "danger", "transparent"].includes(
           val
-        )
+        ),
     },
     size: {
       type: String,
       default: "medium",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     outlined: {
       type: Boolean,
-      default: false
+      default: false,
     },
     fullWidth: {
       type: Boolean,
-      default: false
+      default: false,
     },
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     onClick: {
       type: Function,
-      default: () => {}
+      default: () => {},
     },
     customClass: {
       type: String,
-      default: ""
-    }
-  }
+      default: "",
+    },
+  },
 };
 </script>
 

@@ -4,7 +4,7 @@
       'talkie-alert-wrapper',
       `talkie-alert-${variant.toString()}-wrapper`,
       `talkie-alert-${size.toString()}-wrapper`,
-      customClass.toString()
+      customClass.toString(),
     ]"
   >
     <div :class="['talkie-alert-icon-wrapper']">
@@ -35,7 +35,7 @@ import {
   AlertInfo as AlertInfoSVG,
   AlertError as AlertErrorSVG,
   AlertWarning as AlertWarningSVG,
-  AlertSuccess as AlertSuccessSVG
+  AlertSuccess as AlertSuccessSVG,
 } from "../SVGs";
 
 export default {
@@ -44,32 +44,32 @@ export default {
     AlertSuccessSVG,
     AlertErrorSVG,
     AlertWarningSVG,
-    AlertInfoSVG
+    AlertInfoSVG,
   },
   props: {
     text: {
       type: String,
-      default: "Alert"
+      default: "Alert",
     },
     variant: {
       type: String,
       default: "info",
-      validator: val => ["success", "error", "warning", "info"].includes(val)
+      validator: (val) => ["success", "error", "warning", "info"].includes(val),
     },
     size: {
       type: String,
       default: "medium",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     animateEllipse: {
       type: Boolean,
-      default: false
+      default: false,
     },
     customClass: {
       type: String,
-      default: ""
-    }
-  }
+      default: "",
+    },
+  },
 };
 </script>
 

@@ -38,30 +38,30 @@ export default {
     type: {
       type: String,
       default: "default",
-      validator: val => ["default"].includes(val)
+      validator: (val) => ["default"].includes(val),
     },
     customClass: {
       type: String,
-      default: ""
+      default: "",
     },
     // Confirm variant props
     text: {
-      type: String
+      type: String,
     },
     size: {
       type: String,
       default: "medium",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     onContinue: {
       type: Function,
-      default: () => {}
+      default: () => {},
     },
     onDismiss: {
       type: Function,
-      default: () => {}
-    }
-  }
+      default: () => {},
+    },
+  },
 };
 </script>
 

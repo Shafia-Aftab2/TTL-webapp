@@ -4,7 +4,7 @@
     :class="[
       'talkie-chip',
       `talkie-chip-${size.toString()}`,
-      `talkie-chip-${variant.toString()}`
+      `talkie-chip-${variant.toString()}`,
     ]"
     @click="onClick"
   >
@@ -18,25 +18,25 @@ export default {
   props: {
     label: {
       type: String,
-      default: "Chip"
+      default: "Chip",
     },
     onClick: { type: Function, default: () => {} },
     size: {
       type: String,
       default: "medium",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     variant: {
       type: String,
       default: "primary",
-      validator: val =>
-        ["primary", "secondary", "success", "danger", "neutral"].includes(val)
+      validator: (val) =>
+        ["primary", "secondary", "success", "danger", "neutral"].includes(val),
     },
     customClass: {
       type: String,
-      default: ""
-    }
-  }
+      default: "",
+    },
+  },
 };
 </script>
 

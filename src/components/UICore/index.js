@@ -23,5 +23,5 @@ export {
   TalkieTab,
   TalkieCheckBox,
   TalkieModal,
-  TalkieAlert
+  TalkieAlert,
 };

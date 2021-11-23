@@ -10,24 +10,25 @@
         `talkie-select-${size.toString()}-wrapper`,
         hint && hint.type && `talkie-select-${hint.type.toString()}-wrapper`,
         disabled && `talkie-select-disabled-wrapper`,
-        customClass.toString()
+        customClass.toString(),
       ]"
     >
-      <option class="talkie-select-option" value="">{{
-        placeholder || "Choose an option"
-      }}</option>
+      <option class="talkie-select-option" value="">
+        {{ placeholder || "Choose an option" }}
+      </option>
       <option
         v-for="option in options"
         :key="Math.random() * 1651566514 * option"
         class="talkie-select-option"
-        >{{ option }}</option
       >
+        {{ option }}
+      </option>
     </select>
     <p
       v-if="hint && hint.type && hint.message"
       :class="[
         `talkie-select-message`,
-        hint && hint.type && `talkie-select-${hint.type.toString()}-message`
+        hint && hint.type && `talkie-select-${hint.type.toString()}-message`,
       ]"
     >
       {{ hint.message }}
@@ -41,42 +42,42 @@ export default {
   components: {},
   props: {
     name: {
-      type: String
+      type: String,
     },
     placeholder: {
-      type: String
+      type: String,
     },
     required: {
-      type: Boolean
+      type: Boolean,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     onChange: {
-      type: Function
+      type: Function,
     },
     options: {
       type: Array,
-      default: []
+      default: () => [],
     },
     size: {
       type: String,
       default: "medium",
-      validator: val => ["small", "medium", "large"].includes(val)
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
     hint: {
       type: Object,
-      default: {
+      default: () => ({
         type: null,
-        message: null
-      }
+        message: null,
+      }),
     },
     customClass: {
       type: String,
-      default: ""
-    }
-  }
+      default: "",
+    },
+  },
 };
 </script>
 
