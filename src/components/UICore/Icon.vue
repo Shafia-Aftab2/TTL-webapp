@@ -1,5 +1,5 @@
 <template>
-  <button :class="['talkie-icon-wrapper']">
+  <button :class="['talkie-icon-wrapper']" :style="`--size: ${size}px;`">
     <component :is="loadedIcon" />
   </button>
 </template>
@@ -18,6 +18,11 @@ export default {
       required: true,
       default: "",
     },
+    size: {
+      type: Number,
+      required: true,
+      default: 25,
+    },
   },
   computed: {
     loadedIcon() {
@@ -34,8 +39,8 @@ export default {
 
 <style scoped>
 .talkie-icon-wrapper {
-  width: calc(25px * 1.5);
-  height: calc(25px * 1.5);
+  width: calc(var(--size) * 1.5);
+  height: calc(var(--size) * 1.5);
   min-width: var(--t-space-44);
   min-height: var(--t-space-44);
   display: flex;
@@ -54,7 +59,7 @@ export default {
   background-color: var(--t-gray-100);
 }
 .talkie-icon-wrapper > svg {
-  width: 25px !important;
-  height: 25px !important;
+  width: var(--size) !important;
+  height: var(--size) !important;
 }
 </style>
