@@ -3,6 +3,7 @@
     :class="[
       'talkie-icon-wrapper',
       isActive && 'talkie-icon-wrapper-highlight',
+      transparent && 'talkie-icon-wrapper-transparent',
     ]"
     :style="`--size: ${size}px;`"
   >
@@ -30,6 +31,10 @@ export default {
       default: 25,
     },
     isActive: {
+      type: Boolean,
+      default: false,
+    },
+    transparent: {
       type: Boolean,
       default: false,
     },
@@ -76,5 +81,13 @@ export default {
 /* Active Variant */
 .talkie-icon-wrapper-highlight {
   background-color: var(--t-gray-100);
+}
+
+/* Transparent Variant */
+.talkie-icon-wrapper-transparent {
+  background: transparent !important;
+}
+.talkie-icon-wrapper-transparent:hover {
+  background: transparent !important;
 }
 </style>
