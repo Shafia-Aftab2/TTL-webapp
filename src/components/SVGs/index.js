@@ -3,4 +3,19 @@ import AlertWarning from "./AlertWarning.vue";
 import AlertSuccess from "./AlertSuccess.vue";
 import AlertError from "./AlertError.vue";
 
-export { AlertInfo, AlertWarning, AlertSuccess, AlertError };
+// Icons
+import IconProfile from "./IconProfile.vue";
+
+// Logos
+import LogoTalkie from "./LogoTalkie.vue";
+
+export {
+  AlertInfo,
+  AlertWarning,
+  AlertSuccess,
+  AlertError,
+  // Icons
+  IconProfile,
+  // Logos
+  LogoTalkie,
+};

@@ -10,6 +10,7 @@ import TalkieTab from "./Tab.vue";
 import TalkieCheckBox from "./CheckBox.vue";
 import TalkieModal from "./Modal.vue";
 import TalkieAlert from "./Alert.vue";
+import TalkieIcon from "./Icon.vue";
 
 export {
   TalkieBackDrop,
@@ -24,4 +25,5 @@ export {
   TalkieCheckBox,
   TalkieModal,
   TalkieAlert,
+  TalkieIcon,
 };

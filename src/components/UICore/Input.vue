@@ -5,6 +5,7 @@
         'talkie-input-wrapper',
         hint && hint.type && `talkie-input-${hint.type.toString()}-wrapper`,
         disabled && `talkie-input-disabled-wrapper`,
+        customClass.toString(),
       ]"
     >
       <input
@@ -15,11 +16,7 @@
         :placeholder="placeholder"
         @change="onChange"
         :type="type"
-        :class="[
-          'talkie-input',
-          `talkie-input-${size.toString()}`,
-          customClass.toString(),
-        ]"
+        :class="['talkie-input', `talkie-input-${size.toString()}`]"
       />
     </div>
     <p
