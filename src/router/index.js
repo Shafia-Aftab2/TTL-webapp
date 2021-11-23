@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 // base
-import AppLayout from "../layouts/AppLayout.vue";
+import AppLayout from "../components/Layouts/Wrapper.vue";
 import Home from "../views/Home.vue";
 // modular
 // import teacherRoutes from "../modules/teacher/teacher-routes";
