@@ -78,9 +78,14 @@ a {
   text-decoration: underline;
   text-underline-offset: var(--t-space-3);
   color: var(--t-black);
+  transition: 0.1s ease;
+  cursor: pointer;
 }
 a:visited {
   color: var(--t-secondary);
+}
+a:hover {
+  filter: opacity(0.8);
 }
 
 /* Scroll Bar */
