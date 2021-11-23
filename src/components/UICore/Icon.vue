@@ -6,6 +6,7 @@
       transparent && 'talkie-icon-wrapper-transparent',
     ]"
     :style="`--size: ${size}px;`"
+    @click="onClick"
   >
     <component :is="loadedIcon" />
   </button>
@@ -38,6 +39,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    onClick: {
+      type: Function,
+      default: () => {},
+    },
   },
   computed: {
     loadedIcon() {
@@ -54,8 +59,8 @@ export default {
 
 <style scoped>
 .talkie-icon-wrapper {
-  width: calc(var(--size) * 1.5);
-  height: calc(var(--size) * 1.5);
+  width: calc(var(--responsive-size) * 1.5);
+  height: calc(var(--responsive-size) * 1.5);
   min-width: var(--t-space-44);
   min-height: var(--t-space-44);
   display: flex;
@@ -74,8 +79,8 @@ export default {
   background-color: var(--t-gray-100);
 }
 .talkie-icon-wrapper > svg {
-  width: var(--size) !important;
-  height: var(--size) !important;
+  width: var(--responsive-size) !important;
+  height: var(--responsive-size) !important;
 }
 
 /* Active Variant */
@@ -89,5 +94,28 @@ export default {
 }
 .talkie-icon-wrapper-transparent:hover {
   background: transparent !important;
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-icon-wrapper {
+    --responsive-size: calc(var(--size) * 0.8);
+    min-width: var(--t-space-36);
+    min-height: var(--t-space-36);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-icon-wrapper {
+    --responsive-size: calc(var(--size) * 0.9);
+    min-width: var(--t-space-40);
+    min-height: var(--t-space-40);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-icon-wrapper {
+    --responsive-size: var(--size);
+    min-width: var(--t-space-44);
+    min-height: var(--t-space-44);
+  }
 }
 </style>
