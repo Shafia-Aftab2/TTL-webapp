@@ -1,5 +1,11 @@
 <template>
-  <button :class="['talkie-icon-wrapper']" :style="`--size: ${size}px;`">
+  <button
+    :class="[
+      'talkie-icon-wrapper',
+      isActive && 'talkie-icon-wrapper-highlight',
+    ]"
+    :style="`--size: ${size}px;`"
+  >
     <component :is="loadedIcon" />
   </button>
 </template>
@@ -22,6 +28,10 @@ export default {
       type: Number,
       required: true,
       default: 25,
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -61,5 +71,10 @@ export default {
 .talkie-icon-wrapper > svg {
   width: var(--size) !important;
   height: var(--size) !important;
+}
+
+/* Active Variant */
+.talkie-icon-wrapper-highlight {
+  background-color: var(--t-gray-100);
 }
 </style>
