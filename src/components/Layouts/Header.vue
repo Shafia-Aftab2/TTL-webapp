@@ -24,6 +24,16 @@
               <li class="talkie-navbar-profile-options-list-item">
                 <a>Profile</a>
               </li>
+              <li
+                class="
+                  talkie-navbar-profile-options-list-item
+                  talkie-navbar-profile-options-list-link
+                "
+                v-for="link in links"
+                :key="Math.random() * link"
+              >
+                <a :href="link.url">{{ link.text }}</a>
+              </li>
               <li class="talkie-navbar-profile-options-list-item">
                 <a>Logout</a>
               </li>
@@ -72,10 +82,11 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 var(--t-space-32);
-  min-height: var(--t-space-70);
-  max-height: var(--t-space-70);
   box-shadow: var(--t-shadow-dark);
+}
+.talkie-navbar-logo-link > svg {
+  width: calc(var(--logo-svg-size) * 3);
+  height: var(--logo-svg-size);
 }
 .talkie-navbar-links-wrapper {
   list-style-type: none;
@@ -120,7 +131,6 @@ export default {
 }
 .talkie-navbar-profile-name {
   text-decoration: none;
-  font-size: var(--t-fs-base);
   transition: 0.1s ease;
 }
 .talkie-navbar-profile-name:hover {
@@ -130,8 +140,6 @@ export default {
   color: var(--t-balck);
 }
 .talkie-navbar-profile-image-wrapper {
-  min-width: var(--t-space-44);
-  min-height: var(--t-space-44);
   border-radius: 50%;
   background-color: var(--t-gray-100);
   cursor: pointer;
@@ -147,7 +155,6 @@ export default {
   box-shadow: 0 10px 30px 0 rgba(22, 22, 11, 0.1);
   width: fit-content;
   border-style: var(--t-space-2) solid var(--t-gray-100);
-  border-radius: var(--t-br-large);
   background-color: var(--t-white);
   display: block;
   visibility: hidden;
@@ -157,7 +164,6 @@ export default {
   position: absolute;
   top: 45px;
   right: 0;
-  padding: var(--t-space-8);
 }
 .talkie-navbar-profile-options-list {
   display: flex;
@@ -166,10 +172,6 @@ export default {
   align-items: flex-start;
   width: fit-content;
   gap: var(--t-space-4);
-}
-.talkie-navbar-profile-options-list-item {
-  padding: var(--t-space-12) var(--t-space-64);
-  padding-left: var(--t-space-24);
 }
 .talkie-navbar-profile-options-list-item > a {
   display: flex;
@@ -182,19 +184,96 @@ export default {
 .talkie-navbar-profile-options-list-item > a:visited {
   text-decoration: none;
 }
-.talkie-navbar-logo-link > svg {
-  width: 99px;
-  height: 33px;
-  font-size: var(--t-fs-base);
+
+/* Responsiveness */
+@media (max-width: 599px) {
+  .talkie-navbar-wrapper {
+    padding: 0 var(--t-space-16);
+    min-height: var(--t-space-50);
+    max-height: var(--t-space-50);
+  }
+  .talkie-navbar-logo-link > svg {
+    --logo-svg-size: var(--t-space-24);
+  }
+  .talkie-navbar-link-item {
+    display: none;
+  }
+  .talkie-navbar-profile-name {
+    font-size: calc(var(--t-fs-small) - 2px);
+  }
+  .talkie-navbar-profile-image-wrapper {
+    min-width: var(--t-space-36);
+    min-height: var(--t-space-36);
+  }
+  .talkie-navbar-profile-options-wrapper {
+    border-radius: var(--t-br-medium);
+    font-size: calc(var(--t-fs-small) - 2px);
+  }
+  .talkie-navbar-profile-options-list {
+    gap: var(--t-space-2);
+  }
+  .talkie-navbar-profile-options-list-link {
+    display: inherit;
+  }
+  .talkie-navbar-profile-options-list-item {
+    padding: var(--t-space-12) var(--t-space-50);
+    padding-left: var(--t-space-24);
+  }
 }
-.talkie-navbar-profile-name {
-  font-size: var(--t-fs-base);
+@media (min-width: 600px) {
+  .talkie-navbar-wrapper {
+    padding: 0 var(--t-space-24);
+    min-height: var(--t-space-58);
+    max-height: var(--t-space-58);
+  }
+  .talkie-navbar-logo-link > svg {
+    --logo-svg-size: var(--t-space-28);
+  }
+  .talkie-navbar-link-item,
+  .talkie-navbar-profile-name {
+    font-size: var(--t-fs-small);
+  }
+  .talkie-navbar-profile-image-wrapper {
+    min-width: var(--t-space-40);
+    min-height: var(--t-space-40);
+  }
+  .talkie-navbar-profile-options-wrapper {
+    border-radius: var(--t-br-large);
+    font-size: var(--t-fs-small);
+    padding: var(--t-space-8);
+  }
+  .talkie-navbar-profile-options-list {
+    gap: var(--t-space-4);
+  }
+  .talkie-navbar-profile-options-list-link {
+    display: none;
+  }
+  .talkie-navbar-profile-options-list-item {
+    padding: var(--t-space-12) var(--t-space-64);
+    padding-left: var(--t-space-24);
+  }
 }
-.talkie-navbar-profile-image-wrapper {
-  min-width: var(--t-space-44);
-  min-height: var(--t-space-44);
-}
-.talkie-navbar-profile-options-wrapper {
-  font-size: var(--t-fs-base);
+@media (min-width: 1200px) {
+  .talkie-navbar-wrapper {
+    padding: 0 var(--t-space-32);
+    min-height: var(--t-space-70);
+    max-height: var(--t-space-70);
+  }
+  .talkie-navbar-logo-link > svg {
+    --logo-svg-size: var(--t-space-33);
+  }
+  .talkie-navbar-link-item {
+    font-size: var(--t-fs-base);
+  }
+  .talkie-navbar-profile-name {
+    font-size: var(--t-fs-base);
+  }
+  .talkie-navbar-profile-image-wrapper {
+    min-width: var(--t-space-44);
+    min-height: var(--t-space-44);
+  }
+  .talkie-navbar-profile-options-wrapper {
+    font-size: var(--t-fs-base);
+  }
 }
 </style>
