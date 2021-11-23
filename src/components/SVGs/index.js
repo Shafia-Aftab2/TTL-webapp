@@ -6,4 +6,16 @@ import AlertError from "./AlertError.vue";
 // Icons
 import IconProfile from "./IconProfile.vue";
 
-export { AlertInfo, AlertWarning, AlertSuccess, AlertError, IconProfile };
+// Logos
+import LogoTalkie from "./LogoTalkie.vue";
+
+export {
+  AlertInfo,
+  AlertWarning,
+  AlertSuccess,
+  AlertError,
+  // Icons
+  IconProfile,
+  // Logos
+  LogoTalkie,
+};
