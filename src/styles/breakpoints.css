@@ -1,0 +1,13 @@
+/* PHONES */
+@custom-media --for-phone-only (max-width: 599px);
+
+/* TABLETS */
+@custom-media --for-tablet-portrait-and-up (min-width: 600px);
+@custom-media --for-tablet-portrait-only (min-width: 600px) and (max-width: 899px);
+@custom-media --for-tablet-landscape-and-up (min-width: 900px);
+@custom-media --for-tablet-landscape-only (min-width: 900px) and (max-width: 1199px);
+
+/* DESKTOPS */
+@custom-media --for-desktop-and-up (min-width: 1200px);
+@custom-media --for-desktop-only (min-width: 1200px) and (max-width: 1799px);
+@custom-media --for-desktop-large-and-up (min-width: 1800px);
