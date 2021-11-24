@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "postcss-import": "11.1.0",
+    "postcss-preset-env": "6.0.5",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
