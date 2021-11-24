@@ -51,10 +51,6 @@ export default {
   align-items: center;
   width: 100%;
   margin: auto;
-  flex-direction: row;
-  max-width: 100%;
-  gap: var(--t-space-24);
-  padding: var(--t-space-24) 0;
 }
 .teachers-create-class-form {
   display: flex;
@@ -63,7 +59,6 @@ export default {
   justify-content: center;
   width: 100%;
   height: 100%;
-  gap: var(--t-space-16);
 }
 .teachers-create-class-form-header {
   font-family: var(--t-ff-medium);
@@ -76,12 +71,73 @@ export default {
   --logo-width: 500px;
   --logo-height: 500px;
 }
-.teachers-create-class-avatar > svg {
-  position: static;
-  opacity: 1;
-  transform: translate(0, 0);
-  z-index: var(--t-zindex-10);
-  width: var(--logo-width);
-  height: var(--logo-height);
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .teachers-create-class-wrapper {
+    flex-direction: column;
+    gap: var(--t-space-16);
+    padding: var(--t-space-32);
+    margin-top: var(--t-space-12);
+  }
+  .teachers-create-class-form {
+    gap: var(--t-space-12);
+  }
+  .teachers-create-class-avatar {
+    display: none;
+  }
+}
+@media (min-width: 600px) {
+  .teachers-create-class-wrapper {
+    flex-direction: column;
+    gap: var(--t-space-24);
+    padding: var(--t-space-32);
+    max-width: 75%;
+  }
+  .teachers-create-class-form {
+    gap: var(--t-space-12);
+  }
+  .teachers-create-class-avatar {
+    display: flex;
+  }
+  .teachers-create-class-avatar > svg {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translate(-40%, -50%);
+    opacity: 0.5;
+    z-index: var(--t-zindex-nv-10);
+    width: calc(var(--logo-width) * 0.9);
+    height: calc(var(--logo-height) * 0.9);
+  }
+}
+@media (min-width: 900px) {
+  .teachers-create-class-wrapper {
+    flex-direction: row;
+    gap: var(--t-space-16);
+    padding: var(--t-space-58);
+    max-width: 100%;
+  }
+  .teachers-create-class-avatar > svg {
+    position: static;
+    opacity: 1;
+    transform: translate(0, 0);
+    z-index: var(--t-zindex-10);
+    width: calc(var(--logo-width) * 0.8);
+    height: calc(var(--logo-height) * 0.8);
+  }
+}
+@media (min-width: 1200px) {
+  .teachers-create-class-wrapper {
+    gap: var(--t-space-24);
+    padding: var(--t-space-24) 0;
+  }
+  .teachers-create-class-form {
+    gap: var(--t-space-16);
+  }
+  .teachers-create-class-avatar > svg {
+    width: var(--logo-width);
+    height: var(--logo-height);
+  }
 }
 </style>
