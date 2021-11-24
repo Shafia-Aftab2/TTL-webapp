@@ -83,6 +83,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   box-shadow: var(--t-shadow-dark);
+  background-color: var(--t-white);
 }
 .talkie-navbar-logo-link > svg {
   width: calc(var(--logo-svg-size) * 3);
