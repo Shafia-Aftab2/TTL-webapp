@@ -8,6 +8,7 @@ import IconProfile from "./IconProfile.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
+import LogoTeacherSignup from "./LogoTeacherSignup.vue";
 
 export {
   AlertInfo,
@@ -18,4 +19,5 @@ export {
   IconProfile,
   // Logos
   LogoTalkie,
+  LogoTeacherSignup,
 };
