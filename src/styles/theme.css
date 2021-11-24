@@ -101,6 +101,27 @@ h5,
   }
 }
 
+/* Paragraphs */
+p,
+.p {
+  --paragraph-font-size: var(--t-fs-body);
+}
+
+/* Responsive variants */
+@media (--for-phone-only) {
+  .p {
+    font-size: calc(var(--paragraph-font-size) * 0.8);
+  }
+}
+@media (--for-tablet-portrait-and-up) {
+  .p {
+    font-size: calc(var(--paragraph-font-size) * 0.9);
+  }
+}
+@media (--for-desktop-and-up) {
+  .p {
+    font-size: var(--paragraph-font-size);
+  }
 }
 
 /* Links */
