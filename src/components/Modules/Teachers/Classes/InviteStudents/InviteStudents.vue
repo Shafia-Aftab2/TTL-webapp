@@ -29,9 +29,6 @@ export default {
   flex-direction: column;
   margin: auto;
   margin-top: var(--t-space-12);
-  max-width: 55%;
-  gap: var(--t-space-36);
-  padding: var(--t-space-48) 0;
 }
 .teachers-class-invite-students-info-wrapper,
 .teachers-class-invite-students-options-wrapper {
@@ -41,5 +38,27 @@ export default {
   align-items: center;
   margin: auto;
   gap: var(--t-space-12);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .teachers-class-invite-students-wrapper {
+    max-width: 80%;
+    gap: var(--t-space-24);
+    padding: var(--t-space-32) 0;
+  }
+}
+@media (min-width: 600px) {
+  .teachers-class-invite-students-wrapper {
+    max-width: 55%;
+    gap: var(--t-space-32);
+    padding: var(--t-space-32) 0;
+  }
+}
+@media (min-width: 1200px) {
+  .teachers-class-invite-students-wrapper {
+    gap: var(--t-space-36);
+    padding: var(--t-space-48) 0;
+  }
 }
 </style>
