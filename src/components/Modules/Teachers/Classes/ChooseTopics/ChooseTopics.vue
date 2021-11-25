@@ -48,10 +48,6 @@ export default {
   align-items: center;
   width: 100%;
   margin: auto;
-  flex-direction: row;
-  max-width: 100%;
-  gap: var(--t-space-24);
-  padding: var(--t-space-24) 0;
 }
 .teachers-choose-class-topics-info {
   display: flex;
@@ -60,7 +56,6 @@ export default {
   justify-content: center;
   width: 100%;
   height: 100%;
-  gap: var(--t-space-16);
 }
 .teachers-choose-class-topics-info-header {
   font-family: var(--t-ff-medium);
@@ -75,11 +70,69 @@ export default {
   width: 100%;
   height: 100%;
 }
-.teachers-choose-class-topics-form {
-  margin-top: 0;
-  gap: var(--t-space-48);
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .teachers-choose-class-topics-wrapper {
+    flex-direction: column;
+    padding: var(--t-space-32);
+    margin-top: var(--t-space-12);
+  }
+  .teachers-choose-class-topics-info {
+    gap: var(--t-space-12);
+  }
+  .teachers-choose-class-topics-info-header {
+    font-family: var(--t-ff-regular);
+  }
+  .teachers-choose-class-topics-form {
+    gap: var(--t-space-24);
+    margin-top: var(--t-space-24);
+  }
+  .teachers-choose-class-topics-sub-form {
+    gap: var(--t-space-12);
+  }
 }
-.teachers-choose-class-topics-sub-form {
-  gap: var(--t-space-16);
+@media (min-width: 600px) {
+  .teachers-choose-class-topics-wrapper {
+    flex-direction: column;
+    padding: var(--t-space-32);
+    max-width: 75%;
+  }
+  .teachers-choose-class-topics-info {
+    gap: var(--t-space-12);
+  }
+  .teachers-choose-class-topics-form {
+    gap: var(--t-space-36);
+    margin-top: var(--t-space-36);
+  }
+  .teachers-choose-class-topics-sub-form {
+    gap: var(--t-space-12);
+  }
+}
+@media (min-width: 900px) {
+  .teachers-choose-class-topics-wrapper {
+    flex-direction: row;
+    gap: var(--t-space-16);
+    padding: var(--t-space-58);
+    max-width: 100%;
+  }
+  .teachers-choose-class-topics-form {
+    margin-top: 0;
+  }
+}
+@media (min-width: 1200px) {
+  .teachers-choose-class-topics-wrapper {
+    gap: var(--t-space-24);
+    padding: var(--t-space-24) 0;
+  }
+  .teachers-choose-class-topics-info {
+    gap: var(--t-space-16);
+  }
+  .teachers-choose-class-topics-form {
+    gap: var(--t-space-48);
+  }
+  .teachers-choose-class-topics-sub-form {
+    gap: var(--t-space-16);
+  }
 }
 </style>
