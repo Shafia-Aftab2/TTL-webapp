@@ -2,7 +2,7 @@
   <div
     :class="[
       'talkie-checkbox-wrapper',
-      disabled && 'talkie-checkbox-wrapper-disabled'
+      disabled && 'talkie-checkbox-wrapper-disabled',
     ]"
     :key="Math.random() * 5616316256464"
   >
@@ -17,13 +17,13 @@
       <span
         :class="[
           'talkie-checkbox-material',
-          disabled && 'talkie-checkbox-material-disabled'
+          disabled && 'talkie-checkbox-material-disabled',
         ]"
       >
         <span
           :class="['talkie-checkmark', disabled && 'talkie-checkmark-disabled']"
         ></span>
-        <span v-if="label">{{ label }}</span>
+        <span v-if="label" :class="['talkie-checkbox-label']">{{ label }}</span>
       </span>
     </label>
   </div>
@@ -35,28 +35,28 @@ export default {
   components: {},
   props: {
     label: {
-      type: String
+      type: String,
     },
     onToggle: {
       type: Function,
-      default: () => {}
+      default: () => {},
     },
     disabled: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      isChecked: false
+      isChecked: false,
     };
   },
   methods: {
     hanldeToggle() {
       this.isChecked = !this.isChecked;
       this.onToggle && this.onToggle(this.isChecked);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -68,6 +68,7 @@ export default {
   --lightbg-text: rgba(0, 0, 0, 0.84);
   --checked-colour: var(--t-gray-50);
   --checked-colour-main: var(--t-secondary);
+  --checkbox-label-font-size: var(--t-fs-base);
   display: inline-block;
   transform: translateZ(0);
 }
@@ -284,6 +285,23 @@ input[type="checkbox"]:checked
   100% {
     opacity: 0;
     transform: scale(13, 13);
+  }
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-checkbox-label {
+    font-size: calc(var(--checkbox-label-font-size) * 0.9);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-checkbox-label {
+    font-size: calc(var(--checkbox-label-font-size) * 0.95);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-checkbox-label {
+    font-size: var(--checkbox-label-font-size);
   }
 }
 </style>

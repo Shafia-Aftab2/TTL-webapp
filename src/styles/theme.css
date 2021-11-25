@@ -54,23 +54,74 @@ h5,
 }
 h1,
 .h1 {
-  font-size: var(--t-fs-h1);
+  --heading-font-size: var(--t-fs-h1);
 }
 h2,
 .h2 {
-  font-size: var(--t-fs-h2);
+  --heading-font-size: var(--t-fs-h2);
 }
 h3,
 .h3 {
-  font-size: var(--t-fs-h3);
+  --heading-font-size: var(--t-fs-h3);
 }
 h4,
 .h4 {
-  font-size: var(--t-fs-sub);
+  --heading-font-size: var(--t-fs-sub);
 }
 h5,
 .h5 {
-  font-size: var(--t-fs-body);
+  --heading-font-size: var(--t-fs-body);
+}
+/* Responsive variants */
+@media (--for-phone-only) {
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5 {
+    font-size: calc(var(--heading-font-size) * 0.9);
+  }
+}
+@media (--for-tablet-portrait-and-up) {
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5 {
+    font-size: calc(var(--heading-font-size) * 0.95);
+  }
+}
+@media (--for-desktop-and-up) {
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5 {
+    font-size: var(--heading-font-size);
+  }
+}
+
+/* Paragraphs */
+p,
+.p {
+  --paragraph-font-size: var(--t-fs-body);
+}
+
+/* Responsive variants */
+@media (--for-phone-only) {
+  .p {
+    font-size: calc(var(--paragraph-font-size) * 0.8);
+  }
+}
+@media (--for-tablet-portrait-and-up) {
+  .p {
+    font-size: calc(var(--paragraph-font-size) * 0.9);
+  }
+}
+@media (--for-desktop-and-up) {
+  .p {
+    font-size: var(--paragraph-font-size);
+  }
 }
 
 /* Links */
