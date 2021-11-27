@@ -10,11 +10,13 @@
     >
       <input
         :name="name"
-        :value="value"
+        :value="t_value"
         :required="required"
         :disabled="disabled"
         :placeholder="placeholder"
         @change="onChange"
+        @input="handleChange"
+        @blur="handleBlur"
         :type="type"
         :class="['talkie-input', `talkie-input-${size.toString()}`]"
       />
@@ -32,12 +34,31 @@
 </template>
 
 <script>
+import { useField } from "vee-validate";
+
 export default {
   name: "TalkieInput",
   components: {},
+  data() {
+    const {
+      value: t_value,
+      handleChange,
+      handleBlur,
+      setValue,
+    } = useField(this.name);
+
+    if (this.value) setValue(this.value);
+
+    return {
+      t_value,
+      handleChange,
+      handleBlur,
+    };
+  },
   props: {
     name: {
       type: String,
+      default: `talkie-input-${Math.random() * 101010105}`,
     },
     value: {
       type: String,
