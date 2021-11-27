@@ -22,7 +22,7 @@ import { useForm } from "vee-validate";
 
 export default {
   name: "TalkieForm",
-  data: () => {
+  data() {
     const {
       errors,
       isSubmitting,
