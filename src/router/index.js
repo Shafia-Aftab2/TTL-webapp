@@ -4,6 +4,8 @@ import AppLayout from "../components/Layouts/Wrapper.vue";
 import Home from "../views/Home.vue";
 import TeacherSignup from "../components/Modules/Teachers/Signup";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
+import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
+import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
 // modular
 // import teacherRoutes from "../modules/teacher/teacher-routes";
 // import studentRoutes from "../modules/student/student-routes";
@@ -33,6 +35,16 @@ const routes = [
         name: "TeacherClassCreate",
         path: "/teachers/classes/create",
         component: TeacherClassCreate,
+      },
+      {
+        name: "TeacherClassChooseTopics",
+        path: "/teachers/classes/choose-topics",
+        component: TeacherClassChooseTopics,
+      },
+      {
+        name: "TeacherClassInviteStudents",
+        path: "/teachers/classes/invite-students",
+        component: TeacherClassInviteStudents,
       },
     ],
   },
