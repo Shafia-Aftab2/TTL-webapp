@@ -10,7 +10,7 @@
       :customClass="'teachers-signup-form'"
       v-slot="{ errors }"
       :validationSchema="teacherSignupSchema"
-      :onSubmit="handleSubmit"
+      :onSubmit="mockAPI"
     >
       <h3 class="h3">Create A Teacher Account</h3>
       <talkie-input
@@ -162,6 +162,22 @@ export default {
         type: "success",
         message: "Account Created. Redirecting..!",
       };
+    },
+    async mockAPI(values) {
+      this.loading = true;
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      this.loading = false;
+      if (values.email === "success@talkie.com") {
+        this.formStatus = {
+          type: "success",
+          message: "Account created. Redirecting...!",
+        };
+      } else {
+        this.formStatus = {
+          type: "error",
+          message: "Could not create account.",
+        };
+      }
     },
   },
 };
