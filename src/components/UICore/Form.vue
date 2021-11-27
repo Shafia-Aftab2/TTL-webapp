@@ -1,5 +1,8 @@
 <template>
-  <form @submit="handleSubmit($event, onSubmit)">
+  <form
+    @submit="handleSubmit($event, onSubmit)"
+    :class="[customClass.toString()]"
+  >
     <slot
       :errors="errors"
       :isSubmitting="isSubmitting"
@@ -87,6 +90,10 @@ export default {
     onSubmit: {
       type: Function,
       default: () => {},
+    },
+    customClass: {
+      type: String,
+      default: "",
     },
   },
 };
