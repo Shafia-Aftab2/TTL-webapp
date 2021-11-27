@@ -1,8 +1,5 @@
 <template>
-  <form
-    @submit="handleSubmit($event, onSubmit)"
-    :class="[customClass.toString()]"
-  >
+  <form :class="[customClass.toString()]" @submit="handleFormSubmit">
     <slot
       :errors="errors"
       :isSubmitting="isSubmitting"
@@ -94,6 +91,15 @@ export default {
     customClass: {
       type: String,
       default: "",
+    },
+  },
+  methods: {
+    async handleFormSubmit(e) {
+      e.preventDefault();
+      await this.submitForm();
+      if (Object.keys(this.errors).length === 0) {
+        await this.onSubmit({ ...this.values });
+      }
     },
   },
 };
