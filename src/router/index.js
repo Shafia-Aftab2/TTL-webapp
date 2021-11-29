@@ -6,6 +6,7 @@ import TeacherSignup from "../components/Modules/Teachers/Signup";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
 import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
 import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
+import TeacherStartConvo from "../components/Modules/Teachers/StartConvo";
 // modular
 // import teacherRoutes from "../modules/teacher/teacher-routes";
 // import studentRoutes from "../modules/student/student-routes";
@@ -45,6 +46,11 @@ const routes = [
         name: "TeacherClassInviteStudents",
         path: "/teachers/classes/invite-students",
         component: TeacherClassInviteStudents,
+      },
+      {
+        name: "TeacherStartConvo",
+        path: "/teachers/start-convo",
+        component: TeacherStartConvo,
       },
     ],
   },
