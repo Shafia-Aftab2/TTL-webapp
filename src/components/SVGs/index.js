@@ -5,6 +5,7 @@ import AlertError from "./AlertError.vue";
 
 // Icons
 import IconProfile from "./IconProfile.vue";
+import IconArrowRoundedLeft from "./IconArrowRoundedLeft.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
@@ -18,6 +19,7 @@ export {
   AlertError,
   // Icons
   IconProfile,
+  IconArrowRoundedLeft,
   // Logos
   LogoTalkie,
   LogoTeacherSignup,
