@@ -1,3 +1,3 @@
-// here export all services from containing dir
+import AuthService from "./Auth.service";
 
-export {};
+export { AuthService };

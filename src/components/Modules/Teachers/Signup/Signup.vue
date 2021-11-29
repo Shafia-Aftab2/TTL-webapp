@@ -6,35 +6,72 @@
     </div>
 
     <!-- on Right of Screen -->
-    <div class="teachers-signup-form">
+    <talkie-form
+      :customClass="'teachers-signup-form'"
+      v-slot="{ errors }"
+      :validationSchema="teacherSignupSchema"
+      :onSubmit="mockAPI"
+    >
       <h3 class="h3">Create A Teacher Account</h3>
       <talkie-input
+        :name="'name'"
         :size="'medium'"
         :placeholder="'Your Name'"
         :customClass="'teachers-signup-form-field'"
+        :hint="{
+          type: errors.name ? 'error' : null,
+          message: errors.name ? errors.name : null,
+        }"
       />
       <talkie-input
+        :name="'displayName'"
         :size="'medium'"
         :placeholder="'Your Display Name - What Do Students Call You?'"
         :customClass="'teachers-signup-form-field'"
+        :hint="{
+          type: errors.displayName ? 'error' : null,
+          message: errors.displayName ? errors.displayName : null,
+        }"
       />
       <talkie-input
+        :name="'schoolName'"
         :size="'medium'"
         :placeholder="'School Name'"
         :customClass="'teachers-signup-form-field'"
+        :hint="{
+          type: errors.schoolName ? 'error' : null,
+          message: errors.schoolName ? errors.schoolName : null,
+        }"
       />
       <talkie-input
+        :name="'email'"
         :size="'medium'"
         :placeholder="'Email Address'"
         :customClass="'teachers-signup-form-field'"
+        :hint="{
+          type: errors.email ? 'error' : null,
+          message: errors.email ? errors.email : null,
+        }"
       />
       <talkie-input
+        :name="'password'"
         :size="'medium'"
         :placeholder="'Password'"
         :customClass="'teachers-signup-form-field'"
+        :hint="{
+          type: errors.password ? 'error' : null,
+          message: errors.password ? errors.password : null,
+        }"
+      />
+      <talkie-alert
+        :text="formStatus.message"
+        :variant="formStatus.type"
+        v-if="formStatus.type && formStatus.message"
       />
       <div class="teachers-signup-form-options">
-        <talkie-button :size="'medium'">Create</talkie-button>
+        <talkie-button :size="'medium'" :type="'submit'" :loading="loading">
+          Create
+        </talkie-button>
         <div>
           <p class="teachers-signup-form-options-info">
             By signing up, you accept Talkie’s
@@ -54,20 +91,94 @@
           <a class="teachers-signup-form-options-info-link" href="#">Log in</a>
         </p>
       </div>
-    </div>
+    </talkie-form>
   </div>
 </template>
 
 <script>
-import { TalkieInput, TalkieButton } from "../../../UICore";
+import {
+  TalkieInput,
+  TalkieButton,
+  TalkieForm,
+  TalkieAlert,
+} from "../../../UICore";
 import LogoTeacherSignup from "../../../SVGs/LogoTeacherSignup.vue";
+import { teacherSignupSchema } from "../../../../utils/validations/auth.validation";
+import { AuthService } from "../../../../api/services";
 
 export default {
   name: "TeacherSignup",
+  data() {
+    return {
+      teacherSignupSchema: teacherSignupSchema,
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+      },
+    };
+  },
   components: {
+    TalkieForm,
     TalkieInput,
     TalkieButton,
     LogoTeacherSignup,
+    TalkieAlert,
+  },
+  methods: {
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { name, displayName, schoolName, email, password } = values;
+
+      // payload
+      const payload = {
+        name,
+        displayName,
+        schoolName,
+        email,
+        password,
+      };
+
+      // api call
+      const response = await AuthService.Signup(payload).catch(() => false);
+
+      // failure case
+      if (!response) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: "Could not create account.",
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Account Created. Redirecting..!",
+      };
+    },
+    async mockAPI(values) {
+      this.loading = true;
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      this.loading = false;
+      if (values.email === "success@talkie.com") {
+        this.formStatus = {
+          type: "success",
+          message: "Account created. Redirecting...!",
+        };
+      } else {
+        this.formStatus = {
+          type: "error",
+          message: "Could not create account.",
+        };
+      }
+    },
   },
 };
 </script>
