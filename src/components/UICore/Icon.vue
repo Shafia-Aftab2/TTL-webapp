@@ -2,8 +2,8 @@
   <button
     :class="[
       'talkie-icon-wrapper',
+      `talkie-icon-${variant.toString()}-wrapper`,
       isActive && 'talkie-icon-wrapper-highlight',
-      transparent && 'talkie-icon-wrapper-transparent',
     ]"
     :style="`--size: ${size}px;`"
     @click="onClick"
@@ -38,6 +38,20 @@ export default {
     transparent: {
       type: Boolean,
       default: false,
+    },
+    variant: {
+      type: String,
+      default: "default",
+      validator: (val) =>
+        [
+          "primary",
+          "secondary",
+          "success",
+          "danger",
+          "neutral",
+          "transparent",
+          "default",
+        ].includes(val),
     },
     onClick: {
       type: Function,
@@ -81,24 +95,54 @@ export default {
 }
 .talkie-icon-wrapper:hover {
   filter: opacity(0.8);
-  background-color: var(--t-gray-100);
+  background-color: var(--bg-color);
 }
 .talkie-icon-wrapper > svg {
+  fill: var(--icon-color);
   width: var(--responsive-size) !important;
   height: var(--responsive-size) !important;
 }
 
 /* Active Variant */
 .talkie-icon-wrapper-highlight {
-  background-color: var(--t-gray-100);
+  background-color: var(--bg-color);
 }
 
-/* Transparent Variant */
-.talkie-icon-wrapper-transparent {
-  background: transparent !important;
+/* Color Variant */
+.talkie-icon-primary-wrapper,
+.talkie-icon-primary-wrapper:hover {
+  --icon-color: rgb(247, 212, 30);
+  --bg-color: rgba(247, 212, 30, 0.2);
 }
-.talkie-icon-wrapper-transparent:hover {
-  background: transparent !important;
+.talkie-icon-secondary-wrapper,
+.talkie-icon-secondary-wrapper:hover {
+  --icon-color: rgb(255, 161, 95);
+  --bg-color: rgba(255, 161, 95, 0.2);
+}
+.talkie-icon-success-wrapper,
+.talkie-icon-success-wrapper:hover {
+  --icon-color: rgb(40, 167, 69);
+  --bg-color: rgba(40, 167, 69, 0.2);
+}
+.talkie-icon-danger-wrapper,
+.talkie-icon-danger-wrapper:hover {
+  --icon-color: rgb(225, 78, 15);
+  --bg-color: rgba(225, 78, 15, 0.2);
+}
+.talkie-icon-neutral-wrapper,
+.talkie-icon-neutral-wrapper:hover {
+  --icon-color: rgb(107, 107, 107);
+  --bg-color: rgba(107, 107, 107, 0.1);
+}
+.talkie-icon-transparent-wrapper,
+.talkie-icon-transparent-wrapper:hover {
+  --icon-color: var(--t-black);
+  --bg-color: transparent;
+}
+.talkie-icon-default-wrapper,
+.talkie-icon-default-wrapper:hover {
+  --icon-color: var(--t-black);
+  --bg-color: var(--t-gray-100);
 }
 
 /* Responsive variants */
