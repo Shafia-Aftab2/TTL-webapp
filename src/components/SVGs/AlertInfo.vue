@@ -18,9 +18,9 @@ export default {
   props: {
     customClass: {
       type: String,
-      default: ""
-    }
-  }
+      default: "",
+    },
+  },
 };
 </script>
 <style scoped>
