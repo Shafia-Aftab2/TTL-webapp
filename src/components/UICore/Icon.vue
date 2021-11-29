@@ -78,10 +78,11 @@ export default {
 
 <style scoped>
 .talkie-icon-wrapper {
-  width: calc(var(--responsive-size) * 1.5);
-  height: calc(var(--responsive-size) * 1.5);
-  min-width: var(--t-space-44);
-  min-height: var(--t-space-44);
+  --icon-size: calc(var(--responsive-size) * 1.75);
+  min-width: var(--icon-size);
+  max-width: var(--icon-size);
+  min-height: var(--icon-size);
+  max-height: var(--icon-size);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -149,22 +150,16 @@ export default {
 @media (max-width: 599px) {
   .talkie-icon-wrapper {
     --responsive-size: calc(var(--size) * 0.8);
-    min-width: var(--t-space-36);
-    min-height: var(--t-space-36);
   }
 }
 @media (min-width: 600px) {
   .talkie-icon-wrapper {
     --responsive-size: calc(var(--size) * 0.9);
-    min-width: var(--t-space-40);
-    min-height: var(--t-space-40);
   }
 }
 @media (min-width: 1200px) {
   .talkie-icon-wrapper {
     --responsive-size: var(--size);
-    min-width: var(--t-space-44);
-    min-height: var(--t-space-44);
   }
 }
 </style>
