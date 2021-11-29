@@ -47,12 +47,17 @@ export default {
   computed: {
     loadedIcon() {
       return defineAsyncComponent(() =>
-        import(`../SVGs/Icon${this.capitalize(this.name)}.vue`)
+        import(`../SVGs/Icon${this.getIconName(this.name)}.vue`)
       );
     },
   },
   methods: {
     capitalize: (str) => str.charAt(0).toUpperCase() + str.slice(1),
+    getIconName: (name) =>
+      name
+        .split("-")
+        .map((x) => this.capitalize(x))
+        .join(""),
   },
 };
 </script>
