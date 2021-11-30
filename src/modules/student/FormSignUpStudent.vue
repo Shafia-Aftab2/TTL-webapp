@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="flex-end">
       <div>
         <input class="text-input" type="text" placeholder="Your Name" v-model="firstName" />
@@ -105,4 +105,4 @@ export default {
     color: black;
   }
   </style>
-
+ -->
