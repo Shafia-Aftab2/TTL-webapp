@@ -2,10 +2,12 @@
   /******************************************* COLORS *******************************************/
   --t-primary: #f7d41e; /* Primary | CTA's */
   --t-secondary: #ffa15f; /* Secondary | Small Buttons */
+
   --t-orange: #f9e5d6; /* Danger */
   --t-gray: #6b6b6b; /* Subtle Text | Helper Text */
   --t-gray-50: #808080; /* Overlays */
   --t-gray-100: #f1f1f1; /* TODO: */
+  --t-gray-home: #e5e5e5;
   --t-black: #000000; /* General */
   --t-black-50: #1c1c1c; /* Text | Body Text */
   --t-black-100: #18191f; /* Dark | Overlays, Shadows, Headings */
