@@ -1,21 +1,45 @@
-# talkie_webapp
-
-> Talkie the App
+# Talkie Web App
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
-npm install
+yarn install
 
-# serve with hot reload at localhost:8080
-npm run dev
+# serve with hot reload at port 8080
+yarn serve
 
 # build for production with minification
-npm run build
+yarn build
 
-# build for production and view the bundle analyzer report
-npm run build --report
+# unit testing
+yarn test:unit
+
+# linting
+yarn lint
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Project Structure
+
+```
+.
+├── dist                    # Compiled files (not tracked)
+├── src                     # Source files
+│   ├── api                 # Api services, client and config
+│   ├── assets              # Brand assets (images, fonts)
+│   ├── components          # App modules, ui elements and manipulators
+│   │   ├── Layouts         # Layouts (dark, light, grids, header, footer)
+│   │   ├── Modules         # Page level reusable components (will be used in views)
+│   │   ├── SubModules      # Component level reusable components (will be used in modules)
+│   │   ├── SVGs            # SVG components
+│   │   ├── UIActions       # UI manipulators (to make/indicate ui change)
+│   │   ├── UICore          # Core elements with theming and variants (buttons, input etc)
+│   ├── router              # App routing, urls (will use views)
+│   ├── store               # Global store/state management
+│   ├── styles              # Global styles, theming
+│   ├── utils               # App utilities, helpers, validations, mixins, constants
+│   ├── views               # Pages and flows (uses modules from components)
+│   ├── App.vue             # Vue App
+│   ├── main.js             # Entry point
+├── tests                   # Unit tests
+```
