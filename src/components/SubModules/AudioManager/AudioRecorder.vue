@@ -6,6 +6,7 @@
     :pauseRecording="pauseRecording"
     :isRecording="isRecording"
     :isPaused="isPaused"
+    :recordingVolume="recordingVolume"
     :recordingDuration="recordingDuration"
   />
 </template>
@@ -76,6 +77,9 @@ export default {
     },
     isRecording() {
       return this.recorder.isRecording;
+    },
+    recordingVolume() {
+      return parseFloat(this.recorder.volume);
     },
     recordingDuration() {
       if (
