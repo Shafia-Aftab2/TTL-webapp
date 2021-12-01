@@ -4,6 +4,7 @@
     :startRecording="startRecording"
     :stopRecording="stopRecording"
     :pauseRecording="pauseRecording"
+    :downloadRecording="downloadRecording"
     :isRecording="isRecording"
     :isPaused="isPaused"
     :recordingVolume="recordingVolume"
@@ -14,7 +15,6 @@
 <script>
 import Recorder from "./lib/recorder";
 import { convertTimeMMSS } from "./lib/utils";
-
 export default {
   data() {
     return {
@@ -23,6 +23,7 @@ export default {
     };
   },
   props: {
+    audioFilename: { type: String, default: "talkie-audio" },
     audioFormat: { type: String, default: "mp3" },
     audioTimeLimitInMinutes: { type: Number },
     audioSampleBitRate: { type: Number, default: 128 },
@@ -69,6 +70,16 @@ export default {
       if (!(!this.isRecording || (this.isRecording && this.isPaused))) {
         this.recorder.pause();
       }
+    },
+    downloadRecording() {
+      if (this.recordList.length === 0 || !this.recordList[0].url) return;
+      const type = this.recordList[0].blob.type.split("/")[1];
+      const link = document.createElement("a");
+      link.href = this.recordList[0].url;
+      link.download = `${
+        this.audioFilename
+      }-${new Date().toISOString()}.${type}`;
+      link.click();
     },
   },
   computed: {
