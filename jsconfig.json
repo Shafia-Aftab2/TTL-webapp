@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./src*"],
+      "@/": ["./src"],
+      "@/*": ["./src/*"],
+      "@/api": ["./src/api"],
+      "@/api/*": ["./src/api/*"],
+      "@/assets": ["./src/assets"],
+      "@/assets/*": ["./src/assets/*"],
+      "@/components": ["./src/components"],
+      "@/components/*": ["./src/components/*"],
+      "@/components/Layouts": ["./src/components/Layouts"],
+      "@/components/Layouts/*": ["./src/components/Layouts/*"],
+      "@/components/Modules": ["./src/components/Modules"],
+      "@/components/Modules/*": ["./src/components/Modules/*"],
+      "@/components/SubModules": ["./src/components/SubModules"],
+      "@/components/SubModules/*": ["./src/components/SubModules/*"],
+      "@/components/SVGs": ["./src/components/SVGs"],
+      "@/components/SVGs/*": ["./src/components/SVGs/*"],
+      "@/components/UIActions": ["./src/components/UIActions"],
+      "@/components/UIActions/*": ["./src/components/UIActions/*"],
+      "@/components/UICore": ["./src/components/UICore"],
+      "@/components/UICore/*": ["./src/components/UICore/*"],
+      "@/router": ["./src/router"],
+      "@/router/*": ["./src/router/*"],
+      "@/store": ["./src/store"],
+      "@/store/*": ["./src/store/*"],
+      "@/utils": ["./src/utils"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/views": ["./src/views"],
+      "@/views/*": ["./src/views/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
