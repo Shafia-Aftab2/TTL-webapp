@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div>
       <MainNavbar></MainNavbar>
       <section class="row">
@@ -103,4 +103,4 @@ a:visited {
     }
   }
   </style>
-
+ -->
