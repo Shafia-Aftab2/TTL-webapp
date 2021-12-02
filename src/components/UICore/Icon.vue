@@ -4,6 +4,7 @@
       'talkie-icon-wrapper',
       `talkie-icon-${variant.toString()}-wrapper`,
       isActive && 'talkie-icon-wrapper-highlight',
+      customClass.toString(),
     ]"
     :style="`--size: ${size}px;`"
     @click="onClick"
@@ -56,6 +57,10 @@ export default {
     onClick: {
       type: Function,
       default: () => {},
+    },
+    customClass: {
+      type: String,
+      default: "",
     },
   },
   computed: {
