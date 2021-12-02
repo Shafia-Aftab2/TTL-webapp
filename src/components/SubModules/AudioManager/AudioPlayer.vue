@@ -17,6 +17,7 @@
 import { convertTimeMMSS } from "./lib/utils";
 
 export default {
+  name: "AudioPlayer",
   data() {
     return {
       isPlaying: false,

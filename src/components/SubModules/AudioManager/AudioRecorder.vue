@@ -16,6 +16,7 @@
 import Recorder from "./lib/recorder";
 import { convertTimeMMSS } from "./lib/utils";
 export default {
+  name: "AudioRecorder",
   data() {
     return {
       recorder: this._initRecorder(),
