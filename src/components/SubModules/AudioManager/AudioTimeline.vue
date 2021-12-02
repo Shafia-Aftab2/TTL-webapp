@@ -63,12 +63,30 @@ export default {
   border-style: solid;
   border-color: var(--t-secondary);
   position: relative;
-  height: var(--t-space-10);
-  border-width: var(--t-space-2);
 }
 .audio-timeline-head {
   position: absolute;
   height: inherit;
   background-color: var(--t-secondary);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .audio-timeline-wrapper {
+    height: var(--t-space-8);
+    border-width: var(--t-space-1);
+  }
+}
+@media (min-width: 600px) {
+  .audio-timeline-wrapper {
+    height: var(--t-space-8);
+    border-width: var(--t-space-1);
+  }
+}
+@media (min-width: 900px) {
+  .audio-timeline-wrapper {
+    height: var(--t-space-10);
+    border-width: var(--t-space-2);
+  }
 }
 </style>
