@@ -3,46 +3,126 @@
     <h2 class="teachers-class-start-convo-header h2">
       Start a conversation now?
     </h2>
-    <div class="teachers-class-start-convo-form">
-      <talkie-select :placeholder="'Choose topic'" />
-      <talkie-input :placeholder="'Title (required)'" />
-      <talkie-input :placeholder="'Question text (optional)'" />
-    </div>
-    <div class="teachers-class-start-convo-form-options-wrapper">
-      <div class="teachers-class-start-convo-form-options">
-        <talkie-icon
-          :name="'arrow-rounded-left'"
-          :isActive="true"
-          :variant="'secondary'"
-          :size="30"
-        />
-        <talkie-icon
-          :name="'mike-unmuted'"
-          :isActive="true"
-          :variant="'secondary'"
-          :size="50"
-        />
-        <talkie-icon
-          :name="'send'"
-          :isActive="true"
-          :variant="'secondary'"
-          :size="30"
-        />
+    <talkie-audio-recorder
+      v-slot="{ startRecording, stopRecording, isRecording }"
+      :onRecordingStopped="handleRecordedItem"
+    >
+      <div class="teachers-class-start-convo-form">
+        <talkie-select :placeholder="'Choose topic'" />
+        <talkie-input :placeholder="'Title (required)'" />
+        <talkie-input :placeholder="'Question text (optional)'" />
+        <talkie-audio-player
+          v-slot="{
+            isPlaying,
+            togglePlayer,
+            currentAudioPercentage,
+            updateAudioPercentage,
+            totalAudioPlaybackTime,
+            currentAudioPlaybackTime,
+          }"
+          :recording="currentRecording"
+          v-if="currentRecording"
+        >
+          <span hidden>
+            <!-- TODO: updated these states via a handler -->
+            {{ (this.isAudioPlaying = isPlaying) }}
+            {{ (this.toggleAudioPlayerState = togglePlayer) }}
+          </span>
+          <talkie-audio-timeline
+            :percentage="currentAudioPercentage"
+            :onHeadChange="updateAudioPercentage"
+          />
+          {{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+        </talkie-audio-player>
       </div>
-    </div>
+      <div class="teachers-class-start-convo-form-options-wrapper">
+        <div class="teachers-class-start-convo-form-options">
+          <talkie-icon
+            :name="'arrow-rounded-left'"
+            :isActive="true"
+            :variant="'secondary'"
+            :size="30"
+          />
+          <talkie-icon
+            :name="'mike-unmuted'"
+            :isActive="true"
+            :variant="'secondary'"
+            :size="50"
+            :onClick="startRecording"
+            v-if="!isRecording && !currentRecording"
+          />
+          <talkie-icon
+            :name="'square'"
+            :isActive="true"
+            :variant="'secondary'"
+            :size="50"
+            :iconToSizeRatio="1.5"
+            :customClass="'teachers-class-start-convo-form-options-stop-recording-button'"
+            :onClick="stopRecording"
+            v-if="isRecording && !currentRecording"
+          />
+          <talkie-icon
+            :name="'play'"
+            :isActive="true"
+            :variant="'primary'"
+            :size="50"
+            :onClick="toggleAudioPlayerState"
+            v-if="!isRecording && !isAudioPlaying && currentRecording"
+          />
+          <talkie-icon
+            :name="'pause'"
+            :isActive="true"
+            :variant="'primary'"
+            :size="50"
+            :onClick="toggleAudioPlayerState"
+            v-if="!isRecording && isAudioPlaying && currentRecording"
+          />
+          <talkie-icon
+            :name="'send'"
+            :isActive="true"
+            :variant="'secondary'"
+            :size="30"
+          />
+        </div>
+      </div>
+    </talkie-audio-recorder>
   </div>
 </template>
 
 <script>
-import { TalkieInput, TalkieSelect, TalkieIcon } from "../../../UICore";
+import { TalkieInput, TalkieSelect, TalkieIcon } from "@/components/UICore";
+import {
+  TalkieAudioRecorder,
+  TalkieAudioPlayer,
+  TalkieAudioTimeline,
+} from "@/components/SubModules/AudioManager";
 
 export default {
   name: "TeacherStartConvo",
-  components: { TalkieInput, TalkieSelect, TalkieIcon },
+  data() {
+    return {
+      currentRecording: null,
+      isAudioPlaying: null,
+      toggleAudioPlayerState: () => {},
+    };
+  },
+  components: {
+    TalkieInput,
+    TalkieSelect,
+    TalkieIcon,
+    TalkieAudioRecorder,
+    TalkieAudioPlayer,
+    TalkieAudioTimeline,
+  },
+  methods: {
+    handleRecordedItem(recording) {
+      this.currentRecording = recording;
+    },
+  },
 };
 </script>
 
-<style>
+<style scoped>
 /* TODO: temp, move body color to wrappers with in views */
 body {
   background: var(--t-gray-100);
@@ -72,6 +152,11 @@ body {
   align-items: center;
   position: absolute;
   left: 50%;
+}
+.teachers-class-start-convo-form-options-stop-recording-button {
+  border-color: var(--t-secondary) !important;
+  border-style: solid !important;
+  border-width: var(--t-space-2);
 }
 
 /* Responsive variants */
