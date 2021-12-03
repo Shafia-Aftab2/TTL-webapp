@@ -156,7 +156,6 @@ body {
 .teachers-class-start-convo-form-options-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
-  border-width: var(--t-space-2);
 }
 
 /* Responsive variants */
@@ -179,6 +178,9 @@ body {
     transform: translate(-50%, 20%);
     gap: var(--t-space-36);
   }
+  .teachers-class-start-convo-form-options-stop-recording-button {
+    border-width: var(--t-space-2) !important;
+  }
 }
 @media (min-width: 600px) {
   .teachers-class-start-convo-wrapper {
@@ -198,6 +200,9 @@ body {
   .teachers-class-start-convo-form-options {
     transform: translate(-50%, 30%);
     gap: var(--t-space-40);
+  }
+  .teachers-class-start-convo-form-options-stop-recording-button {
+    border-width: var(--t-space-3) !important;
   }
 }
 @media (min-width: 900px) {
