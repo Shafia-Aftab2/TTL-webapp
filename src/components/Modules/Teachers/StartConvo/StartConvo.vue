@@ -28,11 +28,20 @@
             {{ (this.isAudioPlaying = isPlaying) }}
             {{ (this.toggleAudioPlayerState = togglePlayer) }}
           </span>
-          <talkie-audio-timeline
-            :percentage="currentAudioPercentage"
-            :onHeadChange="updateAudioPercentage"
-          />
-          {{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+          <div
+            class="teachers-class-start-convo-form-options-audio-player-wrapper"
+          >
+            <talkie-audio-timeline
+              :percentage="currentAudioPercentage"
+              :onHeadChange="updateAudioPercentage"
+            />
+            <span
+              class="
+                teachers-class-start-convo-form-options-audio-player-timestamps
+              "
+              >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+            </span>
+          </div>
         </talkie-audio-player>
       </div>
       <div class="teachers-class-start-convo-form-options-wrapper">
@@ -144,6 +153,15 @@ body {
   flex-direction: column;
   margin: auto;
 }
+.teachers-class-start-convo-form-options-audio-player-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.teachers-class-start-convo-form-options-audio-player-timestamps {
+  margin-left: auto;
+  color: var(--t-black-100);
+}
 .teachers-class-start-convo-form-options-wrapper {
   position: relative;
 }
@@ -162,7 +180,7 @@ body {
 @media (max-width: 599px) {
   .teachers-class-start-convo-wrapper {
     padding: var(--t-space-32);
-    padding-bottom: calc(var(--t-space-32) * 1.5);
+    padding-bottom: var(--t-space-40);
     margin-top: var(--t-space-24);
     border-radius: var(--t-br-small);
     min-width: 80%;
@@ -175,8 +193,15 @@ body {
     width: 100%;
   }
   .teachers-class-start-convo-form-options {
-    transform: translate(-50%, 20%);
+    transform: translate(-50%, 5%);
     gap: var(--t-space-36);
+  }
+  .teachers-class-start-convo-form-options-audio-player-wrapper {
+    gap: var(--t-space-5);
+    margin-top: var(--t-space-12);
+  }
+  .teachers-class-start-convo-form-options-audio-player-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.8);
   }
   .teachers-class-start-convo-form-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
@@ -185,7 +210,7 @@ body {
 @media (min-width: 600px) {
   .teachers-class-start-convo-wrapper {
     padding: var(--t-space-32);
-    padding-bottom: calc(var(--t-space-32) * 2);
+    padding-bottom: var(--t-space-36);
     margin-top: var(--t-space-24);
     border-radius: var(--t-br-large);
     max-width: 80%;
@@ -198,8 +223,15 @@ body {
     width: 65%;
   }
   .teachers-class-start-convo-form-options {
-    transform: translate(-50%, 30%);
+    transform: translate(-50%, -5%);
     gap: var(--t-space-40);
+  }
+  .teachers-class-start-convo-form-options-audio-player-wrapper {
+    gap: var(--t-space-8);
+    margin-top: var(--t-space-10);
+  }
+  .teachers-class-start-convo-form-options-audio-player-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.85);
   }
   .teachers-class-start-convo-form-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
@@ -213,7 +245,7 @@ body {
 @media (min-width: 1200px) {
   .teachers-class-start-convo-wrapper {
     padding: var(--t-space-48);
-    padding-bottom: calc(var(--t-space-48) * 2);
+    padding-bottom: var(--t-space-58);
     margin-top: var(--t-space-48);
   }
   .teachers-class-start-convo-header {
@@ -224,8 +256,15 @@ body {
     width: 70%;
   }
   .teachers-class-start-convo-form-options {
-    transform: translate(-50%, 60%);
+    transform: translate(-50%, 5%);
     gap: var(--t-space-48);
+  }
+  .teachers-class-start-convo-form-options-audio-player-wrapper {
+    gap: var(--t-space-5);
+    margin-top: var(--t-space-16);
+  }
+  .teachers-class-start-convo-form-options-audio-player-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.9);
   }
 }
 </style>
