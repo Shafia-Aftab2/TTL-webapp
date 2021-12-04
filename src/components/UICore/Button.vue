@@ -5,7 +5,9 @@
     :class="[
       'talkie-button',
       `talkie-button-${variant.toString()}`,
-      !loading && `talkie-button-${variant.toString()}-interaction`,
+      !noHighlights &&
+        !loading &&
+        `talkie-button-${variant.toString()}-interaction`,
       `talkie-button-${size.toString()}`,
       outlined && `talkie-button-outlined`,
       fullWidth && `talkie-button-fullWidth`,
@@ -50,6 +52,10 @@ export default {
       validator: (val) => ["small", "medium", "large"].includes(val),
     },
     outlined: {
+      type: Boolean,
+      default: false,
+    },
+    noHighlights: {
       type: Boolean,
       default: false,
     },
