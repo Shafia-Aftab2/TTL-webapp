@@ -6,7 +6,7 @@
       isActive && 'talkie-icon-wrapper-highlight',
       customClass.toString(),
     ]"
-    :style="`--size: ${size}px;`"
+    :style="`--size: ${size}px; --icon-size-ratio:${iconToSizeRatio}`"
     @click="onClick"
   >
     <component :is="loadedIcon" />
@@ -31,6 +31,10 @@ export default {
       type: Number,
       required: true,
       default: 25,
+    },
+    iconToSizeRatio: {
+      type: Number,
+      default: 1,
     },
     isActive: {
       type: Boolean,
@@ -105,8 +109,8 @@ export default {
 }
 .talkie-icon-wrapper > svg {
   fill: var(--icon-color);
-  width: var(--responsive-size) !important;
-  height: var(--responsive-size) !important;
+  width: calc(var(--responsive-size) / var(--icon-size-ratio)) !important;
+  height: calc(var(--responsive-size) / var(--icon-size-ratio)) !important;
 }
 
 /* Active Variant */
