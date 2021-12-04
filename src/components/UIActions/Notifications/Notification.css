@@ -1,0 +1,97 @@
+/* Talkie Notifications Global Utility */
+.talkie-notification-container {
+  --notification-items-gap: var(--t-space-24);
+  --notification-animation-duration: 0.35s;
+  --notification-animation-easing: cubic-bezier(0, 0, 0.6, 1.46);
+  --notification-transition-easing: ease;
+  --notification-container-size: 350px;
+  width: var(--notification-container-size);
+  z-index: var(--t-zindex-100);
+  line-height: 1.2;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: auto;
+  bottom: 0;
+}
+.talkie-notification-icon-wrapper {
+  display: flex;
+  opacity: 0.9;
+  font-size: var(--t-fs-base);
+}
+.talkie-notification-icon {
+  fill: currentColor;
+  width: var(--notification-icon-size);
+  height: var(--notification-icon-size);
+  display: inline-block;
+  font-size: var(--t-fs-base);
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  flex-shrink: 0;
+  user-select: none;
+  --notification-icon-size: var(--t-space-24);
+}
+.talkie-notification-message {
+  position: absolute;
+  left: 0;
+  top: auto;
+  bottom: var(--notification-items-gap);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--t-space-14);
+  border-radius: var(--t-br-large);
+  font-size: var(--t-fs-base);
+  box-shadow: 0 0 var(--t-space-10) var(--t-shadow-dark);
+  padding: var(--t-space-14) var(--t-space-20);
+  color: var(--t-white);
+  background: var(--t-black-50);
+  width: var(--notification-container-size);
+  opacity: 0;
+  transition: top calc(var(--notification-animation-duration) - 0.1s)
+      var(--notification-transition-easing),
+    bottom calc(var(--notification-animation-duration) - 0.1s)
+      var(--notification-transition-easing);
+  animation: talkie-notification-slide-from-bottom
+    var(--notification-animation-duration) var(--notification-animation-easing)
+    forwards;
+  transform: translateY(calc(100% + var(--notification-items-gap)));
+}
+.talkie-notification-message span {
+  width: calc(100% - var(--t-space-30));
+}
+.talkie-notification-close-button {
+  color: var(--t-white);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Color Variants */
+.talkie-notification-error-message {
+  color: var(--t-white);
+  background-color: var(--t-red);
+}
+.talkie-notification-warning-message {
+  color: var(--t-black);
+  background-color: var(--t-primary);
+}
+.talkie-notification-success-message {
+  color: var(--t-white);
+  background-color: var(--t-green);
+}
+.talkie-notification-info-message {
+  color: var(--t-white);
+  background-color: var(--t-black-50);
+}
+
+/* Animation */
+@keyframes talkie-notification-slide-from-bottom {
+  50% {
+    transform: translateY(calc(var(--t-space-14) * -1));
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
