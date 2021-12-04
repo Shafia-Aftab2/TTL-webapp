@@ -4,10 +4,11 @@
   --notification-animation-duration: 0.35s;
   --notification-animation-easing: cubic-bezier(0, 0, 0.6, 1.46);
   --notification-transition-easing: ease;
-  --notification-container-size: 350px;
   width: var(--notification-container-size);
   z-index: var(--t-zindex-100);
   line-height: 1.2;
+
+  /* position */
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
@@ -28,25 +29,26 @@
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   flex-shrink: 0;
   user-select: none;
-  --notification-icon-size: var(--t-space-24);
 }
 .talkie-notification-message {
+  /* position */
   position: absolute;
   left: 0;
   top: auto;
   bottom: var(--notification-items-gap);
+
+  /* display */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--t-space-14);
-  border-radius: var(--t-br-large);
-  font-size: var(--t-fs-base);
-  box-shadow: 0 0 var(--t-space-10) var(--t-shadow-dark);
-  padding: var(--t-space-14) var(--t-space-20);
-  color: var(--t-white);
-  background: var(--t-black-50);
   width: var(--notification-container-size);
+  background: var(--t-black-50);
+  box-shadow: 0 0 var(--t-space-10) var(--t-shadow-dark);
+  color: var(--t-white);
   opacity: 0;
+
+  /* animation */
   transition: top calc(var(--notification-animation-duration) - 0.1s)
       var(--notification-transition-easing),
     bottom calc(var(--notification-animation-duration) - 0.1s)
@@ -93,5 +95,43 @@
   100% {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-notification-container {
+    --notification-container-size: 300px;
+  }
+  .talkie-notification-icon {
+    --notification-icon-size: var(--t-space-20);
+  }
+  .talkie-notification-message {
+    padding: var(--t-space-10);
+    border-radius: var(--t-br-medium);
+    font-size: var(--t-fs-small);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-notification-container {
+    --notification-container-size: 350px;
+  }
+  .talkie-notification-icon {
+    --notification-icon-size: var(--t-space-24);
+  }
+  .talkie-notification-message {
+    padding: var(--t-space-10) var(--t-space-12);
+    border-radius: var(--t-br-medium);
+    font-size: var(--t-fs-base);
+  }
+}
+@media (min-width: 900px) {
+  .talkie-notification-message {
+    border-radius: var(--t-br-large);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-notification-message {
+    padding: var(--t-space-14) var(--t-space-20);
   }
 }
