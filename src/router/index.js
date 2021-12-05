@@ -14,6 +14,9 @@ import StudentFeedback from "../components/Modules/Students/Feedback";
 import StudentInbox from "../components/Modules/Students/Inbox";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
+import StudentQA from "../components/Modules/Students/QA";
+import StudentCaption from "../components/Modules/Students/Caption";
+import StudentTranslation from "../components/Modules/Students/Translation";
 import TeacherStartConvo from "../components/Modules/Teachers/StartConvo";
 // modular
 // import teacherRoutes from "../modules/teacher/teacher-routes";
@@ -106,6 +109,21 @@ const routes = [
         name: "StudentStatistics",
         path: "/students/statistics",
         component: StudentStatistics,
+      },
+      {
+        name: "StudentQA",
+        path: "/students/qa",
+        component: StudentQA,
+      },
+      {
+        name: "StudentCaption",
+        path: "/students/caption",
+        component: StudentCaption,
+      },
+      {
+        name: "StudentTranslation",
+        path: "/students/translation",
+        component: StudentTranslation,
       },
     ],
   },
