@@ -1,7 +1,7 @@
 <template>
-  <talkie-header />
+  <talkie-header :onSidebarIconClick="handleSidebarToggle" />
   <wrapper-layout v-if="type === 'default'" />
-  <sidebar-layout v-if="type === 'sidebar'" />
+  <sidebar-layout v-if="type === 'sidebar'" :hideSidebar="hideSidebar" />
 </template>
 
 <script>
@@ -11,6 +11,11 @@ import SidebarLayout from "./SidebarLayout.vue";
 
 export default {
   name: "Layout",
+  data() {
+    return {
+      hideSidebar: false,
+    };
+  },
   components: {
     TalkieHeader,
     WrapperLayout,
@@ -21,6 +26,11 @@ export default {
       type: String,
       default: "default",
       validator: (val) => ["default", "sidebar"].includes(val),
+    },
+  },
+  methods: {
+    handleSidebarToggle() {
+      this.hideSidebar = !this.hideSidebar;
     },
   },
 };
