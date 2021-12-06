@@ -1,9 +1,14 @@
 <template>
   <nav class="talkie-navbar-wrapper">
     <!-- Left Side -->
-    <a href="#" class="talkie-navbar-logo-link">
-      <logo-talkie />
-    </a>
+    <ul class="talkie-navbar-brand-wrapper">
+      <span>
+        <talkie-icon :name="'hamburger'" :onClick="onSidebarIconClick" />
+      </span>
+      <a href="#" class="talkie-navbar-brand-logo-link">
+        <logo-talkie />
+      </a>
+    </ul>
     <!-- Right Side -->
     <ul class="talkie-navbar-links-wrapper" v-if="!hideLinksAndProfile">
       <template v-if="!hideLinks" class="talkie-navbar">
@@ -73,6 +78,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    onSidebarIconClick: {
+      type: Function,
+      default: () => {},
+    },
   },
 };
 </script>
@@ -88,7 +97,11 @@ export default {
   top: 0;
   width: 100%;
 }
-.talkie-navbar-logo-link > svg {
+.talkie-navbar-brand-wrapper {
+  display: flex;
+  align-items: center;
+}
+.talkie-navbar-brand-logo-link > svg {
   width: calc(var(--logo-svg-size) * 3);
   height: var(--logo-svg-size);
 }
@@ -196,7 +209,10 @@ export default {
     min-height: var(--t-space-50);
     max-height: var(--t-space-50);
   }
-  .talkie-navbar-logo-link > svg {
+  .talkie-navbar-brand-wrapper {
+    gap: var(--t-space-4);
+  }
+  .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-24);
   }
   .talkie-navbar-link-item {
@@ -230,7 +246,10 @@ export default {
     min-height: var(--t-space-58);
     max-height: var(--t-space-58);
   }
-  .talkie-navbar-logo-link > svg {
+  .talkie-navbar-brand-wrapper {
+    gap: var(--t-space-8);
+  }
+  .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-28);
   }
   .talkie-navbar-link-item,
@@ -263,7 +282,7 @@ export default {
     min-height: var(--t-space-70);
     max-height: var(--t-space-70);
   }
-  .talkie-navbar-logo-link > svg {
+  .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-33);
   }
   .talkie-navbar-link-item {
