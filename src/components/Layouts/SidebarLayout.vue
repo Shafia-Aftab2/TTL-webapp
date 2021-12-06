@@ -6,7 +6,25 @@
         hideSidebar && 'talkie-sidebar-navigation-wrapper-hidden',
       ]"
       id="talkie-sidebar-navigation-wrapper"
-    ></div>
+    >
+      <ul class="talkie-sidebar-navigation-content-wrapper">
+        <template v-if="sidebar.items.length > 0">
+          <li
+            :class="[
+              'talkie-sidebar-navigation-content-item',
+              item.isActive && 'talkie-sidebar-navigation-content-item-active',
+            ]"
+            v-for="item in sidebar.items"
+            :key="item * Math.random() * 91641684161"
+          >
+            <p class="p" v-if="item.name">
+              {{ item.name }}
+            </p>
+            <talkie-icon :name="'arrow-head-right'" v-if="item.hasRightIcon" />
+          </li>
+        </template>
+      </ul>
+    </div>
     <div
       :class="[
         'talkie-sidebar-content-wrapper',
@@ -19,8 +37,30 @@
 </template>
 
 <script>
+import TalkieIcon from "../UICore/Icon.vue";
+
 export default {
   name: "SidebarLayout",
+  components: { TalkieIcon },
+  data() {
+    return {
+      // sample data
+      sidebar: {
+        items: [
+          {
+            name: "Lucy M",
+            isActive: true,
+            hasRightIcon: true,
+            onClick: () => {},
+          },
+          {
+            name: "Nathan C",
+            hasRightIcon: true,
+          },
+        ],
+      },
+    };
+  },
   props: {
     hideSidebar: {
       type: Boolean,
@@ -55,6 +95,34 @@ export default {
 }
 .talkie-sidebar-navigation-wrapper:-webkit-scrollbar {
   display: none !important;
+}
+.talkie-sidebar-navigation-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--t-space-10);
+}
+.talkie-sidebar-navigation-content-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  cursor: pointer;
+  border-style: solid;
+  border-color: transparent;
+  border-width: var(--t-space-1);
+  border-radius: var(--t-br-medium);
+  padding: var(--t-space-5);
+  padding-left: var(--t-space-16);
+  font-size: var(--t-fs-base);
+  min-height: var(--t-space-56);
+  max-height: var(--t-space-56);
+}
+.talkie-sidebar-navigation-content-item:hover {
+  background-color: var(--t-gray-100);
+  border-color: var(--t-gray-100);
+}
+.talkie-sidebar-navigation-content-item-active {
+  font-family: var(--t-ff-bold);
 }
 .talkie-sidebar-content-wrapper {
   margin: auto;
@@ -119,5 +187,10 @@ export default {
   .talkie-sidebar-content-wrapper {
     padding-top: var(--t-space-70);
   }
+}
+
+/* TEMP */
+.p {
+  margin-bottom: 0 !important;
 }
 </style>
