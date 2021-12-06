@@ -173,6 +173,12 @@ export default {
   .talkie-sidebar-navigation-wrapper-hidden {
     transform: translateX(calc(var(--sidebar-width) * -1));
   }
+  .talkie-sidebar-navigation-content-back-link-wrapper {
+    padding-bottom: var(--t-space-36);
+  }
+  .talkie-sidebar-navigation-content-back-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
   .talkie-sidebar-navigation-content-item {
     font-size: calc(var(--t-fs-base) * 0.9);
     min-height: var(--t-space-48);
@@ -201,6 +207,12 @@ export default {
     padding: var(--t-space-12);
     padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-58);
+  }
+  .talkie-sidebar-navigation-content-back-link-wrapper {
+    padding-bottom: var(--t-space-50);
+  }
+  .talkie-sidebar-navigation-content-back-link {
+    font-size: calc(var(--t-fs-small) * 0.95);
   }
   .talkie-sidebar-navigation-content-item {
     font-size: calc(var(--t-fs-base) * 0.9);
@@ -244,6 +256,12 @@ export default {
     padding: var(--t-space-20);
     padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-70);
+  }
+  .talkie-sidebar-navigation-content-back-link-wrapper {
+    padding-bottom: var(--t-space-70);
+  }
+  .talkie-sidebar-navigation-content-back-link {
+    font-size: var(--t-fs-small);
   }
   .talkie-sidebar-navigation-content-item {
     font-size: var(--t-fs-base);
