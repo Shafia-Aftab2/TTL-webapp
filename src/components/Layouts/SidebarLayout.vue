@@ -113,9 +113,6 @@ export default {
   border-radius: var(--t-br-medium);
   padding: var(--t-space-5);
   padding-left: var(--t-space-16);
-  font-size: var(--t-fs-base);
-  min-height: var(--t-space-56);
-  max-height: var(--t-space-56);
 }
 .talkie-sidebar-navigation-content-item:hover {
   background-color: var(--t-gray-100);
@@ -139,10 +136,16 @@ export default {
   }
   .talkie-sidebar-navigation-wrapper {
     padding: var(--t-space-16);
+    padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-50);
   }
   .talkie-sidebar-navigation-wrapper-hidden {
     transform: translateX(calc(var(--sidebar-width) * -1));
+  }
+  .talkie-sidebar-navigation-content-item {
+    font-size: calc(var(--t-fs-base) * 0.9);
+    min-height: var(--t-space-48);
+    max-height: var(--t-space-48);
   }
   .talkie-sidebar-content-wrapper {
     margin: auto;
@@ -157,7 +160,13 @@ export default {
   .talkie-sidebar-navigation-wrapper {
     transform: translateX(0);
     padding: var(--t-space-12);
+    padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-58);
+  }
+  .talkie-sidebar-navigation-content-item {
+    font-size: calc(var(--t-fs-base) * 0.9);
+    min-height: var(--t-space-48);
+    max-height: var(--t-space-48);
   }
   .talkie-sidebar-content-wrapper {
     margin: auto;
@@ -174,6 +183,10 @@ export default {
   }
   .talkie-sidebar-navigation-wrapper {
     padding: var(--t-space-18);
+    padding-bottom: calc(var(--t-space-70) * 3);
+  }
+  .talkie-sidebar-navigation-content-item {
+    font-size: calc(var(--t-fs-base) * 0.95);
   }
 }
 @media (min-width: 1200px) {
@@ -182,7 +195,13 @@ export default {
   }
   .talkie-sidebar-navigation-wrapper {
     padding: var(--t-space-20);
+    padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-70);
+  }
+  .talkie-sidebar-navigation-content-item {
+    font-size: var(--t-fs-base);
+    min-height: var(--t-space-56);
+    max-height: var(--t-space-56);
   }
   .talkie-sidebar-content-wrapper {
     padding-top: var(--t-space-70);
