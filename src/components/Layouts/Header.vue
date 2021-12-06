@@ -2,7 +2,15 @@
   <nav class="talkie-navbar-wrapper">
     <!-- Left Side -->
     <ul class="talkie-navbar-brand-wrapper">
-      <span>
+      <span
+        :class="[
+          hideSideBarIconOn
+            .map((x) =>
+              `talkie-navbar-brand-wrapper-toggle-button-${x}-hidden`.toString()
+            )
+            .join(' '),
+        ]"
+      >
         <talkie-icon :name="'hamburger'" :onClick="onSidebarIconClick" />
       </span>
       <a href="#" class="talkie-navbar-brand-logo-link">
@@ -81,6 +89,11 @@ export default {
     onSidebarIconClick: {
       type: Function,
       default: () => {},
+    },
+    hideSideBarIconOn: {
+      type: Array,
+      default: () => ["tablet", "desktop"],
+      validator: (val) => ["phone", "tablet", "desktop"].includes(val),
     },
   },
 };
@@ -212,6 +225,9 @@ export default {
   .talkie-navbar-brand-wrapper {
     gap: var(--t-space-4);
   }
+  .talkie-navbar-brand-wrapper-toggle-button-phone-hidden {
+    display: none !important;
+  }
   .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-24);
   }
@@ -276,11 +292,24 @@ export default {
     padding-left: var(--t-space-24);
   }
 }
+@media (min-width: 600px) and (max-width: 899px) {
+  .talkie-navbar-brand-wrapper-toggle-button-tablet-hidden {
+    display: none !important;
+  }
+}
+@media (min-width: 900px) and (max-width: 1199px) {
+  .talkie-navbar-brand-wrapper-toggle-button-tablet-hidden {
+    display: none !important;
+  }
+}
 @media (min-width: 1200px) {
   .talkie-navbar-wrapper {
     padding: 0 var(--t-space-32);
     min-height: var(--t-space-70);
     max-height: var(--t-space-70);
+  }
+  .talkie-navbar-brand-wrapper-toggle-button-desktop-hidden {
+    display: none !important;
   }
   .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-33);
