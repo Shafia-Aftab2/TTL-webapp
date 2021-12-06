@@ -136,12 +136,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: var(--t-space-16);
-  margin-top: var(--t-space-32);
-}
-.talkie-sidebar-navigation-content-button {
-  min-height: calc(var(--t-space-56) * 0.8);
-  max-height: calc(var(--t-space-56) * 0.8);
 }
 .talkie-sidebar-content-wrapper {
   margin: auto;
@@ -169,6 +163,14 @@ export default {
     min-height: var(--t-space-48);
     max-height: var(--t-space-48);
   }
+  .talkie-sidebar-navigation-content-buttons-wrapper {
+    gap: var(--t-space-8);
+    margin-top: var(--t-space-24);
+  }
+  .talkie-sidebar-navigation-content-button {
+    min-height: calc(var(--t-space-48) * 0.8);
+    max-height: calc(var(--t-space-48) * 0.8);
+  }
   .talkie-sidebar-content-wrapper {
     margin: auto;
     max-width: var(--t-grid-small);
@@ -189,6 +191,14 @@ export default {
     font-size: calc(var(--t-fs-base) * 0.9);
     min-height: var(--t-space-48);
     max-height: var(--t-space-48);
+  }
+  .talkie-sidebar-navigation-content-buttons-wrapper {
+    gap: var(--t-space-8);
+    margin-top: var(--t-space-24);
+  }
+  .talkie-sidebar-navigation-content-button {
+    min-height: calc(var(--t-space-48) * 0.8);
+    max-height: calc(var(--t-space-48) * 0.8);
   }
   .talkie-sidebar-content-wrapper {
     margin: auto;
@@ -224,6 +234,14 @@ export default {
     font-size: var(--t-fs-base);
     min-height: var(--t-space-56);
     max-height: var(--t-space-56);
+  }
+  .talkie-sidebar-navigation-content-buttons-wrapper {
+    gap: var(--t-space-16);
+    margin-top: var(--t-space-32);
+  }
+  .talkie-sidebar-navigation-content-button {
+    min-height: calc(var(--t-space-56) * 0.8);
+    max-height: calc(var(--t-space-56) * 0.8);
   }
   .talkie-sidebar-content-wrapper {
     padding-top: var(--t-space-70);
