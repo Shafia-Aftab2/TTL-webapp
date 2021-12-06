@@ -8,13 +8,15 @@
       id="talkie-sidebar-navigation-wrapper"
     >
       <ul class="talkie-sidebar-navigation-content-wrapper">
-        <template v-if="sidebar.items.length > 0">
+        <template
+          v-if="computedSidebar.items && computedSidebar.items.length > 0"
+        >
           <li
             :class="[
               'talkie-sidebar-navigation-content-item',
               item.isActive && 'talkie-sidebar-navigation-content-item-active',
             ]"
-            v-for="item in sidebar.items"
+            v-for="item in computedSidebar.items"
             :key="item * Math.random() * 91641684161"
           >
             <p class="p" v-if="item.name">
@@ -42,24 +44,10 @@ import TalkieIcon from "../UICore/Icon.vue";
 export default {
   name: "SidebarLayout",
   components: { TalkieIcon },
-  data() {
-    return {
-      // sample data
-      sidebar: {
-        items: [
-          {
-            name: "Lucy M",
-            isActive: true,
-            hasRightIcon: true,
-            onClick: () => {},
-          },
-          {
-            name: "Nathan C",
-            hasRightIcon: true,
-          },
-        ],
-      },
-    };
+  computed: {
+    computedSidebar() {
+      return this.$store.state.sidebar;
+    },
   },
   props: {
     hideSidebar: {
