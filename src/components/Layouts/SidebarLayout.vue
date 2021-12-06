@@ -1,10 +1,18 @@
 <template>
   <div class="talkie-sidebar-layout-wrapper">
     <div
-      :class="['talkie-sidebar-navigation-wrapper']"
+      :class="[
+        'talkie-sidebar-navigation-wrapper',
+        hideSidebar && 'talkie-sidebar-navigation-wrapper-hidden',
+      ]"
       id="talkie-sidebar-navigation-wrapper"
     ></div>
-    <div :class="['talkie-sidebar-content-wrapper']">
+    <div
+      :class="[
+        'talkie-sidebar-content-wrapper',
+        hideSidebar && 'talkie-sidebar-content-wrapper-full-width',
+      ]"
+    >
       <router-view />
     </div>
   </div>
@@ -13,6 +21,12 @@
 <script>
 export default {
   name: "SidebarLayout",
+  props: {
+    hideSidebar: {
+      type: Boolean,
+      default: true,
+    },
+  },
 };
 </script>
 
@@ -46,6 +60,9 @@ export default {
   margin: auto;
   transition: 0.15s ease;
 }
+.talkie-sidebar-content-wrapper-full-width {
+  margin-left: auto !important;
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -55,6 +72,9 @@ export default {
   .talkie-sidebar-navigation-wrapper {
     padding: var(--t-space-16);
     margin-top: var(--t-space-50);
+  }
+  .talkie-sidebar-navigation-wrapper-hidden {
+    transform: translateX(calc(var(--sidebar-width) * -1));
   }
   .talkie-sidebar-content-wrapper {
     margin: auto;
