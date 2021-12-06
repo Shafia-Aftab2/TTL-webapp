@@ -1,5 +1,12 @@
 <template>
-  <talkie-header :onSidebarIconClick="handleSidebarToggle" />
+  <talkie-header
+    :onSidebarIconClick="handleSidebarToggle"
+    :hideSideBarIconOn="
+      type === 'sidebar'
+        ? ['tablet', 'desktop']
+        : ['phone', 'tablet', 'desktop']
+    "
+  />
   <wrapper-layout v-if="type === 'default'" />
   <sidebar-layout v-if="type === 'sidebar'" :hideSidebar="hideSidebar" />
 </template>
