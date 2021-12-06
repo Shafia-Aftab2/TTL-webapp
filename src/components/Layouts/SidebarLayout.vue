@@ -7,24 +7,23 @@
       ]"
       id="talkie-sidebar-navigation-wrapper"
     >
-      <ul class="talkie-sidebar-navigation-content-wrapper">
-        <template
-          v-if="computedSidebar.items && computedSidebar.items.length > 0"
+      <ul
+        class="talkie-sidebar-navigation-content-items-wrapper"
+        v-if="computedSidebar.items && computedSidebar.items.length > 0"
+      >
+        <li
+          :class="[
+            'talkie-sidebar-navigation-content-item',
+            item.isActive && 'talkie-sidebar-navigation-content-item-active',
+          ]"
+          v-for="item in computedSidebar.items"
+          :key="item * Math.random() * 91641684161"
         >
-          <li
-            :class="[
-              'talkie-sidebar-navigation-content-item',
-              item.isActive && 'talkie-sidebar-navigation-content-item-active',
-            ]"
-            v-for="item in computedSidebar.items"
-            :key="item * Math.random() * 91641684161"
-          >
-            <p class="p" v-if="item.name">
-              {{ item.name }}
-            </p>
-            <talkie-icon :name="'arrow-head-right'" v-if="item.hasRightIcon" />
-          </li>
-        </template>
+          <p class="p" v-if="item.name">
+            {{ item.name }}
+          </p>
+          <talkie-icon :name="'arrow-head-right'" v-if="item.hasRightIcon" />
+        </li>
       </ul>
     </div>
     <div
@@ -84,7 +83,7 @@ export default {
 .talkie-sidebar-navigation-wrapper:-webkit-scrollbar {
   display: none !important;
 }
-.talkie-sidebar-navigation-content-wrapper {
+.talkie-sidebar-navigation-content-items-wrapper {
   display: flex;
   flex-direction: column;
   gap: var(--t-space-10);
