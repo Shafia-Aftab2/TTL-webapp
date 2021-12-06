@@ -7,6 +7,16 @@
       ]"
       id="talkie-sidebar-navigation-wrapper"
     >
+      <div
+        class="talkie-sidebar-navigation-content-back-link-wrapper"
+        v-if="computedSidebar.hasBackLink"
+      >
+        <a
+          class="talkie-sidebar-navigation-content-back-link"
+          @click="handleBackLinkClick"
+          >&#8592; back</a
+        >
+      </div>
       <ul
         class="talkie-sidebar-navigation-content-items-wrapper"
         v-if="computedSidebar.items && computedSidebar.items.length > 0"
@@ -76,6 +86,11 @@ export default {
     hideSidebar: {
       type: Boolean,
       default: true,
+    },
+  },
+  methods: {
+    handleBackLinkClick() {
+      this.$router.go(-1);
     },
   },
 };
