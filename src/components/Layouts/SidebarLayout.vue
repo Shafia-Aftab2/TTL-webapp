@@ -25,6 +25,29 @@
           <talkie-icon :name="'arrow-head-right'" v-if="item.hasRightIcon" />
         </li>
       </ul>
+      <ul
+        class="talkie-sidebar-navigation-content-buttons-wrapper"
+        v-if="computedSidebar.buttons && computedSidebar.buttons.length > 0"
+      >
+        <template
+          v-for="_sidebarButton in computedSidebar.buttons"
+          :key="_sidebarButton"
+        >
+          <talkie-button
+            :type="_sidebarButton.type || 'button'"
+            :variant="_sidebarButton.variant || 'primary'"
+            :size="_sidebarButton.size || 'medium'"
+            :outlined="_sidebarButton.outlined || false"
+            :fullWidth="_sidebarButton.fullWidth || false"
+            :loading="_sidebarButton.loading || false"
+            :disabled="_sidebarButton.disabled || false"
+            :onClick="_sidebarButton.onClick"
+            :customClass="`talkie-sidebar-navigation-content-button ${_sidebarButton.customClass}`"
+          >
+            {{ _sidebarButton.text }}
+          </talkie-button>
+        </template>
+      </ul>
     </div>
     <div
       :class="[
@@ -39,10 +62,11 @@
 
 <script>
 import TalkieIcon from "../UICore/Icon.vue";
+import TalkieButton from "../UICore/Button.vue";
 
 export default {
   name: "SidebarLayout",
-  components: { TalkieIcon },
+  components: { TalkieIcon, TalkieButton },
   computed: {
     computedSidebar() {
       return this.$store.state.sidebar;
@@ -107,6 +131,17 @@ export default {
 }
 .talkie-sidebar-navigation-content-item-active {
   font-family: var(--t-ff-bold);
+}
+.talkie-sidebar-navigation-content-buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--t-space-16);
+  margin-top: var(--t-space-32);
+}
+.talkie-sidebar-navigation-content-button {
+  min-height: calc(var(--t-space-56) * 0.8);
+  max-height: calc(var(--t-space-56) * 0.8);
 }
 .talkie-sidebar-content-wrapper {
   margin: auto;
