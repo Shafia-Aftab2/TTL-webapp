@@ -8,6 +8,7 @@ import IconProfile from "./IconProfile.vue";
 import IconArrowRoundedLeft from "./IconArrowRoundedLeft.vue";
 import IconSend from "./IconSend.vue";
 import IconMikeUnmuted from "./IconMikeUnmuted.vue";
+import IconHamburger from "./IconHamburger.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
