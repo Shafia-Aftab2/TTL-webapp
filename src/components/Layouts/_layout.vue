@@ -22,13 +22,27 @@ export default {
     SidebarLayout,
   },
   props: {
+    variant: {
+      type: String,
+      default: "light",
+      validator: (val) => ["light", "dark"].includes(val),
+    },
     type: {
       type: String,
       default: "default",
       validator: (val) => ["default", "sidebar"].includes(val),
     },
   },
+  created() {
+    const color =
+      this.variant === "light" ? "var(--t-white)" : "var(--t-white-100)";
+
+    this.handleBodyBackColorChange(color);
+  },
   methods: {
+    handleBodyBackColorChange(color) {
+      document.body.style.backgroundColor = color;
+    },
     handleSidebarToggle() {
       this.hideSidebar = !this.hideSidebar;
     },
