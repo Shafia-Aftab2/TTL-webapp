@@ -1,27 +1,45 @@
 <template>
   <talkie-back-drop>
-    <div :class="['talkie-modal-content', customClass.toString()]">
-      <!-- Custom Dialog -->
-      <slot v-if="type === 'default'" />
+    <div class="talkie-modal-content-wrapper">
+      <div :class="['talkie-modal-content', customClass.toString()]">
+        <!-- Custom Dialog -->
+        <slot v-if="type === 'default'" />
 
-      <!-- Confirm Dialog -->
-      <p class="talkie-confirm-modal-text" v-if="type === 'confirm' && text">
-        {{ text }}
-      </p>
-      <div
-        class="talkie-confirm-modal-action-buttons"
-        v-if="type === 'confirm'"
-      >
-        <talkie-button variant="transparent" :onClick="onDismiss" :size="size"
-          >Cancel</talkie-button
+        <!-- Confirm Dialog -->
+        <p class="talkie-confirm-modal-text" v-if="type === 'confirm' && text">
+          {{ text }}
+        </p>
+        <div
+          class="talkie-confirm-modal-action-buttons"
+          v-if="type === 'confirm'"
         >
-        <talkie-button
-          variant="primary"
-          :loading="false"
-          :onClick="onContinue"
-          :size="size"
-          >Continue</talkie-button
-        >
+          <talkie-button
+            variant="transparent"
+            :onClick="onDismiss"
+            :size="size"
+          >
+            Cancel
+          </talkie-button>
+          <talkie-button
+            variant="primary"
+            :loading="false"
+            :onClick="onContinue"
+            :size="size"
+            >Continue</talkie-button
+          >
+        </div>
+      </div>
+      <div class="talkie-modal-content-footer-wrapper">
+        <template v-for="_button in buttonsOutSideModal" :key="_button">
+          <talkie-button
+            :onClick="_button.onClick"
+            :noHighlights="true"
+            :variant="_button.variant || 'primary'"
+            :size="_button.size || 'medium'"
+          >
+            {{ _button.text }}
+          </talkie-button>
+        </template>
       </div>
     </div>
   </talkie-back-drop>
@@ -38,7 +56,11 @@ export default {
     type: {
       type: String,
       default: "default",
-      validator: (val) => ["default"].includes(val),
+      validator: (val) => ["default", "confirm"].includes(val),
+    },
+    buttonsOutSideModal: {
+      type: Array,
+      default: () => [],
     },
     customClass: {
       type: String,
@@ -66,13 +88,28 @@ export default {
 </script>
 
 <style scoped>
+.talkie-modal-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  z-index: var(--t-zindex-70);
+  max-width: 445px;
+  width: 100%;
+}
 .talkie-modal-content {
   display: flex;
   flex-direction: column;
   background-color: var(--t-white);
-  z-index: var(--t-zindex-70);
   max-width: 445px;
   width: 100%;
+}
+.talkie-modal-content-footer-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+  max-width: 445px;
+  gap: var(--t-space-16);
 }
 
 /* Confirm Dialog */
@@ -99,6 +136,10 @@ export default {
   .talkie-confirm-modal-action-buttons {
     gap: var(--t-space-4);
   }
+  .talkie-modal-content-footer-wrapper {
+    width: 50%;
+    margin-top: var(--t-space-36);
+  }
 }
 @media (min-width: 600px) {
   .talkie-modal-content {
@@ -114,6 +155,10 @@ export default {
   .talkie-confirm-modal-action-buttons {
     gap: var(--t-space-6);
   }
+  .talkie-modal-content-footer-wrapper {
+    width: 60%;
+    margin-top: var(--t-space-36);
+  }
 }
 @media (min-width: 1200px) {
   .talkie-modal-content {
@@ -127,6 +172,10 @@ export default {
   }
   .talkie-confirm-modal-action-buttons {
     gap: var(--t-space-8);
+  }
+  .talkie-modal-content-footer-wrapper {
+    width: 80%;
+    margin-top: var(--t-space-48);
   }
 }
 </style>

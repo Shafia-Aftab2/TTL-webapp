@@ -17,8 +17,13 @@
         @change="onChange"
         @input="handleChange"
         @blur="handleBlur"
-        :type="type"
+        :type="type === 'password' && isPasswordVisiable ? 'text' : type"
         :class="['talkie-input', `talkie-input-${size.toString()}`]"
+      />
+      <talkie-icon
+        :name="'eye'"
+        :onClick="handlePasswordToggle"
+        :size="size === 'small' ? 20 : size === 'medium' ? 25 : 28"
       />
     </div>
     <p
@@ -35,10 +40,11 @@
 
 <script>
 import { useField } from "vee-validate";
+import TalkieIcon from "./Icon.vue";
 
 export default {
   name: "TalkieInput",
-  components: {},
+  components: { TalkieIcon },
   data() {
     const {
       value: t_value,
@@ -53,6 +59,7 @@ export default {
       t_value,
       handleChange,
       handleBlur,
+      isPasswordVisiable: false,
     };
   },
   props: {
@@ -100,7 +107,11 @@ export default {
       default: "",
     },
   },
-  methods: {},
+  methods: {
+    handlePasswordToggle() {
+      this.isPasswordVisiable = !this.isPasswordVisiable;
+    },
+  },
 };
 </script>
 
@@ -115,6 +126,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   font-family: var(--t-ff-regular);
+  padding-right: var(--t-space-4);
 }
 .talkie-input-wrapper:focus-within {
   border-color: var(--t-black-100);

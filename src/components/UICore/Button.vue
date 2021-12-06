@@ -5,7 +5,9 @@
     :class="[
       'talkie-button',
       `talkie-button-${variant.toString()}`,
-      !loading && `talkie-button-${variant.toString()}-interaction`,
+      !noHighlights &&
+        !loading &&
+        `talkie-button-${variant.toString()}-interaction`,
       `talkie-button-${size.toString()}`,
       outlined && `talkie-button-outlined`,
       fullWidth && `talkie-button-fullWidth`,
@@ -40,9 +42,15 @@ export default {
       type: String,
       default: "primary",
       validator: (val) =>
-        ["primary", "secondary", "success", "danger", "transparent"].includes(
-          val
-        ),
+        [
+          "primary",
+          "secondary",
+          "success",
+          "danger",
+          "transparent",
+          "light",
+          "dark",
+        ].includes(val),
     },
     size: {
       type: String,
@@ -50,6 +58,10 @@ export default {
       validator: (val) => ["small", "medium", "large"].includes(val),
     },
     outlined: {
+      type: Boolean,
+      default: false,
+    },
+    noHighlights: {
       type: Boolean,
       default: false,
     },
@@ -125,6 +137,21 @@ export default {
 .talkie-button-transparent {
   background-color: transparent;
   border-color: transparent;
+}
+.talkie-button-light {
+  background-color: var(--t-white);
+  border-color: transparent;
+}
+.talkie-button-light-interaction:hover {
+  filter: opacity(0.8);
+}
+.talkie-button-dark {
+  background-color: var(--t-black);
+  color: var(--t-white);
+  border-color: transparent;
+}
+.talkie-button-dark-interaction:hover {
+  filter: opacity(0.8);
 }
 
 /* Size variants */
