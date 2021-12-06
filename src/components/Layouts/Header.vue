@@ -77,13 +77,16 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .talkie-navbar-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: var(--t-shadow-dark);
   background-color: var(--t-white);
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 .talkie-navbar-logo-link > svg {
   width: calc(var(--logo-svg-size) * 3);
@@ -138,7 +141,7 @@ export default {
   filter: opacity(0.8);
 }
 .talkie-navbar-profile-name:visited {
-  color: var(--t-balck);
+  color: var(--t-black);
 }
 .talkie-navbar-profile-image-wrapper {
   border-radius: 50%;
