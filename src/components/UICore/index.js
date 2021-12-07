@@ -2,6 +2,7 @@ import TalkieBackDrop from "./BackDrop.vue";
 import TalkieLoader from "./Loader.vue";
 import TalkieBackDropLoader from "./BackDropLoader.vue";
 import TalkieButton from "./Button.vue";
+import TalkieButtonDropDown from "./ButtonDropDown.vue";
 import TalkieInput from "./Input.vue";
 import TalkieSelect from "./Select.vue";
 import TalkieChip from "./Chip.vue";
@@ -18,6 +19,7 @@ export {
   TalkieLoader,
   TalkieBackDropLoader,
   TalkieButton,
+  TalkieButtonDropDown,
   TalkieInput,
   TalkieSelect,
   TalkieChip,
