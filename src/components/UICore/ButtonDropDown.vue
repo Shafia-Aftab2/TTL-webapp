@@ -20,7 +20,10 @@
       v-if="showDropDown && dropDownItems && dropDownItems.length > 0"
     >
       <li
-        :class="['talkie-button-drop-down-item']"
+        :class="[
+          'talkie-button-drop-down-item',
+          `talkie-button-drop-down-item-${size.toString()}`,
+        ]"
         @click="_item.onClick"
         v-for="_item in dropDownItems"
         :key="_item * Math.random() * 9641631"
@@ -106,18 +109,58 @@ export default {
 .talkie-button-drop-down-item {
   cursor: pointer;
   background-color: var(--t-white);
-  padding: var(--t-space-16) var(--t-space-48);
-  font-size: var(--t-fs-sub);
 }
 .talkie-button-drop-down-item:hover {
   background-color: var(--t-primary);
 }
-.talkie-button-drop-down-item:first-of-type {
-  border-top-left-radius: var(--t-br-medium);
-  border-top-right-radius: var(--t-br-medium);
+
+/* Size variants */
+.talkie-button-drop-down-item-small {
+  --item-size: var(--t-space-10);
+  --font-size: var(--t-fs-base);
 }
-.talkie-button-drop-down-item:last-of-type {
-  border-bottom-left-radius: var(--t-br-medium);
-  border-bottom-right-radius: var(--t-br-medium);
+.talkie-button-drop-down-item-medium {
+  --item-size: var(--t-space-14);
+  --font-size: var(--t-fs-body);
+}
+.talkie-button-drop-down-item-large {
+  --item-size: var(--t-space-16);
+  --font-size: var(--t-fs-sub);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-button-drop-down-item {
+    padding: calc(var(--item-size) / 2) calc((var(--item-size) / 2) * 3);
+    font-size: calc(var(--font-size) / 1.35);
+  }
+  .talkie-button-drop-down-item:first-of-type {
+    border-top-left-radius: var(--t-br-small);
+    border-top-right-radius: var(--t-br-small);
+  }
+  .talkie-button-drop-down-item:last-of-type {
+    border-bottom-left-radius: var(--t-br-small);
+    border-bottom-right-radius: var(--t-br-small);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-button-drop-down-item {
+    padding: calc(var(--item-size) / 1.5) calc((var(--item-size) / 1.5) * 3);
+    font-size: calc(var(--font-size) / 1.2);
+  }
+  .talkie-button-drop-down-item:first-of-type {
+    border-top-left-radius: var(--t-br-medium);
+    border-top-right-radius: var(--t-br-medium);
+  }
+  .talkie-button-drop-down-item:last-of-type {
+    border-bottom-left-radius: var(--t-br-medium);
+    border-bottom-right-radius: var(--t-br-medium);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-button-drop-down-item {
+    padding: calc(var(--item-size)) calc((var(--item-size)) * 3);
+    font-size: calc(var(--font-size));
+  }
 }
 </style>
