@@ -28,6 +28,16 @@
       </talkie-button-drop-down>
     </div>
     <div class="teachers-class-home-content-wrapper">
+      <talkie-modal
+        :type="'confirm'"
+        :contentPadded="true"
+        :closeButton="true"
+        :centered="true"
+        :title="'Are You Sure'"
+        :description="'Your students responses will also be deleted.'"
+        :onClose="handleTopicDeleteDialogClose"
+        v-if="showDeleteDialog"
+      />
       <template v-if="questionsList && questionsList.length > 0">
         <talkie-question-card
           v-for="_question in questionsList"
@@ -38,6 +48,7 @@
           :manageMode="_question.manageMode"
           :centered="_question.centered"
           :audioSource="_question.audioSource"
+          :onDeleteClick="handleTopicCardDeleteClick"
         />
       </template>
     </div>
@@ -50,6 +61,7 @@ import {
   TalkieIcon,
   TalkieTab,
   TalkieSelect,
+  TalkieModal,
   TalkieButtonDropDown,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
@@ -58,6 +70,7 @@ export default {
   name: "TeacherClassHome",
   data() {
     return {
+      showDeleteDialog: false,
       topicFilterOptions: ["Topic", "Recent", "Oldest"],
       newTaskOptions: [
         {
@@ -103,8 +116,17 @@ export default {
     TalkieIcon,
     TalkieTab,
     TalkieSelect,
+    TalkieModal,
     TalkieButtonDropDown,
     TalkieQuestionCard,
+  },
+  methods: {
+    handleTopicCardDeleteClick() {
+      this.showDeleteDialog = !this.showDeleteDialog;
+    },
+    handleTopicDeleteDialogClose() {
+      this.showDeleteDialog = !this.showDeleteDialog;
+    },
   },
 };
 </script>
