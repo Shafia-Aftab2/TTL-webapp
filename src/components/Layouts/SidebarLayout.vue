@@ -274,9 +274,7 @@ export default {
   .talkie-sidebar-content-wrapper {
     margin: auto;
     max-width: var(--t-grid-large);
-    margin-left: calc(
-      var(--sidebar-width) + (var(--sidebar-width) / 10)
-    ) !important;
+    margin-left: var(--sidebar-width) !important;
     padding-top: var(--t-space-58);
   }
 }
