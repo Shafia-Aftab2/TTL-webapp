@@ -109,6 +109,7 @@ export default {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: var(--t-zindex-70);
 }
 .talkie-navbar-brand-wrapper {
   display: flex;
