@@ -23,6 +23,7 @@
         :class="[
           'talkie-button-drop-down-item',
           `talkie-button-drop-down-item-${size.toString()}`,
+          `talkie-button-drop-down-item-${variant.toString()}`,
         ]"
         @click="_item.onClick"
         v-for="_item in dropDownItems"
@@ -108,10 +109,45 @@ export default {
 }
 .talkie-button-drop-down-item {
   cursor: pointer;
+}
+
+/* Color variants */
+.talkie-button-drop-down-item-primary {
   background-color: var(--t-white);
 }
-.talkie-button-drop-down-item:hover {
+.talkie-button-drop-down-item-primary:hover {
   background-color: var(--t-primary);
+}
+.talkie-button-drop-down-item-secondary {
+  background-color: var(--t-white);
+}
+.talkie-button-drop-down-item-secondary:hover {
+  background-color: var(--t-secondary);
+}
+.talkie-button-drop-down-item-success {
+  background-color: var(--t-white);
+}
+.talkie-button-drop-down-item-success:hover {
+  background-color: var(--t-green);
+}
+.talkie-button-drop-down-item-danger {
+  background-color: var(--t-white);
+}
+.talkie-button-drop-down-item-danger:hover {
+  background-color: var(--t-orange);
+}
+.talkie-button-drop-down-item-light {
+  background-color: var(--t-white);
+}
+.talkie-button-drop-down-item-light:hover {
+  filter: opacity(0.8);
+}
+.talkie-button-drop-down-item-dark {
+  background-color: var(--t-black);
+  color: var(--t-white);
+}
+.talkie-button-drop-down-item-dark:hover {
+  filter: opacity(0.8);
 }
 
 /* Size variants */
