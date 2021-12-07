@@ -54,6 +54,7 @@
         }"
       />
       <talkie-input
+        :type="'password'"
         :name="'password'"
         :size="'medium'"
         :placeholder="'Password'"
