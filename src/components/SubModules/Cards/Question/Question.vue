@@ -13,12 +13,29 @@
       </div>
     </div>
     <p class="p" v-if="description">{{ description }}</p>
+    <div class="talkie-question-card-footer-wrapper" v-if="manageMode">
+      <talkie-chip
+        :label="'Edit'"
+        :variant="'neutral'"
+        :onClick="onEditClick"
+      />
+      <talkie-chip
+        :label="'Delete'"
+        :variant="'danger'"
+        :onClick="onDeleteClick"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import { TalkieChip } from "@/components/UICore";
+
 export default {
   name: "QuestionCard",
+  components: {
+    TalkieChip,
+  },
   props: {
     title: {
       type: String,
@@ -35,6 +52,18 @@ export default {
     imageAlt: {
       type: String,
       default: "Card Image",
+    },
+    manageMode: {
+      type: Boolean,
+      default: false,
+    },
+    onEditClick: {
+      type: Function,
+      default: () => {},
+    },
+    onDeleteClick: {
+      type: Function,
+      default: () => {},
     },
   },
 };
@@ -68,6 +97,10 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: var(--t-space-16);
+}
+.talkie-question-card-footer-wrapper {
+  display: flex;
   gap: var(--t-space-16);
 }
 
