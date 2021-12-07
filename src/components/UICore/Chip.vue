@@ -46,6 +46,7 @@ export default {
   color: var(--t-black-100);
   background: transparent;
   width: fit-content;
+  height: fit-content;
   cursor: pointer;
   border: transparent;
   transition: 0.1s ease;
@@ -104,8 +105,8 @@ export default {
 }
 @media (min-width: 1200px) {
   .talkie-chip {
-    padding: var(--size) calc(var(--size) * 1.5);
-    font-size: calc(var(--font-size));
+    padding: calc(var(--size) * 0.9) calc(((var(--size) * 0.9) * 1.5));
+    font-size: calc(var(--font-size) / 1.1);
   }
 }
 </style>

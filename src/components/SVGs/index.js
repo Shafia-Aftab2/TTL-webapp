@@ -9,6 +9,7 @@ import IconArrowRoundedLeft from "./IconArrowRoundedLeft.vue";
 import IconSend from "./IconSend.vue";
 import IconMikeUnmuted from "./IconMikeUnmuted.vue";
 import IconHamburger from "./IconHamburger.vue";
+import IconXMark from "./IconXMark.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
@@ -25,6 +26,8 @@ export {
   IconArrowRoundedLeft,
   IconSend,
   IconMikeUnmuted,
+  IconHamburger,
+  IconXMark,
   // Logos
   LogoTalkie,
   LogoTeacherSignup,
