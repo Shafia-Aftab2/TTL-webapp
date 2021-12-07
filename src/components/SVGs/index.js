@@ -10,6 +10,7 @@ import IconSend from "./IconSend.vue";
 import IconMikeUnmuted from "./IconMikeUnmuted.vue";
 import IconHamburger from "./IconHamburger.vue";
 import IconXMark from "./IconXMark.vue";
+import IconSetting from "./IconSetting.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
@@ -28,6 +29,7 @@ export {
   IconMikeUnmuted,
   IconHamburger,
   IconXMark,
+  IconSetting,
   // Logos
   LogoTalkie,
   LogoTeacherSignup,
