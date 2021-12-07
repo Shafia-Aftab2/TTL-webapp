@@ -13,6 +13,7 @@
       <div
         :class="[
           'talkie-modal-content',
+          centered && 'talkie-modal-content-centered',
           contentPadded && 'talkie-modal-content-padded',
           closeButton && 'talkie-modal-content-pad-bottom',
           !closeButton && 'talkie-modal-content-top-rounding',
@@ -80,6 +81,9 @@ export default {
       type: Array,
       default: () => [],
     },
+    centered: {
+      type: Boolean,
+    },
     closeButton: {
       type: Boolean,
     },
@@ -137,6 +141,11 @@ export default {
   background-color: var(--t-white);
   max-width: 445px;
   width: 100%;
+}
+.talkie-modal-content-centered {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 .talkie-modal-content-footer-wrapper {
   display: flex;
