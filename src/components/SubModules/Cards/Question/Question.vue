@@ -11,8 +11,32 @@
         class="talkie-question-card-image"
         :src="image"
         :alt="imageAlt"
-        v-if="image"
+        v-if="image && !audioSource"
       />
+      <talkie-audio-player
+        v-slot="{ startPlayer, stopPlayer, isPlaying }"
+        :source="audioSource"
+        v-if="!image && audioSource"
+      >
+        <talkie-icon
+          :name="'play'"
+          :variant="'primary'"
+          :isActive="true"
+          :size="40"
+          :iconToSizeRatio="1.2"
+          v-if="!isPlaying"
+          :onClick="startPlayer"
+        />
+        <talkie-icon
+          :name="'pause'"
+          :variant="'primary'"
+          :isActive="true"
+          :size="40"
+          :iconToSizeRatio="1.2"
+          v-if="isPlaying"
+          :onClick="stopPlayer"
+        />
+      </talkie-audio-player>
       <div class="talkie-question-card-details-header-wrapper">
         <h5 class="h5" v-if="title">{{ title }}</h5>
         <p class="p" v-if="topic">Topic: {{ topic }}</p>
@@ -35,12 +59,15 @@
 </template>
 
 <script>
-import { TalkieChip } from "@/components/UICore";
+import { TalkieIcon, TalkieChip } from "@/components/UICore";
+import { TalkieAudioPlayer } from "@/components/SubModules/AudioManager";
 
 export default {
   name: "QuestionCard",
   components: {
+    TalkieIcon,
     TalkieChip,
+    TalkieAudioPlayer,
   },
   props: {
     title: {
@@ -58,6 +85,9 @@ export default {
     imageAlt: {
       type: String,
       default: "Card Image",
+    },
+    audioSource: {
+      type: String,
     },
     fullWidth: {
       type: Boolean,
