@@ -1,7 +1,12 @@
 <template>
   <div class="talkie-question-card-wrapper">
     <div class="talkie-question-card-details-wrapper">
-      <img class="talkie-question-card-image" :src="image" v-if="image" />
+      <img
+        class="talkie-question-card-image"
+        :src="image"
+        :alt="imageAlt"
+        v-if="image"
+      />
       <div class="talkie-question-card-details-header-wrapper">
         <h5 class="h5" v-if="title">{{ title }}</h5>
         <p class="p" v-if="topic">Topic: {{ topic }}</p>
@@ -22,6 +27,10 @@ export default {
     },
     image: {
       type: String,
+    },
+    imageAlt: {
+      type: String,
+      default: "Card Image",
     },
   },
 };
