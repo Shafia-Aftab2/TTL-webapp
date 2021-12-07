@@ -6,7 +6,83 @@
         hideSidebar && 'talkie-sidebar-navigation-wrapper-hidden',
       ]"
       id="talkie-sidebar-navigation-wrapper"
-    ></div>
+    >
+      <div
+        class="talkie-sidebar-navigation-content-back-link-wrapper"
+        v-if="computedSidebar.hasBackLink"
+      >
+        <a
+          class="talkie-sidebar-navigation-content-back-link"
+          @click="handleBackLinkClick"
+          >&#8592; back</a
+        >
+      </div>
+      <ul
+        class="talkie-sidebar-navigation-content-items-wrapper"
+        v-if="computedSidebar.items && computedSidebar.items.length > 0"
+      >
+        <li
+          :class="[
+            'talkie-sidebar-navigation-content-item',
+            item.isActive && 'talkie-sidebar-navigation-content-item-active',
+          ]"
+          v-for="item in computedSidebar.items"
+          :key="item * Math.random() * 91641684161"
+        >
+          <p class="p" v-if="item.name">
+            {{ item.name }}
+          </p>
+          <talkie-icon :name="'arrow-head-right'" v-if="item.hasRightIcon" />
+        </li>
+      </ul>
+      <ul
+        :class="[
+          'talkie-sidebar-navigation-content-checkboxes-wrapper',
+          computedSidebar.items &&
+            computedSidebar.items.length > 0 &&
+            'talkie-sidebar-navigation-content-checkboxes-wrapper-top-spacing',
+        ]"
+        v-if="
+          computedSidebar.checkboxes && computedSidebar.checkboxes.length > 0
+        "
+      >
+        <talkie-check-box
+          v-for="_checkbox in computedSidebar.checkboxes"
+          :label="_checkbox.label"
+          :isChecked="_checkbox.isChecked"
+          :disabled="_checkbox.disabled"
+          :onToggle="_checkbox.onToggle"
+          :key="_checkbox * Math.random() * 91641684161"
+          :customClass="`${
+            _checkbox.isActive &&
+            'talkie-sidebar-navigation-content-checkbox-active'
+          } ${_checkbox.customClass}`"
+        />
+      </ul>
+      <ul
+        class="talkie-sidebar-navigation-content-buttons-wrapper"
+        v-if="computedSidebar.buttons && computedSidebar.buttons.length > 0"
+      >
+        <template
+          v-for="_sidebarButton in computedSidebar.buttons"
+          :key="_sidebarButton"
+        >
+          <talkie-button
+            :type="_sidebarButton.type || 'button'"
+            :variant="_sidebarButton.variant || 'primary'"
+            :size="_sidebarButton.size || 'medium'"
+            :outlined="_sidebarButton.outlined || false"
+            :fullWidth="_sidebarButton.fullWidth || false"
+            :loading="_sidebarButton.loading || false"
+            :disabled="_sidebarButton.disabled || false"
+            :onClick="_sidebarButton.onClick"
+            :customClass="`talkie-sidebar-navigation-content-button ${_sidebarButton.customClass}`"
+          >
+            {{ _sidebarButton.text }}
+          </talkie-button>
+        </template>
+      </ul>
+    </div>
     <div
       :class="[
         'talkie-sidebar-content-wrapper',
@@ -19,12 +95,27 @@
 </template>
 
 <script>
+import TalkieIcon from "../UICore/Icon.vue";
+import TalkieButton from "../UICore/Button.vue";
+import TalkieCheckBox from "../UICore/CheckBox.vue";
+
 export default {
   name: "SidebarLayout",
+  components: { TalkieIcon, TalkieButton, TalkieCheckBox },
+  computed: {
+    computedSidebar() {
+      return this.$store.state.sidebar;
+    },
+  },
   props: {
     hideSidebar: {
       type: Boolean,
       default: true,
+    },
+  },
+  methods: {
+    handleBackLinkClick() {
+      this.$router.go(-1);
     },
   },
 };
@@ -56,6 +147,43 @@ export default {
 .talkie-sidebar-navigation-wrapper:-webkit-scrollbar {
   display: none !important;
 }
+.talkie-sidebar-navigation-content-items-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--t-space-10);
+}
+.talkie-sidebar-navigation-content-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  cursor: pointer;
+  border-style: solid;
+  border-color: transparent;
+  border-width: var(--t-space-1);
+  border-radius: var(--t-br-medium);
+  padding: var(--t-space-5);
+  padding-left: var(--t-space-16);
+}
+.talkie-sidebar-navigation-content-item:hover {
+  background-color: var(--t-gray-100);
+  border-color: var(--t-gray-100);
+}
+.talkie-sidebar-navigation-content-item-active {
+  font-family: var(--t-ff-bold);
+}
+.talkie-sidebar-navigation-content-checkboxes-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.talkie-sidebar-navigation-content-checkbox-active {
+  font-family: var(--t-ff-bold);
+}
+.talkie-sidebar-navigation-content-buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .talkie-sidebar-content-wrapper {
   margin: auto;
   transition: 0.15s ease;
@@ -71,10 +199,36 @@ export default {
   }
   .talkie-sidebar-navigation-wrapper {
     padding: var(--t-space-16);
+    padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-50);
   }
   .talkie-sidebar-navigation-wrapper-hidden {
     transform: translateX(calc(var(--sidebar-width) * -1));
+  }
+  .talkie-sidebar-navigation-content-back-link-wrapper {
+    padding-bottom: var(--t-space-36);
+  }
+  .talkie-sidebar-navigation-content-back-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
+  .talkie-sidebar-navigation-content-item {
+    font-size: calc(var(--t-fs-base) * 0.9);
+    min-height: var(--t-space-48);
+    max-height: var(--t-space-48);
+  }
+  .talkie-sidebar-navigation-content-checkboxes-wrapper {
+    gap: var(--t-space-24);
+  }
+  .talkie-sidebar-navigation-content-checkboxes-wrapper-top-spacing {
+    margin-top: var(--t-space-24);
+  }
+  .talkie-sidebar-navigation-content-buttons-wrapper {
+    gap: var(--t-space-8);
+    margin-top: var(--t-space-24);
+  }
+  .talkie-sidebar-navigation-content-button {
+    min-height: calc(var(--t-space-48) * 0.8);
+    max-height: calc(var(--t-space-48) * 0.8);
   }
   .talkie-sidebar-content-wrapper {
     margin: auto;
@@ -89,14 +243,38 @@ export default {
   .talkie-sidebar-navigation-wrapper {
     transform: translateX(0);
     padding: var(--t-space-12);
+    padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-58);
+  }
+  .talkie-sidebar-navigation-content-back-link-wrapper {
+    padding-bottom: var(--t-space-50);
+  }
+  .talkie-sidebar-navigation-content-back-link {
+    font-size: calc(var(--t-fs-small) * 0.95);
+  }
+  .talkie-sidebar-navigation-content-item {
+    font-size: calc(var(--t-fs-base) * 0.9);
+    min-height: var(--t-space-48);
+    max-height: var(--t-space-48);
+  }
+  .talkie-sidebar-navigation-content-checkboxes-wrapper {
+    gap: var(--t-space-28);
+  }
+  .talkie-sidebar-navigation-content-checkboxes-wrapper-top-spacing {
+    margin-top: var(--t-space-24);
+  }
+  .talkie-sidebar-navigation-content-buttons-wrapper {
+    gap: var(--t-space-8);
+    margin-top: var(--t-space-24);
+  }
+  .talkie-sidebar-navigation-content-button {
+    min-height: calc(var(--t-space-48) * 0.8);
+    max-height: calc(var(--t-space-48) * 0.8);
   }
   .talkie-sidebar-content-wrapper {
     margin: auto;
     max-width: var(--t-grid-large);
-    margin-left: calc(
-      var(--sidebar-width) + (var(--sidebar-width) / 10)
-    ) !important;
+    margin-left: var(--sidebar-width) !important;
     padding-top: var(--t-space-58);
   }
 }
@@ -106,6 +284,10 @@ export default {
   }
   .talkie-sidebar-navigation-wrapper {
     padding: var(--t-space-18);
+    padding-bottom: calc(var(--t-space-70) * 3);
+  }
+  .talkie-sidebar-navigation-content-item {
+    font-size: calc(var(--t-fs-base) * 0.95);
   }
 }
 @media (min-width: 1200px) {
@@ -114,10 +296,41 @@ export default {
   }
   .talkie-sidebar-navigation-wrapper {
     padding: var(--t-space-20);
+    padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-70);
+  }
+  .talkie-sidebar-navigation-content-back-link-wrapper {
+    padding-bottom: var(--t-space-70);
+  }
+  .talkie-sidebar-navigation-content-back-link {
+    font-size: var(--t-fs-small);
+  }
+  .talkie-sidebar-navigation-content-item {
+    font-size: var(--t-fs-base);
+    min-height: var(--t-space-56);
+    max-height: var(--t-space-56);
+  }
+  .talkie-sidebar-navigation-content-checkboxes-wrapper {
+    gap: var(--t-space-32);
+  }
+  .talkie-sidebar-navigation-content-checkboxes-wrapper-top-spacing {
+    margin-top: var(--t-space-32);
+  }
+  .talkie-sidebar-navigation-content-buttons-wrapper {
+    gap: var(--t-space-16);
+    margin-top: var(--t-space-32);
+  }
+  .talkie-sidebar-navigation-content-button {
+    min-height: calc(var(--t-space-56) * 0.8);
+    max-height: calc(var(--t-space-56) * 0.8);
   }
   .talkie-sidebar-content-wrapper {
     padding-top: var(--t-space-70);
   }
+}
+
+/* TEMP */
+.p {
+  margin-bottom: 0 !important;
 }
 </style>
