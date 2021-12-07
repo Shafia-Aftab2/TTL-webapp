@@ -13,6 +13,7 @@
       <div
         :class="[
           'talkie-modal-content',
+          contentPadded && 'talkie-modal-content-padded',
           closeButton && 'talkie-modal-content-pad-bottom',
           !closeButton && 'talkie-modal-content-top-rounding',
           customClass.toString(),
@@ -85,6 +86,9 @@ export default {
     onClose: {
       type: Function,
       default: () => {},
+    },
+    contentPadded: {
+      type: Boolean,
     },
     customClass: {
       type: String,
@@ -162,6 +166,8 @@ export default {
   .talkie-modal-content {
     border-bottom-left-radius: var(--t-br-medium);
     border-bottom-right-radius: var(--t-br-medium);
+  }
+  .talkie-modal-content-padded {
     gap: var(--t-space-12);
     padding: var(--t-space-30) var(--t-space-36);
   }
@@ -193,6 +199,8 @@ export default {
   .talkie-modal-content {
     border-bottom-left-radius: var(--t-br-large);
     border-bottom-right-radius: var(--t-br-large);
+  }
+  .talkie-modal-content-padded {
     gap: var(--t-space-12);
     padding: var(--t-space-34) var(--t-space-38);
   }
@@ -217,9 +225,12 @@ export default {
   }
 }
 @media (min-width: 1200px) {
-  .talkie-modal-content {
-    gap: var(--t-space-24);
+  .talkie-modal-content-padded {
+    gap: var(--t-space-16);
     padding: var(--t-space-36) var(--t-space-40);
+  }
+  .talkie-modal-content-pad-bottom {
+    padding-bottom: var(--t-space-50);
   }
   .talkie-confirm-modal-text {
     line-height: 1.5;
