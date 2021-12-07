@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 // base
 import AppLayout from "../components/Layouts/Wrapper.vue";
 import HomeLayout from "../components/Layouts/HomeWrapper.vue";
+import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
 import TeacherSignup from "../components/Modules/Teachers/Signup";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
@@ -36,7 +37,7 @@ const routes = [
   },
   {
     path: "/teachers",
-    component: AppLayout,
+    component: Layout,
     children: [
       {
         name: "TeacherSignup",
@@ -53,6 +54,13 @@ const routes = [
         path: "/teachers/classes/choose-topics",
         component: TeacherClassChooseTopics,
       },
+    ],
+  },
+  {
+    path: "/teachers",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
       {
         name: "TeacherClassInviteStudents",
         path: "/teachers/classes/invite-students",
