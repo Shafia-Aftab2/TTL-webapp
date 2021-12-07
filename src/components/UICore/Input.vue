@@ -24,6 +24,7 @@
         :name="'eye'"
         :onClick="handlePasswordToggle"
         :size="size === 'small' ? 20 : size === 'medium' ? 25 : 28"
+        v-if="type === 'password'"
       />
     </div>
     <p

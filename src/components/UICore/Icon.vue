@@ -1,5 +1,6 @@
 <template>
   <button
+    :type="'button'"
     :class="[
       'talkie-icon-wrapper',
       `talkie-icon-${variant.toString()}-wrapper`,
