@@ -1,5 +1,10 @@
 <template>
-  <div class="talkie-question-card-wrapper">
+  <div
+    :class="[
+      'talkie-question-card-wrapper',
+      fullWidth && 'talkie-question-card-fullwidth-wrapper',
+    ]"
+  >
     <div class="talkie-question-card-details-wrapper">
       <img
         class="talkie-question-card-image"
@@ -53,6 +58,10 @@ export default {
       type: String,
       default: "Card Image",
     },
+    fullWidth: {
+      type: Boolean,
+      default: false,
+    },
     manageMode: {
       type: Boolean,
       default: false,
@@ -78,6 +87,11 @@ export default {
   border-radius: var(--t-br-large);
   padding: var(--t-space-16);
   gap: var(--t-space-16);
+}
+.talkie-question-card-fullwidth-wrapper {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 .talkie-question-card-image {
   border-radius: 50%;
