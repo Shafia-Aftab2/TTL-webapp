@@ -1,7 +1,23 @@
 <template>
   <talkie-back-drop>
     <div class="talkie-modal-content-wrapper">
-      <div :class="['talkie-modal-content', customClass.toString()]">
+      <!-- Close Icon -->
+      <div :class="['talkie-modal-content-header']" v-if="closeButton">
+        <talkie-icon
+          :name="'x-mark'"
+          :iconToSizeRatio="1.5"
+          :onClick="onClose"
+        />
+      </div>
+
+      <div
+        :class="[
+          'talkie-modal-content',
+          closeButton && 'talkie-modal-content-pad-bottom',
+          !closeButton && 'talkie-modal-content-top-rounding',
+          customClass.toString(),
+        ]"
+      >
         <!-- Custom Dialog -->
         <slot v-if="type === 'default'" />
 
@@ -48,10 +64,11 @@
 <script>
 import TalkieBackDrop from "./BackDrop.vue";
 import TalkieButton from "./Button.vue";
+import TalkieIcon from "./Icon.vue";
 
 export default {
   name: "TalkieModal",
-  components: { TalkieBackDrop, TalkieButton },
+  components: { TalkieBackDrop, TalkieButton, TalkieIcon },
   props: {
     type: {
       type: String,
@@ -61,6 +78,13 @@ export default {
     buttonsOutSideModal: {
       type: Array,
       default: () => [],
+    },
+    closeButton: {
+      type: Boolean,
+    },
+    onClose: {
+      type: Function,
+      default: () => {},
     },
     customClass: {
       type: String,
@@ -95,6 +119,14 @@ export default {
   max-width: 445px;
   width: 100%;
 }
+.talkie-modal-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: var(--t-white);
+  width: 100%;
+  padding: var(--t-space-5);
+}
 .talkie-modal-content {
   display: flex;
   flex-direction: column;
@@ -123,10 +155,22 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
+  .talkie-modal-content-header {
+    border-top-left-radius: var(--t-br-medium);
+    border-top-right-radius: var(--t-br-medium);
+  }
   .talkie-modal-content {
-    border-radius: var(--t-br-medium);
-    gap: var(--t-space-16);
+    border-bottom-left-radius: var(--t-br-medium);
+    border-bottom-right-radius: var(--t-br-medium);
+    gap: var(--t-space-12);
     padding: var(--t-space-30) var(--t-space-36);
+  }
+  .talkie-modal-content-pad-bottom {
+    padding-bottom: var(--t-space-44);
+  }
+  .talkie-modal-content-top-rounding {
+    border-top-left-radius: var(--t-br-medium);
+    border-top-right-radius: var(--t-br-medium);
   }
   .talkie-confirm-modal-text {
     line-height: 1.3;
@@ -142,10 +186,22 @@ export default {
   }
 }
 @media (min-width: 600px) {
+  .talkie-modal-content-header {
+    border-top-left-radius: var(--t-br-large);
+    border-top-right-radius: var(--t-br-large);
+  }
   .talkie-modal-content {
-    border-radius: var(--t-br-large);
-    gap: var(--t-space-20);
+    border-bottom-left-radius: var(--t-br-large);
+    border-bottom-right-radius: var(--t-br-large);
+    gap: var(--t-space-12);
     padding: var(--t-space-34) var(--t-space-38);
+  }
+  .talkie-modal-content-pad-bottom {
+    padding-bottom: var(--t-space-48);
+  }
+  .talkie-modal-content-top-rounding {
+    border-top-left-radius: var(--t-br-large);
+    border-top-right-radius: var(--t-br-large);
   }
   .talkie-confirm-modal-text {
     line-height: 1.4;
