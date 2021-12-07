@@ -2,6 +2,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 *,
@@ -30,7 +31,8 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   background-color: var(--t-white);
   font-family: var(--t-ff-regular);
