@@ -2,7 +2,10 @@
   <talkie-back-drop>
     <div class="talkie-modal-content-wrapper">
       <!-- Close Icon -->
-      <div :class="['talkie-modal-content-header']" v-if="closeButton">
+      <div
+        :class="['talkie-modal-content-header']"
+        v-if="type === 'confirm' || closeButton"
+      >
         <talkie-icon
           :name="'x-mark'"
           :iconToSizeRatio="1.5"
@@ -15,7 +18,8 @@
           'talkie-modal-content',
           centered && 'talkie-modal-content-centered',
           contentPadded && 'talkie-modal-content-padded',
-          closeButton && 'talkie-modal-content-pad-bottom',
+          (type === 'confirm' || closeButton) &&
+            'talkie-modal-content-pad-bottom',
           !closeButton && 'talkie-modal-content-top-rounding',
           customClass.toString(),
         ]"
@@ -24,27 +28,24 @@
         <slot v-if="type === 'default'" />
 
         <!-- Confirm Dialog -->
-        <p class="talkie-confirm-modal-text" v-if="type === 'confirm' && text">
-          {{ text }}
+        <h3 class="h3" v-if="type === 'confirm' && title">
+          {{ title }}
+        </h3>
+        <p class="p" v-if="type === 'confirm' && description">
+          {{ description }}
         </p>
         <div
           class="talkie-confirm-modal-action-buttons"
           v-if="type === 'confirm'"
         >
           <talkie-button
-            variant="transparent"
-            :onClick="onDismiss"
+            variant="danger"
+            :noHighlights="true"
+            :onClick="onConfirm"
             :size="size"
           >
-            Cancel
+            {{ confirmButtonText }}
           </talkie-button>
-          <talkie-button
-            variant="primary"
-            :loading="false"
-            :onClick="onContinue"
-            :size="size"
-            >Continue</talkie-button
-          >
         </div>
       </div>
       <div class="talkie-modal-content-footer-wrapper">
@@ -99,7 +100,10 @@ export default {
       default: "",
     },
     // Confirm variant props
-    text: {
+    title: {
+      type: String,
+    },
+    description: {
       type: String,
     },
     size: {
@@ -107,11 +111,11 @@ export default {
       default: "medium",
       validator: (val) => ["small", "medium", "large"].includes(val),
     },
-    onContinue: {
-      type: Function,
-      default: () => {},
+    confirmButtonText: {
+      type: String,
+      default: "Delete",
     },
-    onDismiss: {
+    onConfirm: {
       type: Function,
       default: () => {},
     },
@@ -158,7 +162,7 @@ export default {
 }
 
 /* Confirm Dialog */
-.talkie-confirm-modal-text {
+.talkie-confirm-modal-description {
   color: var(--t-black-100);
 }
 .talkie-confirm-modal-action-buttons {
@@ -187,12 +191,13 @@ export default {
     border-top-left-radius: var(--t-br-medium);
     border-top-right-radius: var(--t-br-medium);
   }
-  .talkie-confirm-modal-text {
+  .talkie-confirm-modal-description {
     line-height: 1.3;
     font-size: calc(var(--t-fs-h3) * 0.7);
     word-spacing: var(--t-space-1);
   }
   .talkie-confirm-modal-action-buttons {
+    margin-top: var(--t-space-16);
     gap: var(--t-space-4);
   }
   .talkie-modal-content-footer-wrapper {
@@ -220,12 +225,13 @@ export default {
     border-top-left-radius: var(--t-br-large);
     border-top-right-radius: var(--t-br-large);
   }
-  .talkie-confirm-modal-text {
+  .talkie-confirm-modal-description {
     line-height: 1.4;
     font-size: calc(var(--t-fs-h3) * 0.9);
     word-spacing: var(--t-space-1);
   }
   .talkie-confirm-modal-action-buttons {
+    margin-top: var(--t-space-24);
     gap: var(--t-space-6);
   }
   .talkie-modal-content-footer-wrapper {
@@ -241,7 +247,7 @@ export default {
   .talkie-modal-content-pad-bottom {
     padding-bottom: var(--t-space-50);
   }
-  .talkie-confirm-modal-text {
+  .talkie-confirm-modal-description {
     line-height: 1.5;
     font-size: var(--t-fs-h3);
     word-spacing: var(--t-space-2);
@@ -253,5 +259,10 @@ export default {
     width: 80%;
     margin-top: var(--t-space-48);
   }
+}
+
+/* TEMP */
+.p {
+  margin-bottom: 0 !important;
 }
 </style>
