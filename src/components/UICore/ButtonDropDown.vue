@@ -1,4 +1,7 @@
 <template>
+  <span @click="handleBackDropClick">
+    <talkie-back-drop v-if="showDropDown" />
+  </span>
   <div class="talkie-button-drop-down-wrapper">
     <talkie-button
       :type="'button'"
@@ -30,6 +33,7 @@
 
 <script>
 import TalkieButton from "./Button.vue";
+import TalkieBackDrop from "./BackDrop.vue";
 
 export default {
   name: "TalkieButtonDropDown",
@@ -38,7 +42,7 @@ export default {
       showDropDown: false,
     };
   },
-  components: { TalkieButton },
+  components: { TalkieButton, TalkieBackDrop },
   props: {
     variant: {
       type: String,
@@ -78,6 +82,9 @@ export default {
     handleButtonClick() {
       this.showDropDown = !this.showDropDown;
       this.onClick && this.onClick();
+    },
+    handleBackDropClick() {
+      this.showDropDown = !this.showDropDown;
     },
   },
 };
