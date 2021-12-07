@@ -12,6 +12,7 @@
         <p class="p" v-if="topic">Topic: {{ topic }}</p>
       </div>
     </div>
+    <p class="p" v-if="description">{{ description }}</p>
   </div>
 </template>
 
@@ -23,6 +24,9 @@ export default {
       type: String,
     },
     topic: {
+      type: String,
+    },
+    description: {
       type: String,
     },
     image: {
