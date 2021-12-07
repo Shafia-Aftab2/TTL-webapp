@@ -3,6 +3,7 @@
     :class="[
       'talkie-question-card-wrapper',
       fullWidth && 'talkie-question-card-fullwidth-wrapper',
+      centered && 'talkie-question-card-centered-wrapper',
     ]"
   >
     <div class="talkie-question-card-details-wrapper">
@@ -62,6 +63,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    centered: {
+      type: Boolean,
+      default: false,
+    },
     manageMode: {
       type: Boolean,
       default: false,
@@ -92,6 +97,9 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+}
+.talkie-question-card-centered-wrapper {
+  align-items: center;
 }
 .talkie-question-card-image {
   border-radius: 50%;
