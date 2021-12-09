@@ -154,9 +154,6 @@ export default {
   align-items: center;
   background-color: var(--t-white);
   width: fit-content;
-  padding: var(--t-space-16);
-  gap: var(--t-space-16);
-  border-radius: var(--t-br-large);
 }
 .talkie-feedback-card-fullwidth-wrapper {
   width: 100%;
@@ -173,12 +170,10 @@ export default {
 .talkie-feedback-card-options {
   display: flex;
   align-items: center;
-  gap: var(--t-space-12);
 }
 .talkie-feedback-card-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
-  border-width: var(--t-space-3);
 }
 .talkie-feedback-card-options-audio-timestamps {
   background: var(--t-primary);
@@ -186,11 +181,65 @@ export default {
   border-radius: var(--t-br-medium);
   text-align: center;
   white-space: nowrap;
-  font-size: var(--t-fs-small);
 }
 .talkie-feedback-card-options-audio-player-icons {
   display: flex;
   align-items: center;
-  gap: var(--t-space-12);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-feedback-card-wrapper {
+    border-radius: var(--t-br-small);
+    padding: var(--t-space-12);
+    gap: var(--t-space-12);
+  }
+  .talkie-feedback-card-options {
+    gap: var(--t-space-12);
+  }
+
+  .talkie-feedback-card-stop-recording-button {
+    border-width: var(--t-space-2);
+  }
+  .talkie-feedback-card-options-audio-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
+  .talkie-feedback-card-options-audio-player-icons {
+    gap: var(--t-space-8);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-feedback-card-wrapper {
+    border-radius: var(--t-br-medium);
+    padding: var(--t-space-16);
+    gap: var(--t-space-16);
+  }
+  .talkie-feedback-card-options {
+    gap: var(--t-space-12);
+  }
+
+  .talkie-feedback-card-stop-recording-button {
+    border-width: var(--t-space-3);
+  }
+  .talkie-feedback-card-options-audio-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.85);
+  }
+  .talkie-feedback-card-options-audio-player-icons {
+    gap: var(--t-space-12);
+  }
+}
+@media (min-width: 900px) {
+  .talkie-feedback-card-wrapper {
+    border-radius: var(--t-br-large);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-feedback-card-wrapper {
+    padding: var(--t-space-16);
+    gap: var(--t-space-16);
+  }
+  .talkie-feedback-card-options-audio-timestamps {
+    font-size: var(--t-fs-small);
+  }
 }
 </style>
