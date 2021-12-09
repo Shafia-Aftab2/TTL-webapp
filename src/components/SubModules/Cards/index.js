@@ -1,3 +1,4 @@
 import TalkieQuestionCard from "./Question";
+import TalkieFeedbackCard from "./Feedback";
 
-export { TalkieQuestionCard };
+export { TalkieQuestionCard, TalkieFeedbackCard };
