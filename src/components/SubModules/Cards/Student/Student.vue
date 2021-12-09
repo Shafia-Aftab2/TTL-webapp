@@ -7,8 +7,10 @@
   >
     <!-- Left Content -->
     <div class="talkie-student-card-details-wrapper">
-      <!-- Feedback Mode | Points Mode -->
-      <template v-if="mode === 'feedback' || mode === 'points'">
+      <!-- Feedback Mode | Info Mode | Points Mode -->
+      <template
+        v-if="mode === 'feedback' || mode === 'info' || mode === 'points'"
+      >
         <img
           class="talkie-student-card-details-image"
           :src="studentAvatar"
@@ -158,6 +160,17 @@
         />
       </template>
 
+      <!-- Info Mode -->
+      <template v-if="mode === 'info'">
+        <talkie-icon
+          :name="'arrow-head-right'"
+          :variant="'secondary'"
+          :size="40"
+          :iconToSizeRatio="1.1"
+          :onClick="onInfoClick"
+        />
+      </template>
+
       <!-- Points Mode -->
       <template v-if="mode === 'points'">
         <h5 class="h5" v-if="studentPoints">{{ studentPoints }} points</h5>
@@ -189,13 +202,15 @@ export default {
   props: {
     mode: {
       type: String,
-      validator: (val) => ["feedback", "points", "question"].includes(val),
+      validator: (val) =>
+        ["feedback", "info", "points", "question"].includes(val),
     },
     fullWidth: {
       type: Boolean,
       default: true,
     },
     // feedback
+    // info
     // points
     studentName: {
       type: String,
@@ -220,6 +235,11 @@ export default {
       default: () => {},
     },
     onRatingStarClick: {
+      type: Function,
+      default: () => {},
+    },
+    // info
+    onInfoClick: {
       type: Function,
       default: () => {},
     },
