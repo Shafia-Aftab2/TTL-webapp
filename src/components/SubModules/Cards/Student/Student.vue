@@ -91,7 +91,7 @@
           :recording="currentRecording"
           v-if="currentRecording"
         >
-          <span>
+          <span class="talkie-student-card-options-audio-timestamps">
             {{ currentAudioPlaybackTime }} /
             {{ totalAudioPlaybackTime }}
           </span>
@@ -259,6 +259,14 @@ export default {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
   border-width: var(--t-space-3);
+}
+.talkie-student-card-options-audio-timestamps {
+  background: var(--t-primary);
+  padding: var(--t-space-3) var(--t-space-5);
+  border-radius: var(--t-br-medium);
+  text-align: center;
+  white-space: nowrap;
+  font-size: var(--t-fs-small);
 }
 .talkie-student-card-options-audio-player-icons {
   display: flex;
