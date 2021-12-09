@@ -21,6 +21,16 @@
         </p>
       </template>
 
+      <!-- Add Mode -->
+      <template v-if="mode === 'add'">
+        <p
+          class="p talkie-student-card-details-title"
+          style="margin-bottom: 0 !important"
+        >
+          Add Student
+        </p>
+      </template>
+
       <!-- Question Mode -->
       <template v-if="mode === 'question'">
         <p
@@ -171,6 +181,18 @@
         />
       </template>
 
+      <!-- Add Mode -->
+      <template v-if="mode === 'add'">
+        <talkie-icon
+          :name="'plus-rounded'"
+          :isActive="true"
+          :variant="'neutral'"
+          :size="40"
+          :iconToSizeRatio="1.2"
+          :onClick="onAddClick"
+        />
+      </template>
+
       <!-- Points Mode -->
       <template v-if="mode === 'points'">
         <h5 class="h5" v-if="studentPoints">{{ studentPoints }} points</h5>
@@ -203,7 +225,7 @@ export default {
     mode: {
       type: String,
       validator: (val) =>
-        ["feedback", "info", "points", "question"].includes(val),
+        ["feedback", "info", "add", "points", "question"].includes(val),
     },
     fullWidth: {
       type: Boolean,
@@ -246,6 +268,11 @@ export default {
     // points
     studentPoints: {
       type: String,
+    },
+    // add
+    onAddClick: {
+      type: Function,
+      default: () => {},
     },
     // question
     questionText: {
