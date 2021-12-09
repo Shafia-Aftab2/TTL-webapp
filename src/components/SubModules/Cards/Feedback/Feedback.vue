@@ -3,6 +3,7 @@
     :class="[
       'talkie-feedback-card-wrapper',
       fullWidth && 'talkie-feedback-card-fullwidth-wrapper',
+      currentRecording && 'talkie-feedback-card-wrap-content-wrapper',
     ]"
   >
     <div class="talkie-feedback-card-input-wrapper">
@@ -10,7 +11,12 @@
     </div>
 
     <!-- Recorder -->
-    <div class="talkie-feedback-card-options">
+    <div
+      :class="[
+        'talkie-feedback-card-options',
+        currentRecording && 'talkie-feedback-card-options-wrap-content',
+      ]"
+    >
       <talkie-audio-recorder
         v-slot="{ startRecording, stopRecording, isRecording }"
         :onRecordingStopped="handleRecordedItem"
@@ -194,10 +200,17 @@ export default {
     padding: var(--t-space-12);
     gap: var(--t-space-12);
   }
+  .talkie-feedback-card-wrap-content-wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
   .talkie-feedback-card-options {
     gap: var(--t-space-12);
   }
-
+  .talkie-feedback-card-options-wrap-content {
+    flex-direction: column;
+    gap: var(--t-space-12);
+  }
   .talkie-feedback-card-stop-recording-button {
     border-width: var(--t-space-2);
   }
@@ -206,6 +219,16 @@ export default {
   }
   .talkie-feedback-card-options-audio-player-icons {
     gap: var(--t-space-8);
+  }
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .talkie-feedback-card-wrap-content-wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .talkie-feedback-card-options-wrap-content {
+    flex-direction: column;
+    gap: var(--t-space-12);
   }
 }
 @media (min-width: 600px) {
@@ -217,7 +240,9 @@ export default {
   .talkie-feedback-card-options {
     gap: var(--t-space-12);
   }
-
+  .talkie-feedback-card-options-wrap-content {
+    gap: var(--t-space-16);
+  }
   .talkie-feedback-card-stop-recording-button {
     border-width: var(--t-space-3);
   }
@@ -237,6 +262,9 @@ export default {
   .talkie-feedback-card-wrapper {
     padding: var(--t-space-16);
     gap: var(--t-space-16);
+  }
+  .talkie-feedback-card-options-wrap-content {
+    gap: var(--t-space-24);
   }
   .talkie-feedback-card-options-audio-timestamps {
     font-size: var(--t-fs-small);
