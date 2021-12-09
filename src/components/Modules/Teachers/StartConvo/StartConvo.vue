@@ -46,55 +46,73 @@
       </div>
       <div class="teachers-class-start-convo-form-options-wrapper">
         <div class="teachers-class-start-convo-form-options">
-          <talkie-icon
-            :name="'arrow-rounded-left'"
-            :isActive="true"
-            :variant="'secondary'"
-            :size="30"
-          />
-          <talkie-icon
-            :name="'mike-unmuted'"
-            :isActive="true"
-            :variant="'secondary'"
-            :size="50"
-            :onClick="startRecording"
-            v-if="!isRecording && !currentRecording"
-          />
-          <talkie-icon
-            :name="'square'"
-            :isActive="true"
-            :variant="'secondary'"
-            :size="50"
-            :iconToSizeRatio="1.5"
-            :customClass="'teachers-class-start-convo-form-options-stop-recording-button'"
-            :onClick="stopRecording"
-            v-if="isRecording && !currentRecording"
-          />
-          <talkie-icon
-            :name="'play'"
-            :isActive="true"
-            :variant="'primary'"
-            :size="50"
-            :onClick="toggleAudioPlayerState"
-            v-if="!isRecording && !isAudioPlaying && currentRecording"
-          />
-          <talkie-icon
-            :name="'pause'"
-            :isActive="true"
-            :variant="'primary'"
-            :size="50"
-            :onClick="toggleAudioPlayerState"
-            v-if="!isRecording && isAudioPlaying && currentRecording"
-          />
-          <talkie-icon
-            :name="'send'"
-            :isActive="true"
-            :variant="'secondary'"
-            :size="30"
-          />
+          <div class="teachers-class-start-convo-form-options-item">
+            <talkie-icon
+              :name="'arrow-rounded-left'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="30"
+            />
+            <p class="teachers-class-start-convo-form-options-item-label">
+              Redo
+            </p>
+          </div>
+          <div class="teachers-class-start-convo-form-options-item">
+            <talkie-icon
+              :name="'mike-unmuted'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="50"
+              :onClick="startRecording"
+              v-if="!isRecording && !currentRecording"
+            />
+            <talkie-icon
+              :name="'square'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="50"
+              :iconToSizeRatio="1.5"
+              :customClass="'teachers-class-start-convo-form-options-stop-recording-button'"
+              :onClick="stopRecording"
+              v-if="isRecording && !currentRecording"
+            />
+            <talkie-icon
+              :name="'play'"
+              :isActive="true"
+              :variant="'primary'"
+              :size="50"
+              :onClick="toggleAudioPlayerState"
+              v-if="!isRecording && !isAudioPlaying && currentRecording"
+            />
+            <talkie-icon
+              :name="'pause'"
+              :isActive="true"
+              :variant="'primary'"
+              :size="50"
+              :onClick="toggleAudioPlayerState"
+              v-if="!isRecording && isAudioPlaying && currentRecording"
+            />
+            <p class="teachers-class-start-convo-form-options-item-label">
+              Tap To Record
+            </p>
+          </div>
+          <div class="teachers-class-start-convo-form-options-item">
+            <talkie-icon
+              :name="'send'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="30"
+            />
+            <p class="teachers-class-start-convo-form-options-item-label">
+              Preview send
+            </p>
+          </div>
         </div>
       </div>
     </talkie-audio-recorder>
+  </div>
+  <div class="teachers-class-start-convo-footer">
+    <a href="#" class="teachers-class-start-convo-footer-link">Not now</a>
   </div>
 </template>
 
@@ -171,9 +189,34 @@ body {
   position: absolute;
   left: 50%;
 }
+.teachers-class-start-convo-form-options-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.teachers-class-start-convo-form-options-item-label {
+  text-align: center;
+  line-height: 1.1;
+}
 .teachers-class-start-convo-form-options-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
+}
+.teachers-class-start-convo-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+.teachers-class-start-convo-footer-link {
+  text-decoration: underline;
+}
+.teachers-class-start-convo-footer-link,
+.teachers-class-start-convo-footer-link:hover,
+.teachers-class-start-convo-footer-link:visited {
+  text-decoration: underline;
+  color: var(--t-black);
 }
 
 /* Responsive variants */
@@ -196,6 +239,13 @@ body {
     transform: translate(-50%, 5%);
     gap: var(--t-space-36);
   }
+  .teachers-class-start-convo-form-options-item {
+    gap: var(--t-space-8);
+    min-width: var(--t-space-64);
+  }
+  .teachers-class-start-convo-form-options-item-label {
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
   .teachers-class-start-convo-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-12);
@@ -205,6 +255,13 @@ body {
   }
   .teachers-class-start-convo-form-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
+  }
+  .teachers-class-start-convo-footer {
+    margin-top: var(--t-space-70);
+    padding: var(--t-space-64);
+  }
+  .teachers-class-start-convo-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
   }
 }
 @media (min-width: 600px) {
@@ -226,6 +283,13 @@ body {
     transform: translate(-50%, -5%);
     gap: var(--t-space-40);
   }
+  .teachers-class-start-convo-form-options-item {
+    gap: var(--t-space-10);
+    min-width: calc(var(--t-space-64) * 1.5);
+  }
+  .teachers-class-start-convo-form-options-item-label {
+    font-size: calc(var(--t-fs-small) * 0.85);
+  }
   .teachers-class-start-convo-form-options-audio-player-wrapper {
     gap: var(--t-space-8);
     margin-top: var(--t-space-10);
@@ -235,6 +299,13 @@ body {
   }
   .teachers-class-start-convo-form-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
+  }
+  .teachers-class-start-convo-footer {
+    margin-top: var(--t-space-70);
+    padding: var(--t-space-64);
+  }
+  .teachers-class-start-convo-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
   }
 }
 @media (min-width: 900px) {
@@ -259,12 +330,26 @@ body {
     transform: translate(-50%, 5%);
     gap: var(--t-space-48);
   }
+  .teachers-class-start-convo-form-options-item {
+    gap: var(--t-space-12);
+    min-width: calc(var(--t-space-48) * 2);
+  }
+  .teachers-class-start-convo-form-options-item-label {
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
   .teachers-class-start-convo-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-16);
   }
   .teachers-class-start-convo-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
+  }
+  .teachers-class-start-convo-footer {
+    margin-top: var(--t-space-70);
+    padding: var(--t-space-50);
+  }
+  .teachers-class-start-convo-footer-link {
+    font-size: var(--t-fs-small);
   }
 }
 </style>

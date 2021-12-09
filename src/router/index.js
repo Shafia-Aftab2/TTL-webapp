@@ -5,6 +5,7 @@ import HomeLayout from "../components/Layouts/HomeWrapper.vue";
 import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
 import TeacherSignup from "../components/Modules/Teachers/Signup";
+import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
 import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
 import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
@@ -70,6 +71,18 @@ const routes = [
         name: "TeacherStartConvo",
         path: "/teachers/start-convo",
         component: TeacherStartConvo,
+      },
+    ],
+  },
+  {
+    path: "/teachers",
+    component: Layout,
+    props: { variant: "dark", type: "sidebar" },
+    children: [
+      {
+        name: "TeacherClassHome",
+        path: "/teachers/classes/home",
+        component: TeacherClassHome,
       },
     ],
   },
