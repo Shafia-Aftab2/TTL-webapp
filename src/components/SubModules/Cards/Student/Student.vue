@@ -18,12 +18,23 @@
           {{ studentName }}
         </p>
       </template>
+
+      <!-- Question Mode -->
+      <template v-if="mode === 'question'">
+        <p
+          class="p talkie-student-card-details-title"
+          style="margin-bottom: 0 !important"
+          v-if="questionText"
+        >
+          {{ questionText }}
+        </p>
+      </template>
     </div>
 
     <!-- Right Content -->
     <div class="talkie-student-card-options">
-      <!-- Feedback Mode -->
-      <template v-if="mode === 'feedback'">
+      <!-- Feedback Mode || Question Mode -->
+      <template v-if="mode === 'feedback' || mode === 'question'">
         <!-- Source Record || Player -->
         <talkie-audio-player
           v-slot="{ isPlaying, startPlayer, stopPlayer }"
@@ -173,7 +184,7 @@ export default {
   props: {
     mode: {
       type: String,
-      validator: (val) => ["feedback"].includes(val),
+      validator: (val) => ["feedback", "question"].includes(val),
     },
     fullWidth: {
       type: Boolean,
@@ -204,6 +215,10 @@ export default {
     onRatingStarClick: {
       type: Function,
       default: () => {},
+    },
+    // question
+    questionText: {
+      type: String,
     },
   },
   methods: {
@@ -248,6 +263,9 @@ export default {
   min-width: var(--t-space-70);
   height: var(--t-space-70);
   width: var(--t-space-70);
+}
+.talkie-student-card-details-title {
+  padding: 0 var(--t-space-8);
 }
 .talkie-student-card-options {
   display: flex;
