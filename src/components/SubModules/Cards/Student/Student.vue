@@ -52,6 +52,10 @@
           </span>
         </talkie-audio-player>
         <!-- New Recording || Recorder, Player, Reset And Send -->
+        <div
+          class="talkie-student-card-options-spacer"
+          v-if="currentRecording"
+        ></div>
         <talkie-audio-recorder
           v-slot="{ startRecording, stopRecording, isRecording }"
           :onRecordingStopped="handleRecordedItem"
@@ -128,6 +132,10 @@
             />
           </span>
         </talkie-audio-player>
+        <div
+          class="talkie-student-card-options-spacer"
+          v-if="currentRecording"
+        ></div>
         <!-- Feedback Stars -->
         <talkie-icon
           :name="'star'"
@@ -240,6 +248,12 @@ export default {
   display: flex;
   align-items: center;
   gap: var(--t-space-12);
+}
+.talkie-student-card-options-spacer {
+  background: var(--t-primary);
+  border-radius: var(--t-br-large);
+  height: var(--t-space-50);
+  width: var(--t-space-5);
 }
 .talkie-student-card-stop-recording-button {
   border-color: var(--t-secondary) !important;
