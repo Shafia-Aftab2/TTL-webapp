@@ -1,5 +1,10 @@
 <template>
-  <div class="talkie-feedback-card-wrapper">
+  <div
+    :class="[
+      'talkie-feedback-card-wrapper',
+      fullWidth && 'talkie-feedback-card-fullwidth-wrapper',
+    ]"
+  >
     <div class="talkie-feedback-card-input-wrapper">
       <talkie-input :placeholder="inputPlaceholder" />
     </div>
@@ -37,6 +42,10 @@ export default {
       type: String,
       default: "Whole class feedback",
     },
+    fullWidth: {
+      type: Boolean,
+      default: true,
+    },
   },
 };
 </script>
@@ -44,15 +53,19 @@ export default {
 <style>
 .talkie-feedback-card-wrapper {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: var(--t-white);
   width: fit-content;
   padding: var(--t-space-16);
   gap: var(--t-space-16);
   border-radius: var(--t-br-large);
+}
+.talkie-feedback-card-fullwidth-wrapper {
+  width: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
 }
 .talkie-feedback-card-input-wrapper {
   width: 100%;
