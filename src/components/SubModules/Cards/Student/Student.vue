@@ -24,13 +24,33 @@
     <div class="talkie-student-card-options">
       <!-- Feedback Mode -->
       <template v-if="mode === 'feedback'">
-        <talkie-icon
-          :name="'play'"
-          :isActive="true"
-          :variant="'primary'"
-          :size="40"
-          :iconToSizeRatio="1.1"
-        />
+        <!-- Source Record || Player -->
+        <talkie-audio-player
+          v-slot="{ isPlaying, startPlayer, stopPlayer }"
+          :source="studentResponseAudio"
+          v-if="studentResponseAudio"
+        >
+          <span class="talkie-student-card-options-audio-player-icons">
+            <talkie-icon
+              :name="'play'"
+              :isActive="true"
+              :variant="'primary'"
+              :size="40"
+              :iconToSizeRatio="1.1"
+              :onClick="startPlayer"
+              v-if="!isPlaying"
+            />
+            <talkie-icon
+              :name="'pause'"
+              :isActive="true"
+              :variant="'primary'"
+              :size="40"
+              :iconToSizeRatio="1.1"
+              :onClick="stopPlayer"
+              v-if="isPlaying"
+            />
+          </span>
+        </talkie-audio-player>
         <talkie-icon
           :name="'mike-unmuted'"
           :isActive="true"
@@ -52,12 +72,14 @@
 
 <script>
 import { TalkieIcon, TalkieInput } from "@/components/UICore";
+import { TalkieAudioPlayer } from "@/components/SubModules/AudioManager";
 
 export default {
   name: "FeedbackCard",
   components: {
     TalkieIcon,
     TalkieInput,
+    TalkieAudioPlayer,
   },
   props: {
     mode: {
@@ -73,6 +95,9 @@ export default {
       type: String,
     },
     studentAvatar: {
+      type: String,
+    },
+    studentResponseAudio: {
       type: String,
     },
   },
@@ -110,6 +135,11 @@ export default {
   width: var(--t-space-70);
 }
 .talkie-student-card-options {
+  display: flex;
+  align-items: center;
+  gap: var(--t-space-12);
+}
+.talkie-student-card-options-audio-player-icons {
   display: flex;
   align-items: center;
   gap: var(--t-space-12);
