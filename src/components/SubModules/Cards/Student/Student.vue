@@ -7,8 +7,8 @@
   >
     <!-- Left Content -->
     <div class="talkie-student-card-details-wrapper">
-      <!-- Feedback Mode -->
-      <template v-if="mode === 'feedback'">
+      <!-- Feedback Mode | Points Mode -->
+      <template v-if="mode === 'feedback' || mode === 'points'">
         <img
           class="talkie-student-card-details-image"
           :src="studentAvatar"
@@ -157,6 +157,11 @@
           :onClick="onRatingStarClick"
         />
       </template>
+
+      <!-- Points Mode -->
+      <template v-if="mode === 'points'">
+        <h5 class="h5" v-if="studentPoints">{{ studentPoints }} points</h5>
+      </template>
     </div>
   </div>
 </template>
@@ -184,19 +189,21 @@ export default {
   props: {
     mode: {
       type: String,
-      validator: (val) => ["feedback", "question"].includes(val),
+      validator: (val) => ["feedback", "points", "question"].includes(val),
     },
     fullWidth: {
       type: Boolean,
       default: true,
     },
     // feedback
+    // points
     studentName: {
       type: String,
     },
     studentAvatar: {
       type: String,
     },
+    // feedback
     studentResponseAudio: {
       type: String,
     },
@@ -215,6 +222,10 @@ export default {
     onRatingStarClick: {
       type: Function,
       default: () => {},
+    },
+    // points
+    studentPoints: {
+      type: String,
     },
     // question
     questionText: {
