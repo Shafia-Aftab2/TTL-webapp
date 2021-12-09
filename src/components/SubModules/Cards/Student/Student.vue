@@ -7,9 +7,14 @@
   >
     <!-- Left Content -->
     <div class="talkie-student-card-details-wrapper">
-      <!-- Feedback Mode | Info Mode | Points Mode -->
+      <!-- Feedback Mode | Info Mode | Manage Mode | Points Mode -->
       <template
-        v-if="mode === 'feedback' || mode === 'info' || mode === 'points'"
+        v-if="
+          mode === 'feedback' ||
+          mode === 'info' ||
+          mode === 'manage' ||
+          mode === 'points'
+        "
       >
         <img
           class="talkie-student-card-details-image"
@@ -181,6 +186,26 @@
         />
       </template>
 
+      <!-- Manage Mode -->
+      <template v-if="mode === 'manage'">
+        <talkie-icon
+          :name="'key'"
+          :isActive="true"
+          :variant="'neutral'"
+          :size="40"
+          :iconToSizeRatio="1.2"
+          :onClick="onKeyClick"
+        />
+        <talkie-icon
+          :name="'trash'"
+          :isActive="true"
+          :variant="'neutral'"
+          :size="40"
+          :iconToSizeRatio="1.4"
+          :onClick="onDeleteClick"
+        />
+      </template>
+
       <!-- Add Mode -->
       <template v-if="mode === 'add'">
         <talkie-icon
@@ -225,7 +250,9 @@ export default {
     mode: {
       type: String,
       validator: (val) =>
-        ["feedback", "info", "add", "points", "question"].includes(val),
+        ["feedback", "info", "manage", "add", "points", "question"].includes(
+          val
+        ),
     },
     fullWidth: {
       type: Boolean,
@@ -233,6 +260,7 @@ export default {
     },
     // feedback
     // info
+    // manage
     // points
     studentName: {
       type: String,
@@ -262,6 +290,15 @@ export default {
     },
     // info
     onInfoClick: {
+      type: Function,
+      default: () => {},
+    },
+    // manage
+    onKeyClick: {
+      type: Function,
+      default: () => {},
+    },
+    onDeleteClick: {
       type: Function,
       default: () => {},
     },
