@@ -51,13 +51,84 @@
             />
           </span>
         </talkie-audio-player>
-        <talkie-icon
-          :name="'mike-unmuted'"
-          :isActive="true"
-          :variant="'secondary'"
-          :size="40"
-          :iconToSizeRatio="1.1"
-        />
+        <!-- New Recording || Recorder, Player, Reset And Send -->
+        <talkie-audio-recorder
+          v-slot="{ startRecording, stopRecording, isRecording }"
+          :onRecordingStopped="handleRecordedItem"
+          v-if="!currentRecording"
+        >
+          <talkie-icon
+            :name="'mike-unmuted'"
+            :isActive="true"
+            :variant="'secondary'"
+            :size="40"
+            :iconToSizeRatio="1.1"
+            :onClick="startRecording"
+            v-if="!isRecording"
+          />
+          <talkie-icon
+            :name="'square'"
+            :isActive="true"
+            :variant="'secondary'"
+            :size="40"
+            :iconToSizeRatio="1.5"
+            :customClass="'talkie-student-card-stop-recording-button'"
+            :onClick="stopRecording"
+            v-if="isRecording"
+          />
+        </talkie-audio-recorder>
+        <talkie-audio-player
+          v-slot="{
+            isPlaying,
+            togglePlayer,
+            totalAudioPlaybackTime,
+            currentAudioPlaybackTime,
+          }"
+          :recording="currentRecording"
+          v-if="currentRecording"
+        >
+          <span>
+            {{ currentAudioPlaybackTime }} /
+            {{ totalAudioPlaybackTime }}
+          </span>
+          <span class="talkie-student-card-options-audio-player-icons">
+            <talkie-icon
+              :name="'play'"
+              :isActive="true"
+              :variant="'primary'"
+              :size="40"
+              :iconToSizeRatio="1.1"
+              :onClick="togglePlayer"
+              v-if="!isPlaying"
+            />
+            <talkie-icon
+              :name="'pause'"
+              :isActive="true"
+              :variant="'primary'"
+              :size="40"
+              :iconToSizeRatio="1.1"
+              :onClick="togglePlayer"
+              v-if="isPlaying"
+            />
+            <talkie-icon
+              :name="'arrow-rounded-left'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="40"
+              :iconToSizeRatio="1.1"
+              :onClick="handleRecordingReset"
+            />
+            <talkie-icon
+              :name="'send'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="40"
+              :iconToSizeRatio="1.1"
+              :onClick="onFeedbackSendClick"
+            />
+          </span>
+        </talkie-audio-player>
+        <!-- Feedback Stars -->
         <talkie-icon
           :name="'star'"
           :isActive="true"
@@ -72,13 +143,22 @@
 
 <script>
 import { TalkieIcon, TalkieInput } from "@/components/UICore";
-import { TalkieAudioPlayer } from "@/components/SubModules/AudioManager";
+import {
+  TalkieAudioRecorder,
+  TalkieAudioPlayer,
+} from "@/components/SubModules/AudioManager";
 
 export default {
   name: "FeedbackCard",
+  data() {
+    return {
+      currentRecording: null,
+    };
+  },
   components: {
     TalkieIcon,
     TalkieInput,
+    TalkieAudioRecorder,
     TalkieAudioPlayer,
   },
   props: {
@@ -99,6 +179,28 @@ export default {
     },
     studentResponseAudio: {
       type: String,
+    },
+    onFeedbackRecording: {
+      type: Function,
+      default: () => {},
+    },
+    onFeedbackRecordingDiscard: {
+      type: Function,
+      default: () => {},
+    },
+    onFeedbackSendClick: {
+      type: Function,
+      default: () => {},
+    },
+  },
+  methods: {
+    handleRecordedItem(recording) {
+      this.currentRecording = recording;
+      this.onFeedbackRecording && this.onFeedbackRecording(recording);
+    },
+    handleRecordingReset() {
+      this.currentRecording = null;
+      this.onFeedbackRecordingDiscard && this.onFeedbackRecordingDiscard();
     },
   },
 };
@@ -138,6 +240,11 @@ export default {
   display: flex;
   align-items: center;
   gap: var(--t-space-12);
+}
+.talkie-student-card-stop-recording-button {
+  border-color: var(--t-secondary) !important;
+  border-style: solid !important;
+  border-width: var(--t-space-3);
 }
 .talkie-student-card-options-audio-player-icons {
   display: flex;
