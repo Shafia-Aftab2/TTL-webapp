@@ -143,6 +143,7 @@
           :variant="'primary'"
           :size="40"
           :iconToSizeRatio="1.1"
+          :onClick="onRatingStarClick"
         />
       </template>
     </div>
@@ -197,6 +198,10 @@ export default {
       default: () => {},
     },
     onFeedbackSendClick: {
+      type: Function,
+      default: () => {},
+    },
+    onRatingStarClick: {
       type: Function,
       default: () => {},
     },
