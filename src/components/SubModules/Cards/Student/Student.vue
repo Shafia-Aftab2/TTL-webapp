@@ -3,6 +3,7 @@
     :class="[
       'talkie-student-card-wrapper',
       fullWidth && 'talkie-student-card-fullwidth-wrapper',
+      computedShouldWrap && 'talkie-student-card-wrap-content-wrapper',
     ]"
   >
     <!-- Left Content -->
@@ -49,7 +50,12 @@
     </div>
 
     <!-- Right Content -->
-    <div class="talkie-student-card-options">
+    <div
+      :class="[
+        'talkie-student-card-options',
+        currentRecording && 'talkie-student-card-options-wrap-content',
+      ]"
+    >
       <!-- Feedback Mode || Question Mode -->
       <template v-if="mode === 'feedback' || mode === 'question'">
         <!-- Source Record || Player -->
@@ -324,6 +330,14 @@ export default {
     handleRecordingReset() {
       this.currentRecording = null;
       this.onFeedbackRecordingDiscard && this.onFeedbackRecordingDiscard();
+    },
+  },
+  computed: {
+    computedShouldWrap() {
+      if (["feedback", "question"].includes(this.mode)) {
+        return true;
+      }
+      return false;
     },
   },
 };
