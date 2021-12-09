@@ -336,9 +336,6 @@ export default {
   align-items: center;
   background-color: var(--t-white);
   width: fit-content;
-  border-radius: var(--t-br-large);
-  padding: var(--t-space-16);
-  gap: var(--t-space-16);
 }
 .talkie-student-card-fullwidth-wrapper {
   width: 100%;
@@ -349,34 +346,26 @@ export default {
 .talkie-student-card-details-wrapper {
   display: flex;
   align-items: center;
-  gap: var(--t-space-24);
 }
 .talkie-student-card-details-image {
   border-radius: 50%;
   object-fit: cover;
-  min-height: var(--t-space-70);
-  min-width: var(--t-space-70);
-  height: var(--t-space-70);
-  width: var(--t-space-70);
-}
-.talkie-student-card-details-title {
-  padding: 0 var(--t-space-8);
+  min-height: var(--image-size);
+  min-width: var(--image-size);
+  height: var(--image-size);
+  width: var(--image-size);
 }
 .talkie-student-card-options {
   display: flex;
   align-items: center;
-  gap: var(--t-space-12);
 }
 .talkie-student-card-options-spacer {
   background: var(--t-primary);
   border-radius: var(--t-br-large);
-  height: var(--t-space-50);
-  width: var(--t-space-5);
 }
 .talkie-student-card-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
-  border-width: var(--t-space-3);
 }
 .talkie-student-card-options-audio-timestamps {
   background: var(--t-primary);
@@ -384,11 +373,119 @@ export default {
   border-radius: var(--t-br-medium);
   text-align: center;
   white-space: nowrap;
-  font-size: var(--t-fs-small);
 }
 .talkie-student-card-options-audio-player-icons {
   display: flex;
   align-items: center;
-  gap: var(--t-space-12);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-student-card-wrapper {
+    border-radius: var(--t-br-small);
+    padding: var(--t-space-12);
+    gap: var(--t-space-12);
+  }
+  .talkie-student-card-wrap-content-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  .talkie-student-card-details-wrapper {
+    gap: var(--t-space-12);
+  }
+  .talkie-student-card-details-image {
+    --image-size: var(--t-space-56);
+  }
+  .talkie-student-card-details-title {
+    padding: 0 var(--t-space-8);
+  }
+  .talkie-student-card-options {
+    gap: var(--t-space-12);
+  }
+  .talkie-student-card-options-wrap-content {
+    flex-direction: column;
+    gap: var(--t-space-12);
+  }
+  .talkie-student-card-options-spacer {
+    width: calc(var(--t-space-50) * 2);
+    height: var(--t-space-3);
+  }
+  .talkie-student-card-stop-recording-button {
+    border-width: var(--t-space-2);
+  }
+  .talkie-student-card-options-audio-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
+  .talkie-student-card-options-audio-player-icons {
+    gap: var(--t-space-8);
+  }
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .talkie-student-card-wrap-content-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  .talkie-student-card-options-wrap-content {
+    flex-direction: column;
+    gap: var(--t-space-12);
+  }
+  .talkie-student-card-options-spacer {
+    width: calc(var(--t-space-50) * 2);
+    height: var(--t-space-5);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-student-card-wrapper {
+    border-radius: var(--t-br-medium);
+    padding: var(--t-space-16);
+    gap: var(--t-space-16);
+  }
+  .talkie-student-card-details-wrapper {
+    gap: var(--t-space-16);
+  }
+  .talkie-student-card-details-image {
+    --image-size: var(--t-space-63);
+  }
+  .talkie-student-card-details-title {
+    padding: 0 var(--t-space-8);
+  }
+  .talkie-student-card-options {
+    gap: var(--t-space-12);
+  }
+  .talkie-student-card-options-wrap-content {
+    gap: var(--t-space-16);
+  }
+  .talkie-student-card-stop-recording-button {
+    border-width: var(--t-space-3);
+  }
+  .talkie-student-card-options-audio-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.85);
+  }
+  .talkie-student-card-options-audio-player-icons {
+    gap: var(--t-space-12);
+  }
+}
+@media (min-width: 900px) {
+  .talkie-student-card-wrapper {
+    border-radius: var(--t-br-large);
+  }
+  .talkie-student-card-options-spacer {
+    height: var(--t-space-50);
+    width: var(--t-space-5);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-student-card-details-wrapper {
+    gap: var(--t-space-24);
+  }
+  .talkie-student-card-details-image {
+    --image-size: var(--t-space-70);
+  }
+  .talkie-student-card-options-wrap-content {
+    gap: var(--t-space-24);
+  }
+  .talkie-student-card-options-audio-timestamps {
+    font-size: var(--t-fs-small);
+  }
 }
 </style>
