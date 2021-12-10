@@ -22,7 +22,7 @@
         <option
           :selected="option === t_value"
           v-for="option in options"
-          :key="Math.random() * 1651566514 * option"
+          :key="option"
           class="talkie-select-option"
         >
           {{ option }}
