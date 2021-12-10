@@ -10,7 +10,7 @@
       :customClass="'teachers-signup-form'"
       v-slot="{ errors }"
       :validationSchema="teacherSignupSchema"
-      :onSubmit="mockAPI"
+      :onSubmit="handleSubmit"
     >
       <h3 class="h3">Create A Teacher Account</h3>
       <talkie-input
@@ -102,10 +102,12 @@ import {
   TalkieButton,
   TalkieForm,
   TalkieAlert,
-} from "../../../UICore";
-import LogoTeacherSignup from "../../../SVGs/LogoTeacherSignup.vue";
-import { teacherSignupSchema } from "../../../../utils/validations/auth.validation";
-import { AuthService } from "../../../../api/services";
+} from "@/components/UICore";
+import LogoTeacherSignup from "@/components/SVGs/LogoTeacherSignup.vue";
+import { AuthService } from "@/api/services";
+import { teacherSignupSchema } from "@/utils/validations/auth.validation";
+import { roles } from "@/utils/constants";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "TeacherSignup",
@@ -142,43 +144,58 @@ export default {
         schoolName,
         email,
         password,
+        role: roles.TEACHER,
       };
 
       // api call
-      const response = await AuthService.Signup(payload).catch(() => false);
+      const response = await AuthService.Signup(payload).catch((e) => {
+        const errorMap = {
+          ['"name" contains bad word']: "Name should not be unethical..!",
+          ['"displayname" contains bad word']:
+            "Display name should not be unethical..!",
+          ['"schoolname" contains bad word']:
+            "School name should not be unethical..!",
+          ["email already exists"]: "Email already exists..!",
+          ["password must be at least 8 characters"]:
+            "Password must contain at least 8 characters..!",
+          ["password must contain at least 1 letter and 1 number"]:
+            "Password must contain at least 1 letter and 1 number..!",
+        };
+
+        return {
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            "Could not create account..!",
+        };
+      });
 
       // failure case
-      if (!response) {
+      if (response.error) {
         this.loading = false;
         this.formStatus = {
           type: "error",
-          message: "Could not create account.",
+          message: response.error,
         };
         return;
       }
 
       // success case
+      const { user, tokens } = response.data;
+      const expires = (date) => ({ expires: new Date(date) });
+      authUser.setUser(user, expires(tokens.refresh.expiry));
+      authUser.setAccessToken(
+        tokens.access.token,
+        expires(tokens.access.expiry)
+      );
+      authUser.setRefreshToken(
+        tokens.refresh.token,
+        expires(tokens.refresh.expiry)
+      );
       this.loading = false;
       this.formStatus = {
         type: "success",
         message: "Account Created. Redirecting..!",
       };
-    },
-    async mockAPI(values) {
-      this.loading = true;
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      this.loading = false;
-      if (values.email === "success@talkie.com") {
-        this.formStatus = {
-          type: "success",
-          message: "Account created. Redirecting...!",
-        };
-      } else {
-        this.formStatus = {
-          type: "error",
-          message: "Could not create account.",
-        };
-      }
     },
   },
 };

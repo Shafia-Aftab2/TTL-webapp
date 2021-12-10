@@ -1,27 +1,53 @@
 <template>
   <div class="teachers-create-class-wrapper">
     <!-- on Left of Screen -->
-    <div class="teachers-create-class-form">
+    <talkie-form
+      :customClass="'teachers-create-class-form'"
+      v-slot="{ errors }"
+      :initialValues="{
+        schoolId: schoolId,
+      }"
+      :validationSchema="createClassSchema"
+      :onSubmit="handleSubmit"
+    >
       <h3 class="h3">¡Hola, Ms. Joyce!</h3>
       <h5 class="teachers-create-class-form-header h5">
         Let’s create your first class...
       </h5>
       <talkie-input
+        :name="'name'"
         :size="'medium'"
         :placeholder="'Class Name'"
         :customClass="'teachers-create-class-form-field'"
+        :hint="{
+          type: errors.name ? 'error' : null,
+          message: errors.name ? errors.name : null,
+        }"
       />
-      <talkie-input
+      <talkie-select
+        :name="'language'"
         :size="'medium'"
         :placeholder="'I teach...'"
+        :options="languageList"
         :customClass="'teachers-create-class-form-field'"
+        :hint="{
+          type: errors.language ? 'error' : null,
+          message: errors.language ? errors.language : null,
+        }"
+      />
+      <talkie-alert
+        :text="formStatus.message"
+        :variant="formStatus.type"
+        v-if="formStatus.type && formStatus.message"
       />
       <talkie-button
         :size="'medium'"
         :customClass="'teachers-create-class-form-field'"
-        >Next</talkie-button
+        :loading="loading"
       >
-    </div>
+        Next
+      </talkie-button>
+    </talkie-form>
 
     <!-- On Right of Screen -->
     <div class="teachers-create-class-avatar">
@@ -31,15 +57,90 @@
 </template>
 
 <script>
-import { TalkieInput, TalkieButton } from "../../../../UICore";
-import LogoTeacherClassCreate from "../../../../SVGs/LogoTeacherClassCreate.vue";
+import {
+  TalkieInput,
+  TalkieSelect,
+  TalkieButton,
+  TalkieForm,
+  TalkieAlert,
+} from "@/components/UICore";
+import LogoTeacherClassCreate from "@/components/SVGs/LogoTeacherClassCreate.vue";
+import { ClassService } from "@/api/services";
+import { createClassSchema } from "@/utils/validations/class.validation";
+import supportedLangugages from "@/utils/constants/supportedLangugages";
 
 export default {
   name: "TeacherClassCreate",
+  data() {
+    return {
+      createClassSchema: createClassSchema,
+      languageList: [...Object.values(supportedLangugages)],
+      schoolId: "61b231c2ea1d9f1e29e4030c", // TODO: remove hardcoded
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+      },
+    };
+  },
   components: {
     TalkieInput,
+    TalkieSelect,
     TalkieButton,
+    TalkieForm,
+    TalkieAlert,
     LogoTeacherClassCreate,
+  },
+  methods: {
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { name, language, schoolId } = values;
+
+      // payload
+      const payload = {
+        name,
+        language,
+        schoolId,
+      };
+
+      // api call
+      const response = await ClassService.Create(payload).catch((e) => {
+        const errorMap = {
+          ['"name" contains bad word']: "Name should not be unethical..!",
+          ['"schoolid" must be a valid mongo id']: "Invalid School",
+          ["school not found"]: "Invalid School",
+          ["class already exists in school"]:
+            "Class with same name already exists..!",
+        };
+
+        return {
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            "Could not create class..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Class Created. Redirecting..!",
+      };
+    },
   },
 };
 </script>
