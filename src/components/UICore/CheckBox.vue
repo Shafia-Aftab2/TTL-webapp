@@ -4,7 +4,7 @@
       'talkie-checkbox-wrapper',
       disabled && 'talkie-checkbox-wrapper-disabled',
     ]"
-    :key="Math.random() * 5616316256464"
+    :key="'talkie-checkbox-' + Math.random() * 5616316256464"
   >
     <label :for="checkboxId">
       <!-- Note: After Form API implementation - label trigger was disabled -->
