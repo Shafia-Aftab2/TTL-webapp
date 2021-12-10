@@ -6,12 +6,15 @@
     ]"
     :key="Math.random() * 5616316256464"
   >
-    <label>
+    <label :for="checkboxId">
+      <!-- Note: After Form API implementation - label trigger was disabled -->
       <input
-        :id="'talkie-checkbox-' + Math.random() * 5616316256464"
+        :name="name"
         type="checkbox"
-        :checked="isChecked"
-        @click="handleToggle"
+        :checked="checked"
+        @change="handleToggle"
+        @blur="handleBlur"
+        @input="handleChange"
         :disabled="disabled"
       />
       <span
@@ -22,6 +25,7 @@
       >
         <span
           :class="['talkie-checkmark', disabled && 'talkie-checkmark-disabled']"
+          @click="handleToggle"
         ></span>
         <span v-if="label" :class="['talkie-checkbox-label']">{{ label }}</span>
       </span>
@@ -30,10 +34,33 @@
 </template>
 
 <script>
+import { useField } from "vee-validate";
+
 export default {
   name: "TalkieCheckBox",
-  components: {},
+  data() {
+    const {
+      value: checked,
+      handleChange,
+      handleBlur,
+      setValue: setChecked,
+    } = useField(this.name);
+
+    setChecked(false);
+
+    return {
+      checked,
+      handleChange,
+      handleBlur,
+      setChecked,
+      checkboxId: "talkie-checkbox-" + Math.random() * 5616316256464,
+    };
+  },
   props: {
+    name: {
+      type: String,
+      default: `talkie-checkbox-${Math.random() * 10101010537}`,
+    },
     label: {
       type: String,
     },
@@ -46,15 +73,10 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      isChecked: false,
-    };
-  },
   methods: {
-    hanldeToggle() {
-      this.isChecked = !this.isChecked;
-      this.onToggle && this.onToggle(this.isChecked);
+    async handleToggle() {
+      await this.setChecked(!this.checked);
+      this.onToggle && (await this.onToggle(this.checked));
     },
   },
 };
@@ -149,6 +171,8 @@ export default {
     0 0 0 0 inset;
   animation: checkbox-off var(--checkbox-animation-check) forwards ease-out;
 }
+
+/* Functionality */
 .talkie-checkbox-wrapper
   input[type="checkbox"]:focus
   + .talkie-checkbox-material
