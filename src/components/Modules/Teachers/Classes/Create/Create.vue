@@ -65,6 +65,7 @@ import {
   TalkieAlert,
 } from "../../../../UICore";
 import LogoTeacherClassCreate from "../../../../SVGs/LogoTeacherClassCreate.vue";
+import { ClassService } from "../../../../../api/services";
 import { createClassSchema } from "../../../../../utils/validations/class.validation";
 import supportedLangugages from "../../../../../utils/constants/supportedLangugages";
 
@@ -91,7 +92,41 @@ export default {
     LogoTeacherClassCreate,
   },
   methods: {
-    async handleSubmit() {},
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { name, language, schoolId } = values;
+
+      // payload
+      const payload = {
+        name,
+        language,
+        schoolId,
+      };
+
+      // api call
+      const response = await ClassService.Create(payload).catch(() => null);
+
+      // failure case
+      if (!response) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: "Could not create class..!",
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Class Created. Redirecting..!",
+      };
+    },
   },
 };
 </script>
