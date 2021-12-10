@@ -106,6 +106,7 @@ import {
 import LogoTeacherSignup from "../../../SVGs/LogoTeacherSignup.vue";
 import { teacherSignupSchema } from "../../../../utils/validations/auth.validation";
 import { AuthService } from "../../../../api/services";
+import { roles } from "../../../../utils/constants";
 
 export default {
   name: "TeacherSignup",
@@ -142,17 +143,37 @@ export default {
         schoolName,
         email,
         password,
+        role: roles.TEACHER,
       };
 
       // api call
-      const response = await AuthService.Signup(payload).catch(() => false);
+      const response = await AuthService.Signup(payload).catch((e) => {
+        const errorMap = {
+          ['"name" contains bad word']: "Name should not be unethical..!",
+          ['"displayname" contains bad word']:
+            "Display name should not be unethical..!",
+          ['"schoolname" contains bad word']:
+            "School name should not be unethical..!",
+          ["email already exists"]: "Email already exists..!",
+          ["password must be at least 8 characters"]:
+            "Password must contain at least 8 characters..!",
+          ["password must contain at least 1 letter and 1 number"]:
+            "Password must contain at least 1 letter and 1 number..!",
+        };
+
+        return {
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            "Could not create account..!",
+        };
+      });
 
       // failure case
-      if (!response) {
+      if (response.error) {
         this.loading = false;
         this.formStatus = {
           type: "error",
-          message: "Could not create account.",
+          message: response.error,
         };
         return;
       }
