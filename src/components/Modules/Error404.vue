@@ -1,7 +1,11 @@
 <template>
   <div class="error-404-wrapper">
     <h5 class="h5">404 Not Found</h5>
-    <talkie-button :size="'medium'" :noHighlights="true">
+    <talkie-button
+      :size="'medium'"
+      :onClick="handleBackClick"
+      :noHighlights="true"
+    >
       Go Back
     </talkie-button>
   </div>
@@ -14,6 +18,11 @@ export default {
   name: "Error404",
   components: {
     TalkieButton,
+  },
+  methods: {
+    handleBackClick() {
+      this.$router.go(-1);
+    },
   },
 };
 </script>
