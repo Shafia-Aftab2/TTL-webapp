@@ -5,6 +5,7 @@
       'talkie-icon-wrapper',
       `talkie-icon-${variant.toString()}-wrapper`,
       isActive && 'talkie-icon-wrapper-highlight',
+      noHighlights && 'talkie-icon-wrapper-no-highlights',
       customClass.toString(),
     ]"
     :style="`--size: ${size}px; --icon-size-ratio:${iconToSizeRatio}`"
@@ -38,6 +39,10 @@ export default {
       default: 1,
     },
     isActive: {
+      type: Boolean,
+      default: false,
+    },
+    noHighlights: {
       type: Boolean,
       default: false,
     },
@@ -117,6 +122,12 @@ export default {
 /* Active Variant */
 .talkie-icon-wrapper-highlight {
   background-color: var(--bg-color);
+}
+
+/* No Highlights variant */
+.talkie-icon-wrapper-no-highlights,
+.talkie-icon-danger-wrapper:hover:hover {
+  background-color: transparent !important;
 }
 
 /* Color Variant */

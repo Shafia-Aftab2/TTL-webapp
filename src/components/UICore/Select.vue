@@ -1,28 +1,34 @@
 <template>
-  <div>
+  <div class="talkie-select-wrapper">
     <select
       :name="name"
       :required="required"
       :disabled="disabled"
-      @change="onChange"
+      @change="handleSelectedItem"
+      @input="handleChange"
+      @blur="handleBlur"
       :class="[
-        'talkie-select-wrapper',
-        `talkie-select-${size.toString()}-wrapper`,
-        hint && hint.type && `talkie-select-${hint.type.toString()}-wrapper`,
-        disabled && `talkie-select-disabled-wrapper`,
+        'talkie-select',
+        `talkie-select-${size.toString()}`,
+        hint && hint.type && `talkie-select-${hint.type.toString()}`,
+        disabled && `talkie-select-disabled`,
+        computedShowPlaceholderColor && 'talkie-select-placeholder',
         customClass.toString(),
       ]"
     >
       <option class="talkie-select-option" value="">
         {{ placeholder || "Choose an option" }}
       </option>
-      <option
-        v-for="option in options"
-        :key="Math.random() * 1651566514 * option"
-        class="talkie-select-option"
-      >
-        {{ option }}
-      </option>
+      <template v-if="options && options.length > 0">
+        <option
+          :selected="option === t_value"
+          v-for="option in options"
+          :key="option"
+          class="talkie-select-option"
+        >
+          {{ option }}
+        </option>
+      </template>
     </select>
     <p
       v-if="hint && hint.type && hint.message"
@@ -37,8 +43,27 @@
 </template>
 
 <script>
+import { useField } from "vee-validate";
+
 export default {
   name: "TalkieSelect",
+  data() {
+    const {
+      value: t_value,
+      handleChange,
+      handleBlur,
+      setValue,
+    } = useField(this.name);
+
+    if (this.value) setValue(this.value);
+
+    return {
+      setValue,
+      t_value,
+      handleChange,
+      handleBlur,
+    };
+  },
   components: {},
   props: {
     name: {
@@ -56,6 +81,7 @@ export default {
     },
     onChange: {
       type: Function,
+      default: () => {},
     },
     options: {
       type: Array,
@@ -78,11 +104,22 @@ export default {
       default: "",
     },
   },
+  methods: {
+    async handleSelectedItem(e) {
+      this.setValue(e.target.value);
+      this.onChange && (await this.onChange(e));
+    },
+  },
+  computed: {
+    computedShowPlaceholderColor() {
+      return !(this.t_value && this.t_value.length && this.t_value.length > 0);
+    },
+  },
 };
 </script>
 
 <style scoped>
-.talkie-select-wrapper {
+.talkie-select {
   display: block;
   display: flex;
   align-items: center;
@@ -102,8 +139,11 @@ export default {
   background-position: 98%;
   background-repeat: no-repeat;
 }
-.talkie-select-wrapper:focus {
+.talkie-select:focus {
   border: var(--t-space-2) solid var(--t-black-100);
+}
+.talkie-select-placeholder {
+  color: var(--t-gray-50) !important;
 }
 .talkie-select-option {
   color: var(--t-black-100);
@@ -112,15 +152,15 @@ export default {
 }
 
 /* Size variants */
-.talkie-select-small-wrapper {
+.talkie-select-small {
   --size: var(--t-space-12);
   --font-size: var(--t-fs-base);
 }
-.talkie-select-medium-wrapper {
+.talkie-select-medium {
   --size: var(--t-space-16);
   --font-size: var(--t-fs-body);
 }
-.talkie-select-large-wrapper {
+.talkie-select-large {
   --size: var(--t-space-20);
   --font-size: var(--t-fs-sub);
 }
@@ -130,25 +170,25 @@ export default {
   margin-top: var(--t-space-3);
   font-size: var(--t-fs-small);
 }
-.talkie-select-success-wrapper {
+.talkie-select-success {
   border-color: var(--t-green) !important;
 }
 .talkie-select-success-message {
   color: var(--t-green);
 }
-.talkie-select-error-wrapper {
+.talkie-select-error {
   border-color: var(--t-red) !important;
 }
 .talkie-select-error-message {
   color: var(--t-red);
 }
-.talkie-select-warning-wrapper {
+.talkie-select-warning {
   border-color: var(--t-primary) !important;
 }
 .talkie-select-warning-message {
   color: var(--t-primary);
 }
-.talkie-select-info-wrapper {
+.talkie-select-info {
   border-color: var(--t-black-100) !important;
 }
 .talkie-select-info-message {
@@ -156,7 +196,7 @@ export default {
 }
 
 /* Disabled variant */
-.talkie-select-disabled-wrapper {
+.talkie-select-disabled {
   background: var(--t-white-300);
   border-color: var(--t-white-300);
   color: var(--t-gray-50);
@@ -165,7 +205,7 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .talkie-select-wrapper {
+  .talkie-select {
     border-radius: calc(var(--t-br-small) * 0.7);
     padding: calc(var(--size) / 1.75);
     font-size: calc(var(--font-size) / 1.35);
@@ -173,7 +213,7 @@ export default {
   }
 }
 @media (min-width: 600px) {
-  .talkie-select-wrapper {
+  .talkie-select {
     border-radius: var(--t-br-small);
     padding: calc(var(--size) / 1.5);
     font-size: calc(var(--font-size) / 1.2);
@@ -181,7 +221,7 @@ export default {
   }
 }
 @media (min-width: 1200px) {
-  .talkie-select-wrapper {
+  .talkie-select {
     padding: var(--size);
     font-size: var(--font-size);
     background-size: var(--t-space-24) var(--t-space-12);
