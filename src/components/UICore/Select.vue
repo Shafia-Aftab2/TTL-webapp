@@ -4,7 +4,9 @@
       :name="name"
       :required="required"
       :disabled="disabled"
-      @change="onChange"
+      @change="handleSelectedItem"
+      @input="handleChange"
+      @blur="handleBlur"
       :class="[
         'talkie-select',
         `talkie-select-${size.toString()}`,
@@ -16,13 +18,16 @@
       <option class="talkie-select-option" value="">
         {{ placeholder || "Choose an option" }}
       </option>
-      <option
-        v-for="option in options"
-        :key="Math.random() * 1651566514 * option"
-        class="talkie-select-option"
-      >
-        {{ option }}
-      </option>
+      <template v-if="options && options.length > 0">
+        <option
+          :selected="option === t_value"
+          v-for="option in options"
+          :key="Math.random() * 1651566514 * option"
+          class="talkie-select-option"
+        >
+          {{ option }}
+        </option>
+      </template>
     </select>
     <p
       v-if="hint && hint.type && hint.message"
@@ -37,8 +42,27 @@
 </template>
 
 <script>
+import { useField } from "vee-validate";
+
 export default {
   name: "TalkieSelect",
+  data() {
+    const {
+      value: t_value,
+      handleChange,
+      handleBlur,
+      setValue,
+    } = useField(this.name);
+
+    if (this.value) setValue(this.value);
+
+    return {
+      setValue,
+      t_value,
+      handleChange,
+      handleBlur,
+    };
+  },
   components: {},
   props: {
     name: {
@@ -56,6 +80,7 @@ export default {
     },
     onChange: {
       type: Function,
+      default: () => {},
     },
     options: {
       type: Array,
@@ -76,6 +101,12 @@ export default {
     customClass: {
       type: String,
       default: "",
+    },
+  },
+  methods: {
+    async handleSelectedItem(e) {
+      this.setValue(e.target.value);
+      this.onChange && (await this.onChange(e));
     },
   },
 };
