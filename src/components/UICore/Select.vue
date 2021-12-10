@@ -12,6 +12,7 @@
         `talkie-select-${size.toString()}`,
         hint && hint.type && `talkie-select-${hint.type.toString()}`,
         disabled && `talkie-select-disabled`,
+        computedShowPlaceholderColor && 'talkie-select-placeholder',
         customClass.toString(),
       ]"
     >
@@ -109,6 +110,11 @@ export default {
       this.onChange && (await this.onChange(e));
     },
   },
+  computed: {
+    computedShowPlaceholderColor() {
+      return !(this.t_value && this.t_value.length && this.t_value.length > 0);
+    },
+  },
 };
 </script>
 
@@ -135,6 +141,9 @@ export default {
 }
 .talkie-select:focus {
   border: var(--t-space-2) solid var(--t-black-100);
+}
+.talkie-select-placeholder {
+  color: var(--t-gray-50) !important;
 }
 .talkie-select-option {
   color: var(--t-black-100);
