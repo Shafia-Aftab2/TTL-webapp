@@ -75,7 +75,7 @@ export default {
     return {
       createClassSchema: createClassSchema,
       languageList: [...Object.values(supportedLangugages)],
-      schoolId: "61b20838ea1d9f1e29e40290", // TODO: remove hardcoded
+      schoolId: "61b231c2ea1d9f1e29e4030c", // TODO: remove hardcoded
       loading: false,
       formStatus: {
         type: null,
@@ -108,14 +108,28 @@ export default {
       };
 
       // api call
-      const response = await ClassService.Create(payload).catch(() => null);
+      const response = await ClassService.Create(payload).catch((e) => {
+        const errorMap = {
+          ['"name" contains bad word']: "Name should not be unethical..!",
+          ['"schoolid" must be a valid mongo id']: "Invalid School",
+          ["school not found"]: "Invalid School",
+          ["class already exists in school"]:
+            "Class with same name already exists..!",
+        };
+
+        return {
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            "Could not create class..!",
+        };
+      });
 
       // failure case
-      if (!response) {
+      if (response.error) {
         this.loading = false;
         this.formStatus = {
           type: "error",
-          message: "Could not create class..!",
+          message: response.error,
         };
         return;
       }
