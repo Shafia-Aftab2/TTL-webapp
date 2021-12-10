@@ -71,6 +71,7 @@ export default {
   --checkbox-label-font-size: var(--t-fs-base);
   display: inline-block;
   transform: translateZ(0);
+  width: fit-content;
 }
 .talkie-checkbox-wrapper:hover {
   --checked-colour: var(--t-secondary);
@@ -115,7 +116,7 @@ export default {
 .talkie-checkbox-wrapper .talkie-checkbox-material:before {
   position: absolute;
   left: 8px;
-  top: 2px;
+  top: 30%;
   content: "";
   background-color: rgba(0, 0, 0, 0.5);
   height: 4px;
