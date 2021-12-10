@@ -33,7 +33,19 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 80vh;
-  gap: var(--t-space-24);
-  flex-direction: row;
+}
+
+/* Responsive Variants */
+@media (max-width: 599px) {
+  .error-404-wrapper {
+    gap: var(--t-space-12);
+    flex-direction: column;
+  }
+}
+@media (min-width: 600px) {
+  .error-404-wrapper {
+    gap: var(--t-space-24);
+    flex-direction: row;
+  }
 }
 </style>
