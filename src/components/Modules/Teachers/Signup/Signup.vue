@@ -107,6 +107,7 @@ import LogoTeacherSignup from "../../../SVGs/LogoTeacherSignup.vue";
 import { teacherSignupSchema } from "../../../../utils/validations/auth.validation";
 import { AuthService } from "../../../../api/services";
 import { roles } from "../../../../utils/constants";
+import authUser from "../../../../utils/helpers/auth";
 
 export default {
   name: "TeacherSignup",
@@ -179,6 +180,17 @@ export default {
       }
 
       // success case
+      const { user, tokens } = response.data;
+      const expires = (date) => ({ expires: new Date(date) });
+      authUser.setUser(user, expires(tokens.refresh.expiry));
+      authUser.setAccessToken(
+        tokens.access.token,
+        expires(tokens.access.expiry)
+      );
+      authUser.setRefreshToken(
+        tokens.refresh.token,
+        expires(tokens.refresh.expiry)
+      );
       this.loading = false;
       this.formStatus = {
         type: "success",
