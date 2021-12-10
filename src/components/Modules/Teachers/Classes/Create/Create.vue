@@ -63,11 +63,11 @@ import {
   TalkieButton,
   TalkieForm,
   TalkieAlert,
-} from "../../../../UICore";
-import LogoTeacherClassCreate from "../../../../SVGs/LogoTeacherClassCreate.vue";
-import { ClassService } from "../../../../../api/services";
-import { createClassSchema } from "../../../../../utils/validations/class.validation";
-import supportedLangugages from "../../../../../utils/constants/supportedLangugages";
+} from "@/components/UICore";
+import LogoTeacherClassCreate from "@/components/SVGs/LogoTeacherClassCreate.vue";
+import { ClassService } from "@/api/services";
+import { createClassSchema } from "@/utils/validations/class.validation";
+import supportedLangugages from "@/utils/constants/supportedLangugages";
 
 export default {
   name: "TeacherClassCreate",

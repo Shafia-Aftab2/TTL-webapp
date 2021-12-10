@@ -102,12 +102,12 @@ import {
   TalkieButton,
   TalkieForm,
   TalkieAlert,
-} from "../../../UICore";
-import LogoTeacherSignup from "../../../SVGs/LogoTeacherSignup.vue";
-import { teacherSignupSchema } from "../../../../utils/validations/auth.validation";
-import { AuthService } from "../../../../api/services";
-import { roles } from "../../../../utils/constants";
-import authUser from "../../../../utils/helpers/auth";
+} from "@/components/UICore";
+import LogoTeacherSignup from "@/components/SVGs/LogoTeacherSignup.vue";
+import { AuthService } from "@/api/services";
+import { teacherSignupSchema } from "@/utils/validations/auth.validation";
+import { roles } from "@/utils/constants";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "TeacherSignup",
