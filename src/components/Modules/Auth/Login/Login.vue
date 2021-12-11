@@ -8,12 +8,12 @@
     >
       <h3 class="h3">Login With Your Account</h3>
       <talkie-input
-        :name="'email'"
+        :name="'emailOrUsername'"
         :size="'medium'"
-        :placeholder="'Email Address'"
+        :placeholder="'Username or Email Address'"
         :hint="{
-          type: errors.email ? 'error' : null,
-          message: errors.email ? errors.email : null,
+          type: errors.emailOrUsername ? 'error' : null,
+          message: errors.emailOrUsername ? errors.emailOrUsername : null,
         }"
       />
       <talkie-input
@@ -90,24 +90,31 @@ export default {
     TalkieAuthSplitWrapper,
   },
   methods: {
+    isValidEmail(email) {
+      const emailTestRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailTestRegex.test(email);
+    },
     async handleSubmit(values) {
       // update page state
       this.loading = true;
       this.formStatus = { type: null, message: null };
 
       // form data
-      const { email, password } = values;
+      const { emailOrUsername, password } = values;
 
       // payload
-      const payload = {
-        email,
-        password,
-      };
+      const payload = { password };
+      if (this.isValidEmail(emailOrUsername)) {
+        payload.email = emailOrUsername;
+      } else {
+        payload.username = emailOrUsername;
+      }
 
       // api call
       const response = await AuthService.Login(payload).catch((e) => {
         const errorMap = {
-          ["incorrect email or password"]: "Incorrect email or password..!",
+          ["incorrect email or password"]:
+            "Incorrect email/username or password..!",
           ['"email" must be a valid email']: "Email must be valid..!",
         };
 
