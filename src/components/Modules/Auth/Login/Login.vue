@@ -104,9 +104,16 @@ export default {
       };
 
       // api call
-      const response = await AuthService.Login(payload).catch(() => {
+      const response = await AuthService.Login(payload).catch((e) => {
+        const errorMap = {
+          ["incorrect email or password"]: "Incorrect email or password..!",
+          ['"email" must be a valid email']: "Email must be valid..!",
+        };
+
         return {
-          error: "Could not login..!",
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            "Could not login..!",
         };
       });
 
