@@ -7,7 +7,11 @@
       :onSubmit="handleSubmit"
     >
       <h3 class="h3">
-        {{ signupMode === "teacher" ? "Create A Teacher Account" : "" }}
+        {{
+          signupMode === "teacher"
+            ? "Create A Teacher Account"
+            : "Create A Student Account"
+        }}
       </h3>
       <template v-if="signupMode === 'teacher'">
         <talkie-input
@@ -45,6 +49,23 @@
             type: errors.email ? 'error' : null,
             message: errors.email ? errors.email : null,
           }"
+        />
+      </template>
+      <template v-if="signupMode === 'student'">
+        <talkie-input
+          :name="'firstName'"
+          :size="'medium'"
+          :placeholder="'First Name'"
+        />
+        <talkie-input
+          :name="'lastName'"
+          :size="'medium'"
+          :placeholder="'Last Name'"
+        />
+        <talkie-input
+          :name="'username'"
+          :size="'medium'"
+          :placeholder="'Username'"
         />
       </template>
       <talkie-input
@@ -124,7 +145,7 @@ export default {
   props: {
     signupMode: {
       type: String,
-      default: "teacher",
+      validator: (val) => ["student", "teacher"].includes(val),
     },
   },
   methods: {
