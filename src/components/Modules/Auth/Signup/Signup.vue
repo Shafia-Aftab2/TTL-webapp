@@ -3,7 +3,7 @@
     <talkie-form
       :customClass="'auth-split-form'"
       v-slot="{ errors }"
-      :validationSchema="signupSchema"
+      :validationSchema="computedSignupSchema"
       :onSubmit="handleSubmit"
     >
       <h3 class="h3">
@@ -56,16 +56,28 @@
           :name="'firstName'"
           :size="'medium'"
           :placeholder="'First Name'"
+          :hint="{
+            type: errors.firstName ? 'error' : null,
+            message: errors.firstName ? errors.firstName : null,
+          }"
         />
         <talkie-input
           :name="'lastName'"
           :size="'medium'"
           :placeholder="'Last Name'"
+          :hint="{
+            type: errors.lastName ? 'error' : null,
+            message: errors.lastName ? errors.lastName : null,
+          }"
         />
         <talkie-input
           :name="'username'"
           :size="'medium'"
           :placeholder="'Username'"
+          :hint="{
+            type: errors.username ? 'error' : null,
+            message: errors.username ? errors.username : null,
+          }"
         />
       </template>
       <talkie-input
@@ -118,7 +130,10 @@ import {
   TalkieAlert,
 } from "@/components/UICore";
 import { AuthService } from "@/api/services";
-import { teacherSignupSchema } from "@/utils/validations/auth.validation";
+import {
+  studentSignupSchema,
+  teacherSignupSchema,
+} from "@/utils/validations/auth.validation";
 import { roles } from "@/utils/constants";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
@@ -127,13 +142,19 @@ export default {
   name: "AuthSignup",
   data() {
     return {
-      signupSchema: teacherSignupSchema,
       loading: false,
       formStatus: {
         type: null,
         message: null,
       },
     };
+  },
+  computed: {
+    computedSignupSchema() {
+      return this.signupMode === "teacher"
+        ? teacherSignupSchema
+        : studentSignupSchema;
+    },
   },
   components: {
     TalkieForm,
@@ -155,27 +176,51 @@ export default {
       this.formStatus = { type: null, message: null };
 
       // form data
-      const { name, displayName, schoolName, email, password } = values;
-
-      // payload
-      const payload = {
+      const {
         name,
+        firstName,
+        lastName,
+        username,
         displayName,
         schoolName,
         email,
         password,
-        role: roles.TEACHER,
-      };
+      } = values;
+
+      // payload
+      const payload = (() => {
+        if (this.signupMode === "student") {
+          return {
+            name: `${firstName} ${lastName}`,
+            username,
+            password,
+            role: roles.STUDENT,
+          };
+        }
+        if (this.signupMode === "teacher") {
+          return {
+            name,
+            displayName,
+            schoolName,
+            email,
+            password,
+            role: roles.TEACHER,
+          };
+        }
+      })();
 
       // api call
       const response = await AuthService.Signup(payload).catch((e) => {
         const errorMap = {
           ['"name" contains bad word']: "Name should not be unethical..!",
+          ['"username" contains bad word']:
+            "Username should not be unethical..!",
           ['"displayname" contains bad word']:
             "Display name should not be unethical..!",
           ['"schoolname" contains bad word']:
             "School name should not be unethical..!",
           ["email already exists"]: "Email already exists..!",
+          ["username already exists"]: "Username already exists..!",
           ["password must be at least 8 characters"]:
             "Password must contain at least 8 characters..!",
           ["password must contain at least 1 letter and 1 number"]:
