@@ -20,6 +20,7 @@ import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
 import TeacherStartConvo from "../components/Modules/Teachers/StartConvo";
+import Error404 from "../components/Modules/Error404";
 // modular
 // import teacherRoutes from "../modules/teacher/teacher-routes";
 // import studentRoutes from "../modules/student/student-routes";
@@ -145,6 +146,19 @@ const routes = [
         name: "StudentTranslation",
         path: "/students/translation",
         component: StudentTranslation,
+      },
+    ],
+  },
+  // 404 page
+  {
+    path: "/:catchAll(.*)",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
+      {
+        name: "Error404",
+        path: "/:catchAll(.*)",
+        component: Error404,
       },
     ],
   },
