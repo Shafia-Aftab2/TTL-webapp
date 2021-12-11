@@ -47,18 +47,24 @@ const routes = [
         path: "/auth/login",
         component: AuthLogin,
       },
+      {
+        name: "AuthLoginStudent",
+        path: "/auth/signup/student",
+        component: AuthSignup,
+        props: { signupMode: "student" },
+      },
+      {
+        name: "AuthLoginTeacher",
+        path: "/auth/signup/teacher",
+        component: AuthSignup,
+        props: { signupMode: "teacher" },
+      },
     ],
   },
   {
     path: "/teachers",
     component: Layout,
     children: [
-      {
-        name: "TeacherSignup",
-        path: "/teachers/signup",
-        component: AuthSignup,
-        props: { signupMode: "teacher" },
-      },
       {
         name: "TeacherClassCreate",
         path: "/teachers/classes/create",
@@ -97,18 +103,6 @@ const routes = [
         name: "TeacherClassHome",
         path: "/teachers/classes/home",
         component: TeacherClassHome,
-      },
-    ],
-  },
-  {
-    path: "/students",
-    component: Layout,
-    children: [
-      {
-        name: "StudentSignup",
-        path: "/students/signup",
-        component: AuthSignup,
-        props: { signupMode: "student" },
       },
     ],
   },
