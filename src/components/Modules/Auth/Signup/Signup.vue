@@ -3,46 +3,50 @@
     <talkie-form
       :customClass="'auth-split-form'"
       v-slot="{ errors }"
-      :validationSchema="teacherSignupSchema"
+      :validationSchema="signupSchema"
       :onSubmit="handleSubmit"
     >
-      <h3 class="h3">Create A Teacher Account</h3>
-      <talkie-input
-        :name="'name'"
-        :size="'medium'"
-        :placeholder="'Your Name'"
-        :hint="{
-          type: errors.name ? 'error' : null,
-          message: errors.name ? errors.name : null,
-        }"
-      />
-      <talkie-input
-        :name="'displayName'"
-        :size="'medium'"
-        :placeholder="'Your Display Name - What Do Students Call You?'"
-        :hint="{
-          type: errors.displayName ? 'error' : null,
-          message: errors.displayName ? errors.displayName : null,
-        }"
-      />
-      <talkie-input
-        :name="'schoolName'"
-        :size="'medium'"
-        :placeholder="'School Name'"
-        :hint="{
-          type: errors.schoolName ? 'error' : null,
-          message: errors.schoolName ? errors.schoolName : null,
-        }"
-      />
-      <talkie-input
-        :name="'email'"
-        :size="'medium'"
-        :placeholder="'Email Address'"
-        :hint="{
-          type: errors.email ? 'error' : null,
-          message: errors.email ? errors.email : null,
-        }"
-      />
+      <h3 class="h3">
+        {{ signupMode === "teacher" ? "Create A Teacher Account" : "" }}
+      </h3>
+      <template v-if="signupMode === 'teacher'">
+        <talkie-input
+          :name="'name'"
+          :size="'medium'"
+          :placeholder="'Your Name'"
+          :hint="{
+            type: errors.name ? 'error' : null,
+            message: errors.name ? errors.name : null,
+          }"
+        />
+        <talkie-input
+          :name="'displayName'"
+          :size="'medium'"
+          :placeholder="'Your Display Name - What Do Students Call You?'"
+          :hint="{
+            type: errors.displayName ? 'error' : null,
+            message: errors.displayName ? errors.displayName : null,
+          }"
+        />
+        <talkie-input
+          :name="'schoolName'"
+          :size="'medium'"
+          :placeholder="'School Name'"
+          :hint="{
+            type: errors.schoolName ? 'error' : null,
+            message: errors.schoolName ? errors.schoolName : null,
+          }"
+        />
+        <talkie-input
+          :name="'email'"
+          :size="'medium'"
+          :placeholder="'Email Address'"
+          :hint="{
+            type: errors.email ? 'error' : null,
+            message: errors.email ? errors.email : null,
+          }"
+        />
+      </template>
       <talkie-input
         :type="'password'"
         :name="'password'"
@@ -102,7 +106,7 @@ export default {
   name: "AuthSignup",
   data() {
     return {
-      teacherSignupSchema: teacherSignupSchema,
+      signupSchema: teacherSignupSchema,
       loading: false,
       formStatus: {
         type: null,
@@ -116,6 +120,12 @@ export default {
     TalkieButton,
     TalkieAlert,
     TalkieAuthSplitWrapper,
+  },
+  props: {
+    signupMode: {
+      type: String,
+      default: "teacher",
+    },
   },
   methods: {
     async handleSubmit(values) {

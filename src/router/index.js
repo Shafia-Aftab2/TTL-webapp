@@ -45,6 +45,7 @@ const routes = [
         name: "TeacherSignup",
         path: "/teachers/signup",
         component: AuthSignup,
+        props: { signupMode: "teacher" },
       },
       {
         name: "TeacherClassCreate",
