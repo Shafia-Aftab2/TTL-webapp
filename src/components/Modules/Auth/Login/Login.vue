@@ -67,6 +67,7 @@ import {
 } from "@/components/UICore";
 import { AuthService } from "@/api/services";
 import { loginSchema } from "@/utils/validations/auth.validation";
+import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 
 export default {
@@ -128,6 +129,17 @@ export default {
       }
 
       // success case
+      const { user, tokens } = response.data;
+      const expires = (date) => ({ expires: new Date(date) });
+      authUser.setUser(user, expires(tokens.refresh.expiry));
+      authUser.setAccessToken(
+        tokens.access.token,
+        expires(tokens.access.expiry)
+      );
+      authUser.setRefreshToken(
+        tokens.refresh.token,
+        expires(tokens.refresh.expiry)
+      );
       this.loading = false;
       this.formStatus = {
         type: "success",
