@@ -1,5 +1,10 @@
 import * as yup from "yup";
 
+const loginSchema = yup.object({
+  email: yup.string().required("Email is required."),
+  password: yup.string().required("Password is required."),
+});
+
 const studentSignupSchema = yup.object({
   firstName: yup.string().required("First Name is required."),
   lastName: yup.string().required("Last Name is required."),
@@ -18,4 +23,4 @@ const teacherSignupSchema = yup.object({
   password: yup.string().required("Password is required."),
 });
 
-export { studentSignupSchema, teacherSignupSchema };
+export { loginSchema, studentSignupSchema, teacherSignupSchema };
