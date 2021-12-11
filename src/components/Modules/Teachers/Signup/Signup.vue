@@ -2,7 +2,7 @@
   <div class="teachers-signup-wrapper">
     <!-- On Left of Screen -->
     <div class="teachers-signup-avatar">
-      <logo-teacher-signup />
+      <logo-auth-signup />
     </div>
 
     <!-- on Right of Screen -->
@@ -103,7 +103,7 @@ import {
   TalkieForm,
   TalkieAlert,
 } from "@/components/UICore";
-import LogoTeacherSignup from "@/components/SVGs/LogoTeacherSignup.vue";
+import LogoAuthSignup from "@/components/SVGs/LogoAuthSignup.vue";
 import { AuthService } from "@/api/services";
 import { teacherSignupSchema } from "@/utils/validations/auth.validation";
 import { roles } from "@/utils/constants";
@@ -125,7 +125,7 @@ export default {
     TalkieForm,
     TalkieInput,
     TalkieButton,
-    LogoTeacherSignup,
+    LogoAuthSignup,
     TalkieAlert,
   },
   methods: {
