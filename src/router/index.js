@@ -89,14 +89,21 @@ const routes = [
     ],
   },
   {
-    path: "/",
-    component: AppLayout,
+    path: "/students",
+    component: Layout,
     children: [
       {
         name: "StudentSignup",
         path: "/students/signup",
-        component: StudentSignUp,
+        component: AuthSignup,
+        props: { signupMode: "student" },
       },
+    ],
+  },
+  {
+    path: "/",
+    component: AppLayout,
+    children: [
       {
         name: "StudentClassJoin",
         path: "/students/classes/join",
