@@ -1,20 +1,40 @@
 <template>
   <talkie-auth-split-wrapper>
-    <div class="auth-split-form">
+    <talkie-form
+      :customClass="'auth-split-form'"
+      v-slot="{ errors }"
+      :validationSchema="loginSchema"
+      :onSubmit="handleSubmit"
+    >
       <h3 class="h3">Login With Your Account</h3>
       <talkie-input
         :name="'email'"
         :size="'medium'"
         :placeholder="'Email Address'"
+        :hint="{
+          type: errors.email ? 'error' : null,
+          message: errors.email ? errors.email : null,
+        }"
       />
       <talkie-input
         :type="'password'"
         :name="'password'"
         :size="'medium'"
         :placeholder="'Password'"
+        :hint="{
+          type: errors.password ? 'error' : null,
+          message: errors.password ? errors.password : null,
+        }"
+      />
+      <talkie-alert
+        :text="formStatus.message"
+        :variant="formStatus.type"
+        v-if="formStatus.type && formStatus.message"
       />
       <div class="auth-split-form-options">
-        <talkie-button :size="'medium'" :type="'submit'">Login</talkie-button>
+        <talkie-button :size="'medium'" :type="'submit'" :loading="loading">
+          Login
+        </talkie-button>
         <div>
           <p class="auth-split-form-options-info">View Talkie’s</p>
           <p class="auth-split-form-options-info">
@@ -34,20 +54,79 @@
           </a>
         </p>
       </div>
-    </div>
+    </talkie-form>
   </talkie-auth-split-wrapper>
 </template>
 
 <script>
-import { TalkieInput, TalkieButton } from "@/components/UICore";
+import {
+  TalkieInput,
+  TalkieButton,
+  TalkieForm,
+  TalkieAlert,
+} from "@/components/UICore";
+import { AuthService } from "@/api/services";
+import { loginSchema } from "@/utils/validations/auth.validation";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 
 export default {
   name: "AuthLogin",
+  data() {
+    return {
+      loginSchema: loginSchema,
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+      },
+    };
+  },
   components: {
+    TalkieForm,
     TalkieInput,
     TalkieButton,
+    TalkieAlert,
     TalkieAuthSplitWrapper,
+  },
+  methods: {
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { email, password } = values;
+
+      // payload
+      const payload = {
+        email,
+        password,
+      };
+
+      // api call
+      const response = await AuthService.Login(payload).catch(() => {
+        return {
+          error: "Could not login..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Login Successfull. Redirecting..!",
+      };
+    },
   },
 };
 </script>
