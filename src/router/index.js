@@ -10,7 +10,6 @@ import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
 import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
 import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
-import StudentSignUp from "../components/Modules/Students/Onboarding/Signup";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
 import StudentFeedback from "../components/Modules/Students/Feedback";
