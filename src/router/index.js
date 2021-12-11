@@ -4,6 +4,7 @@ import AppLayout from "../components/Layouts/Wrapper.vue";
 import HomeLayout from "../components/Layouts/HomeWrapper.vue";
 import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
+import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
@@ -34,6 +35,17 @@ const routes = [
         name: "Home",
         path: "",
         component: Home,
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    component: Layout,
+    children: [
+      {
+        name: "AuthLogin",
+        path: "/auth/login",
+        component: AuthLogin,
       },
     ],
   },
