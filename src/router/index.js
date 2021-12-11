@@ -4,7 +4,7 @@ import AppLayout from "../components/Layouts/Wrapper.vue";
 import HomeLayout from "../components/Layouts/HomeWrapper.vue";
 import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
-import TeacherSignup from "../components/Modules/Teachers/Signup";
+import AuthSignup from "../components/Modules/Auth/Signup";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
 import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
@@ -44,7 +44,7 @@ const routes = [
       {
         name: "TeacherSignup",
         path: "/teachers/signup",
-        component: TeacherSignup,
+        component: AuthSignup,
       },
       {
         name: "TeacherClassCreate",
