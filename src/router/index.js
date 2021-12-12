@@ -4,12 +4,12 @@ import AppLayout from "../components/Layouts/Wrapper.vue";
 import HomeLayout from "../components/Layouts/HomeWrapper.vue";
 import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
-import TeacherSignup from "../components/Modules/Teachers/Signup";
+import AuthLogin from "../components/Modules/Auth/Login";
+import AuthSignup from "../components/Modules/Auth/Signup";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
 import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
 import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
-import StudentSignUp from "../components/Modules/Students/Onboarding/Signup";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
 import StudentFeedback from "../components/Modules/Students/Feedback";
@@ -38,14 +38,32 @@ const routes = [
     ],
   },
   {
-    path: "/teachers",
+    path: "/auth",
     component: Layout,
     children: [
       {
-        name: "TeacherSignup",
-        path: "/teachers/signup",
-        component: TeacherSignup,
+        name: "AuthLogin",
+        path: "/auth/login",
+        component: AuthLogin,
       },
+      {
+        name: "AuthLoginStudent",
+        path: "/auth/signup/student",
+        component: AuthSignup,
+        props: { signupMode: "student" },
+      },
+      {
+        name: "AuthLoginTeacher",
+        path: "/auth/signup/teacher",
+        component: AuthSignup,
+        props: { signupMode: "teacher" },
+      },
+    ],
+  },
+  {
+    path: "/teachers",
+    component: Layout,
+    children: [
       {
         name: "TeacherClassCreate",
         path: "/teachers/classes/create",
@@ -91,11 +109,6 @@ const routes = [
     path: "/",
     component: AppLayout,
     children: [
-      {
-        name: "StudentSignup",
-        path: "/students/signup",
-        component: StudentSignUp,
-      },
       {
         name: "StudentClassJoin",
         path: "/students/classes/join",
