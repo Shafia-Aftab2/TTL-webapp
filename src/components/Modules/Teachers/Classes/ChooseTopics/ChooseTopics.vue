@@ -12,7 +12,7 @@
     <!-- On Right of Screen -->
     <talkie-form
       :customClass="'teachers-choose-class-topics-form'"
-      :onSubmit="handleSubmit"
+      :onSubmit="handleCustomFormValidation"
     >
       <div class="teachers-choose-class-topics-sub-form">
         <h4 class="h4">Beginners/Intermediate</h4>
@@ -104,6 +104,27 @@ export default {
     TalkieAlert,
   },
   methods: {
+    async handleCustomFormValidation(values) {
+      // ensure at least one topic to be selected
+      const hasASelectedTopic =
+        Object.values(values).filter((x) => x).length > 0;
+
+      // error case
+      if (!hasASelectedTopic) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: "At least one topic must be selected..!",
+        };
+        return;
+      }
+
+      // success case
+      await this.handleSubmit(await this.handleSanitizeFormValues(values));
+    },
+    handleSanitizeFormValues(values) {
+      return { topics: Object.keys(values).filter((key) => values[key]) };
+    },
     async handleSubmit(values) {
       // update page state
       this.loading = true;
