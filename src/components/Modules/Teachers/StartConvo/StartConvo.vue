@@ -1,10 +1,14 @@
 <template>
   <talkie-form
-    v-slot="{ errors }"
+    v-slot="{ errors, setValue }"
     :validationSchema="createQandATopicSchema"
     :onSubmit="handleSubmit"
     :customClass="'teachers-class-start-convo-wrapper'"
   >
+    <span hidden>
+      <!-- TODO: updated these states via a handler -->
+      {{ (this.setFormValue = setValue) }}
+    </span>
     <h2 class="teachers-class-start-convo-header h2">
       Start a conversation now?
     </h2>
@@ -34,6 +38,12 @@
           :multiline="true"
           :name="'questionText'"
           :placeholder="'Question text (optional)'"
+        />
+        <!-- TODO: hide this filed via a class -->
+        <talkie-input
+          :name="'voiceForQnA'"
+          :placeholder="'Audio Recording Url/Blob'"
+          hidden
         />
         <talkie-audio-player
           v-slot="{
@@ -161,8 +171,9 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import { createQandATopicSchema } from "@/utils/validations/task.validation";
-import { TaskService } from "@/api/services";
+import { FileService, TaskService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
+import FilePurposes from "@/utils/constants/filePurposes";
 
 export default {
   name: "TeacherStartConvo",
@@ -212,6 +223,7 @@ export default {
       currentRecording: null,
       isAudioPlaying: null,
       handleAudioPlayerToggle: () => {},
+      setFormValue: () => {},
       classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
     };
   },
@@ -228,11 +240,55 @@ export default {
   methods: {
     handleRecordedItem(recording) {
       this.currentRecording = recording;
+      this.setFormValue("voiceForQnA", recording.blob);
+    },
+    async handleFileUpload() {
+      // update page state
+      this.formStatus = {
+        type: "info",
+        message: "Uploading Audio",
+        animateEllipse: true,
+      };
+
+      // payload
+      const payload = new FormData();
+      payload.append(
+        "files",
+        this.currentRecording.blob,
+        `talkie-audio-${Math.random() * 123456789}.mp3`
+      );
+
+      // api call
+      const response = await FileService.Upload(
+        { purpose: FilePurposes.TASK_VOICE },
+        payload
+      ).catch(() => null);
+
+      // error case
+      if (!response) return null;
+
+      // success case
+      const uploadedFile = response.data[0].s3Url;
+      this.formStatus = { type: null, message: null, animateEllipse: false };
+      return uploadedFile;
     },
     async handleSubmit(values) {
       // update page state
       this.loading = true;
       this.formStatus = { type: null, message: null, animateEllipse: false };
+
+      // upload file
+      const voiceForQnA = await this.handleFileUpload();
+
+      // failure case
+      if (!voiceForQnA) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: "Could not upload audio file..!",
+        };
+        return;
+      }
 
       // form data
       const { title, topic: topicName, questionText } = values;
@@ -244,8 +300,7 @@ export default {
         title,
         topic: topicId,
         type: TaskTypes.QUESTION_ANSWER,
-        voiceForQnA:
-          "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
+        voiceForQnA,
       };
       if (questionText) payload.questionText = questionText;
 
