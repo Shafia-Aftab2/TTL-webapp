@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 // base
-import AppLayout from "../components/Layouts/Wrapper.vue";
-import HomeLayout from "../components/Layouts/HomeWrapper.vue";
 import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
 import TeacherSignup from "../components/Modules/Teachers/Signup";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
+import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
 import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
 import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
@@ -28,7 +27,7 @@ import Error404 from "../components/Modules/Error404";
 const routes = [
   {
     path: "/",
-    component: AppLayout,
+    component: Layout,
     children: [
       {
         name: "Home",
@@ -85,11 +84,16 @@ const routes = [
         path: "/teachers/classes/home",
         component: TeacherClassHome,
       },
+      {
+        name: "TeacherClassStudents",
+        path: "/teachers/class/students",
+        component: TeacherClassStudents,
+      },
     ],
   },
   {
     path: "/",
-    component: AppLayout,
+    component: Layout,
     children: [
       {
         name: "StudentSignup",
@@ -105,7 +109,8 @@ const routes = [
   },
   {
     path: "/students",
-    component: HomeLayout,
+    component: Layout,
+    props: { variant: "dark" },
     children: [
       {
         name: "StudentHomePage",

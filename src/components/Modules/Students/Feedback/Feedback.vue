@@ -35,4 +35,38 @@ export default {
   components: { Select, Chip },
 };
 </script>
-<style></style>
+<style scoped>
+.bar-content {
+  display: grid;
+  gap: 10px;
+  padding: var(--t-space-18);
+}
+.bar {
+  background-color: var(--t-white);
+  padding: var(--t-space-24);
+  border-radius: var(--t-space-10);
+}
+.bar-outline {
+  background-color: var(--t-white);
+  padding: var(--t-space-16);
+  border-radius: var(--t-space-10);
+  border: 2px solid var(--t-gray-home);
+}
+.bar-inline {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+
+.back {
+  text-decoration: none;
+}
+
+@media (min-width: 1200px) {
+  .back {
+    position: absolute;
+    left: var(--t-space-50);
+  }
+}
+</style>

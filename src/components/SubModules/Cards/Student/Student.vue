@@ -233,7 +233,7 @@
 </template>
 
 <script>
-import { TalkieIcon, TalkieInput } from "@/components/UICore";
+import { TalkieIcon } from "@/components/UICore";
 import {
   TalkieAudioRecorder,
   TalkieAudioPlayer,
@@ -248,7 +248,6 @@ export default {
   },
   components: {
     TalkieIcon,
-    TalkieInput,
     TalkieAudioRecorder,
     TalkieAudioPlayer,
   },
