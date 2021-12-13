@@ -10,7 +10,10 @@
     </div>
 
     <!-- On Right of Screen -->
-    <div class="teachers-choose-class-topics-form">
+    <talkie-form
+      :customClass="'teachers-choose-class-topics-form'"
+      :onSubmit="handleSubmit"
+    >
       <div class="teachers-choose-class-topics-sub-form">
         <h4 class="h4">Beginners/Intermediate</h4>
         <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
@@ -25,13 +28,24 @@
           <talkie-check-box :name="topic.id" :label="topic.name" />
         </template>
       </div>
-      <talkie-button :size="'medium'">Next</talkie-button>
-    </div>
+      <talkie-alert
+        :text="formStatus.message"
+        :variant="formStatus.type"
+        v-if="formStatus.type && formStatus.message"
+      />
+      <talkie-button :loading="loading" :size="'medium'">Next</talkie-button>
+    </talkie-form>
   </div>
 </template>
 
 <script>
-import { TalkieCheckBox, TalkieButton } from "../../../../UICore";
+import {
+  TalkieCheckBox,
+  TalkieButton,
+  TalkieForm,
+  TalkieAlert,
+} from "../../../../UICore";
+import { ClassService } from "../../../../../api/services";
 
 export default {
   name: "ChooseTopics",
@@ -75,11 +89,59 @@ export default {
           },
         ],
       },
+      classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+      },
     };
   },
   components: {
     TalkieCheckBox,
     TalkieButton,
+    TalkieForm,
+    TalkieAlert,
+  },
+  methods: {
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { topics } = values;
+
+      // payload
+      const classId = this.classId;
+      const payload = { topics };
+
+      // api call
+      const response = await ClassService.AddTopics(classId, payload).catch(
+        () => {
+          return {
+            error: "Could not add class topic/s..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Class Topics Added. Redirecting..!",
+      };
+    },
   },
 };
 </script>
