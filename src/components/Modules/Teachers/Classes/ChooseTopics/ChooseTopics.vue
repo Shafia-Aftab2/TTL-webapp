@@ -13,19 +13,17 @@
     <div class="teachers-choose-class-topics-form">
       <div class="teachers-choose-class-topics-sub-form">
         <h4 class="h4">Beginners/Intermediate</h4>
-        <p class="p">GCSE Level</p>
-        <talkie-check-box :label="'⚽️ Free-time activities'" />
-        <talkie-check-box :label="'✈️ Travel and tourism'" />
-        <talkie-check-box :label="'🍔 Food and drink'" />
-        <talkie-check-box :label="'🤳 Social media and technology'" />
+        <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
+        <template v-for="topic in topics.intermediate" :key="topic.id">
+          <talkie-check-box :name="topic.id" :label="topic.name" />
+        </template>
       </div>
       <div class="teachers-choose-class-topics-sub-form">
         <h4 class="h4">Beginners</h4>
-        <p class="p">KS3 Level</p>
-        <talkie-check-box :label="'😊 My family and friends'" />
-        <talkie-check-box :label="'🏡 Where I live'" />
-        <talkie-check-box :label="'🐶 Pets'" />
-        <talkie-check-box :label="'👖 Clothing'" />
+        <p class="p" style="margin-bottom: 0 !important">KS3 Level</p>
+        <template v-for="topic in topics.beginner" :key="topic.id">
+          <talkie-check-box :name="topic.id" :label="topic.name" />
+        </template>
       </div>
       <talkie-button :size="'medium'">Next</talkie-button>
     </div>
@@ -37,7 +35,52 @@ import { TalkieCheckBox, TalkieButton } from "../../../../UICore";
 
 export default {
   name: "ChooseTopics",
-  components: { TalkieCheckBox, TalkieButton },
+  data() {
+    return {
+      topics: {
+        intermediate: [
+          {
+            name: "⚽️ Free-time activities",
+            id: "61b2328bea1d9f1e29e4032a",
+          },
+          {
+            name: "✈️ Travel and tourism",
+            id: "61b2328bea1d9f1e29e4032c",
+          },
+          {
+            name: "🍔 Food and drink",
+            id: "61b2328bea1d9f1e29e4032d",
+          },
+          {
+            name: "🤳 Social media and technology",
+            id: "61b2328bea1d9f1e29e4032f",
+          },
+        ],
+        beginner: [
+          {
+            name: "😊 My family and friends",
+            id: "61b2328bea1d9f1e29e40320",
+          },
+          {
+            name: "🏡 Where I live",
+            id: "61b2328bea1d9f1e29e4032b",
+          },
+          {
+            name: "🐶 Pets",
+            id: "61b2328bea1d9f1e29e4032e",
+          },
+          {
+            name: "👖 Clothing",
+            id: "61b2328bea1d9f1e29e4032g",
+          },
+        ],
+      },
+    };
+  },
+  components: {
+    TalkieCheckBox,
+    TalkieButton,
+  },
 };
 </script>
 
