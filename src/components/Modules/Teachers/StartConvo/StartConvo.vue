@@ -94,7 +94,13 @@
               :size="30"
               :onClick="handleRecordedItemReset"
             />
-            <p class="teachers-class-start-convo-form-options-item-label">
+            <p
+              :class="[
+                'teachers-class-start-convo-form-options-item-label',
+                !currentRecording &&
+                  'teachers-class-start-convo-form-options-item-label-non-visiable',
+              ]"
+            >
               Redo
             </p>
           </div>
@@ -145,7 +151,13 @@
               :variant="'secondary'"
               :size="30"
             />
-            <p class="teachers-class-start-convo-form-options-item-label">
+            <p
+              :class="[
+                'teachers-class-start-convo-form-options-item-label',
+                !currentRecording &&
+                  'teachers-class-start-convo-form-options-item-label-non-visiable',
+              ]"
+            >
               Preview send
             </p>
           </div>
@@ -399,6 +411,10 @@ body {
 .teachers-class-start-convo-form-options-item-label {
   text-align: center;
   line-height: 1.1;
+}
+.teachers-class-start-convo-form-options-item-label-non-visiable {
+  color: transparent;
+  user-select: none;
 }
 .teachers-class-start-convo-form-options-stop-recording-button {
   border-color: var(--t-secondary) !important;
