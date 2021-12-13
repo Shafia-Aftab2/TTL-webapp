@@ -2,24 +2,57 @@
   <div class="teachers-class-invite-students-wrapper">
     <div class="teachers-class-invite-students-info-wrapper">
       <h2 class="h2">Invite your students</h2>
-      <p class="p">Copy and paste the url below</p>
+      <p class="p" style="margin-bottom: 0 !important">
+        Copy and paste the url below
+      </p>
     </div>
 
-    <talkie-input :placeholder="'Url Here'" />
+    <talkie-input :placeholder="'Url Here'" :value="classLink" />
 
     <div class="teachers-class-invite-students-options-wrapper">
-      <talkie-button>Copy</talkie-button>
+      <talkie-button :onClick="hanldeCopyButtonClick">Copy</talkie-button>
       <talkie-button :disabled="true">Next</talkie-button>
     </div>
   </div>
 </template>
 
 <script>
-import { TalkieInput, TalkieButton } from "../../../../UICore";
+import { TalkieInput, TalkieButton } from "@/components/UICore";
+import { notifications } from "@/components/UIActions";
+import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
 
 export default {
   name: "InviteStudents",
   components: { TalkieInput, TalkieButton },
+  data() {
+    return {
+      classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
+      classLink: `${window.location.origin}/classes/61b255ebea1d9f1e29e40344/join`,
+      isCopiedToClipboard: false,
+    };
+  },
+  methods: {
+    async hanldeCopyButtonClick() {
+      const isCopiedToClipboard = await copyToClipboard(this.classLink);
+
+      // error case
+      if (!isCopiedToClipboard) {
+        notifications.show("Failed To Copy To Clipboard..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        this.isCopiedToClipboard = false;
+        return;
+      }
+
+      // success case
+      notifications.show("Copied To Clipboard..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.isCopiedToClipboard = true;
+    },
+  },
 };
 </script>
 
