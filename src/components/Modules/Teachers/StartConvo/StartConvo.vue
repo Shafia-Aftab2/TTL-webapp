@@ -150,7 +150,15 @@
                   'teachers-class-start-convo-form-options-item-label-error',
               ]"
             >
-              {{ !!errors.voiceForQnA ? errors.voiceForQnA : "Tap To Record" }}
+              {{
+                !!errors.voiceForQnA
+                  ? errors.voiceForQnA
+                  : !currentRecording
+                  ? "Tap To Record"
+                  : !isAudioPlaying
+                  ? "Play"
+                  : "Pause"
+              }}
             </p>
           </div>
           <div class="teachers-class-start-convo-form-options-item">
