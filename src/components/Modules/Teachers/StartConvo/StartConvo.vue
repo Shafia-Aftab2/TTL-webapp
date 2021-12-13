@@ -1,5 +1,10 @@
 <template>
-  <div class="teachers-class-start-convo-wrapper">
+  <talkie-form
+    v-slot="{ errors }"
+    :validationSchema="createQandATopicSchema"
+    :onSubmit="handleSubmit"
+    :customClass="'teachers-class-start-convo-wrapper'"
+  >
     <h2 class="teachers-class-start-convo-header h2">
       Start a conversation now?
     </h2>
@@ -8,9 +13,28 @@
       :onRecordingStopped="handleRecordedItem"
     >
       <div class="teachers-class-start-convo-form">
-        <talkie-select :placeholder="'Choose topic'" />
-        <talkie-input :placeholder="'Title (required)'" />
-        <talkie-input :placeholder="'Question text (optional)'" />
+        <talkie-select
+          :name="'topic'"
+          :placeholder="'Choose topic'"
+          :options="topics.map((x) => x.name)"
+          :hint="{
+            type: errors.topic ? 'error' : null,
+            message: errors.topic ? errors.topic : null,
+          }"
+        />
+        <talkie-input
+          :name="'title'"
+          :placeholder="'Title (required)'"
+          :hint="{
+            type: errors.title ? 'error' : null,
+            message: errors.title ? errors.title : null,
+          }"
+        />
+        <talkie-input
+          :multiline="true"
+          :name="'questionText'"
+          :placeholder="'Question text (optional)'"
+        />
         <talkie-audio-player
           v-slot="{
             isPlaying,
@@ -26,7 +50,7 @@
           <span hidden>
             <!-- TODO: updated these states via a handler -->
             {{ (this.isAudioPlaying = isPlaying) }}
-            {{ (this.toggleAudioPlayerState = togglePlayer) }}
+            {{ (this.handleAudioPlayerToggle = togglePlayer) }}
           </span>
           <div
             class="teachers-class-start-convo-form-options-audio-player-wrapper"
@@ -43,6 +67,12 @@
             </span>
           </div>
         </talkie-audio-player>
+        <talkie-alert
+          :text="formStatus.message"
+          :variant="formStatus.type"
+          :animateEllipse="formStatus.animateEllipse"
+          v-if="formStatus.type && formStatus.message"
+        />
       </div>
       <div class="teachers-class-start-convo-form-options-wrapper">
         <div class="teachers-class-start-convo-form-options">
@@ -81,7 +111,7 @@
               :isActive="true"
               :variant="'primary'"
               :size="50"
-              :onClick="toggleAudioPlayerState"
+              :onClick="handleAudioPlayerToggle"
               v-if="!isRecording && !isAudioPlaying && currentRecording"
             />
             <talkie-icon
@@ -89,7 +119,7 @@
               :isActive="true"
               :variant="'primary'"
               :size="50"
-              :onClick="toggleAudioPlayerState"
+              :onClick="handleAudioPlayerToggle"
               v-if="!isRecording && isAudioPlaying && currentRecording"
             />
             <p class="teachers-class-start-convo-form-options-item-label">
@@ -98,6 +128,7 @@
           </div>
           <div class="teachers-class-start-convo-form-options-item">
             <talkie-icon
+              :type="'submit'"
               :name="'send'"
               :isActive="true"
               :variant="'secondary'"
@@ -110,27 +141,78 @@
         </div>
       </div>
     </talkie-audio-recorder>
-  </div>
+  </talkie-form>
   <div class="teachers-class-start-convo-footer">
     <a href="#" class="teachers-class-start-convo-footer-link">Not now</a>
   </div>
 </template>
 
 <script>
-import { TalkieInput, TalkieSelect, TalkieIcon } from "@/components/UICore";
+import {
+  TalkieInput,
+  TalkieSelect,
+  TalkieIcon,
+  TalkieAlert,
+  TalkieForm,
+} from "@/components/UICore";
 import {
   TalkieAudioRecorder,
   TalkieAudioPlayer,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
+import { createQandATopicSchema } from "@/utils/validations/task.validation";
+import { TaskService } from "@/api/services";
+import TaskTypes from "@/utils/constants/taskTypes";
 
 export default {
   name: "TeacherStartConvo",
   data() {
     return {
+      topics: [
+        {
+          name: "⚽️ Free-time activities",
+          id: "61b2328bea1d9f1e29e4032a",
+        },
+        {
+          name: "✈️ Travel and tourism",
+          id: "61b2328bea1d9f1e29e4032c",
+        },
+        {
+          name: "🍔 Food and drink",
+          id: "61b2328bea1d9f1e29e4032d",
+        },
+        {
+          name: "🤳 Social media and technology",
+          id: "61b2328bea1d9f1e29e4032f",
+        },
+        {
+          name: "😊 My family and friends",
+          id: "61b2328bea1d9f1e29e40320",
+        },
+        {
+          name: "🏡 Where I live",
+          id: "61b2328bea1d9f1e29e4032b",
+        },
+        {
+          name: "🐶 Pets",
+          id: "61b2328bea1d9f1e29e4032e",
+        },
+        {
+          name: "👖 Clothing",
+          id: "61b2328bea1d9f1e29e4032g",
+        },
+      ],
+      createQandATopicSchema: createQandATopicSchema,
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+        animateEllipse: false,
+      },
       currentRecording: null,
       isAudioPlaying: null,
-      toggleAudioPlayerState: () => {},
+      handleAudioPlayerToggle: () => {},
+      classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
     };
   },
   components: {
@@ -140,10 +222,60 @@ export default {
     TalkieAudioRecorder,
     TalkieAudioPlayer,
     TalkieAudioTimeline,
+    TalkieAlert,
+    TalkieForm,
   },
   methods: {
     handleRecordedItem(recording) {
       this.currentRecording = recording;
+    },
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null, animateEllipse: false };
+
+      // form data
+      const { title, topic: topicName, questionText } = values;
+
+      const topicId = this.topics.find((x) => x.name === topicName).id;
+
+      // payload
+      const payload = {
+        title,
+        topic: topicId,
+        type: TaskTypes.QUESTION_ANSWER,
+        voiceForQnA:
+          "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
+      };
+      if (questionText) payload.questionText = questionText;
+
+      // api call
+      const response = await TaskService.Create(this.classId, payload).catch(
+        () => {
+          return {
+            error: "Could not create conversation..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+          animateEllipse: false,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Conversation Created. Redirecting..!",
+        animateEllipse: false,
+      };
     },
   },
 };
