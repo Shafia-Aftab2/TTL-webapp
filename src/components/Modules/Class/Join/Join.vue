@@ -5,13 +5,18 @@
       <div class="teachers-class-join-content-wrapper">
         <h3 class="h3" v-if="isJoined">
           You are now a member of
-          <a class="teachers-class-join-content-class-name">
+          <a
+            class="teachers-class-join-content-class-name"
+            :href="classDetails.link"
+          >
             {{ classDetails.name }}
           </a>
         </h3>
         <h3 class="h3" v-if="!isJoined">Could not join class..!</h3>
 
-        <talkie-button>Go To Class</talkie-button>
+        <talkie-button :onClick="handleRedirection">
+          {{ isJoined ? `Go To Class` : `Try Again` }}
+        </talkie-button>
       </div>
     </template>
 
@@ -51,6 +56,11 @@ export default {
     await this.handleClassJoinSequence();
   },
   methods: {
+    handleRedirection() {
+      this.$router.push(
+        `/classes/${this.classId}${this.isJoined ? "" : "/join"}`
+      );
+    },
     async handleClassJoinSequence() {
       // update page state
       this.loading = true;
@@ -72,6 +82,7 @@ export default {
       this.classDetails = {
         id: classDetails.id,
         name: classDetails.name,
+        link: `/classes/${classDetails.id}`,
       };
       this.isJoined = true;
       this.loading = false;
