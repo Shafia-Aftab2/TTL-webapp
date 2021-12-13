@@ -1,6 +1,6 @@
 <template>
   <button
-    :type="'button'"
+    :type="type"
     :class="[
       'talkie-icon-wrapper',
       `talkie-icon-${variant.toString()}-wrapper`,
@@ -24,6 +24,10 @@ export default {
     icon: "",
   }),
   props: {
+    type: {
+      type: String,
+      default: "button",
+    },
     name: {
       type: String,
       required: true,

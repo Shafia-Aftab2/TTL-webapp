@@ -10,34 +10,160 @@
     </div>
 
     <!-- On Right of Screen -->
-    <div class="teachers-choose-class-topics-form">
+    <talkie-form
+      :customClass="'teachers-choose-class-topics-form'"
+      :onSubmit="handleCustomFormValidation"
+    >
       <div class="teachers-choose-class-topics-sub-form">
         <h4 class="h4">Beginners/Intermediate</h4>
-        <p class="p">GCSE Level</p>
-        <talkie-check-box :label="'⚽️ Free-time activities'" />
-        <talkie-check-box :label="'✈️ Travel and tourism'" />
-        <talkie-check-box :label="'🍔 Food and drink'" />
-        <talkie-check-box :label="'🤳 Social media and technology'" />
+        <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
+        <template v-for="topic in topics.intermediate" :key="topic.id">
+          <talkie-check-box :name="topic.id" :label="topic.name" />
+        </template>
       </div>
       <div class="teachers-choose-class-topics-sub-form">
         <h4 class="h4">Beginners</h4>
-        <p class="p">KS3 Level</p>
-        <talkie-check-box :label="'😊 My family and friends'" />
-        <talkie-check-box :label="'🏡 Where I live'" />
-        <talkie-check-box :label="'🐶 Pets'" />
-        <talkie-check-box :label="'👖 Clothing'" />
+        <p class="p" style="margin-bottom: 0 !important">KS3 Level</p>
+        <template v-for="topic in topics.beginner" :key="topic.id">
+          <talkie-check-box :name="topic.id" :label="topic.name" />
+        </template>
       </div>
-      <talkie-button :size="'medium'">Next</talkie-button>
-    </div>
+      <talkie-alert
+        :text="formStatus.message"
+        :variant="formStatus.type"
+        v-if="formStatus.type && formStatus.message"
+      />
+      <talkie-button :loading="loading" :size="'medium'">Next</talkie-button>
+    </talkie-form>
   </div>
 </template>
 
 <script>
-import { TalkieCheckBox, TalkieButton } from "../../../../UICore";
+import {
+  TalkieCheckBox,
+  TalkieButton,
+  TalkieForm,
+  TalkieAlert,
+} from "../../../../UICore";
+import { ClassService } from "../../../../../api/services";
 
 export default {
   name: "ChooseTopics",
-  components: { TalkieCheckBox, TalkieButton },
+  data() {
+    return {
+      topics: {
+        intermediate: [
+          {
+            name: "⚽️ Free-time activities",
+            id: "61b2328bea1d9f1e29e4032a",
+          },
+          {
+            name: "✈️ Travel and tourism",
+            id: "61b2328bea1d9f1e29e4032c",
+          },
+          {
+            name: "🍔 Food and drink",
+            id: "61b2328bea1d9f1e29e4032d",
+          },
+          {
+            name: "🤳 Social media and technology",
+            id: "61b2328bea1d9f1e29e4032f",
+          },
+        ],
+        beginner: [
+          {
+            name: "😊 My family and friends",
+            id: "61b2328bea1d9f1e29e40320",
+          },
+          {
+            name: "🏡 Where I live",
+            id: "61b2328bea1d9f1e29e4032b",
+          },
+          {
+            name: "🐶 Pets",
+            id: "61b2328bea1d9f1e29e4032e",
+          },
+          {
+            name: "👖 Clothing",
+            id: "61b2328bea1d9f1e29e4032g",
+          },
+        ],
+      },
+      classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+      },
+    };
+  },
+  components: {
+    TalkieCheckBox,
+    TalkieButton,
+    TalkieForm,
+    TalkieAlert,
+  },
+  methods: {
+    async handleCustomFormValidation(values) {
+      // ensure at least one topic to be selected
+      const hasASelectedTopic =
+        Object.values(values).filter((x) => x).length > 0;
+
+      // error case
+      if (!hasASelectedTopic) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: "At least one topic must be selected..!",
+        };
+        return;
+      }
+
+      // success case
+      await this.handleSubmit(await this.handleSanitizeFormValues(values));
+    },
+    handleSanitizeFormValues(values) {
+      return { topics: Object.keys(values).filter((key) => values[key]) };
+    },
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { topics } = values;
+
+      // payload
+      const classId = this.classId;
+      const payload = { topics };
+
+      // api call
+      const response = await ClassService.AddTopics(classId, payload).catch(
+        () => {
+          return {
+            error: "Could not add class topic/s..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Class Topics Added. Redirecting..!",
+      };
+    },
+  },
 };
 </script>
 

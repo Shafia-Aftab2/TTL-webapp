@@ -1,14 +1,48 @@
 <template>
   <div>
-    <div
-      :class="[
-        'talkie-input-wrapper',
-        hint && hint.type && `talkie-input-${hint.type.toString()}-wrapper`,
-        disabled && `talkie-input-disabled-wrapper`,
-        customClass.toString(),
-      ]"
-    >
-      <input
+    <!-- singleline input -->
+    <template v-if="multiline === false">
+      <div
+        :class="[
+          'talkie-input-wrapper',
+          hint && hint.type && `talkie-input-${hint.type.toString()}-wrapper`,
+          disabled && `talkie-input-disabled-wrapper`,
+          customClass.toString(),
+        ]"
+      >
+        <input
+          :name="name"
+          :value="t_value"
+          :required="required"
+          :disabled="disabled"
+          :placeholder="placeholder"
+          @change="onChange"
+          @input="handleChange"
+          @blur="handleBlur"
+          :type="type === 'password' && isPasswordVisiable ? 'text' : type"
+          :class="['talkie-input', `talkie-input-${size.toString()}`]"
+        />
+        <talkie-icon
+          :name="'eye'"
+          :onClick="handlePasswordToggle"
+          :size="size === 'small' ? 20 : size === 'medium' ? 25 : 28"
+          v-if="type === 'password'"
+        />
+      </div>
+    </template>
+
+    <!-- multiline input -->
+    <template v-if="multiline === true">
+      <textarea
+        :class="[
+          'talkie-input-wrapper',
+          hint && hint.type && `talkie-input-${hint.type.toString()}-wrapper`,
+          disabled && `talkie-input-disabled-wrapper`,
+          'talkie-input-multiline',
+          `talkie-input-${size.toString()}`,
+          customClass.toString(),
+        ]"
+        :rows="rows"
         :name="name"
         :value="t_value"
         :required="required"
@@ -17,16 +51,11 @@
         @change="onChange"
         @input="handleChange"
         @blur="handleBlur"
-        :type="type === 'password' && isPasswordVisiable ? 'text' : type"
-        :class="['talkie-input', `talkie-input-${size.toString()}`]"
-      />
-      <talkie-icon
-        :name="'eye'"
-        :onClick="handlePasswordToggle"
-        :size="size === 'small' ? 20 : size === 'medium' ? 25 : 28"
-        v-if="type === 'password'"
-      />
-    </div>
+      >
+      </textarea>
+    </template>
+
+    <!-- input hint -->
     <p
       v-if="hint && hint.type && hint.message"
       :class="[
@@ -103,6 +132,14 @@ export default {
         message: null,
       }),
     },
+    multiline: {
+      type: Boolean,
+      default: false,
+    },
+    rows: {
+      type: Number,
+      default: 5,
+    },
     customClass: {
       type: String,
       default: "",
@@ -136,6 +173,10 @@ export default {
   background: transparent;
   border: none;
   outline: none;
+  font-family: var(--t-ff-regular);
+  width: 100%;
+}
+.talkie-input-multiline {
   font-family: var(--t-ff-regular);
   width: 100%;
 }
@@ -194,7 +235,8 @@ export default {
   .talkie-input-wrapper {
     border-radius: calc(var(--t-br-small) * 0.7);
   }
-  .talkie-input {
+  .talkie-input,
+  .talkie-input-multiline {
     padding: calc(var(--size) / 1.75);
     font-size: calc(var(--font-size) / 1.35);
   }
@@ -207,7 +249,8 @@ export default {
   .talkie-input-wrapper {
     border-radius: var(--t-br-small);
   }
-  .talkie-input {
+  .talkie-input,
+  .talkie-input-multiline {
     padding: calc(var(--size) / 1.5);
     font-size: calc(var(--font-size) / 1.2);
   }
@@ -217,7 +260,8 @@ export default {
   }
 }
 @media (min-width: 1200px) {
-  .talkie-input {
+  .talkie-input,
+  .talkie-input-multiline {
     padding: var(--size);
     font-size: var(--font-size);
   }

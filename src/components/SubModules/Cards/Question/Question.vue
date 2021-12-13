@@ -11,12 +11,13 @@
         class="talkie-question-card-image"
         :src="image"
         :alt="imageAlt"
-        v-if="image && !audioSource"
+        v-if="image && !(audioSource || audioRecording)"
       />
       <talkie-audio-player
         v-slot="{ startPlayer, stopPlayer, isPlaying }"
+        :recording="audioRecording"
         :source="audioSource"
-        v-if="!image && audioSource"
+        v-if="!image && (audioSource || audioRecording)"
       >
         <talkie-icon
           :name="'play'"
@@ -88,6 +89,9 @@ export default {
     },
     audioSource: {
       type: String,
+    },
+    audioRecording: {
+      type: Object,
     },
     fullWidth: {
       type: Boolean,
