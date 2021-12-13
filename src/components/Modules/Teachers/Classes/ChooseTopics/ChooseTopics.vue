@@ -44,8 +44,8 @@ import {
   TalkieButton,
   TalkieForm,
   TalkieAlert,
-} from "../../../../UICore";
-import { ClassService } from "../../../../../api/services";
+} from "@/components/UICore";
+import { ClassService } from "@/api/services";
 
 export default {
   name: "ChooseTopics",
