@@ -15,7 +15,7 @@
 
     <div class="teachers-class-invite-students-options-wrapper">
       <talkie-button :onClick="hanldeCopyButtonClick">Copy</talkie-button>
-      <talkie-button :disabled="true">Next</talkie-button>
+      <talkie-button :disabled="!isCopiedToClipboard">Next</talkie-button>
     </div>
   </div>
 </template>
