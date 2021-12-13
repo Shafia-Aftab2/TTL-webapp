@@ -1,14 +1,11 @@
 <template>
-  <div class="teachers-class-join-wrapper">
+  <div class="class-join-wrapper">
     <!-- Contents -->
     <template v-if="!loading">
-      <div class="teachers-class-join-content-wrapper">
+      <div class="class-join-content-wrapper">
         <h3 class="h3" v-if="isJoined">
           You are now a member of
-          <a
-            class="teachers-class-join-content-class-name"
-            :href="classDetails.link"
-          >
+          <a class="class-join-content-class-name" :href="classDetails.link">
             {{ classDetails.name }}
           </a>
         </h3>
@@ -22,7 +19,7 @@
 
     <!-- Load wrapper -->
     <template v-if="loading">
-      <div class="teachers-class-join-loading-wrapper">
+      <div class="class-join-loading-wrapper">
         <talkie-loader :size="'large'" />
       </div>
     </template>
@@ -92,7 +89,7 @@ export default {
 </script>
 
 <style scoped>
-.teachers-class-join-wrapper {
+.class-join-wrapper {
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -101,39 +98,39 @@ export default {
   transition: 0.2s ease;
   min-height: 80vh;
 }
-.teachers-class-join-content-wrapper {
+.class-join-content-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 80vh;
 }
-.teachers-class-join-content-class-name {
+.class-join-content-class-name {
   color: var(--t-secondary);
 }
-.teachers-class-join-loading-wrapper {
+.class-join-loading-wrapper {
   margin: auto;
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .teachers-class-join-wrapper {
+  .class-join-wrapper {
     gap: var(--t-space-18);
   }
-  .teachers-class-join-content-wrapper {
+  .class-join-content-wrapper {
     gap: var(--t-space-16);
   }
 }
 @media (min-width: 600px) {
-  .teachers-class-join-wrapper {
+  .class-join-wrapper {
     gap: var(--t-space-24);
   }
-  .teachers-class-join-content-wrapper {
+  .class-join-content-wrapper {
     gap: var(--t-space-16);
   }
 }
 @media (min-width: 900px) {
-  .teachers-class-join-wrapper {
+  .class-join-wrapper {
     gap: var(--t-space-36);
   }
 }
