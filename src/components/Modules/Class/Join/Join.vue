@@ -31,7 +31,6 @@ export default {
   padding: var(--t-space-24);
   transition: 0.2s ease;
   min-height: 80vh;
-  gap: var(--t-space-36);
 }
 .teachers-class-join-content-wrapper {
   display: flex;
@@ -39,13 +38,35 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 80vh;
-  gap: var(--t-space-16);
 }
 .teachers-class-join-content-class-name {
   color: var(--t-secondary);
 }
 .teachers-class-join-loading-wrapper {
   margin: auto;
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .teachers-class-join-wrapper {
+    gap: var(--t-space-18);
+  }
+  .teachers-class-join-content-wrapper {
+    gap: var(--t-space-16);
+  }
+}
+@media (min-width: 600px) {
+  .teachers-class-join-wrapper {
+    gap: var(--t-space-24);
+  }
+  .teachers-class-join-content-wrapper {
+    gap: var(--t-space-16);
+  }
+}
+@media (min-width: 900px) {
+  .teachers-class-join-wrapper {
+    gap: var(--t-space-36);
+  }
 }
 
 /* TEMP */
