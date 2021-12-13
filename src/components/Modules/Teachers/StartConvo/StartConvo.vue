@@ -111,6 +111,10 @@
               :variant="'secondary'"
               :size="50"
               :onClick="startRecording"
+              :customClass="
+                errors.voiceForQnA &&
+                'teachers-class-start-convo-form-options-mike-unmuted-button-error'
+              "
               v-if="!isRecording && !currentRecording"
             />
             <talkie-icon
@@ -139,8 +143,14 @@
               :onClick="handleAudioPlayerToggle"
               v-if="!isRecording && isAudioPlaying && currentRecording"
             />
-            <p class="teachers-class-start-convo-form-options-item-label">
-              Tap To Record
+            <p
+              :class="[
+                'teachers-class-start-convo-form-options-item-label',
+                errors.voiceForQnA &&
+                  'teachers-class-start-convo-form-options-item-label-error',
+              ]"
+            >
+              {{ !!errors.voiceForQnA ? errors.voiceForQnA : "Tap To Record" }}
             </p>
           </div>
           <div class="teachers-class-start-convo-form-options-item">
@@ -416,6 +426,13 @@ body {
   color: transparent;
   user-select: none;
 }
+.teachers-class-start-convo-form-options-item-label-error {
+  color: var(--t-red);
+}
+.teachers-class-start-convo-form-options-mike-unmuted-button-error {
+  border-color: var(--t-red) !important;
+  border-style: solid !important;
+}
 .teachers-class-start-convo-form-options-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
@@ -470,6 +487,9 @@ body {
   .teachers-class-start-convo-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
+  .teachers-class-start-convo-form-options-mike-unmuted-button-error {
+    border-width: var(--t-space-2) !important;
+  }
   .teachers-class-start-convo-form-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
   }
@@ -513,6 +533,9 @@ body {
   }
   .teachers-class-start-convo-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
+  }
+  .teachers-class-start-convo-form-options-mike-unmuted-button-error {
+    border-width: var(--t-space-3) !important;
   }
   .teachers-class-start-convo-form-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
