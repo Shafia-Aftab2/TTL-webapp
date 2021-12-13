@@ -13,6 +13,7 @@
       :validate="validate"
       :submitForm="submitForm"
       :resetForm="resetForm"
+      :triggerFormSubmit="triggerFormSubmit"
     />
   </form>
 </template>
@@ -96,6 +97,12 @@ export default {
   methods: {
     async handleFormSubmit(e) {
       e.preventDefault();
+      await this.submitForm();
+      if (Object.keys(this.errors).length === 0) {
+        await this.onSubmit({ ...this.values });
+      }
+    },
+    async triggerFormSubmit() {
       await this.submitForm();
       if (Object.keys(this.errors).length === 0) {
         await this.onSubmit({ ...this.values });
