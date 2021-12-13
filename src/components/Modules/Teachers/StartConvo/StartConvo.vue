@@ -311,9 +311,18 @@ export default {
 
       // api call
       const response = await TaskService.Create(this.classId, payload).catch(
-        () => {
+        (e) => {
+          const errorMap = {
+            ['"title" contains bad word']: "Title should not be unethical..!",
+            ['"questiontext" contains bad word']:
+              "Question text should not be unethical..!",
+            ['"topic" must be a valid mongo id']: "Invalid Topic",
+          };
+
           return {
-            error: "Could not create conversation..!",
+            error:
+              errorMap[e.response.data.message.toLowerCase()] ||
+              "Could not create conversation..!",
           };
         }
       );
