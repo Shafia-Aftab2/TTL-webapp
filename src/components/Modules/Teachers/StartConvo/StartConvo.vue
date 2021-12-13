@@ -1,6 +1,6 @@
 <template>
   <talkie-form
-    v-slot="{ errors, setValue }"
+    v-slot="{ errors, setValue, values, triggerFormSubmit }"
     :validationSchema="createQandATopicSchema"
     :onSubmit="handleSubmit"
     :customClass="'teachers-class-start-convo-wrapper'"
@@ -8,7 +8,21 @@
     <span hidden>
       <!-- TODO: updated these states via a handler -->
       {{ (this.setFormValue = setValue) }}
+      {{ (this.triggerFormSubmission = triggerFormSubmit) }}
     </span>
+    <talkie-modal
+      v-if="modalPreview"
+      :contentPadded="true"
+      :buttonsOutSideModal="modalPreviewButtons"
+    >
+      <talkie-question-card
+        :title="values.title"
+        :topic="values.topic"
+        :description="values.questionText"
+        :audioRecording="currentRecording"
+        :fullWidth="false"
+      />
+    </talkie-modal>
     <h2 class="teachers-class-start-convo-header h2">
       Start a conversation now?
     </h2>
@@ -195,7 +209,10 @@ import {
   TalkieIcon,
   TalkieAlert,
   TalkieForm,
+  TalkieModal,
+  TalkieLoader,
 } from "@/components/UICore";
+import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import {
   TalkieAudioRecorder,
   TalkieAudioPlayer,
@@ -253,8 +270,30 @@ export default {
       },
       currentRecording: null,
       isAudioPlaying: null,
+      modalPreview: false,
+      modalPreviewButtons: [
+        {
+          text: "Back",
+          onClick: async () => {
+            await this.handleModalToggle();
+            await this.handleModalValidationReset();
+          },
+          variant: "light",
+        },
+        {
+          text: "Send",
+          onClick: async () => {
+            await this.handleModalValidation();
+            await this.handleModalToggle();
+            await this.triggerFormSubmission();
+          },
+          variant: "primary",
+        },
+      ],
+      shouldSubmit: false,
       handleAudioPlayerToggle: () => {},
       setFormValue: () => {},
+      triggerFormSubmission: () => {},
       classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
     };
   },
@@ -267,6 +306,9 @@ export default {
     TalkieAudioTimeline,
     TalkieAlert,
     TalkieForm,
+    TalkieModal,
+    TalkieLoader,
+    TalkieQuestionCard,
   },
   methods: {
     handleRecordedItem(recording) {
@@ -276,6 +318,15 @@ export default {
     handleRecordedItemReset() {
       this.currentRecording = null;
       this.setFormValue("voiceForQnA", "");
+    },
+    handleModalToggle() {
+      this.modalPreview = !this.modalPreview;
+    },
+    handleModalValidation() {
+      this.shouldSubmit = true;
+    },
+    handleModalValidationReset() {
+      this.shouldSubmit = false;
     },
     async handleFileUpload() {
       // update page state
@@ -308,6 +359,12 @@ export default {
       return uploadedFile;
     },
     async handleSubmit(values) {
+      if (!this.shouldSubmit) {
+        this.handleModalToggle();
+        this.handleModalValidationReset();
+        return;
+      }
+
       // update page state
       this.loading = true;
       this.formStatus = { type: null, message: null, animateEllipse: false };
