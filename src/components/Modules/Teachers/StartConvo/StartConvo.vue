@@ -381,11 +381,6 @@ export default {
 </script>
 
 <style scoped>
-/* TODO: temp, move body color to wrappers with in views */
-body {
-  background: var(--t-gray-100);
-}
-
 .teachers-class-start-convo-wrapper {
   display: flex;
   flex-direction: column;
