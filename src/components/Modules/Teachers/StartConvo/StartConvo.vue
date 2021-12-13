@@ -92,6 +92,7 @@
               :isActive="true"
               :variant="'secondary'"
               :size="30"
+              :onClick="handleRecordedItemReset"
             />
             <p class="teachers-class-start-convo-form-options-item-label">
               Redo
@@ -241,6 +242,10 @@ export default {
     handleRecordedItem(recording) {
       this.currentRecording = recording;
       this.setFormValue("voiceForQnA", recording.blob);
+    },
+    handleRecordedItemReset() {
+      this.currentRecording = null;
+      this.setFormValue("voiceForQnA", "");
     },
     async handleFileUpload() {
       // update page state
