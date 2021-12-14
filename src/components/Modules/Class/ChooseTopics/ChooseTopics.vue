@@ -1,9 +1,9 @@
 <template>
-  <div class="teachers-choose-class-topics-wrapper">
+  <div class="class-choose-topics-wrapper">
     <!-- on Left of Screen -->
-    <div class="teachers-choose-class-topics-info">
+    <div class="class-choose-topics-info">
       <h3 class="h3">Choose Topics</h3>
-      <p class="teachers-choose-class-topics-info-header p">
+      <p class="class-choose-topics-info-header p">
         Select as many topics as you want for your class. This way, we get to
         tailor the quizzes...
       </p>
@@ -11,17 +11,17 @@
 
     <!-- On Right of Screen -->
     <talkie-form
-      :customClass="'teachers-choose-class-topics-form'"
+      :customClass="'class-choose-topics-form'"
       :onSubmit="handleCustomFormValidation"
     >
-      <div class="teachers-choose-class-topics-sub-form">
+      <div class="class-choose-topics-sub-form">
         <h4 class="h4">Beginners/Intermediate</h4>
         <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
         <template v-for="topic in topics.intermediate" :key="topic.id">
           <talkie-check-box :name="topic.id" :label="topic.name" />
         </template>
       </div>
-      <div class="teachers-choose-class-topics-sub-form">
+      <div class="class-choose-topics-sub-form">
         <h4 class="h4">Beginners</h4>
         <p class="p" style="margin-bottom: 0 !important">KS3 Level</p>
         <template v-for="topic in topics.beginner" :key="topic.id">
@@ -168,14 +168,14 @@ export default {
 </script>
 
 <style>
-.teachers-choose-class-topics-wrapper {
+.class-choose-topics-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   margin: auto;
 }
-.teachers-choose-class-topics-info {
+.class-choose-topics-info {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -183,11 +183,11 @@ export default {
   width: 100%;
   height: 100%;
 }
-.teachers-choose-class-topics-info-header {
+.class-choose-topics-info-header {
   font-family: var(--t-ff-medium);
 }
-.teachers-choose-class-topics-form,
-.teachers-choose-class-topics-sub-form {
+.class-choose-topics-form,
+.class-choose-topics-sub-form {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -199,65 +199,65 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .teachers-choose-class-topics-wrapper {
+  .class-choose-topics-wrapper {
     flex-direction: column;
     padding: var(--t-space-32);
     margin-top: var(--t-space-12);
   }
-  .teachers-choose-class-topics-info {
+  .class-choose-topics-info {
     gap: var(--t-space-12);
   }
-  .teachers-choose-class-topics-info-header {
+  .class-choose-topics-info-header {
     font-family: var(--t-ff-regular);
   }
-  .teachers-choose-class-topics-form {
+  .class-choose-topics-form {
     gap: var(--t-space-24);
     margin-top: var(--t-space-24);
   }
-  .teachers-choose-class-topics-sub-form {
+  .class-choose-topics-sub-form {
     gap: var(--t-space-12);
   }
 }
 @media (min-width: 600px) {
-  .teachers-choose-class-topics-wrapper {
+  .class-choose-topics-wrapper {
     flex-direction: column;
     padding: var(--t-space-32);
     max-width: 75%;
   }
-  .teachers-choose-class-topics-info {
+  .class-choose-topics-info {
     gap: var(--t-space-12);
   }
-  .teachers-choose-class-topics-form {
+  .class-choose-topics-form {
     gap: var(--t-space-36);
     margin-top: var(--t-space-36);
   }
-  .teachers-choose-class-topics-sub-form {
+  .class-choose-topics-sub-form {
     gap: var(--t-space-12);
   }
 }
 @media (min-width: 900px) {
-  .teachers-choose-class-topics-wrapper {
+  .class-choose-topics-wrapper {
     flex-direction: row;
     gap: var(--t-space-16);
     padding: var(--t-space-58);
     max-width: 100%;
   }
-  .teachers-choose-class-topics-form {
+  .class-choose-topics-form {
     margin-top: 0;
   }
 }
 @media (min-width: 1200px) {
-  .teachers-choose-class-topics-wrapper {
+  .class-choose-topics-wrapper {
     gap: var(--t-space-24);
     padding: var(--t-space-24) 0;
   }
-  .teachers-choose-class-topics-info {
+  .class-choose-topics-info {
     gap: var(--t-space-16);
   }
-  .teachers-choose-class-topics-form {
+  .class-choose-topics-form {
     gap: var(--t-space-48);
   }
-  .teachers-choose-class-topics-sub-form {
+  .class-choose-topics-sub-form {
     gap: var(--t-space-16);
   }
 }
