@@ -68,6 +68,7 @@ import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
 import { ClassService } from "@/api/services";
 import { createClassSchema } from "@/utils/validations/class.validation";
 import supportedLangugages from "@/utils/constants/supportedLangugages";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "TeacherClassCreate",
@@ -83,13 +84,26 @@ export default {
     return {
       createClassSchema: createClassSchema,
       languageList: [...Object.values(supportedLangugages)],
-      schoolId: "61b231c2ea1d9f1e29e4030c", // TODO: remove hardcoded
+      schoolId: null,
       loading: false,
       formStatus: {
         type: null,
         message: null,
       },
     };
+  },
+  created() {
+    // get school id from user
+    const user = authUser.getUser();
+
+    const schoolId =
+      user.schools && user.schools.length > 0 ? user.schools[0]._id : null;
+
+    // failure case
+    if (!schoolId) return this.$router.push("/404");
+
+    // success case
+    this.schoolId = schoolId;
   },
   methods: {
     async handleSubmit(values) {
