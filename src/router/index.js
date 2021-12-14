@@ -6,9 +6,9 @@ import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
 import ClassJoin from "../components/Modules/Class/Join";
 import ClassCreate from "../components/Modules/Class/Create";
+import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
-import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
 import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
@@ -81,16 +81,10 @@ const routes = [
         path: "/classes/create",
         component: ClassCreate,
       },
-    ],
-  },
-  {
-    path: "/teachers",
-    component: Layout,
-    children: [
       {
-        name: "TeacherClassChooseTopics",
-        path: "/teachers/classes/choose-topics",
-        component: TeacherClassChooseTopics,
+        name: "ClassChooseTopics",
+        path: "/classes/:id/choose-topics",
+        component: ClassChooseTopics,
       },
     ],
   },
