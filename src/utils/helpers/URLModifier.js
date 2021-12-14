@@ -2,6 +2,25 @@ const _getParams = () => {
   return new URLSearchParams(window.location.search);
 };
 
+const _updateURL = (newParams) => {
+  const _sanitizedNewParams =
+    newParams.toString().length > 0 ? "?" + newParams.toString() : "";
+
+  const newRelativePathQuery = window.location.pathname + _sanitizedNewParams;
+
+  history.pushState(null, "", newRelativePathQuery);
+};
+
+const addToURL = (queryParamName, queryParamValue) => {
+  if (!queryParamName) return;
+
+  const searchParams = _getParams();
+
+  searchParams.set(queryParamName, queryParamValue);
+
+  _updateURL(searchParams);
+};
+
 const getURLParam = (queryParamName) => {
   if (!queryParamName) return;
 
@@ -10,6 +29,6 @@ const getURLParam = (queryParamName) => {
   return searchParams.get(queryParamName);
 };
 
-export { getURLParam };
+export { addToURL, getURLParam };
 
-export default { getURLParam };
+export default { addToURL, getURLParam };
