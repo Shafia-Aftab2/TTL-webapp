@@ -17,15 +17,25 @@
       <div class="class-choose-topics-sub-form">
         <h4 class="h4">Beginners/Intermediate</h4>
         <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
-        <template v-for="topic in topics.intermediate" :key="topic.id">
-          <talkie-check-box :name="topic.id" :label="topic.name" />
+        <template v-if="!pageLoading">
+          <template v-for="topic in topics.intermediate" :key="topic.id">
+            <talkie-check-box :name="topic.id" :label="topic.name" />
+          </template>
+        </template>
+        <template v-if="pageLoading">
+          <talkie-loader :size="'large'" />
         </template>
       </div>
       <div class="class-choose-topics-sub-form">
         <h4 class="h4">Beginners</h4>
         <p class="p" style="margin-bottom: 0 !important">KS3 Level</p>
-        <template v-for="topic in topics.beginner" :key="topic.id">
-          <talkie-check-box :name="topic.id" :label="topic.name" />
+        <template v-if="!pageLoading">
+          <template v-for="topic in topics.beginner" :key="topic.id">
+            <talkie-check-box :name="topic.id" :label="topic.name" />
+          </template>
+        </template>
+        <template v-if="pageLoading">
+          <talkie-loader :size="'large'" />
         </template>
       </div>
       <talkie-alert
@@ -44,6 +54,7 @@ import {
   TalkieButton,
   TalkieForm,
   TalkieAlert,
+  TalkieLoader,
 } from "@/components/UICore";
 import { ClassService, TopicService } from "@/api/services";
 import topicTypes from "@/utils/constants/topicTypes";
@@ -55,6 +66,7 @@ export default {
     TalkieButton,
     TalkieForm,
     TalkieAlert,
+    TalkieLoader,
   },
   data() {
     return {
