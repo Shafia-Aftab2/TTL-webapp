@@ -79,7 +79,8 @@ import {
   TalkieButtonDropDown,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
-import { ClassService } from "@/api/services";
+import { ClassService, TaskService } from "@/api/services";
+import TaskTypes from "@/utils/constants/taskTypes";
 
 export default {
   name: "ClassHome",
@@ -115,7 +116,7 @@ export default {
       ],
       classId: null,
       classDetails: {},
-      classTasks: {},
+      classTasks: [],
       loading: false,
     };
   },
@@ -134,6 +135,10 @@ export default {
     // class details (+ failure case)
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
+
+    // class tasks
+    const classTasks = await this.getClassTasks(classId);
+    if (!classTasks) return this.$router.push("/404");
 
     // success case
     this.classDetails = {
@@ -184,6 +189,14 @@ export default {
       buttons: sidebarButtons,
     });
 
+    this.classTasks = classTasks.results.map((x) => ({
+      id: x.id,
+      type: x.type,
+      title: x.title,
+      topic: x.topic.name,
+      description: x.questionText,
+      audioSource: x.voiceForQnA,
+    }));
     this.loading = false;
   },
   methods: {
@@ -223,6 +236,15 @@ export default {
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async getClassTasks(id) {
+      const query = { type: TaskTypes.QUESTION_ANSWER };
+
+      const response = await TaskService.QueryClassTasks(id, query).catch(
+        () => null
+      );
 
       return response.data || null;
     },
