@@ -27,7 +27,7 @@
             item.isActive && 'talkie-sidebar-navigation-content-item-active',
           ]"
           v-for="item in computedSidebar.items"
-          :key="item * Math.random() * 91641684161"
+          :key="item"
         >
           <p class="p" v-if="item.name">
             {{ item.name }}
@@ -52,7 +52,7 @@
           :isChecked="_checkbox.isChecked"
           :disabled="_checkbox.disabled"
           :onToggle="_checkbox.onToggle"
-          :key="_checkbox * Math.random() * 91641684161"
+          :key="_checkbox"
           :customClass="`${
             _checkbox.isActive &&
             'talkie-sidebar-navigation-content-checkbox-active'
