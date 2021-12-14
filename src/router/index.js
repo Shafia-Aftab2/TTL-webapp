@@ -4,12 +4,13 @@ import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
+import ClassHome from "../components/Modules/Class/Home";
 import ClassJoin from "../components/Modules/Class/Join";
-import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
+import ClassCreate from "../components/Modules/Class/Create";
+import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
+import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
+import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
-import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
-import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
-import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
 import StudentFeedback from "../components/Modules/Students/Feedback";
@@ -19,7 +20,6 @@ import StudentStatistics from "../components/Modules/Students/Stats";
 import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
-import TeacherStartConvo from "../components/Modules/Teachers/StartConvo";
 import Error404 from "../components/Modules/Error404";
 // modular
 // import teacherRoutes from "../modules/teacher/teacher-routes";
@@ -63,6 +63,18 @@ const routes = [
   {
     path: "/classes",
     component: Layout,
+    props: { type: "sidebar", variant: "dark" },
+    children: [
+      {
+        name: "ClassHome",
+        path: "/classes/:id",
+        component: ClassHome,
+      },
+    ],
+  },
+  {
+    path: "/classes",
+    component: Layout,
     props: { variant: "dark" },
     children: [
       {
@@ -70,38 +82,31 @@ const routes = [
         path: "/classes/:id/join",
         component: ClassJoin,
       },
-    ],
-  },
-  {
-    path: "/teachers",
-    component: Layout,
-    children: [
       {
-        name: "TeacherClassCreate",
-        path: "/teachers/classes/create",
-        component: TeacherClassCreate,
+        name: "ClassInviteStudents",
+        path: "/classes/:id/invite-students",
+        component: ClassInviteStudents,
       },
       {
-        name: "TeacherClassChooseTopics",
-        path: "/teachers/classes/choose-topics",
-        component: TeacherClassChooseTopics,
+        name: "ClassTaskCreate",
+        path: "/classes/:id/tasks/create",
+        component: ClassTaskCreate,
       },
     ],
   },
   {
-    path: "/teachers",
+    path: "/classes",
     component: Layout,
-    props: { variant: "dark" },
     children: [
       {
-        name: "TeacherClassInviteStudents",
-        path: "/teachers/classes/invite-students",
-        component: TeacherClassInviteStudents,
+        name: "ClassCreate",
+        path: "/classes/create",
+        component: ClassCreate,
       },
       {
-        name: "TeacherStartConvo",
-        path: "/teachers/start-convo",
-        component: TeacherStartConvo,
+        name: "ClassChooseTopics",
+        path: "/classes/:id/choose-topics",
+        component: ClassChooseTopics,
       },
     ],
   },

@@ -16,7 +16,7 @@ import IconTrophy from "./IconTrophy.vue";
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
 import LogoAuthSignup from "./LogoAuthSignup.vue";
-import LogoTeacherClassCreate from "./LogoTeacherClassCreate.vue";
+import LogoClassCreate from "./LogoClassCreate.vue";
 
 export {
   AlertInfo,
@@ -35,5 +35,5 @@ export {
   // Logos
   LogoTalkie,
   LogoAuthSignup,
-  LogoTeacherClassCreate,
+  LogoClassCreate,
 };
