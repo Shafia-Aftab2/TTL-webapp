@@ -133,6 +133,7 @@ export default {
 
     // get current tab from url
     const tab = URLModifier.getURLParam("tab");
+    if (!tab) URLModifier.addToURL("tab", "questions");
     if (["students", "questions"].includes(tab)) this.activeTab = tab;
     // class id from params
     const classId = this.$route.params.id;
