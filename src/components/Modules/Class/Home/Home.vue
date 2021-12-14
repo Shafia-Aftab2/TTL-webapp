@@ -1,61 +1,71 @@
 <template>
   <div class="class-home-wrapper">
-    <div class="class-home-header-wrapper">
-      <div class="class-home-header-details-wrapper">
-        <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
-        <div class="class-home-header-details-icons-wrapper">
-          <talkie-icon :name="'trophy'" />
-          <talkie-icon :name="'setting'" />
+    <!-- Contents -->
+    <template v-if="!loading">
+      <div class="class-home-header-wrapper">
+        <div class="class-home-header-details-wrapper">
+          <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
+          <div class="class-home-header-details-icons-wrapper">
+            <talkie-icon :name="'trophy'" />
+            <talkie-icon :name="'setting'" />
+          </div>
+        </div>
+        <div class="class-home-header-tabs-wrapper">
+          <talkie-tab :label="'Questions'" :active="true" />
+          <talkie-tab :label="'Students'" />
         </div>
       </div>
-      <div class="class-home-header-tabs-wrapper">
-        <talkie-tab :label="'Questions'" :active="true" />
-        <talkie-tab :label="'Students'" />
-      </div>
-    </div>
-    <div class="class-home-options-wrapper">
-      <talkie-select
-        :placeholder="'Filter by topic'"
-        :customClass="'class-home-options-custom-talkie-select'"
-        :options="
-          classDetails.topics && classDetails.topics.length > 0
-            ? classDetails.topics.map((x) => x.name)
-            : []
-        "
-      />
-      <talkie-button-drop-down
-        :size="'small'"
-        :variant="'primary'"
-        :dropDownItems="newTaskOptions"
-      >
-        + New Task
-      </talkie-button-drop-down>
-    </div>
-    <div class="class-home-content-wrapper">
-      <talkie-modal
-        :type="'confirm'"
-        :contentPadded="true"
-        :closeButton="true"
-        :centered="true"
-        :title="'Are You Sure'"
-        :description="'Your students responses will also be deleted.'"
-        :onClose="handleTopicDeleteDialogClose"
-        v-if="showDeleteDialog"
-      />
-      <template v-if="classTasks && classTasks.length > 0">
-        <talkie-question-card
-          v-for="_question in classTasks"
-          :key="_question"
-          :title="_question.title"
-          :topic="_question.topic"
-          :description="_question.description"
-          :manageMode="true"
-          :centered="false"
-          :audioSource="_question.audioSource"
-          :onDeleteClick="handleTopicCardDeleteClick"
+      <div class="class-home-options-wrapper">
+        <talkie-select
+          :placeholder="'Filter by topic'"
+          :customClass="'class-home-options-custom-talkie-select'"
+          :options="
+            classDetails.topics && classDetails.topics.length > 0
+              ? classDetails.topics.map((x) => x.name)
+              : []
+          "
         />
-      </template>
-    </div>
+        <talkie-button-drop-down
+          :size="'small'"
+          :variant="'primary'"
+          :dropDownItems="newTaskOptions"
+        >
+          + New Task
+        </talkie-button-drop-down>
+      </div>
+      <div class="class-home-content-wrapper">
+        <talkie-modal
+          :type="'confirm'"
+          :contentPadded="true"
+          :closeButton="true"
+          :centered="true"
+          :title="'Are You Sure'"
+          :description="'Your students responses will also be deleted.'"
+          :onClose="handleTopicDeleteDialogClose"
+          v-if="showDeleteDialog"
+        />
+        <template v-if="classTasks && classTasks.length > 0">
+          <talkie-question-card
+            v-for="_question in classTasks"
+            :key="_question"
+            :title="_question.title"
+            :topic="_question.topic"
+            :description="_question.description"
+            :manageMode="true"
+            :centered="false"
+            :audioSource="_question.audioSource"
+            :onDeleteClick="handleTopicCardDeleteClick"
+          />
+        </template>
+      </div>
+    </template>
+
+    <!-- Load wrapper -->
+    <template v-if="loading">
+      <div class="class-home-loading-wrapper">
+        <talkie-loader :size="'large'" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -65,6 +75,7 @@ import {
   TalkieTab,
   TalkieSelect,
   TalkieModal,
+  TalkieLoader,
   TalkieButtonDropDown,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
@@ -78,6 +89,7 @@ export default {
     TalkieSelect,
     TalkieModal,
     TalkieButtonDropDown,
+    TalkieLoader,
     TalkieQuestionCard,
   },
   data() {
@@ -205,6 +217,9 @@ export default {
 }
 .class-home-content-wrapper {
   display: grid;
+}
+.class-home-loading-wrapper {
+  margin: auto;
 }
 
 /* Responsive variants */
