@@ -9,7 +9,7 @@
 
     <talkie-input
       :placeholder="'Url Here'"
-      :value="classLink"
+      :value="computedClassLink"
       :customClass="'class-invite-students-input'"
     />
 
@@ -30,10 +30,19 @@ export default {
   components: { TalkieInput, TalkieButton },
   data() {
     return {
-      classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
-      classLink: `${window.location.origin}/classes/61b255ebea1d9f1e29e40344/join`,
+      classId: null,
       isCopiedToClipboard: false,
     };
+  },
+  computed: {
+    computedClassLink() {
+      return `${window.location.origin}/classes/${this.classId}/join`;
+    },
+  },
+  created() {
+    // class id from params
+    const classId = this.$route.params.id;
+    this.classId = classId;
   },
   methods: {
     async hanldeCopyButtonClick() {

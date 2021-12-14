@@ -54,7 +54,7 @@ export default {
   color: var(--t-black-100);
   background: transparent;
   width: fit-content;
-  font-family: "Inter";
+  font-family: var(--t-ff-regular);
   cursor: pointer;
   border: transparent;
   transition: 0.1s ease;
