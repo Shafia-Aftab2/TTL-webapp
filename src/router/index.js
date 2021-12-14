@@ -4,6 +4,7 @@ import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
+import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
 import ClassHome from "../components/Modules/Class/Home";
 import ClassJoin from "../components/Modules/Class/Join";
 import ClassCreate from "../components/Modules/Class/Create";
@@ -65,6 +66,11 @@ const routes = [
     component: Layout,
     props: { type: "sidebar", variant: "dark" },
     children: [
+      {
+        name: "ClassChooseDefault",
+        path: "/classes",
+        component: ClassChooseDefault,
+      },
       {
         name: "ClassHome",
         path: "/classes/:id",
