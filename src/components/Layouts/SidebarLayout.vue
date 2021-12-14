@@ -21,19 +21,22 @@
         class="talkie-sidebar-navigation-content-items-wrapper"
         v-if="computedSidebar.items && computedSidebar.items.length > 0"
       >
-        <li
+        <component
+          :is="item.link ? 'a' : 'li'"
           :class="[
             'talkie-sidebar-navigation-content-item',
             item.isActive && 'talkie-sidebar-navigation-content-item-active',
           ]"
           v-for="item in computedSidebar.items"
           :key="item"
+          :href="item.link"
+          @click="item.onClick"
         >
           <p class="p" v-if="item.name">
             {{ item.name }}
           </p>
           <talkie-icon :name="'arrow-head-right'" v-if="item.hasRightIcon" />
-        </li>
+        </component>
       </ul>
       <ul
         :class="[
