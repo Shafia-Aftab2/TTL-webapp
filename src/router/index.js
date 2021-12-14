@@ -8,6 +8,7 @@ import ClassJoin from "../components/Modules/Class/Join";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
+import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
@@ -19,7 +20,6 @@ import StudentStatistics from "../components/Modules/Students/Stats";
 import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
-import TeacherStartConvo from "../components/Modules/Teachers/StartConvo";
 import Error404 from "../components/Modules/Error404";
 // modular
 // import teacherRoutes from "../modules/teacher/teacher-routes";
@@ -75,6 +75,11 @@ const routes = [
         path: "/classes/:id/invite-students",
         component: ClassInviteStudents,
       },
+      {
+        name: "ClassTaskCreate",
+        path: "/classes/:id/tasks/create",
+        component: ClassTaskCreate,
+      },
     ],
   },
   {
@@ -90,18 +95,6 @@ const routes = [
         name: "ClassChooseTopics",
         path: "/classes/:id/choose-topics",
         component: ClassChooseTopics,
-      },
-    ],
-  },
-  {
-    path: "/teachers",
-    component: Layout,
-    props: { variant: "dark" },
-    children: [
-      {
-        name: "TeacherStartConvo",
-        path: "/teachers/start-convo",
-        component: TeacherStartConvo,
       },
     ],
   },
