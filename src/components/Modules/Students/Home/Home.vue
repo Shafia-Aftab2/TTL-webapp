@@ -50,38 +50,7 @@ export default {
 };
 </script>
 
-<style>
-.translation-content {
-  position: relative;
-  display: flex;
-  width: auto;
-  background-color: white;
-  border-radius: var(--t-br-medium);
-}
-.translation-box-1 {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--t-gray-home);
-  width: 50%;
-  padding: 170px var(--t-space-20);
-  border-radius: var(--t-br-medium);
-  word-wrap: break-word;
-  gap: 10px;
-}
-.translation-box-2 {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  padding: 170px var(--t-space-20);
-  word-wrap: break-word;
-  gap: 10px;
-}
-.translation-icon-bar {
-  position: absolute;
-  left: 30%;
-  bottom: 5%;
-  padding: var(--t-space-24);
-}
+<style scoped>
 .talkie-icon-bar {
   position: relative;
   background-color: var(--t-white);
@@ -117,36 +86,8 @@ export default {
   font-size: 20px;
   color: var(--t-secondary);
 }
-.box-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 100px 0 var(--t-space-50) 0;
-  gap: 10px;
-}
-.box-content {
-  display: grid;
-  width: 70%;
-  background-color: white;
-  border-radius: var(--t-br-medium);
-  padding: var(--t-space-20);
-  gap: 10px;
-}
-.box-header {
-  display: grid;
-  gap: 10px;
-}
-.box-head {
-  display: flex;
-  justify-content: space-between;
-}
 .text-center {
   text-align: center;
-}
-a {
-  text-decoration: none;
 }
 .bar-content {
   display: grid;
@@ -223,12 +164,6 @@ a {
   .box-container {
     padding: 110px 15px var(--t-space-50) 10px;
   }
-  .translation-content {
-    width: auto;
-  }
-  .translation-icon-bar {
-    left: 20%;
-  }
 }
 
 @media (min-width: 600px) {
@@ -240,20 +175,12 @@ a {
     position: absolute;
     left: 160px;
   }
-  .translation-content {
-    margin-bottom: 18px;
-    width: auto;
-  }
 }
 
 @media (min-width: 900px) {
   .content {
     width: 35%;
     padding: var(--t-space-50);
-  }
-  .translation-content {
-    width: 70%;
-    margin-bottom: 18px;
   }
 }
 
@@ -265,9 +192,6 @@ a {
   .back-default {
     position: absolute;
     left: 160px;
-  }
-  .translation-content {
-    margin-bottom: 9px;
   }
 }
 </style>

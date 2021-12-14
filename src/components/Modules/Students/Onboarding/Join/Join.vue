@@ -38,13 +38,3 @@ export default {
   margin-bottom: 59px;
 }
 </style>
-
-<!-- <template>
-  <div>This is Join Class</div>
-</template>
-
-<script>
-export default {
-  name: "StudentJoin",
-};
-</script> -->

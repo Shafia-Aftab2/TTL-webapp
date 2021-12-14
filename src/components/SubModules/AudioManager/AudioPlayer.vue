@@ -33,7 +33,7 @@ export default {
   mounted: function () {
     this.player = document.getElementById(this.audioPlayerId);
     this.player.addEventListener("ended", () => (this.isPlaying = false));
-    this.player.addEventListener("loadeddata", (ev) => {
+    this.player.addEventListener("loadeddata", () => {
       this.handlePlayerPercentageReset();
       this.totalAudioPlaybackTime = convertTimeMMSS(this.player.duration);
     });

@@ -48,4 +48,73 @@ export default {
   components: { Select, Chip, TalkieIcon },
 };
 </script>
-<style></style>
+<style scoped>
+.talkie-icon-bar {
+  position: relative;
+  background-color: var(--t-white);
+  padding: var(--t-space-24);
+  border-radius: var(--t-space-10);
+}
+.bar-icons {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  bottom: -50px;
+  left: 35%;
+}
+.bar-icons-pg {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  left: 30%;
+}
+
+.bar-bottom {
+  margin-top: 60px;
+  background-color: var(--t-white);
+  padding: var(--t-space-24);
+  border-radius: var(--t-space-10);
+}
+.messege-bar {
+  margin-bottom: 20px;
+}
+.bar-content {
+  display: grid;
+  gap: 10px;
+  padding: var(--t-space-18);
+}
+.bar {
+  background-color: var(--t-white);
+  padding: var(--t-space-24);
+  border-radius: var(--t-space-10);
+}
+.bar-outline {
+  background-color: var(--t-white);
+  padding: var(--t-space-16);
+  border-radius: var(--t-space-10);
+  border: 2px solid var(--t-gray-home);
+}
+.bar-inline {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+.back {
+  text-decoration: none;
+}
+@media (max-width: 599px) {
+}
+@media (min-width: 600px) {
+}
+@media (min-width: 900px) {
+}
+@media (min-width: 1200px) {
+  .back {
+    position: absolute;
+    left: var(--t-space-50);
+  }
+}
+</style>
