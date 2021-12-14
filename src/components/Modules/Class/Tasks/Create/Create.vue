@@ -212,7 +212,7 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import { createQandATopicSchema } from "@/utils/validations/task.validation";
-import { FileService, TaskService } from "@/api/services";
+import { FileService, TaskService, TopicService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
 
@@ -233,40 +233,7 @@ export default {
   },
   data() {
     return {
-      topics: [
-        {
-          name: "⚽️ Free-time activities",
-          id: "61b2328bea1d9f1e29e4032a",
-        },
-        {
-          name: "✈️ Travel and tourism",
-          id: "61b2328bea1d9f1e29e4032c",
-        },
-        {
-          name: "🍔 Food and drink",
-          id: "61b2328bea1d9f1e29e4032d",
-        },
-        {
-          name: "🤳 Social media and technology",
-          id: "61b2328bea1d9f1e29e4032f",
-        },
-        {
-          name: "😊 My family and friends",
-          id: "61b2328bea1d9f1e29e40320",
-        },
-        {
-          name: "🏡 Where I live",
-          id: "61b2328bea1d9f1e29e4032b",
-        },
-        {
-          name: "🐶 Pets",
-          id: "61b2328bea1d9f1e29e4032e",
-        },
-        {
-          name: "👖 Clothing",
-          id: "61b2328bea1d9f1e29e4032g",
-        },
-      ],
+      topics: [],
       createQandATopicSchema: createQandATopicSchema,
       loading: false,
       formStatus: {
@@ -304,9 +271,18 @@ export default {
     };
   },
   async created() {
-    // get class id from params
+    // class id from params
     const classId = this.$route.params.id;
     this.classId = classId;
+
+    // get class topics
+    const topics = await this.getClassTopics();
+
+    // error case
+    if (!topics) return this.$router.push("/404");
+
+    // success case
+    this.topics = topics;
   },
   methods: {
     handleRecordedItem(recording) {
@@ -430,7 +406,13 @@ export default {
         message: "Conversation Created. Redirecting..!",
         animateEllipse: false,
       };
-      this.handleRedirection(`/classes/${this.classId}`, 3000);
+    },
+    async getClassTopics() {
+      const query = {};
+
+      const response = await TopicService.Query(query).catch(() => null);
+
+      return !!response.data ? response.data.results : null;
     },
   },
 };
