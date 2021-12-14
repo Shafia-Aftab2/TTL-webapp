@@ -4,12 +4,12 @@ import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
+import ClassHome from "../components/Modules/Class/Home";
 import ClassJoin from "../components/Modules/Class/Join";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
-import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
@@ -57,6 +57,18 @@ const routes = [
         path: "/auth/signup/teacher",
         component: AuthSignup,
         props: { signupMode: "teacher" },
+      },
+    ],
+  },
+  {
+    path: "/classes",
+    component: Layout,
+    props: { type: "sidebar", variant: "dark" },
+    children: [
+      {
+        name: "ClassHome",
+        path: "/classes/:id",
+        component: ClassHome,
       },
     ],
   },
