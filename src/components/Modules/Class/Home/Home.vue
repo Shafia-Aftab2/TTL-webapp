@@ -15,54 +15,58 @@
             <talkie-tab
               :label="tabName"
               :active="tabName.toLowerCase() === activeTab"
+              :onClick="() => handleTabChange(tabName.toLowerCase())"
             />
           </template>
         </div>
       </div>
-      <div class="class-home-options-wrapper">
-        <talkie-select
-          :placeholder="'Filter by topic'"
-          :customClass="'class-home-options-custom-talkie-select'"
-          :options="
-            classDetails.topics && classDetails.topics.length > 0
-              ? classDetails.topics.map((x) => x.name)
-              : []
-          "
-        />
-        <talkie-button-drop-down
-          :size="'small'"
-          :variant="'primary'"
-          :dropDownItems="newTaskOptions"
-        >
-          + New Task
-        </talkie-button-drop-down>
-      </div>
-      <div class="class-home-content-wrapper">
-        <talkie-modal
-          :type="'confirm'"
-          :contentPadded="true"
-          :closeButton="true"
-          :centered="true"
-          :title="'Are You Sure'"
-          :description="'Your students responses will also be deleted.'"
-          :onClose="handleTopicDeleteDialogClose"
-          v-if="showDeleteDialog"
-        />
-        <template v-if="classTasks && classTasks.length > 0">
-          <talkie-question-card
-            v-for="_question in classTasks"
-            :key="_question"
-            :title="_question.title"
-            :topic="_question.topic"
-            :description="_question.description"
-            :manageMode="true"
-            :centered="false"
-            :audioSource="_question.audioSource"
-            :onDeleteClick="handleTopicCardDeleteClick"
+
+      <!-- Questions tab -->
+      <template v-if="activeTab === 'questions'">
+        <div class="class-home-options-wrapper">
+          <talkie-select
+            :placeholder="'Filter by topic'"
+            :customClass="'class-home-options-custom-talkie-select'"
+            :options="
+              classDetails.topics && classDetails.topics.length > 0
+                ? classDetails.topics.map((x) => x.name)
+                : []
+            "
           />
-        </template>
-      </div>
-    </template>
+          <talkie-button-drop-down
+            :size="'small'"
+            :variant="'primary'"
+            :dropDownItems="newTaskOptions"
+          >
+            + New Task
+          </talkie-button-drop-down>
+        </div>
+        <div class="class-home-content-wrapper">
+          <talkie-modal
+            :type="'confirm'"
+            :contentPadded="true"
+            :closeButton="true"
+            :centered="true"
+            :title="'Are You Sure'"
+            :description="'Your students responses will also be deleted.'"
+            :onClose="handleTopicDeleteDialogClose"
+            v-if="showDeleteDialog"
+          />
+          <template v-if="classTasks && classTasks.length > 0">
+            <talkie-question-card
+              v-for="_question in classTasks"
+              :key="_question"
+              :title="_question.title"
+              :topic="_question.topic"
+              :description="_question.description"
+              :manageMode="true"
+              :centered="false"
+              :audioSource="_question.audioSource"
+              :onDeleteClick="handleTopicCardDeleteClick"
+            />
+          </template>
+        </div>
+      </template>
 
     <!-- Load wrapper -->
     <template v-if="loading">
@@ -216,6 +220,10 @@ export default {
     },
     handleTopicDeleteDialogClose() {
       this.showDeleteDialog = !this.showDeleteDialog;
+    },
+    handleTabChange(x) {
+      this.activeTab = x.toLowerCase();
+      URLModifier.addToURL("tab", x.toLowerCase());
     },
     handleStoreMutation(key, value) {
       this.$store.state[key] = value;
