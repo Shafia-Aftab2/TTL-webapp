@@ -12,7 +12,10 @@
         </div>
         <div class="class-home-header-tabs-wrapper">
           <template v-for="tabName in tabs" :key="tabName">
-            <talkie-tab :label="tabName" />
+            <talkie-tab
+              :label="tabName"
+              :active="tabName.toLowerCase() === activeTab"
+            />
           </template>
         </div>
       </div>
@@ -119,6 +122,7 @@ export default {
       classDetails: {},
       classTasks: [],
       loading: false,
+      activeTab: "questions",
       tabs: ["Questions", "Students"],
     };
   },
