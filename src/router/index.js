@@ -7,9 +7,9 @@ import AuthSignup from "../components/Modules/Auth/Signup";
 import ClassJoin from "../components/Modules/Class/Join";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
+import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
-import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
 import StudentFeedback from "../components/Modules/Students/Feedback";
@@ -70,6 +70,11 @@ const routes = [
         path: "/classes/:id/join",
         component: ClassJoin,
       },
+      {
+        name: "ClassInviteStudents",
+        path: "/classes/:id/invite-students",
+        component: ClassInviteStudents,
+      },
     ],
   },
   {
@@ -93,11 +98,6 @@ const routes = [
     component: Layout,
     props: { variant: "dark" },
     children: [
-      {
-        name: "TeacherClassInviteStudents",
-        path: "/teachers/classes/invite-students",
-        component: TeacherClassInviteStudents,
-      },
       {
         name: "TeacherStartConvo",
         path: "/teachers/start-convo",
