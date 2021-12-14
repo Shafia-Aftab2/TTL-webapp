@@ -5,7 +5,7 @@
       <div class="class-home-header-wrapper">
         <div class="class-home-header-details-wrapper">
           <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
-          <div class="class-home-header-details-icons-wrapper">
+          <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
             <talkie-icon :name="'trophy'" />
             <talkie-icon :name="'setting'" />
           </div>
@@ -37,6 +37,7 @@
             :size="'small'"
             :variant="'primary'"
             :dropDownItems="newTaskOptions"
+            v-if="isTeacher"
           >
             + New Task
           </talkie-button-drop-down>
@@ -64,7 +65,7 @@
               :title="_question.title"
               :topic="_question.topic"
               :description="_question.description"
-              :manageMode="true"
+              :manageMode="isTeacher"
               :centered="false"
               :audioSource="_question.audioSource"
               :onDeleteClick="handleTopicCardDeleteClick"
@@ -119,6 +120,8 @@ import {
 import { ClassService, TaskService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import URLModifier from "@/utils/helpers/URLModifier";
+import authUser from "@/utils/helpers/auth";
+import roles from "@/utils/constants/roles";
 
 export default {
   name: "ClassHome",
@@ -157,6 +160,8 @@ export default {
       classDetails: {},
       classStudents: [],
       classTasks: [],
+      isTeacher: false,
+      isStudent: false,
       loading: false,
       activeTab: "questions",
       tabs: ["Questions", "Students"],
@@ -170,6 +175,14 @@ export default {
     const tab = URLModifier.getURLParam("tab");
     if (!tab) URLModifier.addToURL("tab", "questions");
     if (["students", "questions"].includes(tab)) this.activeTab = tab;
+
+    // get auth user
+    this.user = authUser.getUser();
+
+    // get user role
+    if (this.user.role === roles.TEACHER) this.isTeacher = true;
+    else this.isStudent = true;
+
     // class id from params
     const classId = this.$route.params.id;
     this.classId = classId;
@@ -208,7 +221,6 @@ export default {
         id: x.id,
       })),
     };
-    this.classTasks = classDetails.tasks;
 
     // sidebar data
     const sidebarItems = myClasses.map((x) => ({
