@@ -45,7 +45,8 @@ import {
   TalkieForm,
   TalkieAlert,
 } from "@/components/UICore";
-import { ClassService } from "@/api/services";
+import { ClassService, TopicService } from "@/api/services";
+import topicTypes from "@/utils/constants/topicTypes";
 
 export default {
   name: "ChooseTopics",
@@ -58,44 +59,12 @@ export default {
   data() {
     return {
       topics: {
-        intermediate: [
-          {
-            name: "⚽️ Free-time activities",
-            id: "61b2328bea1d9f1e29e4032a",
-          },
-          {
-            name: "✈️ Travel and tourism",
-            id: "61b2328bea1d9f1e29e4032c",
-          },
-          {
-            name: "🍔 Food and drink",
-            id: "61b2328bea1d9f1e29e4032d",
-          },
-          {
-            name: "🤳 Social media and technology",
-            id: "61b2328bea1d9f1e29e4032f",
-          },
-        ],
-        beginner: [
-          {
-            name: "😊 My family and friends",
-            id: "61b2328bea1d9f1e29e40320",
-          },
-          {
-            name: "🏡 Where I live",
-            id: "61b2328bea1d9f1e29e4032b",
-          },
-          {
-            name: "🐶 Pets",
-            id: "61b2328bea1d9f1e29e4032e",
-          },
-          {
-            name: "👖 Clothing",
-            id: "61b2328bea1d9f1e29e4032g",
-          },
-        ],
+        intermediate: [],
+        beginner: [],
+        advanced: [],
       },
       classId: null,
+      pageLoading: false,
       loading: false,
       formStatus: {
         type: null,
@@ -103,10 +72,26 @@ export default {
       },
     };
   },
-  created() {
+  async created() {
+    // update page state
+    this.pageLoading = true;
+
     // class id from params
     const classId = this.$route.params.id;
     this.classId = classId;
+
+    // get class topics
+    const topics = await this.getClassTopics();
+    // error case
+    if (!topics) return this.$router.push("/404");
+
+    // success case
+    this.topics = {
+      beginner: topics.filter((x) => x.type === topicTypes.BEGINNER),
+      intermediate: topics.filter((x) => x.type === topicTypes.INTERMEDIATE),
+      advanced: topics.filter((x) => x.type === topicTypes.ADVANCED),
+    };
+    this.pageLoading = false;
   },
   methods: {
     async handleCustomFormValidation(values) {
@@ -167,6 +152,13 @@ export default {
         type: "success",
         message: "Class Topics Added. Redirecting..!",
       };
+    },
+    async getClassTopics() {
+      const query = {};
+
+      const response = await TopicService.Query(query).catch(() => null);
+
+      return !!response.data ? response.data.results : null;
     },
   },
 };
