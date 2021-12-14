@@ -127,10 +127,12 @@ export default {
     const classId = this.$route.params.id;
     this.classId = classId;
 
-    // class details
-    const classDetails = await this.getClassDetails(classId);
+    // classes list (+ failure case)
+    const myClasses = await this.getMyClasses();
+    if (!myClasses) return this.$router.push("/404");
 
-    // failure case
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
 
     // success case
@@ -156,6 +158,32 @@ export default {
       })),
     };
     this.classTasks = classDetails.tasks;
+
+    // sidebar data
+    const sidebarItems = myClasses.map((x) => ({
+      name: x.name,
+      hasRightIcon: true,
+      link: `/classes/${x.id}`,
+      onClick: () => this.$router.push(`/classes/${x.id}`),
+      isActive: x.id === classId,
+    }));
+    const sidebarButtons = [
+      {
+        text: "+ New Class",
+        type: "button",
+        variant: "primary",
+        size: "small",
+        outlined: true,
+        loading: false,
+        disabled: false,
+        onClick: () => console.log("Button Clicked"),
+      },
+    ];
+    this.handleSidebarMutation({
+      items: sidebarItems,
+      buttons: sidebarButtons,
+    });
+
     this.loading = false;
   },
   methods: {
@@ -164,6 +192,39 @@ export default {
     },
     handleTopicDeleteDialogClose() {
       this.showDeleteDialog = !this.showDeleteDialog;
+    },
+    handleStoreMutation(key, value) {
+      this.$store.state[key] = value;
+    },
+    handleSidebarMutation(data) {
+      const sidebar = this.$store.state.sidebar;
+      const updatedData = {
+        hasBackLink: data.hasOwnProperty("hasBackLink")
+          ? data.hasBackLink
+          : sidebar.hasBackLink,
+        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
+        checkboxes: data.hasOwnProperty("checkboxes")
+          ? data.checkboxes
+          : sidebar.checkboxes,
+        buttons: data.hasOwnProperty("buttons")
+          ? data.buttons
+          : sidebar.buttons,
+      };
+
+      this.handleStoreMutation(
+        "sidebar",
+        Object.assign({}, { ...updatedData })
+      );
+    },
+    async getMyClasses() {
+      const response = await ClassService.GetMyClasses().catch(() => null);
+
+      return response.data || null;
+    },
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
     },
   },
 };
