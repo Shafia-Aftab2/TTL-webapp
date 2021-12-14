@@ -11,8 +11,9 @@
           </div>
         </div>
         <div class="class-home-header-tabs-wrapper">
-          <talkie-tab :label="'Questions'" :active="true" />
-          <talkie-tab :label="'Students'" />
+          <template v-for="tabName in tabs" :key="tabName">
+            <talkie-tab :label="tabName" />
+          </template>
         </div>
       </div>
       <div class="class-home-options-wrapper">
@@ -118,6 +119,7 @@ export default {
       classDetails: {},
       classTasks: [],
       loading: false,
+      tabs: ["Questions", "Students"],
     };
   },
   async created() {
