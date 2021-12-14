@@ -16,6 +16,7 @@ module.exports = {
         endOfLine: "auto",
       },
     ],
+    "no-prototype-builtins": "off",
   },
   overrides: [
     {
