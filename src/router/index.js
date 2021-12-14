@@ -116,11 +116,6 @@ const routes = [
     props: { variant: "dark", type: "sidebar" },
     children: [
       {
-        name: "TeacherClassHome",
-        path: "/teachers/classes/home",
-        component: TeacherClassHome,
-      },
-      {
         name: "TeacherClassStudents",
         path: "/teachers/class/students",
         component: TeacherClassStudents,

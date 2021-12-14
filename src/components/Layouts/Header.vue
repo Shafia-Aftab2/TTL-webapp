@@ -20,11 +20,7 @@
     <!-- Right Side -->
     <ul class="talkie-navbar-links-wrapper" v-if="!hideLinksAndProfile">
       <template v-if="!hideLinks" class="talkie-navbar">
-        <li
-          class="talkie-navbar-link-item"
-          v-for="link in links"
-          :key="Math.random() * link"
-        >
+        <li class="talkie-navbar-link-item" v-for="link in links" :key="link">
           <a :href="link.url">{{ link.text }}</a>
         </li>
       </template>
@@ -43,7 +39,7 @@
                   talkie-navbar-profile-options-list-link
                 "
                 v-for="link in links"
-                :key="Math.random() * link"
+                :key="link.text"
               >
                 <a :href="link.url">{{ link.text }}</a>
               </li>
