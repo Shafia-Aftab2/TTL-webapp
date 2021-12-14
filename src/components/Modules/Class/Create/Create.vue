@@ -51,7 +51,7 @@
 
     <!-- On Right of Screen -->
     <div class="create-class-avatar">
-      <logo-teacher-class-create />
+      <logo-class-create />
     </div>
   </div>
 </template>
@@ -64,13 +64,21 @@ import {
   TalkieForm,
   TalkieAlert,
 } from "@/components/UICore";
-import LogoTeacherClassCreate from "@/components/SVGs/LogoTeacherClassCreate.vue";
+import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
 import { ClassService } from "@/api/services";
 import { createClassSchema } from "@/utils/validations/class.validation";
 import supportedLangugages from "@/utils/constants/supportedLangugages";
 
 export default {
   name: "TeacherClassCreate",
+  components: {
+    TalkieInput,
+    TalkieSelect,
+    TalkieButton,
+    TalkieForm,
+    TalkieAlert,
+    LogoClassCreate,
+  },
   data() {
     return {
       createClassSchema: createClassSchema,
@@ -82,14 +90,6 @@ export default {
         message: null,
       },
     };
-  },
-  components: {
-    TalkieInput,
-    TalkieSelect,
-    TalkieButton,
-    TalkieForm,
-    TalkieAlert,
-    LogoTeacherClassCreate,
   },
   methods: {
     async handleSubmit(values) {
