@@ -1,8 +1,8 @@
 <template>
-  <div class="teachers-create-class-wrapper">
+  <div class="create-class-wrapper">
     <!-- on Left of Screen -->
     <talkie-form
-      :customClass="'teachers-create-class-form'"
+      :customClass="'create-class-form'"
       v-slot="{ errors }"
       :initialValues="{
         schoolId: schoolId,
@@ -11,14 +11,14 @@
       :onSubmit="handleSubmit"
     >
       <h3 class="h3">¡Hola, Ms. Joyce!</h3>
-      <h5 class="teachers-create-class-form-header h5">
+      <h5 class="create-class-form-header h5">
         Let’s create your first class...
       </h5>
       <talkie-input
         :name="'name'"
         :size="'medium'"
         :placeholder="'Class Name'"
-        :customClass="'teachers-create-class-form-field'"
+        :customClass="'create-class-form-field'"
         :hint="{
           type: errors.name ? 'error' : null,
           message: errors.name ? errors.name : null,
@@ -29,7 +29,7 @@
         :size="'medium'"
         :placeholder="'I teach...'"
         :options="languageList"
-        :customClass="'teachers-create-class-form-field'"
+        :customClass="'create-class-form-field'"
         :hint="{
           type: errors.language ? 'error' : null,
           message: errors.language ? errors.language : null,
@@ -42,7 +42,7 @@
       />
       <talkie-button
         :size="'medium'"
-        :customClass="'teachers-create-class-form-field'"
+        :customClass="'create-class-form-field'"
         :loading="loading"
       >
         Next
@@ -50,7 +50,7 @@
     </talkie-form>
 
     <!-- On Right of Screen -->
-    <div class="teachers-create-class-avatar">
+    <div class="create-class-avatar">
       <logo-teacher-class-create />
     </div>
   </div>
@@ -146,14 +146,14 @@ export default {
 </script>
 
 <style>
-.teachers-create-class-wrapper {
+.create-class-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   margin: auto;
 }
-.teachers-create-class-form {
+.create-class-form {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -161,10 +161,10 @@ export default {
   width: 100%;
   height: 100%;
 }
-.teachers-create-class-form-header {
+.create-class-form-header {
   font-family: var(--t-ff-medium);
 }
-.teachers-create-class-avatar {
+.create-class-avatar {
   display: flex;
   overflow: hidden;
   flex: 1;
@@ -175,33 +175,33 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .teachers-create-class-wrapper {
+  .create-class-wrapper {
     flex-direction: column;
     gap: var(--t-space-16);
     padding: var(--t-space-32);
     margin-top: var(--t-space-12);
   }
-  .teachers-create-class-form {
+  .create-class-form {
     gap: var(--t-space-12);
   }
-  .teachers-create-class-avatar {
+  .create-class-avatar {
     display: none;
   }
 }
 @media (min-width: 600px) {
-  .teachers-create-class-wrapper {
+  .create-class-wrapper {
     flex-direction: column;
     gap: var(--t-space-24);
     padding: var(--t-space-32);
     max-width: 75%;
   }
-  .teachers-create-class-form {
+  .create-class-form {
     gap: var(--t-space-12);
   }
-  .teachers-create-class-avatar {
+  .create-class-avatar {
     display: flex;
   }
-  .teachers-create-class-avatar > svg {
+  .create-class-avatar > svg {
     position: absolute;
     top: 50%;
     left: 100%;
@@ -213,13 +213,13 @@ export default {
   }
 }
 @media (min-width: 900px) {
-  .teachers-create-class-wrapper {
+  .create-class-wrapper {
     flex-direction: row;
     gap: var(--t-space-16);
     padding: var(--t-space-58);
     max-width: 100%;
   }
-  .teachers-create-class-avatar > svg {
+  .create-class-avatar > svg {
     position: static;
     opacity: 1;
     transform: translate(0, 0);
@@ -229,14 +229,14 @@ export default {
   }
 }
 @media (min-width: 1200px) {
-  .teachers-create-class-wrapper {
+  .create-class-wrapper {
     gap: var(--t-space-24);
     padding: var(--t-space-24) 0;
   }
-  .teachers-create-class-form {
+  .create-class-form {
     gap: var(--t-space-16);
   }
-  .teachers-create-class-avatar > svg {
+  .create-class-avatar > svg {
     width: var(--logo-width);
     height: var(--logo-height);
   }
