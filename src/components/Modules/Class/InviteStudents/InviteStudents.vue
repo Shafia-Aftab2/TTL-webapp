@@ -1,6 +1,6 @@
 <template>
-  <div class="teachers-class-invite-students-wrapper">
-    <div class="teachers-class-invite-students-info-wrapper">
+  <div class="class-invite-students-wrapper">
+    <div class="class-invite-students-info-wrapper">
       <h2 class="h2">Invite your students</h2>
       <p class="p" style="margin-bottom: 0 !important">
         Copy and paste the url below
@@ -10,10 +10,10 @@
     <talkie-input
       :placeholder="'Url Here'"
       :value="classLink"
-      :customClass="'teachers-class-invite-students-input'"
+      :customClass="'class-invite-students-input'"
     />
 
-    <div class="teachers-class-invite-students-options-wrapper">
+    <div class="class-invite-students-options-wrapper">
       <talkie-button :onClick="hanldeCopyButtonClick">Copy</talkie-button>
       <talkie-button :disabled="!isCopiedToClipboard">Next</talkie-button>
     </div>
@@ -61,15 +61,15 @@ export default {
 </script>
 
 <style>
-.teachers-class-invite-students-wrapper {
+.class-invite-students-wrapper {
   display: flex;
   flex-direction: column;
   margin: auto;
   margin-top: var(--t-space-36);
   background-color: var(--t-white);
 }
-.teachers-class-invite-students-info-wrapper,
-.teachers-class-invite-students-options-wrapper {
+.class-invite-students-info-wrapper,
+.class-invite-students-options-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -77,40 +77,40 @@ export default {
   margin: auto;
   gap: var(--t-space-12);
 }
-.teachers-class-invite-students-input {
+.class-invite-students-input {
   margin: auto;
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .teachers-class-invite-students-wrapper {
+  .class-invite-students-wrapper {
     max-width: 100%;
     gap: var(--t-space-24);
     padding: var(--t-space-32);
     border-radius: var(--t-br-medium);
   }
-  .teachers-class-invite-students-input {
+  .class-invite-students-input {
     max-width: 100%;
   }
 }
 @media (min-width: 600px) {
-  .teachers-class-invite-students-wrapper {
+  .class-invite-students-wrapper {
     max-width: 65%;
     gap: var(--t-space-36);
     padding: var(--t-space-48);
     border-radius: var(--t-br-medium);
   }
-  .teachers-class-invite-students-input {
+  .class-invite-students-input {
     max-width: 100%;
   }
 }
 @media (min-width: 1200px) {
-  .teachers-class-invite-students-wrapper {
+  .class-invite-students-wrapper {
     max-width: 80%;
     padding: var(--t-space-48);
     border-radius: var(--t-br-large);
   }
-  .teachers-class-invite-students-input {
+  .class-invite-students-input {
     max-width: 85%;
   }
 }
