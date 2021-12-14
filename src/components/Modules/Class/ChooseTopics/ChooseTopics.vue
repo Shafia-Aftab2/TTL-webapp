@@ -49,6 +49,12 @@ import { ClassService } from "@/api/services";
 
 export default {
   name: "ChooseTopics",
+  components: {
+    TalkieCheckBox,
+    TalkieButton,
+    TalkieForm,
+    TalkieAlert,
+  },
   data() {
     return {
       topics: {
@@ -89,7 +95,7 @@ export default {
           },
         ],
       },
-      classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
+      classId: null,
       loading: false,
       formStatus: {
         type: null,
@@ -97,11 +103,10 @@ export default {
       },
     };
   },
-  components: {
-    TalkieCheckBox,
-    TalkieButton,
-    TalkieForm,
-    TalkieAlert,
+  created() {
+    // class id from params
+    const classId = this.$route.params.id;
+    this.classId = classId;
   },
   methods: {
     async handleCustomFormValidation(values) {

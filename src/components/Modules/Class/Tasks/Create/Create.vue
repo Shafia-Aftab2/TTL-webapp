@@ -217,7 +217,20 @@ import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
 
 export default {
-  name: "TeacherStartConvo",
+  name: "ClassTaskCreate",
+  components: {
+    TalkieInput,
+    TalkieSelect,
+    TalkieIcon,
+    TalkieAudioRecorder,
+    TalkieAudioPlayer,
+    TalkieAudioTimeline,
+    TalkieAlert,
+    TalkieForm,
+    TalkieModal,
+    TalkieLoader,
+    TalkieQuestionCard,
+  },
   data() {
     return {
       topics: [
@@ -287,21 +300,13 @@ export default {
       handleAudioPlayerToggle: () => {},
       setFormValue: () => {},
       triggerFormSubmission: () => {},
-      classId: "61b255ebea1d9f1e29e40344", // hardcoded for now
+      classId: null,
     };
   },
-  components: {
-    TalkieInput,
-    TalkieSelect,
-    TalkieIcon,
-    TalkieAudioRecorder,
-    TalkieAudioPlayer,
-    TalkieAudioTimeline,
-    TalkieAlert,
-    TalkieForm,
-    TalkieModal,
-    TalkieLoader,
-    TalkieQuestionCard,
+  async created() {
+    // get class id from params
+    const classId = this.$route.params.id;
+    this.classId = classId;
   },
   methods: {
     handleRecordedItem(recording) {
@@ -425,6 +430,7 @@ export default {
         message: "Conversation Created. Redirecting..!",
         animateEllipse: false,
       };
+      this.handleRedirection(`/classes/${this.classId}`, 3000);
     },
   },
 };
