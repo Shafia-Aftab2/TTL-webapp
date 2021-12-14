@@ -41,7 +41,12 @@
             + New Task
           </talkie-button-drop-down>
         </div>
-        <div class="class-home-content-wrapper">
+        <div
+          :class="[
+            'class-home-content-wrapper',
+            'class-home-content-wrapper-multi-col',
+          ]"
+        >
           <talkie-modal
             :type="'confirm'"
             :contentPadded="true"
@@ -70,7 +75,12 @@
 
       <!-- Students tab -->
       <template v-if="activeTab === 'students'">
-        <div class="class-home-content-wrapper">
+        <div
+          :class="[
+            'class-home-content-wrapper',
+            'class-home-content-wrapper-single-col',
+          ]"
+        >
           <talkie-student-card
             :mode="'info'"
             :studentName="'Alice'"
@@ -365,8 +375,13 @@ export default {
     min-width: calc(var(--t-space-70) * 2.25) !important;
   }
   .class-home-content-wrapper {
-    grid-template-columns: 1fr;
     gap: var(--t-space-16);
+  }
+  .class-home-content-wrapper-single-col {
+    grid-template-columns: 1fr;
+  }
+  .class-home-content-wrapper-multi-col {
+    grid-template-columns: 1fr;
   }
 }
 @media (min-width: 600px) {
@@ -392,8 +407,13 @@ export default {
     min-width: calc(var(--t-space-70) * 3) !important;
   }
   .class-home-content-wrapper {
-    grid-template-columns: 1fr;
     gap: var(--t-space-16);
+  }
+  .class-home-content-wrapper-single-col {
+    grid-template-columns: 1fr;
+  }
+  .class-home-content-wrapper-multi-col {
+    grid-template-columns: 1fr;
   }
 }
 @media (min-width: 900px) {
@@ -403,7 +423,7 @@ export default {
   .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 5) !important;
   }
-  .class-home-content-wrapper {
+  .class-home-content-wrapper-multi-col {
     grid-template-columns: 1fr 1fr;
   }
 }
