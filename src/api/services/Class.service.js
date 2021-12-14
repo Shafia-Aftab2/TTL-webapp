@@ -8,4 +8,8 @@ export default class ClassRoutes {
   static async AddTopics(id, payload) {
     return HTTPClient.post(`/class/${id}/topics`, payload);
   }
+
+  static async JoinAsStudent(id) {
+    return HTTPClient.patch(`/class/${id}/join`);
+  }
 }

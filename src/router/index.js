@@ -6,6 +6,7 @@ import Layout from "../components/Layouts/_layout.vue";
 import Home from "../views/Home.vue";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
+import ClassJoin from "../components/Modules/Class/Join";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
 import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
@@ -57,6 +58,18 @@ const routes = [
         path: "/auth/signup/teacher",
         component: AuthSignup,
         props: { signupMode: "teacher" },
+      },
+    ],
+  },
+  {
+    path: "/classes",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
+      {
+        name: "ClassJoin",
+        path: "/classes/:id/join",
+        component: ClassJoin,
       },
     ],
   },
