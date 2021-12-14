@@ -1,22 +1,22 @@
 <template>
-  <div class="teachers-class-home-wrapper">
-    <div class="teachers-class-home-header-wrapper">
-      <div class="teachers-class-home-header-details-wrapper">
+  <div class="class-home-wrapper">
+    <div class="class-home-header-wrapper">
+      <div class="class-home-header-details-wrapper">
         <h2 class="h2">10A Spanish</h2>
-        <div class="teachers-class-home-header-details-icons-wrapper">
+        <div class="class-home-header-details-icons-wrapper">
           <talkie-icon :name="'trophy'" />
           <talkie-icon :name="'setting'" />
         </div>
       </div>
-      <div class="teachers-class-home-header-tabs-wrapper">
+      <div class="class-home-header-tabs-wrapper">
         <talkie-tab :label="'Questions'" :active="true" />
         <talkie-tab :label="'Students'" />
       </div>
     </div>
-    <div class="teachers-class-home-options-wrapper">
+    <div class="class-home-options-wrapper">
       <talkie-select
         :placeholder="'Filter by topic'"
-        :customClass="'teachers-class-home-options-custom-talkie-select'"
+        :customClass="'class-home-options-custom-talkie-select'"
         :options="topicFilterOptions"
       />
       <talkie-button-drop-down
@@ -27,7 +27,7 @@
         + New Task
       </talkie-button-drop-down>
     </div>
-    <div class="teachers-class-home-content-wrapper">
+    <div class="class-home-content-wrapper">
       <talkie-modal
         :type="'confirm'"
         :contentPadded="true"
@@ -130,118 +130,118 @@ export default {
 </script>
 
 <style scoped>
-.teachers-class-home-wrapper {
+.class-home-wrapper {
   display: flex;
   flex-direction: column;
   margin: auto;
   width: 100%;
   padding: var(--t-space-24);
 }
-.teachers-class-home-header-wrapper {
+.class-home-header-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
 }
-.teachers-class-home-header-details-wrapper {
+.class-home-header-details-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.teachers-class-home-header-details-icons-wrapper {
+.class-home-header-details-icons-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.teachers-class-home-header-tabs-wrapper {
+.class-home-header-tabs-wrapper {
   display: flex;
   align-items: center;
   overflow-x: scroll;
 }
-.teachers-class-home-header-tabs-wrapper::-webkit-scrollbar {
+.class-home-header-tabs-wrapper::-webkit-scrollbar {
   display: none !important;
 }
-.teachers-class-home-header-tabs-wrapper::-webkit-scrollbar-track {
+.class-home-header-tabs-wrapper::-webkit-scrollbar-track {
   display: none !important;
 }
-.teachers-class-home-header-tabs-wrapper:-webkit-scrollbar {
+.class-home-header-tabs-wrapper:-webkit-scrollbar {
   display: none !important;
 }
-.teachers-class-home-header-tabs-wrapper::-webkit-scrollbar-thumb {
+.class-home-header-tabs-wrapper::-webkit-scrollbar-thumb {
   display: none !important;
 }
-.teachers-class-home-options-wrapper {
+.class-home-options-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.teachers-class-home-content-wrapper {
+.class-home-content-wrapper {
   display: grid;
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .teachers-class-home-wrapper {
+  .class-home-wrapper {
     gap: var(--t-space-18);
   }
-  .teachers-class-home-header-wrapper {
+  .class-home-header-wrapper {
     gap: var(--t-space-12);
   }
-  .teachers-class-home-header-details-wrapper {
+  .class-home-header-details-wrapper {
     gap: var(--t-space-12);
   }
-  .teachers-class-home-header-details-icons-wrapper {
+  .class-home-header-details-icons-wrapper {
     gap: var(--t-space-5);
   }
-  .teachers-class-home-header-tabs-wrapper {
+  .class-home-header-tabs-wrapper {
     gap: var(--t-space-12);
   }
-  .teachers-class-home-options-wrapper {
+  .class-home-options-wrapper {
     gap: var(--t-space-12);
   }
-  .teachers-class-home-options-custom-talkie-select {
+  .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 2.25) !important;
   }
-  .teachers-class-home-content-wrapper {
+  .class-home-content-wrapper {
     grid-template-columns: 1fr;
     gap: var(--t-space-16);
   }
 }
 @media (min-width: 600px) {
-  .teachers-class-home-wrapper {
+  .class-home-wrapper {
     gap: var(--t-space-24);
   }
-  .teachers-class-home-header-wrapper {
+  .class-home-header-wrapper {
     gap: var(--t-space-16);
   }
-  .teachers-class-home-header-details-wrapper {
+  .class-home-header-details-wrapper {
     gap: var(--t-space-16);
   }
-  .teachers-class-home-header-details-icons-wrapper {
+  .class-home-header-details-icons-wrapper {
     gap: var(--t-space-8);
   }
-  .teachers-class-home-header-tabs-wrapper {
+  .class-home-header-tabs-wrapper {
     gap: var(--t-space-16);
   }
-  .teachers-class-home-options-wrapper {
+  .class-home-options-wrapper {
     gap: var(--t-space-16);
   }
-  .teachers-class-home-options-custom-talkie-select {
+  .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 3) !important;
   }
-  .teachers-class-home-content-wrapper {
+  .class-home-content-wrapper {
     grid-template-columns: 1fr;
     gap: var(--t-space-16);
   }
 }
 @media (min-width: 900px) {
-  .teachers-class-home-wrapper {
+  .class-home-wrapper {
     gap: var(--t-space-36);
   }
-  .teachers-class-home-options-custom-talkie-select {
+  .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 5) !important;
   }
-  .teachers-class-home-content-wrapper {
+  .class-home-content-wrapper {
     grid-template-columns: 1fr 1fr;
   }
 }
