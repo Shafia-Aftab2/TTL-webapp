@@ -85,6 +85,7 @@ import {
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { ClassService, TaskService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
+import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "ClassHome",
@@ -130,6 +131,9 @@ export default {
     // update page state
     this.loading = true;
 
+    // get current tab from url
+    const tab = URLModifier.getURLParam("tab");
+    if (["students", "questions"].includes(tab)) this.activeTab = tab;
     // class id from params
     const classId = this.$route.params.id;
     this.classId = classId;
