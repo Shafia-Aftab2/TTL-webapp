@@ -21,19 +21,22 @@
         class="talkie-sidebar-navigation-content-items-wrapper"
         v-if="computedSidebar.items && computedSidebar.items.length > 0"
       >
-        <li
+        <component
+          :is="item.link ? 'a' : 'li'"
           :class="[
             'talkie-sidebar-navigation-content-item',
             item.isActive && 'talkie-sidebar-navigation-content-item-active',
           ]"
           v-for="item in computedSidebar.items"
           :key="item"
+          :href="item.link"
+          @click="item.onClick"
         >
           <p class="p" v-if="item.name">
             {{ item.name }}
           </p>
           <talkie-icon :name="'arrow-head-right'" v-if="item.hasRightIcon" />
-        </li>
+        </component>
       </ul>
       <ul
         :class="[
@@ -147,6 +150,9 @@ export default {
 .talkie-sidebar-navigation-wrapper:-webkit-scrollbar {
   display: none !important;
 }
+.talkie-sidebar-navigation-content-back-link {
+  text-decoration: none;
+}
 .talkie-sidebar-navigation-content-items-wrapper {
   display: flex;
   flex-direction: column;
@@ -164,10 +170,14 @@ export default {
   border-radius: var(--t-br-medium);
   padding: var(--t-space-5);
   padding-left: var(--t-space-16);
+  text-decoration: none;
 }
 .talkie-sidebar-navigation-content-item:hover {
   background-color: var(--t-gray-100);
   border-color: var(--t-gray-100);
+}
+.talkie-sidebar-navigation-content-item:visited {
+  color: var(--t-black);
 }
 .talkie-sidebar-navigation-content-item-active {
   font-family: var(--t-ff-bold);

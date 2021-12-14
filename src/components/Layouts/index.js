@@ -1,3 +1,3 @@
-import AppLayoutWrapper from "./Wrapper.vue";
+import Layout from "./_layout.vue";
 
-export default AppLayoutWrapper;
+export default Layout;
