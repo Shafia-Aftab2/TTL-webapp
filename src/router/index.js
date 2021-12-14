@@ -5,9 +5,9 @@ import Home from "../views/Home.vue";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
 import ClassJoin from "../components/Modules/Class/Join";
+import ClassCreate from "../components/Modules/Class/Create";
 import TeacherClassHome from "../components/Modules/Teachers/Classes/Home";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
-import TeacherClassCreate from "../components/Modules/Teachers/Classes/Create";
 import TeacherClassChooseTopics from "../components/Modules/Teachers/Classes/ChooseTopics";
 import TeacherClassInviteStudents from "../components/Modules/Teachers/Classes/InviteStudents";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
@@ -73,14 +73,20 @@ const routes = [
     ],
   },
   {
-    path: "/teachers",
+    path: "/classes",
     component: Layout,
     children: [
       {
-        name: "TeacherClassCreate",
-        path: "/teachers/classes/create",
-        component: TeacherClassCreate,
+        name: "ClassCreate",
+        path: "/classes/create",
+        component: ClassCreate,
       },
+    ],
+  },
+  {
+    path: "/teachers",
+    component: Layout,
+    children: [
       {
         name: "TeacherClassChooseTopics",
         path: "/teachers/classes/choose-topics",
