@@ -32,6 +32,7 @@
                 ? classTopics.map((x) => x.name)
                 : []
             "
+            :onChange="handleTopicFilterChange"
           />
           <talkie-button-drop-down
             :size="'small'"
@@ -59,17 +60,22 @@
             v-if="showDeleteDialog"
           />
           <template v-if="classTasks && classTasks.length > 0">
-            <talkie-question-card
-              v-for="_question in classTasks"
-              :key="_question"
-              :title="_question.title"
-              :topic="_question.topic"
-              :description="_question.description"
-              :manageMode="isTeacher"
-              :centered="false"
-              :audioSource="_question.audioSource"
-              :onDeleteClick="handleTopicCardDeleteClick"
-            />
+            <template v-for="_question in classTasks" :key="_question">
+              <talkie-question-card
+                v-if="
+                  currentTopicFilter
+                    ? _question.topic === currentTopicFilter
+                    : true
+                "
+                :title="_question.title"
+                :topic="_question.topic"
+                :description="_question.description"
+                :manageMode="isTeacher"
+                :centered="false"
+                :audioSource="_question.audioSource"
+                :onDeleteClick="handleTopicCardDeleteClick"
+              />
+            </template>
           </template>
         </div>
       </template>
@@ -166,6 +172,7 @@ export default {
       loading: false,
       activeTab: "questions",
       tabs: ["Questions", "Students"],
+      currentTopicFilter: null,
     };
   },
   async created() {
@@ -283,6 +290,10 @@ export default {
     handleTabChange(x) {
       this.activeTab = x.toLowerCase();
       URLModifier.addToURL("tab", x.toLowerCase());
+    },
+    handleTopicFilterChange(e) {
+      const selectedTopic = e.target.value;
+      this.currentTopicFilter = selectedTopic;
     },
     handleStoreMutation(key, value) {
       this.$store.state[key] = value;

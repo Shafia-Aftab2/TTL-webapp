@@ -5,8 +5,12 @@
       fullWidth && 'talkie-question-card-fullwidth-wrapper',
       centered && 'talkie-question-card-centered-wrapper',
     ]"
+    @click="handleQuestionCardClick"
   >
-    <div class="talkie-question-card-details-wrapper">
+    <div
+      class="talkie-question-card-details-wrapper"
+      @click="handleQuestionCardClick"
+    >
       <img
         class="talkie-question-card-image"
         :src="image"
@@ -38,13 +42,20 @@
           :onClick="stopPlayer"
         />
       </talkie-audio-player>
-      <div class="talkie-question-card-details-header-wrapper">
+      <div
+        class="talkie-question-card-details-header-wrapper"
+        @click="handleQuestionCardClick"
+      >
         <h5 class="h5" v-if="title">{{ title }}</h5>
         <p class="p" v-if="topic">Topic: {{ topic }}</p>
       </div>
     </div>
     <p class="p" v-if="description">{{ description }}</p>
-    <div class="talkie-question-card-footer-wrapper" v-if="manageMode">
+    <div
+      class="talkie-question-card-footer-wrapper"
+      v-if="manageMode"
+      @click="handleQuestionCardClick"
+    >
       <talkie-chip
         :label="'Edit'"
         :variant="'neutral'"
@@ -105,6 +116,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    onCardBodyClick: {
+      type: Function,
+      default: () => {},
+    },
     onEditClick: {
       type: Function,
       default: () => {},
@@ -112,6 +127,13 @@ export default {
     onDeleteClick: {
       type: Function,
       default: () => {},
+    },
+  },
+  methods: {
+    async handleQuestionCardClick(e) {
+      if (e.target === e.currentTarget) {
+        this.onCardBodyClick && (await this.onCardBodyClick());
+      }
     },
   },
 };
