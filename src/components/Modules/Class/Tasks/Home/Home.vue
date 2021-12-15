@@ -3,7 +3,7 @@
     <div class="class-home-header-wrapper">
       <div class="class-home-header-details-wrapper">
         <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
-        <div class="class-home-header-details-icons-wrapper">
+        <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
           <talkie-icon :name="'trophy'" />
           <talkie-icon :name="'setting'" />
         </div>
@@ -21,7 +21,7 @@
         :title="task.title"
         :topic="task.topic"
         :description="task.description"
-        :manageMode="true"
+        :manageMode="isTeacher"
         :centered="false"
         :fullWidth="true"
         :audioSource="task.audioSource"
@@ -51,6 +51,8 @@ import {
   TalkieFeedbackCard,
 } from "@/components/SubModules/Cards";
 import { ClassService } from "@/api/services";
+import authUser from "@/utils/helpers/auth";
+import roles from "@/utils/constants/roles";
 
 export default {
   name: "ClassTaskHome",
@@ -63,6 +65,8 @@ export default {
   data() {
     return {
       classDetails: {},
+      isTeacher: false,
+      isStudent: false,
       task: {
         title: "Fave Place To Visit",
         topic: "✈️ Travel and tourism",
@@ -93,6 +97,13 @@ export default {
     };
   },
   async created() {
+    // get auth user
+    this.user = authUser.getUser();
+
+    // get user role
+    if (this.user.role === roles.TEACHER) this.isTeacher = true;
+    else this.isStudent = true;
+
     // class id from params
     const classId = this.$route.params.classId;
     this.classId = classId;
