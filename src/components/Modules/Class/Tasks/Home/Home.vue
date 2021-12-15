@@ -65,6 +65,7 @@ import {
   TalkieFeedbackCard,
 } from "@/components/SubModules/Cards";
 import { ClassService, TaskService, ResponseService } from "@/api/services";
+import TaskTypes from "@/utils/constants/taskTypes";
 import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
 
@@ -112,6 +113,10 @@ export default {
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
 
+    // class tasks
+    const classTasks = await this.getClassTasks(classId);
+    if (!classTasks) return this.$router.push("/404");
+
     // get task details
     const taskDetails = await this.getTaskDetails(taskId);
     if (!taskDetails) return this.$router.push("/404");
@@ -125,6 +130,32 @@ export default {
       id: classDetails.id,
       name: classDetails.name,
     };
+
+    // sidebar data
+    const sidebarItems = classTasks.results.map((x) => ({
+      name: x.title,
+      hasRightIcon: true,
+      link: `/classes/${this.classId}/tasks/${x.id}`,
+      onClick: () =>
+        this.$router.push(`/classes/${this.classId}/tasks/${x.id}`),
+      isActive: x.id === taskId,
+    }));
+    const sidebarButtons = [
+      {
+        text: "Go To Class",
+        type: "button",
+        variant: "primary",
+        size: "small",
+        outlined: true,
+        loading: false,
+        disabled: false,
+        onClick: () => this.$router.push(`/classes/${this.classId}`),
+      },
+    ];
+    this.handleSidebarMutation({
+      items: sidebarItems,
+      buttons: sidebarButtons,
+    });
 
     this.taskDetails = {
       id: taskDetails.id,
@@ -151,8 +182,40 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleStoreMutation(key, value) {
+      this.$store.state[key] = value;
+    },
+    handleSidebarMutation(data) {
+      const sidebar = this.$store.state.sidebar;
+      const updatedData = {
+        hasBackLink: data.hasOwnProperty("hasBackLink")
+          ? data.hasBackLink
+          : sidebar.hasBackLink,
+        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
+        checkboxes: data.hasOwnProperty("checkboxes")
+          ? data.checkboxes
+          : sidebar.checkboxes,
+        buttons: data.hasOwnProperty("buttons")
+          ? data.buttons
+          : sidebar.buttons,
+      };
+
+      this.handleStoreMutation(
+        "sidebar",
+        Object.assign({}, { ...updatedData })
+      );
+    },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async getClassTasks(id) {
+      const query = { type: TaskTypes.QUESTION_ANSWER };
+
+      const response = await TaskService.QueryClassTasks(id, query).catch(
+        () => null
+      );
 
       return response.data || null;
     },
