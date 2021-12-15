@@ -19,15 +19,17 @@
         ]"
       >
         <!-- Details -->
-        <talkie-question-card
-          :title="task.title"
-          :topic="task.topic"
-          :description="task.description"
-          :manageMode="isTeacher"
-          :centered="false"
-          :fullWidth="true"
-          :audioSource="task.audioSource"
-        />
+        <template v-if="taskDetails">
+          <talkie-question-card
+            :title="taskDetails.title"
+            :topic="taskDetails.topic"
+            :description="taskDetails.description"
+            :manageMode="isTeacher"
+            :centered="false"
+            :fullWidth="true"
+            :audioSource="taskDetails.audioSource"
+          />
+        </template>
 
         <!-- Whole Class Feedback -->
         <talkie-feedback-card :fullWidth="true" />
@@ -60,7 +62,7 @@ import {
   TalkieStudentCard,
   TalkieFeedbackCard,
 } from "@/components/SubModules/Cards";
-import { ClassService } from "@/api/services";
+import { ClassService, TaskService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
 
@@ -76,17 +78,12 @@ export default {
   data() {
     return {
       classId: null,
+      taskId: null,
       classDetails: {},
+      taskDetails: {},
       isTeacher: false,
       isStudent: false,
       loading: false,
-      task: {
-        title: "Fave Place To Visit",
-        topic: "✈️ Travel and tourism",
-        description: "",
-        audioSource:
-          "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
-      },
       responses: [
         {
           student: {
@@ -124,9 +121,17 @@ export default {
     const classId = this.$route.params.classId;
     this.classId = classId;
 
+    // task id from params
+    const taskId = this.$route.params.taskId;
+    this.taskId = taskId;
+
     // class details (+ failure case)
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
+
+    // get task details
+    const taskDetails = await this.getTaskDetails(taskId);
+    if (!taskDetails) return this.$router.push("/404");
 
     // success case
     this.classDetails = {
@@ -134,11 +139,25 @@ export default {
       name: classDetails.name,
     };
 
+    this.taskDetails = {
+      id: taskDetails.id,
+      type: taskDetails.type,
+      title: taskDetails.title,
+      topic: taskDetails.topic.name,
+      description: taskDetails.questionText,
+      audioSource: taskDetails.voiceForQnA,
+    };
+
     this.loading = false;
   },
   methods: {
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async getTaskDetails(id) {
+      const response = await TaskService.GetDetails(id).catch(() => null);
 
       return response.data || null;
     },
