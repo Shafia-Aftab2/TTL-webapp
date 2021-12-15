@@ -2,7 +2,7 @@
   <div class="class-home-wrapper">
     <div class="class-home-header-wrapper">
       <div class="class-home-header-details-wrapper">
-        <h2 class="h2">Spanish 10A</h2>
+        <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
         <div class="class-home-header-details-icons-wrapper">
           <talkie-icon :name="'trophy'" />
           <talkie-icon :name="'setting'" />
@@ -50,6 +50,7 @@ import {
   TalkieStudentCard,
   TalkieFeedbackCard,
 } from "@/components/SubModules/Cards";
+import { ClassService } from "@/api/services";
 
 export default {
   name: "ClassTaskHome",
@@ -61,6 +62,7 @@ export default {
   },
   data() {
     return {
+      classDetails: {},
       task: {
         title: "Fave Place To Visit",
         topic: "✈️ Travel and tourism",
@@ -89,6 +91,28 @@ export default {
         },
       ],
     };
+  },
+  async created() {
+    // class id from params
+    const classId = this.$route.params.classId;
+    this.classId = classId;
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
+
+    // success case
+    this.classDetails = {
+      id: classDetails.id,
+      name: classDetails.name,
+    };
+  },
+  methods: {
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
   },
 };
 </script>
