@@ -1,50 +1,60 @@
 <template>
   <div class="class-home-wrapper">
-    <div class="class-home-header-wrapper">
-      <div class="class-home-header-details-wrapper">
-        <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
-        <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
-          <talkie-icon :name="'trophy'" />
-          <talkie-icon :name="'setting'" />
+    <!-- Contents -->
+    <template v-if="!loading">
+      <div class="class-home-header-wrapper">
+        <div class="class-home-header-details-wrapper">
+          <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
+          <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
+            <talkie-icon :name="'trophy'" />
+            <talkie-icon :name="'setting'" />
+          </div>
         </div>
       </div>
-    </div>
 
-    <div
-      :class="[
-        'class-home-content-wrapper',
-        'class-home-content-wrapper-single-col',
-      ]"
-    >
-      <!-- Details -->
-      <talkie-question-card
-        :title="task.title"
-        :topic="task.topic"
-        :description="task.description"
-        :manageMode="isTeacher"
-        :centered="false"
-        :fullWidth="true"
-        :audioSource="task.audioSource"
-      />
+      <div
+        :class="[
+          'class-home-content-wrapper',
+          'class-home-content-wrapper-single-col',
+        ]"
+      >
+        <!-- Details -->
+        <talkie-question-card
+          :title="task.title"
+          :topic="task.topic"
+          :description="task.description"
+          :manageMode="isTeacher"
+          :centered="false"
+          :fullWidth="true"
+          :audioSource="task.audioSource"
+        />
 
-      <!-- Whole Class Feedback -->
-      <talkie-feedback-card :fullWidth="true" />
+        <!-- Whole Class Feedback -->
+        <talkie-feedback-card :fullWidth="true" />
 
-      <!-- Student responses -->
-      <talkie-student-card
-        v-for="_response in responses"
-        :key="_response"
-        :mode="'feedback'"
-        :studentName="_response.student.name"
-        :studentAvatar="_response.student.avatar"
-        :studentResponseAudio="_response.audioSource"
-      />
-    </div>
+        <!-- Student responses -->
+        <talkie-student-card
+          v-for="_response in responses"
+          :key="_response"
+          :mode="'feedback'"
+          :studentName="_response.student.name"
+          :studentAvatar="_response.student.avatar"
+          :studentResponseAudio="_response.audioSource"
+        />
+      </div>
+    </template>
+
+    <!-- Load wrapper -->
+    <template v-if="loading">
+      <div class="class-home-loading-wrapper">
+        <talkie-loader :size="'large'" />
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import { TalkieIcon } from "@/components/UICore";
+import { TalkieIcon, TalkieLoader } from "@/components/UICore";
 import {
   TalkieQuestionCard,
   TalkieStudentCard,
@@ -58,15 +68,18 @@ export default {
   name: "ClassTaskHome",
   components: {
     TalkieIcon,
+    TalkieLoader,
     TalkieQuestionCard,
     TalkieStudentCard,
     TalkieFeedbackCard,
   },
   data() {
     return {
+      classId: null,
       classDetails: {},
       isTeacher: false,
       isStudent: false,
+      loading: false,
       task: {
         title: "Fave Place To Visit",
         topic: "✈️ Travel and tourism",
@@ -97,6 +110,9 @@ export default {
     };
   },
   async created() {
+    // update page state
+    this.loading = true;
+
     // get auth user
     this.user = authUser.getUser();
 
@@ -117,6 +133,8 @@ export default {
       id: classDetails.id,
       name: classDetails.name,
     };
+
+    this.loading = false;
   },
   methods: {
     async getClassDetails(id) {
@@ -154,6 +172,9 @@ export default {
 }
 .class-home-content-wrapper {
   display: grid;
+}
+.class-home-loading-wrapper {
+  margin: auto;
 }
 
 /* Responsive variants */
