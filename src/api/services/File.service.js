@@ -4,7 +4,7 @@ export default class FileRoutes {
   static async Upload(query, payload) {
     return HTTPClient.post(
       `/files/upload?${Object.entries(query).map(
-        ([key, value]) => `${key}=${value}&`
+        ([key, value]) => `${key}=${encodeURIComponent(value)}&`
       )}`,
       payload
     );
