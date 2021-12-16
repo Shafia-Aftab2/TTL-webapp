@@ -132,6 +132,7 @@ export default {
   position: fixed;
   height: 100%;
   min-width: var(--sidebar-width);
+  max-width: var(--sidebar-width);
   border: var(--t-space-1) solid var(--t-gray-175);
   box-shadow: var(--t-shadow-dark);
   background-color: var(--t-white);
