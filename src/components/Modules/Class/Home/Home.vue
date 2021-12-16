@@ -73,6 +73,7 @@
                 :manageMode="isTeacher"
                 :centered="false"
                 :audioSource="_question.audioSource"
+                :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
                 :onDeleteClick="handleTopicCardDeleteClick"
               />
             </template>
@@ -281,6 +282,15 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleRedirection(link, timeout = 100) {
+      const self = this;
+      setTimeout(function () {
+        self.$router.push(link);
+      }, timeout);
+    },
+    handleTopicCardBodyClick(taskId) {
+      this.handleRedirection(`/classes/${this.classId}/tasks/${taskId}`, 1);
+    },
     handleTopicCardDeleteClick() {
       this.showDeleteDialog = !this.showDeleteDialog;
     },
