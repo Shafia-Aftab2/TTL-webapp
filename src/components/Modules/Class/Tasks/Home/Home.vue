@@ -64,11 +64,16 @@
         <talkie-loader :size="'large'" />
       </div>
     </template>
+    <talkie-back-drop-loader v-if="backdropLoading" />
   </div>
 </template>
 
 <script>
-import { TalkieIcon, TalkieLoader } from "@/components/UICore";
+import {
+  TalkieIcon,
+  TalkieLoader,
+  TalkieBackDropLoader,
+} from "@/components/UICore";
 import {
   TalkieQuestionCard,
   TalkieStudentCard,
@@ -95,6 +100,7 @@ export default {
     TalkieQuestionCard,
     TalkieStudentCard,
     TalkieFeedbackCard,
+    TalkieBackDropLoader,
   },
   data() {
     return {
@@ -107,6 +113,7 @@ export default {
       isTeacher: false,
       isStudent: false,
       loading: false,
+      backdropLoading: false,
     };
   },
   async created() {
@@ -310,6 +317,9 @@ export default {
       return uploadedFile;
     },
     async handleCreateResponseFeedback(values) {
+      // update page state
+      this.backdropLoading = true;
+
       // upload file
       const { responseId, responseFeedbackRecording } = values;
       const voiceRecording = await this.handleFileUpload(
@@ -322,6 +332,7 @@ export default {
           variant: "error",
           displayIcon: true,
         });
+        this.backdropLoading = false;
         return;
       }
 
@@ -339,6 +350,7 @@ export default {
           variant: "error",
           displayIcon: true,
         });
+        this.backdropLoading = false;
         return;
       }
 
@@ -347,6 +359,7 @@ export default {
         variant: "success",
         displayIcon: true,
       });
+      this.backdropLoading = false;
     },
   },
 };
