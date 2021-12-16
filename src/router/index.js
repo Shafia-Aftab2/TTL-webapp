@@ -11,6 +11,7 @@ import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
+import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
@@ -75,6 +76,11 @@ const routes = [
         name: "ClassHome",
         path: "/classes/:id",
         component: ClassHome,
+      },
+      {
+        name: "ClassTaskHome",
+        path: "/classes/:classId/tasks/:taskId",
+        component: ClassTaskHome,
       },
     ],
   },
