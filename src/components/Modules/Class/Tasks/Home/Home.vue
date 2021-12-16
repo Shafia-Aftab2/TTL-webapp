@@ -43,6 +43,13 @@
             :studentName="_response.student.name"
             :studentAvatar="_response.student.avatar"
             :studentResponseAudio="_response.audioSource"
+            :onFeedbackRecording="
+              (recording) =>
+                handleTaskFeedbackRecording(_response.id, recording)
+            "
+            :onFeedbackRecordingDiscard="
+              () => handleTaskFeedbackRecordingDiscard(_response.id)
+            "
           />
         </template>
       </div>
@@ -85,6 +92,7 @@ export default {
       classDetails: {},
       taskDetails: {},
       taskResponses: [],
+      taskResponsesFeedbackRecordings: [],
       isTeacher: false,
       isStudent: false,
       loading: false,
@@ -182,6 +190,22 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleTaskFeedbackRecording(responseId, recording) {
+      this.taskResponsesFeedbackRecordings = [
+        ...this.taskResponsesFeedbackRecordings,
+        {
+          responseId,
+          recording,
+        },
+      ];
+    },
+    handleTaskFeedbackRecordingDiscard(responseId) {
+      this.taskResponsesFeedbackRecordings = [
+        ...this.taskResponsesFeedbackRecordings.filter(
+          (x) => x.responseId !== responseId
+        ),
+      ];
+    },
     handleStoreMutation(key, value) {
       this.$store.state[key] = value;
     },
