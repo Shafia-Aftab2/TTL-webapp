@@ -50,6 +50,9 @@
             :onFeedbackRecordingDiscard="
               () => handleTaskFeedbackRecordingDiscard(_response.id)
             "
+            :onFeedbackSendClick="
+              async () => await handleTaskFeedbackSend(_response.id)
+            "
           />
         </template>
       </div>
@@ -71,8 +74,15 @@ import {
   TalkieStudentCard,
   TalkieFeedbackCard,
 } from "@/components/SubModules/Cards";
-import { ClassService, TaskService, ResponseService } from "@/api/services";
+import {
+  ClassService,
+  TaskService,
+  ResponseService,
+  FileService,
+  FeedbackService,
+} from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
+import FilePurposes from "@/utils/constants/filePurposes";
 import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
 
@@ -206,6 +216,21 @@ export default {
         ),
       ];
     },
+    async handleTaskFeedbackSend(responseId) {
+      const taskFeedback = this.taskResponsesFeedbackRecordings.find(
+        (x) => x.responseId === responseId
+      );
+
+      if (!taskFeedback) {
+        console.log("no feedback found");
+        return;
+      }
+
+      await this.handleCreateResponseFeedback({
+        responseId,
+        responseFeedbackRecording: taskFeedback.recording,
+      });
+    },
     handleStoreMutation(key, value) {
       this.$store.state[key] = value;
     },
@@ -257,6 +282,58 @@ export default {
       ).catch(() => null);
 
       return response.data || null;
+    },
+    async handleFileUpload(recordingBlob) {
+      // payload
+      const payload = new FormData();
+      payload.append(
+        "files",
+        recordingBlob,
+        `talkie-audio-teacher-response-${Math.random() * 123456789}.mp3`
+      );
+
+      // api call
+      const response = await FileService.Upload(
+        { purpose: FilePurposes.TASK_VOICE },
+        payload
+      ).catch(() => null);
+
+      // error case
+      if (!response) return null;
+
+      // success case
+      const uploadedFile = response.data[0].s3Url;
+      return uploadedFile;
+    },
+    async handleCreateResponseFeedback(values) {
+      // upload file
+      const { responseId, responseFeedbackRecording } = values;
+      const voiceRecording = await this.handleFileUpload(
+        responseFeedbackRecording.blob
+      );
+
+      // file upload failure
+      if (!voiceRecording) {
+        console.log("failed to upload file");
+        return;
+      }
+
+      // api payload
+      const payload = { voiceRecording };
+
+      // api call
+      const response = await FeedbackService.Create(responseId, payload).catch(
+        () => null
+      );
+
+      // failure case
+      if (!response) {
+        console.log("failed to create feedback");
+        return;
+      }
+
+      // success case
+      console.log("feedback created");
     },
   },
 };
