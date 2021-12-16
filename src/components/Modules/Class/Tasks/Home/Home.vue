@@ -85,6 +85,7 @@ import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
 import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ClassTaskHome",
@@ -222,7 +223,10 @@ export default {
       );
 
       if (!taskFeedback) {
-        console.log("no feedback found");
+        notifications.show("Could not create feedback..!", {
+          variant: "error",
+          displayIcon: true,
+        });
         return;
       }
 
@@ -314,7 +318,10 @@ export default {
 
       // file upload failure
       if (!voiceRecording) {
-        console.log("failed to upload file");
+        notifications.show("Could not create feedback..!", {
+          variant: "error",
+          displayIcon: true,
+        });
         return;
       }
 
@@ -328,12 +335,18 @@ export default {
 
       // failure case
       if (!response) {
-        console.log("failed to create feedback");
+        notifications.show("Could not create feedback..!", {
+          variant: "error",
+          displayIcon: true,
+        });
         return;
       }
 
       // success case
-      console.log("feedback created");
+      notifications.show("Feeback Created..!", {
+        variant: "success",
+        displayIcon: true,
+      });
     },
   },
 };
