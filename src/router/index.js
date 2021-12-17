@@ -148,7 +148,7 @@ const routes = [
   {
     path: "/students",
     component: Layout,
-    props: { variant: "dark" },
+    props: { variant: "dark", type: "sidebar" },
     children: [
       {
         name: "StudentHomePage",
