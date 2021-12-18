@@ -1,23 +1,31 @@
 <template>
-  <div class="class-convo-status-wrapper">
-    <h2 class="class-convo-status-header h2">{{ taskStatus?.NEW_TASK }}</h2>
-    <div class="class-convo-status-question-card-wrapper">
-      <talkie-question-card
-        :title="taskDetails?.title"
-        :topic="taskDetails?.topic"
-        :audioSource="taskDetails?.audioSource"
-        :fullWidth="false"
-      />
+  <template v-if="!computedPageLoading">
+    <div class="class-convo-status-wrapper">
+      <h2 class="class-convo-status-header h2">{{ taskStatus?.NEW_TASK }}</h2>
+      <div class="class-convo-status-question-card-wrapper">
+        <talkie-question-card
+          :title="taskDetails?.title"
+          :topic="taskDetails?.topic"
+          :audioSource="taskDetails?.audioSource"
+          :fullWidth="false"
+        />
+      </div>
+      <div class="class-convo-status-options-wrapper">
+        <talkie-button>Create New</talkie-button>
+        <talkie-button :outlined="true">Home</talkie-button>
+      </div>
     </div>
-    <div class="class-convo-status-options-wrapper">
-      <talkie-button>Create New</talkie-button>
-      <talkie-button :outlined="true">Home</talkie-button>
+  </template>
+
+  <template v-if="computedPageLoading">
+    <div class="class-convo-status-loading-wrapper">
+      <talkie-loader :size="'large'" />
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
-import { TalkieButton } from "@/components/UICore";
+import { TalkieButton, TalkieLoader } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { TaskService } from "@/api/services";
 
@@ -25,6 +33,7 @@ export default {
   name: "ClassTaskStatus",
   components: {
     TalkieButton,
+    TalkieLoader,
     TalkieQuestionCard,
   },
   data() {
@@ -35,9 +44,18 @@ export default {
         TASK_DELETED: "Deleted!",
       },
       taskDetails: {},
+      pageLoading: false,
     };
   },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
+  },
   async created() {
+    // update page state
+    this.pageLoading = true;
+
     // task id from params
     const taskId = this.$route.params.taskId;
     this.taskId = taskId;
@@ -55,6 +73,7 @@ export default {
       description: taskDetails.questionText,
       audioSource: taskDetails.voiceForQnA,
     };
+    this.pageLoading = false;
   },
   methods: {
     async getTaskDetails(id) {
@@ -92,6 +111,14 @@ export default {
   align-items: center;
   gap: var(--t-space-12);
 }
+.class-convo-status-loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  gap: var(--t-space-36);
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -107,6 +134,9 @@ export default {
   .class-convo-status-question-card-wrapper {
     width: 100%;
   }
+  .class-convo-status-loading-wrapper {
+    margin-top: var(--t-space-24);
+  }
 }
 @media (min-width: 600px) {
   .class-convo-status-wrapper {
@@ -121,6 +151,9 @@ export default {
   .class-convo-status-question-card-wrapper {
     width: 80%;
   }
+  .class-convo-status-loading-wrapper {
+    margin-top: var(--t-space-24);
+  }
 }
 @media (min-width: 900px) {
   .class-convo-status-header {
@@ -134,6 +167,9 @@ export default {
   }
   .class-convo-status-header {
     font-size: var(--font-size);
+  }
+  .class-convo-status-loading-wrapper {
+    margin-top: var(--t-space-48);
   }
 }
 </style>
