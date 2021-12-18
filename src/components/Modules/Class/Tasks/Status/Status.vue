@@ -1,11 +1,11 @@
 <template>
   <div class="class-convo-status-wrapper">
-    <h2 class="class-convo-status-header h2">{{ taskStatus.NEW_TASK }}</h2>
+    <h2 class="class-convo-status-header h2">{{ taskStatus?.NEW_TASK }}</h2>
     <div class="class-convo-status-question-card-wrapper">
       <talkie-question-card
-        :title="taskDetails.title"
-        :topic="taskDetails.topic"
-        :audioSource="taskDetails.audioSource"
+        :title="taskDetails?.title"
+        :topic="taskDetails?.topic"
+        :audioSource="taskDetails?.audioSource"
         :fullWidth="false"
       />
     </div>
@@ -19,9 +19,10 @@
 <script>
 import { TalkieButton } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
+import { TaskService } from "@/api/services";
 
 export default {
-  name: "TeacherConvoSent",
+  name: "ClassTaskStatus",
   components: {
     TalkieButton,
     TalkieQuestionCard,
@@ -33,13 +34,34 @@ export default {
         TASK_EDITED: "Saved!",
         TASK_DELETED: "Deleted!",
       },
-      taskDetails: {
-        title: "Desert Island",
-        topic: "Miscellaneous",
-        audioSource:
-          "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
-      },
+      taskDetails: {},
     };
+  },
+  async created() {
+    // task id from params
+    const taskId = this.$route.params.taskId;
+    this.taskId = taskId;
+
+    // get task details (+ failure case)
+    const taskDetails = await this.getTaskDetails(taskId);
+    if (!taskDetails) return this.$router.push("/404");
+
+    // success case
+    this.taskDetails = {
+      id: taskDetails.id,
+      type: taskDetails.type,
+      title: taskDetails.title,
+      topic: taskDetails.topic.name,
+      description: taskDetails.questionText,
+      audioSource: taskDetails.voiceForQnA,
+    };
+  },
+  methods: {
+    async getTaskDetails(id) {
+      const response = await TaskService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
   },
 };
 </script>
