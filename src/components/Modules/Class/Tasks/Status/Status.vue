@@ -1,7 +1,7 @@
 <template>
   <template v-if="!computedPageLoading">
     <div class="class-convo-status-wrapper">
-      <h2 class="class-convo-status-header h2">{{ taskStatus?.NEW_TASK }}</h2>
+      <h2 class="class-convo-status-header h2">{{ computedTaskStatus }}</h2>
       <div class="class-convo-status-question-card-wrapper">
         <talkie-question-card
           :title="taskDetails?.title"
@@ -28,6 +28,7 @@
 import { TalkieButton, TalkieLoader } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { TaskService } from "@/api/services";
+import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "ClassTaskStatus",
@@ -39,10 +40,11 @@ export default {
   data() {
     return {
       taskStatus: {
-        NEW_TASK: "Woop..! Its out there",
-        TASK_EDITED: "Saved!",
-        TASK_DELETED: "Deleted!",
+        CREATED: "Woop..! Its out there",
+        EDITED: "Saved!",
+        DELETED: "Deleted!",
       },
+      taskStatusQueryParam: null,
       taskDetails: {},
       pageLoading: false,
     };
@@ -51,10 +53,17 @@ export default {
     computedPageLoading() {
       return this.pageLoading;
     },
+    computedTaskStatus() {
+      return this.taskStatus[this?.taskStatusQueryParam?.toUpperCase()];
+    },
   },
   async created() {
     // update page state
     this.pageLoading = true;
+
+    // get status query param from url
+    const statusQueryParam = URLModifier.getURLParam("status");
+    this.taskStatusQueryParam = statusQueryParam;
 
     // task id from params
     const taskId = this.$route.params.taskId;
