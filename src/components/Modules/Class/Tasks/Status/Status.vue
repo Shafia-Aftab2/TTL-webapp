@@ -1,45 +1,98 @@
 <template>
-  <div class="class-convo-status-wrapper">
-    <h2 class="class-convo-status-header h2">{{ taskStatus.NEW_TASK }}</h2>
-    <div class="class-convo-status-question-card-wrapper">
-      <talkie-question-card
-        :title="taskDetails.title"
-        :topic="taskDetails.topic"
-        :audioSource="taskDetails.audioSource"
-        :fullWidth="false"
-      />
+  <template v-if="!computedPageLoading">
+    <div class="class-convo-status-wrapper">
+      <h2 class="class-convo-status-header h2">{{ computedTaskStatus }}</h2>
+      <div class="class-convo-status-question-card-wrapper">
+        <talkie-question-card
+          :title="taskDetails?.title"
+          :topic="taskDetails?.topic"
+          :audioSource="taskDetails?.audioSource"
+          :fullWidth="false"
+        />
+      </div>
+      <div class="class-convo-status-options-wrapper">
+        <talkie-button>Create New</talkie-button>
+        <talkie-button :outlined="true">Home</talkie-button>
+      </div>
     </div>
-    <div class="class-convo-status-options-wrapper">
-      <talkie-button>Create New</talkie-button>
-      <talkie-button :outlined="true">Home</talkie-button>
+  </template>
+
+  <template v-if="computedPageLoading">
+    <div class="class-convo-status-loading-wrapper">
+      <talkie-loader :size="'large'" />
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
-import { TalkieButton } from "@/components/UICore";
+import { TalkieButton, TalkieLoader } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
+import { TaskService } from "@/api/services";
+import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
-  name: "TeacherConvoSent",
+  name: "ClassTaskStatus",
   components: {
     TalkieButton,
+    TalkieLoader,
     TalkieQuestionCard,
   },
   data() {
     return {
       taskStatus: {
-        NEW_TASK: "Woop..! Its out there",
-        TASK_EDITED: "Saved!",
-        TASK_DELETED: "Deleted!",
+        CREATED: "Woop..! Its out there",
+        EDITED: "Saved!",
+        DELETED: "Deleted!",
       },
-      taskDetails: {
-        title: "Desert Island",
-        topic: "Miscellaneous",
-        audioSource:
-          "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
-      },
+      taskStatusQueryParam: null,
+      taskDetails: {},
+      pageLoading: false,
     };
+  },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
+    computedTaskStatus() {
+      return this.taskStatus[this?.taskStatusQueryParam?.toUpperCase()];
+    },
+  },
+  async created() {
+    // update page state
+    this.pageLoading = true;
+
+    // get status query param from url
+    const statusQueryParam = URLModifier.getURLParam("status");
+    this.taskStatusQueryParam = statusQueryParam;
+
+    // remove param from url
+    URLModifier.removeFromURL("status");
+
+    // task id from params
+    const taskId = this.$route.params.taskId;
+    this.taskId = taskId;
+
+    // get task details (+ failure case)
+    const taskDetails = await this.getTaskDetails(taskId);
+    if (!taskDetails) return this.$router.push("/404");
+
+    // success case
+    this.taskDetails = {
+      id: taskDetails.id,
+      type: taskDetails.type,
+      title: taskDetails.title,
+      topic: taskDetails.topic.name,
+      description: taskDetails.questionText,
+      audioSource: taskDetails.voiceForQnA,
+    };
+    this.pageLoading = false;
+  },
+  methods: {
+    async getTaskDetails(id) {
+      const response = await TaskService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
   },
 };
 </script>
@@ -70,6 +123,14 @@ export default {
   align-items: center;
   gap: var(--t-space-12);
 }
+.class-convo-status-loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  gap: var(--t-space-36);
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -85,6 +146,9 @@ export default {
   .class-convo-status-question-card-wrapper {
     width: 100%;
   }
+  .class-convo-status-loading-wrapper {
+    margin-top: var(--t-space-24);
+  }
 }
 @media (min-width: 600px) {
   .class-convo-status-wrapper {
@@ -99,6 +163,9 @@ export default {
   .class-convo-status-question-card-wrapper {
     width: 80%;
   }
+  .class-convo-status-loading-wrapper {
+    margin-top: var(--t-space-24);
+  }
 }
 @media (min-width: 900px) {
   .class-convo-status-header {
@@ -112,6 +179,9 @@ export default {
   }
   .class-convo-status-header {
     font-size: var(--font-size);
+  }
+  .class-convo-status-loading-wrapper {
+    margin-top: var(--t-space-48);
   }
 }
 </style>

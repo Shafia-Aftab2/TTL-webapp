@@ -10,6 +10,7 @@ import ClassJoin from "../components/Modules/Class/Join";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
+import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefault";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
@@ -77,6 +78,11 @@ const routes = [
         name: "ClassHome",
         path: "/classes/:id",
         component: ClassHome,
+      },
+      {
+        name: "ClassTaskChooseDefault",
+        path: "/classes/:classId/tasks",
+        component: ClassTaskChooseDefault,
       },
       {
         name: "ClassTaskHome",
