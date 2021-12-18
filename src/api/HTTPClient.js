@@ -94,7 +94,10 @@ client.interceptors.response.use(
       }).catch(() => null);
 
       // require login if failed to refresh token
-      if (!response) return Promise.reject(error);
+      if (!response) {
+        window.location.href = "/auth/login";
+        return Promise.reject(error);
+      }
 
       // update cookies
       const tokens = response.data;
