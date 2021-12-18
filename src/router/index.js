@@ -12,6 +12,7 @@ import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
+import ClassTaskResponse from "../components/Modules/Class/Tasks/Response";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
@@ -81,6 +82,11 @@ const routes = [
         name: "ClassTaskHome",
         path: "/classes/:classId/tasks/:taskId",
         component: ClassTaskHome,
+      },
+      {
+        name: "ClassTaskResponse",
+        path: "/classes/:classId/tasks/:taskId/respond",
+        component: ClassTaskResponse,
       },
     ],
   },

@@ -15,9 +15,8 @@
         v-if="modalPreview"
         :contentPadded="true"
         :buttonsOutSideModal="modalPreviewButtons"
-        :type="'Confirm'"
-        :title="'Press Send to Continue'"
       >
+        Press Send To Conitnue
       </talkie-modal>
       <talkie-audio-recorder
         v-slot="{ startRecording, stopRecording, isRecording }"
@@ -129,15 +128,16 @@ import {
   TalkieForm,
   TalkieLoader,
   TalkieModal,
-} from "../../../UICore";
+} from "@/components/UICore";
 import {
   TalkieAudioRecorder,
   TalkieAudioPlayer,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
-
+import { FileService, ResponseService } from "@/api/services";
+import FilePurposes from "@/utils/constants/filePurposes";
 export default {
-  name: "StudentQA",
+  name: "ClassTaskResponse",
   components: {
     TalkieIcon,
     TalkieAudioRecorder,
@@ -146,6 +146,178 @@ export default {
     TalkieForm,
     TalkieLoader,
     TalkieModal,
+  },
+  data() {
+    return {
+      topics: [],
+      // createQandATopicSchema: createQandATopicSchema,
+      pageLoading: false,
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+        animateEllipse: false,
+      },
+      modalPreview: false,
+      modalPreviewButtons: [
+        {
+          text: "Back",
+          onClick: async () => {
+            await this.handleModalToggle();
+            await this.handleModalValidationReset();
+          },
+          variant: "light",
+        },
+        {
+          text: "Send",
+          onClick: async () => {
+            await this.handleModalValidation();
+            await this.handleModalToggle();
+            await this.triggerFormSubmission();
+          },
+          variant: "primary",
+        },
+      ],
+      currentRecording: null,
+      isAudioPlaying: null,
+      shouldSubmit: false,
+      handleAudioPlayerToggle: () => {},
+      setFormValue: () => {},
+      triggerFormSubmission: () => {},
+      classId: null,
+      taskId: null,
+    };
+  },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
+  },
+  async created() {
+    // update page state
+    this.pageLoading = true;
+
+    // task id from params
+    const taskId = this.$route.params.taskId;
+    this.taskId = taskId;
+
+    // class id from params
+    const classId = this.$route.params.id;
+    this.classId = classId;
+    this.pageLoading = false;
+  },
+  methods: {
+    handleRecordedItem(recording) {
+      this.currentRecording = recording;
+      this.setFormValue("voiceForQnA", recording.blob);
+    },
+    handleRecordedItemReset() {
+      this.currentRecording = null;
+      this.setFormValue("voiceForQnA", "");
+    },
+    handleModalValidation() {
+      this.shouldSubmit = true;
+    },
+    handleModalToggle() {
+      this.modalPreview = !this.modalPreview;
+    },
+    handleModalValidationReset() {
+      this.shouldSubmit = false;
+    },
+    async handleFileUpload() {
+      // update page state
+      this.formStatus = {
+        type: "info",
+        message: "Uploading Audio",
+        animateEllipse: true,
+      };
+
+      // payload
+      const payload = new FormData();
+      payload.append(
+        "files",
+        this.currentRecording.blob,
+        `talkie-audio-${Math.random() * 123456789}.mp3`
+      );
+
+      // api call
+      const response = await FileService.Upload(
+        { purpose: FilePurposes.TASK_VOICE },
+        payload
+      ).catch(() => null);
+
+      // error case
+      if (!response) return null;
+      // success case
+      const uploadedFile = response.data[0].s3Url;
+      this.formStatus = { type: null, message: null, animateEllipse: false };
+      return uploadedFile;
+    },
+    async handleSubmit() {
+      if (!this.shouldSubmit) {
+        this.handleModalToggle();
+        this.handleModalValidationReset();
+        return;
+      }
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null, animateEllipse: false };
+
+      // upload file
+      const voiceForQnA = await this.handleFileUpload();
+
+      // failure case
+      if (!voiceForQnA) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: "Could not upload audio file..!",
+        };
+        return;
+      }
+
+      // payload
+      const payload = {
+        voiceRecording: voiceForQnA,
+      };
+
+      // api call
+      const response = await ResponseService.CreateResponse(
+        "61b8dab540b8301eca269d38",
+        payload
+      ).catch(() => {
+        return {
+          error: "Could not Send Recording..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+          animateEllipse: false,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Recording Sent. Redirecting..!",
+        animateEllipse: false,
+      };
+
+      // update page state
+      this.loading = false;
+
+      // redirect to class
+      this.$router.push(
+        `/classes/${this.classId}/tasks/${this.taskId}/respond`
+      );
+    },
   },
 };
 </script>
