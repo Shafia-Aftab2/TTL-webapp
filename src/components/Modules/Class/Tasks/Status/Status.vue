@@ -65,6 +65,9 @@ export default {
     const statusQueryParam = URLModifier.getURLParam("status");
     this.taskStatusQueryParam = statusQueryParam;
 
+    // remove param from url
+    URLModifier.removeFromURL("status");
+
     // task id from params
     const taskId = this.$route.params.taskId;
     this.taskId = taskId;
