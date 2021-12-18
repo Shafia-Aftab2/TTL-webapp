@@ -48,20 +48,15 @@ export default {
   margin: auto;
   background: var(--t-white);
   gap: var(--t-space-36);
-  padding: var(--t-space-32);
-  margin-top: var(--t-space-24);
-  border-radius: var(--t-br-large);
-  max-width: 80%;
 }
 .class-convo-status-header {
   text-align: center;
   color: var(--t-secondary);
-  font-size: var(--t-fs-h2);
+  --font-size: var(--t-fs-h2);
 }
 .class-convo-status-question-card-wrapper {
   border: var(--t-space-1) solid var(--t-gray-75);
   border-radius: var(--t-br-large);
-  width: 80%;
 }
 .class-convo-status-options-wrapper {
   display: flex;
@@ -69,5 +64,49 @@ export default {
   justify-content: center;
   align-items: center;
   gap: var(--t-space-12);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .class-convo-status-wrapper {
+    padding: var(--t-space-32);
+    margin-top: var(--t-space-24);
+    border-radius: var(--t-br-small);
+    min-width: 80%;
+  }
+  .class-convo-status-header {
+    font-size: calc(var(--font-size) * 0.7);
+  }
+  .class-convo-status-question-card-wrapper {
+    width: 100%;
+  }
+}
+@media (min-width: 600px) {
+  .class-convo-status-wrapper {
+    padding: var(--t-space-32);
+    margin-top: var(--t-space-24);
+    border-radius: var(--t-br-large);
+    max-width: 80%;
+  }
+  .class-convo-status-header {
+    font-size: calc(var(--font-size) * 0.75);
+  }
+  .class-convo-status-question-card-wrapper {
+    width: 80%;
+  }
+}
+@media (min-width: 900px) {
+  .class-convo-status-header {
+    font-size: calc(var(--font-size) * 0.85);
+  }
+}
+@media (min-width: 1200px) {
+  .class-convo-status-wrapper {
+    padding: var(--t-space-48);
+    margin-top: var(--t-space-48);
+  }
+  .class-convo-status-header {
+    font-size: var(--font-size);
+  }
 }
 </style>
