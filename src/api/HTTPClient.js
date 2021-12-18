@@ -1,6 +1,7 @@
 import Axios from "axios";
 import authUser from "../utils/helpers/auth";
 import { TALKIE_MONO_API_BASE_URL } from "./config";
+import AuthService from "./services/Auth.service";
 
 let baseURL = TALKIE_MONO_API_BASE_URL;
 
@@ -74,3 +75,53 @@ export default class HTTPClient {
     client.defaults.baseURL = url;
   }
 }
+
+// Interceptors
+client.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async function (error) {
+    const originalReq = error.config;
+
+    // refresh token if expired
+    if (error.response.status === 401 && !originalReq.retryAttempt) {
+      const refreshToken = authUser.getRefreshToken();
+
+      // refresh request
+      const response = await AuthService.RefreshTokens({
+        refreshToken: refreshToken,
+      }).catch(() => null);
+
+      // require login if failed to refresh token
+      if (!response) return Promise.reject(error);
+
+      // update cookies
+      const tokens = response.data;
+      const expires = (date) => ({ expires: new Date(date) });
+      authUser.setAccessToken(
+        tokens.access.token,
+        expires(tokens.access.expiry)
+      );
+      authUser.setRefreshToken(
+        tokens.refresh.token,
+        expires(tokens.refresh.expiry)
+      );
+
+      // update axios header for current instance
+      await HTTPClient.setHeader(
+        "Authorization",
+        `Bearer ${tokens?.access?.token}`
+      );
+
+      // update header for current request
+      originalReq.headers.Authorization = `Bearer ${tokens?.access?.token}`;
+      originalReq.retryAttempt = true;
+
+      // retry request
+      return client(originalReq);
+    }
+
+    return Promise.reject(error);
+  }
+);
