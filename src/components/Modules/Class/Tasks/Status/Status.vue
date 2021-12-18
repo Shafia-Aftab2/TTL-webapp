@@ -1,6 +1,6 @@
 <template>
   <div class="class-convo-status-wrapper">
-    <h2 class="class-convo-status-header h2">Woop..! Its out there</h2>
+    <h2 class="class-convo-status-header h2">{{ taskStatus.NEW_TASK }}</h2>
     <div class="class-convo-status-question-card-wrapper">
       <talkie-question-card
         :title="taskDetails.title"
@@ -28,6 +28,11 @@ export default {
   },
   data() {
     return {
+      taskStatus: {
+        NEW_TASK: "Woop..! Its out there",
+        TASK_EDITED: "Saved!",
+        TASK_DELETED: "Deleted!",
+      },
       taskDetails: {
         title: "Desert Island",
         topic: "Miscellaneous",
