@@ -8,4 +8,8 @@ export default class AuthRoutes {
   static async Login(payload) {
     return HTTPClient.post(`/auth/login`, payload);
   }
+
+  static async RefreshTokens(payload) {
+    return HTTPClient.post(`/auth/refresh-tokens`, payload);
+  }
 }
