@@ -8,4 +8,10 @@ export default class ResponseRoutes {
       )}`
     );
   }
+  static async CreateResponse(taskId, payload) {
+    return HTTPClient.post(`/responses/${taskId}`, payload);
+  }
+  static async GetResponse(taskId) {
+    return HTTPClient.get(`/responses/${taskId}`);
+  }
 }

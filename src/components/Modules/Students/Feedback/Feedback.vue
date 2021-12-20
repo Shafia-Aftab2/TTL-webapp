@@ -33,6 +33,11 @@ import Chip from "../../../UICore/Chip.vue";
 export default {
   name: "StudentFeedback",
   components: { Select, Chip },
+  data() {
+    return {
+      form: [],
+    };
+  },
 };
 </script>
 <style scoped>

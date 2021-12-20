@@ -14,6 +14,7 @@ import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefa
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
+import ClassTaskResponse from "../components/Modules/Class/Tasks/Response";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentHomePage from "../components/Modules/Students/Home";
@@ -95,6 +96,11 @@ const routes = [
         component: ClassTaskHome,
         meta: { requiresAuth: true },
       },
+      {
+        name: "ClassTaskResponse",
+        path: "/classes/:classId/tasks/:taskId/respond",
+        component: ClassTaskResponse,
+      },
     ],
   },
   {
@@ -172,7 +178,7 @@ const routes = [
   {
     path: "/students",
     component: Layout,
-    props: { variant: "dark" },
+    props: { variant: "dark", type: "sidebar" },
     children: [
       {
         name: "StudentHomePage",
