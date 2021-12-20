@@ -1,6 +1,6 @@
 <template>
   <div class="student-home-wrapper">
-    <h3 class="h3">
+    <h3 class="h3 student-home-header">
       Hello, {{ studentName }}
       <br />
       What would you like to do today?
@@ -10,8 +10,10 @@
         <talkie-button
           type="button"
           class="student-home-content-item-button-primary"
-          >Enter</talkie-button
+          :onClick="handleClassModeButtonClick"
         >
+          Enter
+        </talkie-button>
         <p class="student-home-content-item-header">Class Mode</p>
         <p class="student-home-content-item-description">
           You have <strong>3 new </strong>tasks
@@ -62,6 +64,11 @@ export default {
     // get student name from auth user
     this.studentName = user?.name;
   },
+  methods: {
+    handleClassModeButtonClick() {
+      this.$router.push(`/classes`);
+    },
+  },
 };
 </script>
 
@@ -74,6 +81,9 @@ export default {
   text-align: center;
   gap: var(--t-space-20);
   font-size: var(--t-fs-small);
+}
+.student-home-header {
+  line-height: 1.2;
 }
 .student-home-content-wrapper {
   display: flex;
