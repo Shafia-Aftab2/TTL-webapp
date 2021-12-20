@@ -31,6 +31,7 @@
 
 <script>
 import { TalkieButton } from "@/components/UICore";
+
 export default {
   name: "StudentHome",
   components: { TalkieButton },
@@ -38,66 +39,6 @@ export default {
 </script>
 
 <style scoped>
-.talkie-icon-bar {
-  position: relative;
-  background-color: var(--t-white);
-  padding: var(--t-space-24);
-  border-radius: var(--t-space-10);
-}
-.bar-icons {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  bottom: -50px;
-  left: 35%;
-}
-.bar-icons-pg {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  left: 30%;
-}
-
-.bar-bottom {
-  margin-top: 60px;
-  background-color: var(--t-white);
-  padding: var(--t-space-24);
-  border-radius: var(--t-space-10);
-}
-.messege-bar {
-  margin-bottom: 20px;
-}
-.text-style {
-  font-size: 20px;
-  color: var(--t-secondary);
-}
-.text-center {
-  text-align: center;
-}
-.bar-content {
-  display: grid;
-  gap: 10px;
-  padding: var(--t-space-18);
-}
-.bar {
-  background-color: var(--t-white);
-  padding: var(--t-space-24);
-  border-radius: var(--t-space-10);
-}
-.bar-outline {
-  background-color: var(--t-white);
-  padding: var(--t-space-16);
-  border-radius: var(--t-space-10);
-  border: 2px solid var(--t-gray-home);
-}
-.bar-inline {
-  display: inline-flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5px;
-}
 .student-home-wrapper {
   padding: var(--t-space-32);
   display: flex;
@@ -145,22 +86,12 @@ export default {
     width: 100%;
     padding: var(--t-space-10);
   }
-  .box-content {
-    width: 100%;
-  }
-  .box-container {
-    padding: 110px 15px var(--t-space-50) 10px;
-  }
 }
 
 @media (min-width: 600px) {
   .student-home-content-item {
     width: 50%;
     padding: var(--t-space-10);
-  }
-  .back-default {
-    position: absolute;
-    left: 160px;
   }
 }
 
@@ -172,13 +103,5 @@ export default {
 }
 
 @media (min-width: 1200px) {
-  .back {
-    position: absolute;
-    left: var(--t-space-50);
-  }
-  .back-default {
-    position: absolute;
-    left: 160px;
-  }
 }
 </style>
