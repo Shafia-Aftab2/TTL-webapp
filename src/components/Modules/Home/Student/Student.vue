@@ -1,52 +1,39 @@
 <template>
-  <div class="home-center">
+  <div class="student-home-wrapper">
     <h3>
       Hello, Mohsin!
       <br />
       What would you like to do today?
     </h3>
-    <div class="content-container">
-      <div class="content">
-        <div>
-          <Button type="button" class="home-btn">Enter</Button>
-        </div>
-        <div>
-          <p><strong>Class Mode</strong></p>
-        </div>
-        <div>
-          <p>You have <strong>3 new </strong>tasks</p>
-        </div>
+    <div class="student-home-content-wrapper">
+      <div class="student-home-content-item">
+        <talkie-button type="button" class="home-btn">Enter</talkie-button>
+        <p><strong>Class Mode</strong></p>
+        <p>You have <strong>3 new </strong>tasks</p>
       </div>
-      <div class="content">
-        <div>
-          <Button
-            type="button"
-            class="home-btn-secondary"
-            variant="secondary"
-            outlined
-            disabled
-          >
-            Coming Soon
-          </Button>
-        </div>
-        <div>
-          <p><strong>Practice Mode</strong></p>
-        </div>
-        <div>
-          <p>Do you own thing here. Always remember Little, but often</p>
-        </div>
+      <div class="student-home-content-item">
+        <talkie-button
+          class="home-btn-secondary"
+          variant="secondary"
+          :outlined="true"
+          disabled
+        >
+          Coming Soon
+        </talkie-button>
+        <p><strong>Practice Mode</strong></p>
+        <p>Do you own thing here. Always remember Little, but often</p>
       </div>
     </div>
-    <Button type="button" outlined>View my Inbox</Button>
-    <Button type="button" outlined>View my Stats</Button>
+    <talkie-button :outlined="true">View my Inbox</talkie-button>
+    <talkie-button :outlined="true">View my Stats</talkie-button>
   </div>
 </template>
 
 <script>
-import Button from "../../../UICore/Button.vue";
+import { TalkieButton } from "@/components/UICore";
 export default {
-  name: "Studenthomepage",
-  components: { Button },
+  name: "StudentHome",
+  components: { TalkieButton },
 };
 </script>
 
@@ -111,7 +98,7 @@ export default {
   align-items: center;
   gap: 5px;
 }
-.home-center {
+.student-home-wrapper {
   padding: var(--t-space-32);
   display: flex;
   flex-direction: column;
@@ -120,13 +107,13 @@ export default {
   text-align: center;
   gap: 20px;
 }
-.content-container {
+.student-home-content-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: center;
   gap: 30px;
 }
-.content {
+.student-home-content-item {
   background-color: var(--t-white);
   border: 2px solid var(--t-primary);
   width: 35%;
@@ -147,14 +134,14 @@ export default {
   border-radius: 100% !important;
 }
 @media (max-width: 599px) {
-  .content-container {
+  .student-home-content-wrapper {
     display: flex;
     flex-direction: column;
   }
-  .home-center {
+  .student-home-wrapper {
     padding: var(--t-space-30);
   }
-  .content {
+  .student-home-content-item {
     width: 100%;
     padding: var(--t-space-10);
   }
@@ -167,7 +154,7 @@ export default {
 }
 
 @media (min-width: 600px) {
-  .content {
+  .student-home-content-item {
     width: 50%;
     padding: var(--t-space-10);
   }
@@ -178,7 +165,7 @@ export default {
 }
 
 @media (min-width: 900px) {
-  .content {
+  .student-home-content-item {
     width: 35%;
     padding: var(--t-space-50);
   }
