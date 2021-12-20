@@ -1,7 +1,7 @@
 <template>
   <div class="student-home-wrapper">
-    <h3>
-      Hello, Mohsin!
+    <h3 class="h3">
+      Hello, {{ studentName }}
       <br />
       What would you like to do today?
     </h3>
@@ -39,10 +39,29 @@
 
 <script>
 import { TalkieButton } from "@/components/UICore";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "StudentHome",
   components: { TalkieButton },
+  data() {
+    return {
+      studentName: null,
+    };
+  },
+  created() {
+    // get auth user
+    const user = authUser.getUser();
+
+    // redirect to login if no auth user
+    if (!user) {
+      this.$router.push("/auth/login");
+      return;
+    }
+
+    // get student name from auth user
+    this.studentName = user?.name;
+  },
 };
 </script>
 
