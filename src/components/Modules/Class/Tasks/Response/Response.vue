@@ -466,7 +466,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 70%;
+  width: 30%;
   padding: 100px 0 var(--t-space-50) 0;
 }
 .talkie-icon-bar {
@@ -476,6 +476,7 @@ export default {
   border-radius: var(--t-space-10);
 }
 .messege-bar {
+  width: 50%;
   margin-bottom: 20px;
 }
 .bar-icons-pg {
