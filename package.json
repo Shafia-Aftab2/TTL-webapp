@@ -1,6 +1,9 @@
 {
   "name": "talkie_webapp",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.15.0"
+  },
   "description": "Talkie the App",
   "author": "ahmadthd <ahmed@techchaps.com>",
   "private": true,
