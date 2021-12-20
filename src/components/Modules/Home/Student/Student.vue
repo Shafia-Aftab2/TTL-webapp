@@ -7,21 +7,29 @@
     </h3>
     <div class="student-home-content-wrapper">
       <div class="student-home-content-item">
-        <talkie-button type="button" class="home-btn">Enter</talkie-button>
-        <p><strong>Class Mode</strong></p>
-        <p>You have <strong>3 new </strong>tasks</p>
+        <talkie-button
+          type="button"
+          class="student-home-content-item-button-primary"
+          >Enter</talkie-button
+        >
+        <p class="student-home-content-item-header">Class Mode</p>
+        <p class="student-home-content-item-description">
+          You have <strong>3 new </strong>tasks
+        </p>
       </div>
       <div class="student-home-content-item">
         <talkie-button
-          class="home-btn-secondary"
-          variant="secondary"
+          class="student-home-content-item-button-secondary"
+          :variant="'secondary'"
           :outlined="true"
-          disabled
+          :disabled="true"
         >
           Coming Soon
         </talkie-button>
-        <p><strong>Practice Mode</strong></p>
-        <p>Do you own thing here. Always remember Little, but often</p>
+        <p class="student-home-content-item-header">Practice Mode</p>
+        <p class="student-home-content-item-description">
+          Do you own thing here. Always remember Little, but often
+        </p>
       </div>
     </div>
     <talkie-button :outlined="true">View my Inbox</talkie-button>
@@ -40,68 +48,91 @@ export default {
 
 <style scoped>
 .student-home-wrapper {
-  padding: var(--t-space-32);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 20px;
+  gap: var(--t-space-20);
+  font-size: var(--t-fs-small);
 }
 .student-home-content-wrapper {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: center;
-  gap: 30px;
 }
 .student-home-content-item {
-  background-color: var(--t-white);
-  border: 2px solid var(--t-primary);
-  width: 35%;
-  height: 60vh;
-  padding: var(--t-space-50);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-radius: 20px;
-  gap: 30px;
+  align-items: center;
+  background-color: var(--t-white);
+  border-style: solid;
+  border-color: var(--t-primary);
+  border-radius: var(--t-space-20);
 }
-.home-btn {
+.student-home-content-item-button-primary,
+.student-home-content-item-button-secondary {
   border-radius: 100% !important;
 }
-.home-btn-secondary {
+.student-home-content-item-button-secondary {
   border: none !important;
   background-color: var(--t-secondary) !important;
-  border-radius: 100% !important;
 }
+.student-home-content-item-header {
+  font-family: var(--t-ff-bold);
+  font-size: var(--t-fs-base);
+}
+.student-home-content-item-description {
+  line-height: 1.3;
+  word-spacing: var(--t-space-1);
+}
+
+/* Responsive variants */
 @media (max-width: 599px) {
   .student-home-content-wrapper {
     display: flex;
     flex-direction: column;
-  }
-  .student-home-wrapper {
-    padding: var(--t-space-30);
+    gap: var(--t-space-16);
   }
   .student-home-content-item {
     width: 100%;
-    padding: var(--t-space-10);
+    border-width: var(--t-space-2);
+    padding: var(--t-space-24);
+    gap: var(--t-space-16);
+  }
+  .student-home-content-item-button-primary,
+  .student-home-content-item-button-secondary {
+    padding: var(--t-space-24);
   }
 }
-
 @media (min-width: 600px) {
+  .student-home-content-wrapper {
+    gap: var(--t-space-24);
+  }
   .student-home-content-item {
     width: 50%;
-    padding: var(--t-space-10);
+    height: 60vh;
+    border-width: var(--t-space-3);
+    gap: var(--t-space-16);
+  }
+  .student-home-content-item-button-primary,
+  .student-home-content-item-button-secondary {
+    padding: var(--t-space-36);
   }
 }
-
 @media (min-width: 900px) {
-  .student-home-content-item {
-    width: 35%;
-    padding: var(--t-space-50);
+  .student-home-content-wrapper {
+    gap: var(--t-space-30);
   }
-}
-
-@media (min-width: 1200px) {
+  .student-home-content-item {
+    width: 70%;
+    padding: var(--t-space-24);
+  }
+  .student-home-content-item-button-primary,
+  .student-home-content-item-button-secondary {
+    padding: var(--t-space-44);
+  }
 }
 </style>
