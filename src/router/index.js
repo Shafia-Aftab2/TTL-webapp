@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 // base
 import Layout from "../components/Layouts/_layout.vue";
-import Home from "../views/Home.vue";
+import Home from "../components/Modules/Home";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
 import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
@@ -17,7 +17,6 @@ import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTaskResponse from "../components/Modules/Class/Tasks/Response";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
 import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
-import StudentHomePage from "../components/Modules/Students/Home";
 import StudentFeedback from "../components/Modules/Students/Feedback";
 import StudentInbox from "../components/Modules/Students/Inbox";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
@@ -36,7 +35,7 @@ const routes = [
     children: [
       {
         name: "Home",
-        path: "",
+        path: "/",
         component: Home,
       },
     ],
@@ -177,11 +176,6 @@ const routes = [
     component: Layout,
     props: { variant: "dark", type: "sidebar" },
     children: [
-      {
-        name: "StudentHomePage",
-        path: "/students",
-        component: StudentHomePage,
-      },
       {
         name: "StudentFeedback",
         path: "/students/feedback",
