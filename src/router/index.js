@@ -25,6 +25,8 @@ import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
 import Error404 from "../components/Modules/Error404";
+// route middlware
+import authMiddlware from "./middlewares/auth";
 // modular
 // import teacherRoutes from "../modules/teacher/teacher-routes";
 // import studentRoutes from "../modules/student/student-routes";
@@ -73,21 +75,25 @@ const routes = [
         name: "ClassChooseDefault",
         path: "/classes",
         component: ClassChooseDefault,
+        meta: { requiresAuth: true },
       },
       {
         name: "ClassHome",
         path: "/classes/:id",
         component: ClassHome,
+        meta: { requiresAuth: true },
       },
       {
         name: "ClassTaskChooseDefault",
         path: "/classes/:classId/tasks",
         component: ClassTaskChooseDefault,
+        meta: { requiresAuth: true },
       },
       {
         name: "ClassTaskHome",
         path: "/classes/:classId/tasks/:taskId",
         component: ClassTaskHome,
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -100,21 +106,25 @@ const routes = [
         name: "ClassJoin",
         path: "/classes/:id/join",
         component: ClassJoin,
+        meta: { requiresAuth: true },
       },
       {
         name: "ClassInviteStudents",
         path: "/classes/:id/invite-students",
         component: ClassInviteStudents,
+        meta: { requiresAuth: true },
       },
       {
         name: "ClassTaskCreate",
         path: "/classes/:id/tasks/create",
         component: ClassTaskCreate,
+        meta: { requiresAuth: true },
       },
       {
         name: "ClassTaskStatus",
         path: "/classes/:classId/tasks/:taskId/status",
         component: ClassTaskStatus,
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -126,11 +136,13 @@ const routes = [
         name: "ClassCreate",
         path: "/classes/create",
         component: ClassCreate,
+        meta: { requiresAuth: true },
       },
       {
         name: "ClassChooseTopics",
         path: "/classes/:id/choose-topics",
         component: ClassChooseTopics,
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -224,6 +236,17 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    authMiddlware({
+      failureCallback: () => next({ name: "AuthLogin" }),
+      successCallback: () => next(),
+    });
+  } else {
+    next();
+  }
 });
 
 export default router;
