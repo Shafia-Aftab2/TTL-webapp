@@ -5,7 +5,6 @@
       :onSubmit="handleSubmit"
       :customClass="'box-container'"
     >
-      <h3>Q&A</h3>
       <span hidden>
         <!-- TODO: updated these states via a handler -->
         {{ (this.setFormValue = setValue) }}
@@ -22,14 +21,23 @@
         v-slot="{ startRecording, stopRecording, isRecording }"
         :onRecordingStopped="handleRecordedItem"
       >
+        <div class="header">
+          <talkie-question-card
+            :title="taskDetails.title"
+            :topic="taskDetails.topic"
+            :description="taskDetails.description"
+            :fullWidth="true"
+            class="bg"
+          />
+        </div>
         <div class="box-content">
           <div class="qa">
-            <small>Technology and Media</small>
-            <h2>Fave App</h2>
-            <p>This is translation</p>
             <div class="talkie-icon-bar">
               <div class="messege-bar">
-                <p>Audios</p>
+                <talkie-audio-timeline
+                  :percentage="currentAudioPercentage"
+                  :onHeadChange="updateAudioPercentage"
+                />
               </div>
               <div class="bar-icons-pg">
                 <talkie-icon
@@ -134,7 +142,14 @@ import {
   TalkieAudioPlayer,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
-import { FileService, ResponseService } from "@/api/services";
+import { TalkieQuestionCard } from "@/components/SubModules/Cards";
+import {
+  ClassService,
+  TaskService,
+  ResponseService,
+  FileService,
+} from "@/api/services";
+import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
 export default {
   name: "ClassTaskResponse",
@@ -146,6 +161,7 @@ export default {
     TalkieForm,
     TalkieLoader,
     TalkieModal,
+    TalkieQuestionCard,
   },
   data() {
     return {
@@ -186,6 +202,7 @@ export default {
       triggerFormSubmission: () => {},
       classId: null,
       taskId: null,
+      taskDetails: {},
     };
   },
   computed: {
@@ -202,11 +219,124 @@ export default {
     this.taskId = taskId;
 
     // class id from params
-    const classId = this.$route.params.id;
+    const classId = this.$route.params.classId;
     this.classId = classId;
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
+
+    // class tasks
+    const classTasks = await this.getClassTasks(classId);
+    if (!classTasks) return this.$router.push("/404");
+
+    // get task details
+    const taskDetails = await this.getTaskDetails(taskId);
+    if (!taskDetails) return this.$router.push("/404");
+
+    // get task responses
+    const taskResponses = await this.getTaskResponses(taskId);
+    if (!taskResponses) return this.$router.push("/404");
+
+    // success case
+    this.classDetails = {
+      id: classDetails.id,
+      name: classDetails.name,
+    };
+
+    // sidebar data
+    const sidebarItems = classTasks.results.map((x) => ({
+      name: x.title,
+      hasRightIcon: true,
+      link: `/classes/${this.classId}/tasks/${x.id}/respond`,
+      onClick: () =>
+        this.$router.push(`/classes/${this.classId}/tasks/${x.id}/respond`),
+      isActive: x.id === taskId,
+    }));
+    const sidebarButtons = [
+      {
+        text: "Go To Class",
+        type: "button",
+        variant: "primary",
+        size: "small",
+        outlined: true,
+        loading: false,
+        disabled: false,
+        onClick: () => this.$router.push(`/classes/${this.classId}`),
+      },
+    ];
+
+    this.handleSidebarMutation({
+      items: sidebarItems,
+      buttons: sidebarButtons,
+    });
+
+    this.taskDetails = {
+      id: taskDetails.id,
+      type: taskDetails.type,
+      title: taskDetails.title,
+      topic: taskDetails.topic.name,
+      description: taskDetails.questionText,
+      audioSource: taskDetails.voiceForQnA,
+    };
+
     this.pageLoading = false;
   },
   methods: {
+    handleStoreMutation(key, value) {
+      this.$store.state[key] = value;
+    },
+    handleSidebarMutation(data) {
+      const sidebar = this.$store.state.sidebar;
+      const updatedData = {
+        hasBackLink: data.hasOwnProperty("hasBackLink")
+          ? data.hasBackLink
+          : sidebar.hasBackLink,
+        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
+        checkboxes: data.hasOwnProperty("checkboxes")
+          ? data.checkboxes
+          : sidebar.checkboxes,
+        buttons: data.hasOwnProperty("buttons")
+          ? data.buttons
+          : sidebar.buttons,
+      };
+
+      this.handleStoreMutation(
+        "sidebar",
+        Object.assign({}, { ...updatedData })
+      );
+    },
+
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async getClassTasks(id) {
+      const query = { type: TaskTypes.QUESTION_ANSWER };
+
+      const response = await TaskService.QueryClassTasks(id, query).catch(
+        () => null
+      );
+
+      return response.data || null;
+    },
+    async getTaskDetails(id) {
+      const response = await TaskService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async getTaskResponses(taskId) {
+      const query = {};
+
+      const response = await ResponseService.QueryClassTaskResponses(
+        taskId,
+        query
+      ).catch(() => null);
+
+      return response.data || null;
+    },
+
     handleRecordedItem(recording) {
       this.currentRecording = recording;
       this.setFormValue("voiceForQnA", recording.blob);
@@ -322,6 +452,16 @@ export default {
 };
 </script>
 <style scoped>
+.bg {
+  background-color: transparent;
+}
+.header {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1;
+}
 .recording {
   display: flex;
   flex-direction: column;
@@ -353,7 +493,6 @@ export default {
   gap: 20px;
 }
 .box-container {
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -362,6 +501,7 @@ export default {
   gap: 10px;
 }
 .box-content {
+  z-index: 1;
   display: grid;
   width: 70%;
   background-color: white;
