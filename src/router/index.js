@@ -28,9 +28,6 @@ import StudentTranslation from "../components/Modules/Students/Translation";
 import Error404 from "../components/Modules/Error404";
 // route middlware
 import authMiddlware from "./middlewares/auth";
-// modular
-// import teacherRoutes from "../modules/teacher/teacher-routes";
-// import studentRoutes from "../modules/student/student-routes";
 
 const routes = [
   {
