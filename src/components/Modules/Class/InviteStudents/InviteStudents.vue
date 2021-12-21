@@ -22,6 +22,11 @@
       >
     </div>
   </div>
+  <div class="class-invite-students-footer">
+    <a :href="`/classes/${classId}`" class="class-invite-students-footer-link">
+      Not now
+    </a>
+  </div>
 </template>
 
 <script>
@@ -96,6 +101,21 @@ export default {
 .class-invite-students-input {
   margin: auto;
 }
+.class-invite-students-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+.class-invite-students-footer-link {
+  text-decoration: underline;
+}
+.class-invite-students-footer-link,
+.class-invite-students-footer-link:hover,
+.class-invite-students-footer-link:visited {
+  text-decoration: underline;
+  color: var(--t-black);
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -108,6 +128,12 @@ export default {
   .class-invite-students-input {
     max-width: 100%;
   }
+  .class-invite-students-footer {
+    padding: var(--t-space-64);
+  }
+  .class-invite-students-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
 }
 @media (min-width: 600px) {
   .class-invite-students-wrapper {
@@ -119,6 +145,13 @@ export default {
   .class-invite-students-input {
     max-width: 100%;
   }
+  .class-invite-students-footer {
+    margin-top: var(--t-space-24);
+    padding: var(--t-space-50);
+  }
+  .class-invite-students-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
 }
 @media (min-width: 1200px) {
   .class-invite-students-wrapper {
@@ -128,6 +161,9 @@ export default {
   }
   .class-invite-students-input {
     max-width: 85%;
+  }
+  .class-invite-students-footer-link {
+    font-size: var(--t-fs-small);
   }
 }
 </style>
