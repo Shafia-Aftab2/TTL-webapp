@@ -115,7 +115,9 @@
         </div>
         <p class="auth-split-form-options-info">
           Already have an account?
-          <a class="auth-split-form-options-info-link" href="#">Log in</a>
+          <a class="auth-split-form-options-info-link" href="/auth/login">
+            Log in
+          </a>
         </p>
       </div>
     </talkie-form>
