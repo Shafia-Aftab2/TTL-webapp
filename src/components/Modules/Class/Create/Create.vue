@@ -94,10 +94,11 @@ export default {
     };
   },
   created() {
-    // get school id from user
+    // get auth user
     const user = authUser.getUser();
     this.user = user;
 
+    // get school id from user
     const schoolId =
       user.schools && user.schools.length > 0 ? user.schools[0]._id : null;
 
@@ -156,6 +157,8 @@ export default {
         type: "success",
         message: "Class Created. Redirecting..!",
       };
+      const classId = response?.data?.id;
+      this.$router.push(`/classes/${classId}/choose-topics`);
     },
   },
 };
