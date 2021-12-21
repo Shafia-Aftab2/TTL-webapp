@@ -49,7 +49,7 @@
         </div>
         <p class="auth-split-form-options-info">
           Don't have an account?
-          <a class="auth-split-form-options-info-link" href="#">
+          <a class="auth-split-form-options-info-link" href="/auth/signup">
             Create Account
           </a>
         </p>
