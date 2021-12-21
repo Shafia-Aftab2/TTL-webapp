@@ -194,7 +194,9 @@
       </talkie-audio-recorder>
     </talkie-form>
     <div class="class-start-convo-footer">
-      <a href="#" class="class-start-convo-footer-link">Not now</a>
+      <a :href="`/classes/${classId}`" class="class-start-convo-footer-link">
+        Not now
+      </a>
     </div>
   </template>
   <!-- loading -->
