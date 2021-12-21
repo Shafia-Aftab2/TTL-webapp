@@ -13,7 +13,7 @@
       >
         <talkie-icon :name="'hamburger'" :onClick="onSidebarIconClick" />
       </span>
-      <a href="#" class="talkie-navbar-brand-logo-link">
+      <a href="/" class="talkie-navbar-brand-logo-link">
         <logo-talkie />
       </a>
     </ul>
