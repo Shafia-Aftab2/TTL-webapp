@@ -148,7 +148,11 @@ export default {
       newTaskOptions: [
         {
           name: "Question",
-          onClick: () => {},
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create`,
+              100
+            ),
         },
         {
           name: "Photo",
