@@ -261,6 +261,7 @@ export default {
         type: "success",
         message: "Account Created. Redirecting..!",
       };
+      this.$router.push("/");
     },
   },
 };
