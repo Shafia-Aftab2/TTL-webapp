@@ -9,11 +9,12 @@
 
     <talkie-input
       :placeholder="'Url Here'"
+      :onChange="handleUrlChange"
       :customClass="'class-join-module-input'"
     />
 
     <div class="class-join-module-options-wrapper">
-      <talkie-button>Join</talkie-button>
+      <talkie-button :onClick="handleJoinClassClick">Join</talkie-button>
     </div>
   </div>
 </template>
@@ -22,7 +23,20 @@ import { TalkieInput, TalkieButton } from "@/components/UICore";
 
 export default {
   name: "ClassJoinModule",
+  data() {
+    return {
+      joinClassLink: "",
+    };
+  },
   components: { TalkieInput, TalkieButton },
+  methods: {
+    handleUrlChange(e) {
+      this.joinClassLink = e.target.value.trim();
+    },
+    handleJoinClassClick() {
+      window.location = this.joinClassLink;
+    },
+  },
 };
 </script>
 
