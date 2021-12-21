@@ -1,40 +1,114 @@
 <template>
-  <div class="container">
-    <h2 class="h2">Join Class</h2>
-    <p class="p">Paste the url sent by your teacher below</p>
-    <Input placeholder="url here" class="talkie-input input" />
-    <Button type="button" class="talkie-button">Join</Button>
+  <div class="class-join-module-wrapper">
+    <div class="class-join-module-info-wrapper">
+      <h2 class="h2">Join Class</h2>
+      <p class="p" style="margin-bottom: 0 !important">
+        Paste the url sent by your teacher below
+      </p>
+    </div>
+
+    <talkie-input
+      :placeholder="'Url Here'"
+      :customClass="'class-join-module-input'"
+    />
+
+    <div class="class-join-module-options-wrapper">
+      <talkie-button>Join</talkie-button>
+    </div>
   </div>
 </template>
 <script>
-import Input from "../../../../UICore/Input.vue";
-import Button from "../../../../UICore/Button.vue";
+import { TalkieInput, TalkieButton } from "@/components/UICore";
 
 export default {
-  name: "join-class",
-  components: { Input, Button },
+  name: "ClassJoinModule",
+  components: { TalkieInput, TalkieButton },
 };
 </script>
 
-<style>
-.container {
+<style scoped>
+.class-join-module-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  margin-top: var(--t-space-36);
+  background-color: var(--t-white);
+}
+.class-join-module-info-wrapper,
+.class-join-module-options-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  align-content: center;
-  height: 80vh;
+  margin: auto;
+  gap: var(--t-space-12);
+}
+.class-join-module-input {
+  margin: auto;
+}
+.class-join-module-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+.class-join-module-footer-link {
+  text-decoration: underline;
+}
+.class-join-module-footer-link,
+.class-join-module-footer-link:hover,
+.class-join-module-footer-link:visited {
+  text-decoration: underline;
+  color: var(--t-black);
 }
 
-.h2 {
-  margin-bottom: 9px;
+/* Responsive variants */
+@media (max-width: 599px) {
+  .class-join-module-wrapper {
+    max-width: 100%;
+    gap: var(--t-space-24);
+    padding: var(--t-space-32);
+    border-radius: var(--t-br-medium);
+  }
+  .class-join-module-input {
+    max-width: 100%;
+  }
+  .class-join-module-footer {
+    padding: var(--t-space-64);
+  }
+  .class-join-module-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
 }
-
-.p {
-  margin-bottom: 59px;
+@media (min-width: 600px) {
+  .class-join-module-wrapper {
+    max-width: 65%;
+    gap: var(--t-space-36);
+    padding: var(--t-space-48);
+    border-radius: var(--t-br-medium);
+  }
+  .class-join-module-input {
+    max-width: 100%;
+  }
+  .class-join-module-footer {
+    margin-top: var(--t-space-24);
+    padding: var(--t-space-50);
+  }
+  .class-join-module-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
 }
-
-.input {
-  margin-bottom: 59px;
+@media (min-width: 1200px) {
+  .class-join-module-wrapper {
+    max-width: 80%;
+    padding: var(--t-space-48);
+    border-radius: var(--t-br-large);
+  }
+  .class-join-module-input {
+    max-width: 85%;
+  }
+  .class-join-module-footer-link {
+    font-size: var(--t-fs-small);
+  }
 }
 </style>
