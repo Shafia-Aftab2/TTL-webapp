@@ -18,8 +18,12 @@
         <h4 class="h4">Beginners/Intermediate</h4>
         <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
         <template v-if="!pageLoading">
-          <template v-for="topic in topics.intermediate" :key="topic.id">
-            <talkie-check-box :name="topic.id" :label="topic.name" />
+          <template v-for="topic in topicsList.intermediate" :key="topic.id">
+            <talkie-check-box
+              :name="topic.id"
+              :label="topic.name"
+              :defaultChecked="classTopics?.includes(topic.id)"
+            />
           </template>
         </template>
         <template v-if="pageLoading">
@@ -30,8 +34,12 @@
         <h4 class="h4">Beginners</h4>
         <p class="p" style="margin-bottom: 0 !important">KS3 Level</p>
         <template v-if="!pageLoading">
-          <template v-for="topic in topics.beginner" :key="topic.id">
-            <talkie-check-box :name="topic.id" :label="topic.name" />
+          <template v-for="topic in topicsList.beginner" :key="topic.id">
+            <talkie-check-box
+              :name="topic.id"
+              :label="topic.name"
+              :defaultChecked="classTopics?.includes(topic.id)"
+            />
           </template>
         </template>
         <template v-if="pageLoading">
@@ -70,11 +78,12 @@ export default {
   },
   data() {
     return {
-      topics: {
+      topicsList: {
         intermediate: [],
         beginner: [],
         advanced: [],
       },
+      classTopics: [],
       classId: null,
       pageLoading: false,
       loading: false,
@@ -92,17 +101,23 @@ export default {
     const classId = this.$route.params.id;
     this.classId = classId;
 
-    // get class topics
-    const topics = await this.getClassTopics();
-    // error case
-    if (!topics) return this.$router.push("/404");
+    // get topics list (+ failure case)
+    const topicsList = await this.getTopicsList();
+    if (!topicsList) return this.$router.push("/404");
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
 
     // success case
-    this.topics = {
-      beginner: topics.filter((x) => x.type === topicTypes.BEGINNER),
-      intermediate: topics.filter((x) => x.type === topicTypes.INTERMEDIATE),
-      advanced: topics.filter((x) => x.type === topicTypes.ADVANCED),
+    this.topicsList = {
+      beginner: topicsList.filter((x) => x.type === topicTypes.BEGINNER),
+      intermediate: topicsList.filter(
+        (x) => x.type === topicTypes.INTERMEDIATE
+      ),
+      advanced: topicsList.filter((x) => x.type === topicTypes.ADVANCED),
     };
+    this.classTopics = (classDetails?.topics || [])?.map((x) => x?.id);
     this.pageLoading = false;
   },
   methods: {
@@ -165,12 +180,17 @@ export default {
         message: "Class Topics Added. Redirecting..!",
       };
     },
-    async getClassTopics() {
+    async getTopicsList() {
       const query = {};
 
       const response = await TopicService.Query(query).catch(() => null);
 
       return !!response.data ? response.data.results : null;
+    },
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
     },
   },
 };
