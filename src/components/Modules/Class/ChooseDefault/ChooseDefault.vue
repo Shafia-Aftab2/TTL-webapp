@@ -28,10 +28,16 @@ export default {
 
     // get user classes
     const classes =
-      user.schools && user.schools.length > 0 ? user.schools[0].classes : null;
+      user?.schools?.length > 0 ? user?.schools[0]?.classes : null;
 
     // check if user has no classes
-    if (classes.length === 0) {
+    if (!classes || classes?.length === 0) {
+      // redirect student to join class
+      if (user.role === roles.STUDENT) {
+        return this.$router.push("/classes/join");
+      }
+
+      // redirect teacher to create class
       if (user.role === roles.TEACHER) {
         return this.$router.push("/classes/create");
       }
