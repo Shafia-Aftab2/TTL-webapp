@@ -222,7 +222,7 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import { createQandATopicSchema } from "@/utils/validations/task.validation";
-import { FileService, TaskService, TopicService } from "@/api/services";
+import { FileService, TaskService, ClassService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
 
@@ -294,14 +294,12 @@ export default {
     const classId = this.$route.params.id;
     this.classId = classId;
 
-    // get class topics
-    const topics = await this.getClassTopics();
-
-    // error case
-    if (!topics) return this.$router.push("/404");
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
 
     // success case
-    this.topics = topics;
+    this.topics = classDetails.topics;
     this.pageLoading = false;
   },
   methods: {
@@ -434,12 +432,10 @@ export default {
       };
       this.handleRedirection(`/classes/${this.classId}`, 200);
     },
-    async getClassTopics() {
-      const query = {};
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
 
-      const response = await TopicService.Query(query).catch(() => null);
-
-      return !!response.data ? response.data.results : null;
+      return response.data || null;
     },
   },
 };
