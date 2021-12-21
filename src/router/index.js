@@ -241,9 +241,9 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth) {
-    authMiddlware({
+    await authMiddlware({
       failureCallback: () => next({ name: "AuthLogin" }),
       successCallback: () => next(),
     });
