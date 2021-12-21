@@ -7,6 +7,7 @@ import AuthSignup from "../components/Modules/Auth/Signup";
 import AuthLogout from "../components/Modules/Auth/Logout";
 import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
 import ClassHome from "../components/Modules/Class/Home";
+import ClassJoinModule from "../components/Modules/Class/Join/Module";
 import ClassJoinLink from "../components/Modules/Class/Join/Link";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
@@ -17,7 +18,6 @@ import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTaskResponse from "../components/Modules/Class/Tasks/Response";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
-import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentFeedback from "../components/Modules/Students/Feedback";
 import StudentInbox from "../components/Modules/Students/Inbox";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
@@ -112,6 +112,12 @@ const routes = [
     props: { variant: "dark" },
     children: [
       {
+        name: "ClassJoinModule",
+        path: "/classes/join",
+        component: ClassJoinModule,
+        meta: { requiresAuth: true },
+      },
+      {
         name: "ClassJoinLink",
         path: "/classes/:id/join",
         component: ClassJoinLink,
@@ -164,17 +170,6 @@ const routes = [
         name: "TeacherClassStudents",
         path: "/teachers/class/students",
         component: TeacherClassStudents,
-      },
-    ],
-  },
-  {
-    path: "/",
-    component: Layout,
-    children: [
-      {
-        name: "StudentClassJoin",
-        path: "/students/classes/join",
-        component: StudentClassJoin,
       },
     ],
   },
