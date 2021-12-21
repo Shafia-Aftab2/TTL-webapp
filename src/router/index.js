@@ -4,6 +4,7 @@ import Layout from "../components/Layouts/_layout.vue";
 import Home from "../components/Modules/Home";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
+import AuthLogout from "../components/Modules/Auth/Logout";
 import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
 import ClassHome from "../components/Modules/Class/Home";
 import ClassJoin from "../components/Modules/Class/Join";
@@ -60,6 +61,11 @@ const routes = [
         path: "/auth/signup/teacher",
         component: AuthSignup,
         props: { signupMode: "teacher" },
+      },
+      {
+        name: "AuthLogout",
+        path: "/auth/logout",
+        component: AuthLogout,
       },
     ],
   },
