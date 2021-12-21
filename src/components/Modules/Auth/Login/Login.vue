@@ -152,6 +152,7 @@ export default {
         type: "success",
         message: "Login Successfull. Redirecting..!",
       };
+      this.$router.push("/");
     },
   },
 };
