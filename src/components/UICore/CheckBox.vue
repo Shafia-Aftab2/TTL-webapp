@@ -46,7 +46,7 @@ export default {
       setValue: setChecked,
     } = useField(this.name);
 
-    setChecked(false);
+    setChecked(this.defaultChecked);
 
     return {
       checked,
@@ -69,6 +69,10 @@ export default {
       default: () => {},
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    defaultChecked: {
       type: Boolean,
       default: false,
     },
