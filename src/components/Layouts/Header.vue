@@ -49,6 +49,15 @@
           </div>
         </li>
       </template>
+      <template v-if="!isLoggedIn">
+        <li
+          class="talkie-navbar-link-item talkie-navbar-link-item-always-visiable"
+        >
+          <a href="/auth/login">Login</a>
+          &nbsp;<strong>/</strong>&nbsp;
+          <a href="/auth/signup">Signup</a>
+        </li>
+      </template>
     </ul>
   </nav>
 </template>
@@ -256,6 +265,10 @@ export default {
   }
   .talkie-navbar-link-item {
     display: none;
+    font-size: calc(var(--t-fs-small) * 0.85);
+  }
+  .talkie-navbar-link-item-always-visiable {
+    display: inherit;
   }
   .talkie-navbar-profile-name {
     font-size: calc(var(--t-fs-small) - 2px);
