@@ -7,7 +7,7 @@ import AuthSignup from "../components/Modules/Auth/Signup";
 import AuthLogout from "../components/Modules/Auth/Logout";
 import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
 import ClassHome from "../components/Modules/Class/Home";
-import ClassJoin from "../components/Modules/Class/Join";
+import ClassJoinLink from "../components/Modules/Class/Join/Link";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
@@ -112,9 +112,9 @@ const routes = [
     props: { variant: "dark" },
     children: [
       {
-        name: "ClassJoin",
+        name: "ClassJoinLink",
         path: "/classes/:id/join",
-        component: ClassJoin,
+        component: ClassJoinLink,
         meta: { requiresAuth: true },
       },
       {
