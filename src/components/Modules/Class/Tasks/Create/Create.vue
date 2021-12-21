@@ -305,6 +305,12 @@ export default {
     this.pageLoading = false;
   },
   methods: {
+    handleRedirection(link, timeout = 100) {
+      const self = this;
+      setTimeout(function () {
+        self.$router.push(link);
+      }, timeout);
+    },
     handleRecordedItem(recording) {
       this.currentRecording = recording;
       this.setFormValue("voiceForQnA", recording.blob);
@@ -426,6 +432,7 @@ export default {
         message: "Conversation Created. Redirecting..!",
         animateEllipse: false,
       };
+      this.handleRedirection(`/classes/${this.classId}`, 200);
     },
     async getClassTopics() {
       const query = {};
