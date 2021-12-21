@@ -15,7 +15,11 @@
 
     <div class="class-invite-students-options-wrapper">
       <talkie-button :onClick="hanldeCopyButtonClick">Copy</talkie-button>
-      <talkie-button :disabled="!isCopiedToClipboard">Next</talkie-button>
+      <talkie-button
+        :disabled="!isCopiedToClipboard"
+        :onClick="handleNextButtonClick"
+        >Next</talkie-button
+      >
     </div>
   </div>
 </template>
@@ -64,6 +68,9 @@ export default {
         displayIcon: true,
       });
       this.isCopiedToClipboard = true;
+    },
+    handleNextButtonClick() {
+      this.$router.push(`/classes/${this.classId}/tasks/create`);
     },
   },
 };
