@@ -256,7 +256,7 @@ export default {
         outlined: true,
         loading: false,
         disabled: false,
-        onClick: () => console.log("Button Clicked"),
+        onClick: () => this.$router.push("/classes/create"),
       },
     ];
     this.handleSidebarMutation({
