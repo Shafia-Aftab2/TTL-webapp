@@ -69,9 +69,11 @@ import { AuthService } from "@/api/services";
 import { loginSchema } from "@/utils/validations/auth.validation";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
+import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
 
 export default {
   name: "AuthLogin",
+  mixins: [handleAlreadyLogginIn],
   data() {
     return {
       loginSchema: loginSchema,
@@ -88,9 +90,6 @@ export default {
     TalkieButton,
     TalkieAlert,
     TalkieAuthSplitWrapper,
-  },
-  created() {
-    this.handleAlreadyLoggedIn();
   },
   methods: {
     isValidEmail(email) {
@@ -156,16 +155,6 @@ export default {
         message: "Login Successfull. Redirecting..!",
       };
       this.$router.push("/");
-    },
-    handleAlreadyLoggedIn() {
-      const user = authUser.getUser();
-      const accessToken = authUser.getAccessToken();
-      const refreshToken = authUser.getRefreshToken();
-
-      // redirect to home if already logged in
-      if (user && accessToken && refreshToken) {
-        this.$router.push("/");
-      }
     },
   },
 };

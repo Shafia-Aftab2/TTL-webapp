@@ -150,9 +150,11 @@ import {
 import { roles } from "@/utils/constants";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
+import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
 
 export default {
   name: "AuthSignup",
+  mixins: [handleAlreadyLogginIn],
   data() {
     return {
       loading: false,
