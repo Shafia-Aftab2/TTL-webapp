@@ -7,7 +7,7 @@ const auth = ({ successCallback = () => {}, failureCallback = () => {} }) => {
   const refreshToken = authUser.getRefreshToken();
 
   // failure case
-  if (!user || !accessToken || !refreshToken) return failureCallback();
+  if (!refreshToken) return failureCallback();
 
   // success case
   return successCallback();
