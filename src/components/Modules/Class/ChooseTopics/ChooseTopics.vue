@@ -54,6 +54,11 @@
       <talkie-button :loading="loading" :size="'medium'">Next</talkie-button>
     </talkie-form>
   </div>
+  <div class="class-choose-topics-footer">
+    <a :href="`/classes/${classId}`" class="class-choose-topics-footer-link">
+      Not now
+    </a>
+  </div>
 </template>
 
 <script>
@@ -226,6 +231,21 @@ export default {
   width: 100%;
   height: 100%;
 }
+.class-choose-topics-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+.class-choose-topics-footer-link {
+  text-decoration: underline;
+}
+.class-choose-topics-footer-link,
+.class-choose-topics-footer-link:hover,
+.class-choose-topics-footer-link:visited {
+  text-decoration: underline;
+  color: var(--t-black);
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -247,6 +267,13 @@ export default {
   .class-choose-topics-sub-form {
     gap: var(--t-space-12);
   }
+  .class-choose-topics-footer {
+    padding: var(--t-space-48);
+    padding-top: var(--t-space-24);
+  }
+  .class-choose-topics-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
 }
 @media (min-width: 600px) {
   .class-choose-topics-wrapper {
@@ -263,6 +290,13 @@ export default {
   }
   .class-choose-topics-sub-form {
     gap: var(--t-space-12);
+  }
+  .class-choose-topics-footer {
+    padding: var(--t-space-36);
+    padding-top: 0;
+  }
+  .class-choose-topics-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
   }
 }
 @media (min-width: 900px) {
@@ -289,6 +323,13 @@ export default {
   }
   .class-choose-topics-sub-form {
     gap: var(--t-space-16);
+  }
+  .class-choose-topics-footer {
+    padding: var(--t-space-50);
+    padding-top: var(--t-space-30);
+  }
+  .class-choose-topics-footer-link {
+    font-size: var(--t-fs-small);
   }
 }
 </style>
