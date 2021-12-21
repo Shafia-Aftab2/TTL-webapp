@@ -15,6 +15,7 @@
 <script>
 import Recorder from "./lib/recorder";
 import { convertTimeMMSS } from "./lib/utils";
+
 export default {
   name: "AudioRecorder",
   data() {
@@ -35,7 +36,7 @@ export default {
     onMikeFailure: { type: Function },
   },
   beforeUnmount() {
-    this.stopRecorder();
+    this.stopRecorder && this.stopRecorder();
   },
   methods: {
     _initRecorder() {

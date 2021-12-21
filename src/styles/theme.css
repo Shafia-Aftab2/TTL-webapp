@@ -11,6 +11,15 @@
   box-sizing: inherit;
 }
 
+::selection {
+  background-color: var(--t-primary);
+  color: var(--t-black-100);
+}
+
+::placeholder {
+  color: var(--t-gray-50);
+}
+
 /* Doc Elements */
 html {
   box-sizing: border-box;
@@ -28,7 +37,7 @@ title {
 
 /* Body Elements */
 body {
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
