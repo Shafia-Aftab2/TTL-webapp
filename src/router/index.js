@@ -11,7 +11,7 @@ import ClassJoinModule from "../components/Modules/Class/Join/Module";
 import ClassJoinLink from "../components/Modules/Class/Join/Link";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
-import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
+import ClassStudentsInvite from "../components/Modules/Class/Students/Invite";
 import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefault";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
@@ -166,9 +166,9 @@ const routes = [
         },
       },
       {
-        name: "ClassInviteStudents",
-        path: "/classes/:id/invite-students",
-        component: ClassInviteStudents,
+        name: "ClassStudentsInvite",
+        path: "/classes/:id/students/invite",
+        component: ClassStudentsInvite,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
