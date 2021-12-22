@@ -29,6 +29,8 @@ import Error404 from "../components/Modules/Error404";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
+// user roles
+import roles from "../utils/constants/roles";
 
 const routes = [
   {
@@ -108,6 +110,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -118,6 +121,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -128,6 +132,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.TEACHER],
           },
         },
       },
@@ -145,6 +150,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.TEACHER],
           },
         },
       },
@@ -155,6 +161,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.TEACHER],
           },
         },
       },
@@ -165,6 +172,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -175,6 +183,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -185,6 +194,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -201,6 +211,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -211,6 +222,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
