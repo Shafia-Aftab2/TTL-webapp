@@ -1,6 +1,6 @@
 <template>
-  <div class="class-invite-students-wrapper">
-    <div class="class-invite-students-info-wrapper">
+  <div class="class-students-invite-wrapper">
+    <div class="class-students-invite-info-wrapper">
       <h2 class="h2">Invite your students</h2>
       <p class="p" style="margin-bottom: 0 !important">
         Copy and paste the url below
@@ -10,20 +10,21 @@
     <talkie-input
       :placeholder="'Url Here'"
       :value="computedClassLink"
-      :customClass="'class-invite-students-input'"
+      :customClass="'class-students-invite-input'"
     />
 
-    <div class="class-invite-students-options-wrapper">
+    <div class="class-students-invite-options-wrapper">
       <talkie-button :onClick="hanldeCopyButtonClick">Copy</talkie-button>
       <talkie-button
         :disabled="!isCopiedToClipboard"
         :onClick="handleNextButtonClick"
-        >Next</talkie-button
       >
+        Next
+      </talkie-button>
     </div>
   </div>
-  <div class="class-invite-students-footer">
-    <a :href="`/classes/${classId}`" class="class-invite-students-footer-link">
+  <div class="class-students-invite-footer">
+    <a :href="`/classes/${classId}`" class="class-students-invite-footer-link">
       Not now
     </a>
   </div>
@@ -82,15 +83,15 @@ export default {
 </script>
 
 <style>
-.class-invite-students-wrapper {
+.class-students-invite-wrapper {
   display: flex;
   flex-direction: column;
   margin: auto;
   margin-top: var(--t-space-36);
   background-color: var(--t-white);
 }
-.class-invite-students-info-wrapper,
-.class-invite-students-options-wrapper {
+.class-students-invite-info-wrapper,
+.class-students-invite-options-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -98,71 +99,71 @@ export default {
   margin: auto;
   gap: var(--t-space-12);
 }
-.class-invite-students-input {
+.class-students-invite-input {
   margin: auto;
 }
-.class-invite-students-footer {
+.class-students-invite-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: auto;
 }
-.class-invite-students-footer-link {
+.class-students-invite-footer-link {
   text-decoration: underline;
 }
-.class-invite-students-footer-link,
-.class-invite-students-footer-link:hover,
-.class-invite-students-footer-link:visited {
+.class-students-invite-footer-link,
+.class-students-invite-footer-link:hover,
+.class-students-invite-footer-link:visited {
   text-decoration: underline;
   color: var(--t-black);
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .class-invite-students-wrapper {
+  .class-students-invite-wrapper {
     max-width: 100%;
     gap: var(--t-space-24);
     padding: var(--t-space-32);
     border-radius: var(--t-br-medium);
   }
-  .class-invite-students-input {
+  .class-students-invite-input {
     max-width: 100%;
   }
-  .class-invite-students-footer {
+  .class-students-invite-footer {
     padding: var(--t-space-64);
   }
-  .class-invite-students-footer-link {
+  .class-students-invite-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
 }
 @media (min-width: 600px) {
-  .class-invite-students-wrapper {
+  .class-students-invite-wrapper {
     max-width: 65%;
     gap: var(--t-space-36);
     padding: var(--t-space-48);
     border-radius: var(--t-br-medium);
   }
-  .class-invite-students-input {
+  .class-students-invite-input {
     max-width: 100%;
   }
-  .class-invite-students-footer {
+  .class-students-invite-footer {
     margin-top: var(--t-space-24);
     padding: var(--t-space-50);
   }
-  .class-invite-students-footer-link {
+  .class-students-invite-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
 }
 @media (min-width: 1200px) {
-  .class-invite-students-wrapper {
+  .class-students-invite-wrapper {
     max-width: 80%;
     padding: var(--t-space-48);
     border-radius: var(--t-br-large);
   }
-  .class-invite-students-input {
+  .class-students-invite-input {
     max-width: 85%;
   }
-  .class-invite-students-footer-link {
+  .class-students-invite-footer-link {
     font-size: var(--t-fs-small);
   }
 }
