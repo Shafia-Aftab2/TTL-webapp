@@ -11,8 +11,12 @@
         />
       </div>
       <div class="class-convo-status-options-wrapper">
-        <talkie-button>Create New</talkie-button>
-        <talkie-button :outlined="true">Home</talkie-button>
+        <talkie-button :onClick="hanldeCreateNewTaskClick">
+          Create New
+        </talkie-button>
+        <talkie-button :outlined="true" :onClick="handleClassHomeClick">
+          Home
+        </talkie-button>
       </div>
     </div>
   </template>
@@ -47,6 +51,8 @@ export default {
       taskStatusQueryParam: null,
       taskDetails: {},
       pageLoading: false,
+      taskId: null,
+      classId: null,
     };
   },
   computed: {
@@ -60,6 +66,10 @@ export default {
   async created() {
     // update page state
     this.pageLoading = true;
+
+    // class id from params
+    const classId = this.$route.params.classId;
+    this.classId = classId;
 
     // get status query param from url
     const statusQueryParam = URLModifier.getURLParam("status");
@@ -88,6 +98,12 @@ export default {
     this.pageLoading = false;
   },
   methods: {
+    hanldeCreateNewTaskClick() {
+      this.$router.push(`/classes/${this.classId}/tasks/create`);
+    },
+    handleClassHomeClick() {
+      this.$router.push(`/classes/${this.classId}`);
+    },
     async getTaskDetails(id) {
       const response = await TaskService.GetDetails(id).catch(() => null);
 
