@@ -13,7 +13,7 @@
       >
         <talkie-icon :name="'hamburger'" :onClick="onSidebarIconClick" />
       </span>
-      <a href="#" class="talkie-navbar-brand-logo-link">
+      <a href="/" class="talkie-navbar-brand-logo-link">
         <logo-talkie />
       </a>
     </ul>
@@ -34,17 +34,14 @@
                 <a>Profile</a>
               </li>
               <li
-                class="
-                  talkie-navbar-profile-options-list-item
-                  talkie-navbar-profile-options-list-link
-                "
+                class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
                 v-for="link in links"
                 :key="link.text"
               >
                 <a :href="link.url">{{ link.text }}</a>
               </li>
               <li class="talkie-navbar-profile-options-list-item">
-                <a>Logout</a>
+                <a href="/auth/logout">Logout</a>
               </li>
             </ul>
           </div>
@@ -205,6 +202,7 @@ export default {
   justify-content: center;
   align-items: center;
   gap: var(--t-space-8);
+  color: var(--t-black);
 }
 .talkie-navbar-profile-options-list-item > a,
 .talkie-navbar-profile-options-list-item > a:hover,

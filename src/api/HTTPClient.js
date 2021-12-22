@@ -2,6 +2,7 @@ import Axios from "axios";
 import authUser from "../utils/helpers/auth";
 import { TALKIE_MONO_API_BASE_URL } from "./config";
 import AuthService from "./services/Auth.service";
+import UserService from "./services/User.service";
 
 let baseURL = TALKIE_MONO_API_BASE_URL;
 
@@ -85,22 +86,26 @@ client.interceptors.response.use(
     const originalReq = error.config;
 
     // refresh token if expired
-    if (error.response.status === 401 && !originalReq.retryAttempt) {
+    if (
+      error.response.status === 401 &&
+      originalReq.url !== "/auth/login" &&
+      !originalReq.retryAttempt
+    ) {
       const refreshToken = authUser.getRefreshToken();
 
       // refresh request
-      const response = await AuthService.RefreshTokens({
+      const responseTokens = await AuthService.RefreshTokens({
         refreshToken: refreshToken,
       }).catch(() => null);
 
       // require login if failed to refresh token
-      if (!response) {
+      if (!responseTokens) {
         window.location.href = "/auth/login";
         return Promise.reject(error);
       }
 
       // update cookies
-      const tokens = response.data;
+      const tokens = responseTokens.data;
       const expires = (date) => ({ expires: new Date(date) });
       authUser.setAccessToken(
         tokens.access.token,
@@ -116,6 +121,13 @@ client.interceptors.response.use(
         "Authorization",
         `Bearer ${tokens?.access?.token}`
       );
+
+      // user profile request
+      const responseUser = await UserService.GetMyProfile().catch(() => null);
+
+      // update user data
+      const { data: user } = responseUser;
+      authUser.setUser(user, expires(tokens.refresh.expiry));
 
       // update header for current request
       originalReq.headers.Authorization = `Bearer ${tokens?.access?.token}`;

@@ -38,13 +38,13 @@
         <div>
           <p class="auth-split-form-options-info">View Talkie’s</p>
           <p class="auth-split-form-options-info">
-            <a class="auth-split-form-options-info-link" href="#"
-              >Terms of Service</a
-            >
+            <a class="auth-split-form-options-info-link" href="#">
+              Terms of Service
+            </a>
             and
-            <a class="auth-split-form-options-info-link" href="#"
-              >Privacy Policy.</a
-            >
+            <a class="auth-split-form-options-info-link" href="#">
+              Privacy Policy.
+            </a>
           </p>
         </div>
         <p class="auth-split-form-options-info">
@@ -88,6 +88,9 @@ export default {
     TalkieButton,
     TalkieAlert,
     TalkieAuthSplitWrapper,
+  },
+  created() {
+    this.handleAlreadyLoggedIn();
   },
   methods: {
     isValidEmail(email) {
@@ -152,6 +155,17 @@ export default {
         type: "success",
         message: "Login Successfull. Redirecting..!",
       };
+      this.$router.push("/");
+    },
+    handleAlreadyLoggedIn() {
+      const user = authUser.getUser();
+      const accessToken = authUser.getAccessToken();
+      const refreshToken = authUser.getRefreshToken();
+
+      // redirect to home if already logged in
+      if (user && accessToken && refreshToken) {
+        this.$router.push("/");
+      }
     },
   },
 };

@@ -114,8 +114,21 @@
           </p>
         </div>
         <p class="auth-split-form-options-info">
+          Are you a {{ signupMode === "teacher" ? "student" : "teacher" }}?
+          <a
+            class="auth-split-form-options-info-link"
+            :href="`/auth/signup/${
+              signupMode === 'teacher' ? 'student' : 'teacher'
+            }`"
+          >
+            Signup here
+          </a>
+        </p>
+        <p class="auth-split-form-options-info">
           Already have an account?
-          <a class="auth-split-form-options-info-link" href="#">Log in</a>
+          <a class="auth-split-form-options-info-link" href="/auth/login">
+            Log in
+          </a>
         </p>
       </div>
     </talkie-form>
@@ -261,6 +274,7 @@ export default {
         type: "success",
         message: "Account Created. Redirecting..!",
       };
+      this.$router.push("/");
     },
   },
 };
