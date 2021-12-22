@@ -38,7 +38,11 @@ const routes = [
         name: "Home",
         path: "/",
         component: Home,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
     ],
   },
@@ -80,31 +84,51 @@ const routes = [
         name: "ClassChooseDefault",
         path: "/classes",
         component: ClassChooseDefault,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassHome",
         path: "/classes/:id",
         component: ClassHome,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassTaskChooseDefault",
         path: "/classes/:classId/tasks",
         component: ClassTaskChooseDefault,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassTaskHome",
         path: "/classes/:classId/tasks/:taskId",
         component: ClassTaskHome,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassTaskResponse",
         path: "/classes/:classId/tasks/:taskId/respond",
         component: ClassTaskResponse,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
     ],
   },
@@ -117,31 +141,51 @@ const routes = [
         name: "ClassJoinModule",
         path: "/classes/join",
         component: ClassJoinModule,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassJoinLink",
         path: "/classes/:id/join",
         component: ClassJoinLink,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassInviteStudents",
         path: "/classes/:id/invite-students",
         component: ClassInviteStudents,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassTaskCreate",
         path: "/classes/:id/tasks/create",
         component: ClassTaskCreate,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassTaskStatus",
         path: "/classes/:classId/tasks/:taskId/status",
         component: ClassTaskStatus,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
     ],
   },
@@ -153,13 +197,21 @@ const routes = [
         name: "ClassCreate",
         path: "/classes/create",
         component: ClassCreate,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassChooseTopics",
         path: "/classes/:id/choose-topics",
         component: ClassChooseTopics,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
     ],
   },
@@ -240,14 +292,19 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.meta.requiresAuth) {
-    await authMiddlware({
-      failureCallback: () => next({ name: "AuthLogin" }),
-      successCallback: () => next(),
-    });
-  } else {
-    next();
+  // get middleware config from route
+  const { middlewareConfig } = to?.meta;
+
+  // check if has any middleware config
+  if (!middlewareConfig && !middlewareConfig.requiresAuth) {
+    return next();
   }
+
+  // auth middleware
+  await authMiddlware({
+    failureCallback: () => next({ name: "AuthLogin" }),
+    successCallback: () => next(),
+  });
 });
 
 export default router;
