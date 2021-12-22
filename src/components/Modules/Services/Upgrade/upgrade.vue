@@ -1,6 +1,6 @@
 <template>
     <div class="upgrade-wrapper">
-        
+    </div>
 </template>
 
 <script>
