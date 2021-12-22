@@ -278,6 +278,7 @@ const routes = [
       {
         name: "Error404",
         path: "/:catchAll(.*)",
+        alias: "/404",
         component: Error404,
       },
     ],
