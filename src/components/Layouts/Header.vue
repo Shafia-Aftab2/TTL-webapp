@@ -72,14 +72,15 @@ export default {
   components: { TalkieIcon, LogoTalkie },
   data: () => ({
     links: [
-      {
-        text: "Upgrade",
-        url: "#",
-      },
-      {
-        text: "Help",
-        url: "#",
-      },
+      // TEMP: nav links hidden for first deployment
+      // {
+      //   text: "Upgrade",
+      //   url: "#",
+      // },
+      // {
+      //   text: "Help",
+      //   url: "#",
+      // },
     ],
     user: {},
     isLoggedIn: false,
