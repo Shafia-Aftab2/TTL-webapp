@@ -28,6 +28,7 @@ import StudentTranslation from "../components/Modules/Students/Translation";
 import Error404 from "../components/Modules/Error404";
 // route middlware
 import authMiddlware from "./middlewares/auth";
+import accessControlMiddleware from "./middlewares/accessControl";
 
 const routes = [
   {
@@ -301,15 +302,35 @@ router.beforeEach(async (to, from, next) => {
   const { middlewareConfig } = to?.meta;
 
   // check if has any middleware config
-  if (!middlewareConfig && !middlewareConfig.requiresAuth) {
+  if (!middlewareConfig || Object.keys(middlewareConfig)?.length === 0) {
     return next();
   }
 
-  // auth middleware
-  await authMiddlware({
-    failureCallback: () => next({ name: "AuthLogin" }),
-    successCallback: () => next(),
-  });
+  // check auth and access control
+  if (
+    middlewareConfig?.requiresAuth &&
+    middlewareConfig?.blockedRoles?.length > 0
+  ) {
+    await authMiddlware({
+      failureCallback: () => next({ name: "AuthLogin" }),
+      successCallback: () =>
+        accessControlMiddleware({
+          failureCallback: () => next({ name: "NotFound" }),
+          successCallback: () => next(),
+          blockedRoles: middlewareConfig?.blockedRoles,
+        }),
+    });
+    return;
+  }
+
+  // check auth
+  if (middlewareConfig?.requiresAuth) {
+    await authMiddlware({
+      failureCallback: () => next({ name: "AuthLogin" }),
+      successCallback: () => next(),
+    });
+    return;
+  }
 });
 
 export default router;
