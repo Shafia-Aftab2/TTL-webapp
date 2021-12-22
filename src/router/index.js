@@ -26,6 +26,7 @@ import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
 import Error404 from "../components/Modules/Error404";
+import upgrade from "/components/Modules/Services/Upgrade";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 
