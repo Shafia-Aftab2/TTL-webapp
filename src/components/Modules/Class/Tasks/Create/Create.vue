@@ -432,7 +432,11 @@ export default {
         message: "Conversation Created. Redirecting..!",
         animateEllipse: false,
       };
-      this.handleRedirection(`/classes/${this.classId}`, 200);
+      const taskId = response?.data?.id;
+      this.handleRedirection(
+        `/classes/${this.classId}/tasks/${taskId}/status?status=created`,
+        200
+      );
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
