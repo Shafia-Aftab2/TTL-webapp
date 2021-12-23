@@ -24,12 +24,19 @@
     ></div>
 
     <template v-if="taskItemExpanded">
+      <!-- Messages -->
       <task-item-response
         v-for="_response in responses"
         :key="_response"
         :alignment="_response.from !== user?.id ? 'left' : 'right'"
         :responseAudio="_response.audio"
       />
+
+      <!-- Spacer -->
+      <div
+        class="class-tasks-inbox-task-item-spacer"
+        v-if="taskItemExpanded"
+      ></div>
     </template>
   </div>
 </template>
