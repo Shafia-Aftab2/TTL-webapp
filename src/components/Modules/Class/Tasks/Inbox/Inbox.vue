@@ -1,42 +1,52 @@
 <template>
-  <div class="class-tasks-inbox-wrapper">
-    <div class="class-tasks-inbox-header-wrapper">
-      <h2 class="h2">Speaking Portfolio</h2>
-      <div class="class-tasks-inbox-header-select-wrapper">
-        <talkie-select
-          :placeholder="'Filter by question type'"
-          :options="
-            classTopics && classTopics.length > 0
-              ? classTopics.map((x) => x.name)
-              : []
-          "
-          :onChange="handleTopicFilterChange"
-        />
+  <!-- Page Content -->
+  <template v-if="!computedLoading">
+    <div class="class-tasks-inbox-wrapper">
+      <div class="class-tasks-inbox-header-wrapper">
+        <h2 class="h2">Speaking Portfolio</h2>
+        <div class="class-tasks-inbox-header-select-wrapper">
+          <talkie-select
+            :placeholder="'Filter by question type'"
+            :options="
+              classTopics && classTopics.length > 0
+                ? classTopics.map((x) => x.name)
+                : []
+            "
+            :onChange="handleTopicFilterChange"
+          />
+        </div>
+      </div>
+      <div class="class-tasks-inbox-task-items-wrapper">
+        <template v-if="tasksList.length > 0">
+          <template v-for="_task in tasksList" :key="_task">
+            <task-item
+              v-if="
+                currentTopicFilter
+                  ? _task?.topic?.name === currentTopicFilter
+                  : true
+              "
+              :id="_task?.id"
+              :title="_task?.title"
+              :topic="_task?.topic?.name"
+              :responses="_task?.responses"
+              :isRead="false"
+            />
+          </template>
+        </template>
       </div>
     </div>
-    <div class="class-tasks-inbox-task-items-wrapper">
-      <template v-if="tasksList.length > 0">
-        <template v-for="_task in tasksList" :key="_task">
-          <task-item
-            v-if="
-              currentTopicFilter
-                ? _task?.topic?.name === currentTopicFilter
-                : true
-            "
-            :id="_task?.id"
-            :title="_task?.title"
-            :topic="_task?.topic?.name"
-            :responses="_task?.responses"
-            :isRead="false"
-          />
-        </template>
-      </template>
+  </template>
+
+  <!-- Loading State -->
+  <template v-if="computedLoading">
+    <div class="class-tasks-inbox-loading-wrapper">
+      <talkie-loader :size="'large'" />
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
-import { TalkieSelect } from "@/components/UICore";
+import { TalkieSelect, TalkieLoader } from "@/components/UICore";
 import TaskItem from "./TaskItem";
 import { ClassService, TaskService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
@@ -45,6 +55,7 @@ export default {
   name: "TasksInbox",
   components: {
     TalkieSelect,
+    TalkieLoader,
     TaskItem,
   },
   data() {
@@ -74,9 +85,18 @@ export default {
       user: {},
       classId: null,
       tasksList: [],
+      loading: false,
     };
   },
+  computed: {
+    computedLoading() {
+      return this.loading;
+    },
+  },
   async created() {
+    // update page state
+    this.loading = true;
+
     // get user data
     const user = authUser.getUser();
     this.user = user;
@@ -118,6 +138,7 @@ export default {
         },
       ],
     }));
+    this.loading = false;
   },
   methods: {
     handleTopicFilterChange(e) {
@@ -157,6 +178,12 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.class-tasks-inbox-loading-wrapper {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -175,6 +202,9 @@ export default {
   .class-tasks-inbox-task-items-wrapper {
     gap: var(--t-space-12);
   }
+  .class-tasks-inbox-loading-wrapper {
+    margin-top: var(--t-space-24);
+  }
 }
 @media (min-width: 600px) {
   .class-tasks-inbox-wrapper {
@@ -192,6 +222,9 @@ export default {
   .class-tasks-inbox-task-items-wrapper {
     gap: var(--t-space-16);
   }
+  .class-tasks-inbox-loading-wrapper {
+    margin-top: var(--t-space-36);
+  }
 }
 @media (min-width: 1200px) {
   .class-tasks-inbox-wrapper {
@@ -201,6 +234,9 @@ export default {
   }
   .class-tasks-inbox-header-select-wrapper {
     min-width: 40%;
+  }
+  .class-tasks-inbox-loading-wrapper {
+    margin-top: var(--t-space-50);
   }
 }
 </style>
