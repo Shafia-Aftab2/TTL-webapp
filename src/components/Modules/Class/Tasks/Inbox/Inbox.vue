@@ -7,18 +7,17 @@
       </div>
     </div>
     <div class="class-tasks-inbox-task-items-wrapper">
-      <task-item
-        :title="'Fave App'"
-        :topic="'Tech'"
-        :responses="responses"
-        :isRead="false"
-      />
-      <task-item
-        :title="'Fave App'"
-        :topic="'Tech'"
-        :responses="responses"
-        :isRead="false"
-      />
+      <template v-if="tasksList.length > 0">
+        <task-item
+          v-for="_task in tasksList"
+          :key="_task"
+          :id="_task?.id"
+          :title="_task?.title"
+          :topic="_task?.topic?.name"
+          :responses="_task?.responses"
+          :isRead="false"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -26,6 +25,8 @@
 <script>
 import { TalkieSelect } from "@/components/UICore";
 import TaskItem from "./TaskItem";
+import { TaskService } from "@/api/services";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "TasksInbox",
@@ -55,7 +56,57 @@ export default {
             "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
         },
       ],
+      user: {},
+      classId: null,
+      tasksList: [],
     };
+  },
+  async created() {
+    // get user data
+    const user = authUser.getUser();
+    this.user = user;
+
+    // get class id from user data (+ failure case)
+    const classId =
+      user?.schools?.length > 0 && user?.schools[0]?.classes?.length > 0
+        ? user?.schools[0]?.classes[0]
+        : null;
+    if (!classId) return this.$router.push("/404");
+    this.classId = classId;
+
+    // get class tasks list
+    const tasksList = await this.getClassTasks(classId);
+    if (!tasksList) return this.$router.push("/404");
+
+    // update state
+    this.tasksList = tasksList?.map((x) => ({
+      id: x?.id,
+      type: x?.type,
+      title: x?.title,
+      topic: {
+        id: x?.topic?.id,
+        name: x?.topic?.name,
+      },
+      responses: [
+        {
+          id: x?.id,
+          from: x?.teacher,
+          audio: x?.voiceForQnA,
+        },
+      ],
+    }));
+  },
+  methods: {
+    async getClassTasks(classId) {
+      const query = {};
+
+      const response = await TaskService.QueryClassTasks(
+        classId,
+        query
+      ).catch();
+
+      return response?.data?.results || null;
+    },
   },
 };
 </script>
