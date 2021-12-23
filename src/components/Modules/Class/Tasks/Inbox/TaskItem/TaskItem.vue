@@ -1,9 +1,15 @@
 <template>
-  <div class="class-tasks-inbox-task-item">
-    <div class="class-tasks-inbox-task-item-header-wrapper">
-      <div class="class-tasks-inbox-task-item-header">
-        <p class="p" v-if="title">{{ title }}</p>
-        <p class="p" v-if="topic">{{ topic }}</p>
+  <div class="class-tasks-inbox-task-item" @click="handleItemBodyClick">
+    <div
+      class="class-tasks-inbox-task-item-header-wrapper"
+      @click="handleItemBodyClick"
+    >
+      <div
+        class="class-tasks-inbox-task-item-header"
+        @click="handleItemBodyClick"
+      >
+        <p class="p" v-if="title" @click="handleItemBodyClick">{{ title }}</p>
+        <p class="p" v-if="topic" @click="handleItemBodyClick">{{ topic }}</p>
       </div>
       <div
         class="class-tasks-inbox-task-item-header-status"
@@ -11,14 +17,14 @@
       ></div>
     </div>
 
-    <div class="class-tasks-inbox-task-item-audio-responses-wrapper">
+    <template v-if="taskItemExpanded">
       <task-item-response
         v-for="_response in responses"
         :key="_response"
         :alignment="_response.from !== 'me' ? 'left' : 'right'"
         :responseAudio="_response.audio"
       />
-    </div>
+    </template>
   </div>
 </template>
 
@@ -46,6 +52,18 @@ export default {
     },
     responses: {
       type: Array,
+    },
+  },
+  data() {
+    return {
+      taskItemExpanded: false,
+    };
+  },
+  methods: {
+    async handleItemBodyClick(e) {
+      if (e.target === e.currentTarget) {
+        this.taskItemExpanded = !this.taskItemExpanded;
+      }
     },
   },
 };
