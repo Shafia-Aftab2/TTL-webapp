@@ -44,9 +44,6 @@ export default {
   flex-direction: column;
   background: var(--t-white);
   cursor: pointer;
-  gap: var(--t-space-16);
-  border-radius: var(--t-br-large);
-  padding: var(--t-space-24);
 }
 .class-tasks-inbox-task-item-header-wrapper {
   display: flex;
@@ -61,25 +58,76 @@ export default {
 .class-tasks-inbox-task-item-header {
   display: flex;
   flex-direction: column;
-  gap: var(--t-space-8);
 }
 .class-tasks-inbox-task-item-header-status {
   display: block;
   border-radius: 50%;
   background: var(--t-primary);
-  width: var(--t-space-16);
-  height: var(--t-space-16);
 }
 .class-tasks-inbox-task-item-audio-responses-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--t-space-12);
-  padding: var(--t-space-12) 0;
 }
 .class-tasks-inbox-task-item-audio-message-centered {
   margin: auto;
 }
 .class-tasks-inbox-task-item-audio-message-right {
   margin-left: auto;
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .class-tasks-inbox-task-item {
+    gap: var(--t-space-8);
+    border-radius: var(--t-br-medium);
+    padding: var(--t-space-20);
+  }
+  .class-tasks-inbox-task-item-spacer {
+    margin: var(--t-space-12) 0;
+  }
+  .class-tasks-inbox-task-item-header {
+    gap: var(--t-space-8);
+  }
+  .class-tasks-inbox-task-item-header-status {
+    width: var(--t-space-12);
+    height: var(--t-space-12);
+  }
+  .class-tasks-inbox-task-item-audio-responses-wrapper {
+    gap: var(--t-space-8);
+    padding: var(--t-space-8) 0;
+  }
+}
+@media (min-width: 600px) {
+  .class-tasks-inbox-task-item {
+    gap: var(--t-space-8);
+    border-radius: var(--t-br-large);
+    padding: var(--t-space-24);
+  }
+  .class-tasks-inbox-task-item-spacer {
+    margin: var(--t-space-16) 0;
+  }
+  .class-tasks-inbox-task-item-header {
+    gap: var(--t-space-8);
+  }
+  .class-tasks-inbox-task-item-header-status {
+    width: var(--t-space-16);
+    height: var(--t-space-16);
+  }
+  .class-tasks-inbox-task-item-audio-responses-wrapper {
+    gap: var(--t-space-10);
+    padding: var(--t-space-10) 0;
+  }
+}
+@media (min-width: 1200px) {
+  .class-tasks-inbox-task-item {
+    gap: var(--t-space-16);
+  }
+  .class-tasks-inbox-task-item-spacer {
+    margin: var(--t-space-24) 0;
+  }
+  .class-tasks-inbox-task-item-audio-responses-wrapper {
+    gap: var(--t-space-12);
+    padding: var(--t-space-12) 0;
+  }
 }
 </style>
