@@ -1,5 +1,6 @@
 <template>
   <div class="class-tasks-inbox-task-item" @click="handleItemBodyClick">
+    <!-- Item Header -->
     <div
       class="class-tasks-inbox-task-item-header-wrapper"
       @click="handleItemBodyClick"
@@ -24,13 +25,15 @@
     ></div>
 
     <template v-if="taskItemExpanded">
-      <!-- Messages -->
-      <task-item-response
-        v-for="_response in responses"
-        :key="_response"
-        :alignment="_response.from !== user?.id ? 'left' : 'right'"
-        :responseAudio="_response.audio"
-      />
+      <!-- Audio Messages -->
+      <div class="class-tasks-inbox-task-item-audio-responses-wrapper">
+        <task-item-response
+          v-for="_response in computedResponses"
+          :key="_response"
+          :alignment="_response.from !== user?.id ? 'left' : 'right'"
+          :responseAudio="_response.audio"
+        />
+      </div>
 
       <!-- Spacer -->
       <div
@@ -45,6 +48,7 @@
 import { TalkieLoader, TalkieAlert } from "@/components/UICore";
 import TaskItemResponse from "./Response";
 import authUser from "@/utils/helpers/auth";
+import { ResponseService } from "@/api/services";
 
 export default {
   name: "TasksInboxTaskItem",
@@ -75,12 +79,58 @@ export default {
     return {
       taskItemExpanded: false,
       user: {},
+      messagesFetched: [],
     };
+  },
+  computed: {
+    computedResponses() {
+      return [...this.responses, ...this.messagesFetched];
+    },
   },
   created() {
     // get auth user
     const user = authUser.getUser();
     this.user = user;
+  },
+  methods: {
+    async handleItemBodyClick(e) {
+      if (e.target === e.currentTarget) {
+        this.taskItemExpanded = !this.taskItemExpanded;
+      }
+
+      if (this.taskItemExpanded) {
+        // get responses for current task
+        const taskResponses = await this.getTaskResponses(this.id);
+
+        // failure case
+        if (!taskResponses) {
+          this.state.responsesFetch = {
+            loading: false,
+            message: {
+              type: "error",
+              text: "Failed to load latest responses..!",
+            },
+          };
+          return;
+        }
+
+        // success case
+        this.messagesFetched = taskResponses?.map((x) => ({
+          id: x?.id,
+          from: x?.student?.id,
+          audio: x?.voiceRecording,
+        }));
+      }
+    },
+    async getTaskResponses(taskId) {
+      const query = {};
+      const responseAPI = await ResponseService.QueryClassTaskResponses(
+        taskId,
+        query
+      ).catch();
+
+      return responseAPI?.data || null;
+    },
   },
 };
 </script>
