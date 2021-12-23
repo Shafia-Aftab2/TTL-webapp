@@ -27,7 +27,7 @@
       <task-item-response
         v-for="_response in responses"
         :key="_response"
-        :alignment="_response.from !== 'me' ? 'left' : 'right'"
+        :alignment="_response.from !== user?.id ? 'left' : 'right'"
         :responseAudio="_response.audio"
       />
     </template>
@@ -37,6 +37,7 @@
 <script>
 import { TalkieLoader, TalkieAlert } from "@/components/UICore";
 import TaskItemResponse from "./Response";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "TasksInboxTaskItem",
@@ -66,14 +67,13 @@ export default {
   data() {
     return {
       taskItemExpanded: false,
+      user: {},
     };
   },
-  methods: {
-    async handleItemBodyClick(e) {
-      if (e.target === e.currentTarget) {
-        this.taskItemExpanded = !this.taskItemExpanded;
-      }
-    },
+  created() {
+    // get auth user
+    const user = authUser.getUser();
+    this.user = user;
   },
 };
 </script>
