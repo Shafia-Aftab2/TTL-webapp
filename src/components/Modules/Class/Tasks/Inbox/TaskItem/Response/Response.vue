@@ -47,7 +47,7 @@ import {
 } from "@/components/SubModules/AudioManager";
 
 export default {
-  name: "TasksInboxTaskItemMessage",
+  name: "TasksInboxTaskItemResponse",
   props: {
     alignment: {
       type: String,

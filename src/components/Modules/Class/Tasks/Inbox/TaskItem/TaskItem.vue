@@ -160,9 +160,9 @@ export default {
   },
   methods: {
     async handleItemBodyClick(e) {
-      if (e.target === e.currentTarget) {
-        this.taskItemExpanded = !this.taskItemExpanded;
-      }
+      if (e.target !== e.currentTarget) return;
+
+      this.taskItemExpanded = !this.taskItemExpanded;
 
       if (this.taskItemExpanded) {
         // update page state
