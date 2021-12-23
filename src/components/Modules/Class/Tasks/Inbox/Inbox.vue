@@ -3,7 +3,14 @@
     <div class="class-tasks-inbox-header-wrapper">
       <h2 class="h2">Speaking Portfolio</h2>
       <div class="class-tasks-inbox-header-select-wrapper">
-        <talkie-select :placeholder="'Filter by question type'" />
+        <talkie-select
+          :placeholder="'Filter by question type'"
+          :options="
+            classTopics && classTopics.length > 0
+              ? classTopics.map((x) => x.name)
+              : []
+          "
+        />
       </div>
     </div>
     <div class="class-tasks-inbox-task-items-wrapper">
@@ -25,7 +32,7 @@
 <script>
 import { TalkieSelect } from "@/components/UICore";
 import TaskItem from "./TaskItem";
-import { TaskService } from "@/api/services";
+import { ClassService, TaskService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 
 export default {
@@ -56,6 +63,7 @@ export default {
             "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
         },
       ],
+      classTopics: [],
       user: {},
       classId: null,
       tasksList: [],
@@ -74,11 +82,19 @@ export default {
     if (!classId) return this.$router.push("/404");
     this.classId = classId;
 
+    // get class details
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
+
     // get class tasks list
     const tasksList = await this.getClassTasks(classId);
     if (!tasksList) return this.$router.push("/404");
 
     // update state
+    this.classTopics = classDetails?.topics?.map((x) => ({
+      id: x?.id,
+      name: x?.name,
+    }));
     this.tasksList = tasksList?.map((x) => ({
       id: x?.id,
       type: x?.type,
@@ -97,6 +113,11 @@ export default {
     }));
   },
   methods: {
+    async getClassDetails(classId) {
+      const response = await ClassService.GetDetails(classId).catch();
+
+      return response?.data || null;
+    },
     async getClassTasks(classId) {
       const query = {};
 
