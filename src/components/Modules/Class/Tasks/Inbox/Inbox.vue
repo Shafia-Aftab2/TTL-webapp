@@ -6,17 +6,56 @@
         <talkie-select :placeholder="'Filter by question type'" />
       </div>
     </div>
-    <div class="class-tasks-inbox-items-wrapper"></div>
+    <div class="class-tasks-inbox-task-items-wrapper">
+      <task-item
+        :title="'Fave App'"
+        :topic="'Tech'"
+        :responses="responses"
+        :isRead="false"
+      />
+      <task-item
+        :title="'Fave App'"
+        :topic="'Tech'"
+        :responses="responses"
+        :isRead="false"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import { TalkieSelect } from "@/components/UICore";
+import TaskItem from "./TaskItem";
 
 export default {
   name: "TasksInbox",
   components: {
     TalkieSelect,
+    TaskItem,
+  },
+  data() {
+    return {
+      responses: [
+        {
+          id: 123131468541,
+          from: "teacher",
+          audio:
+            "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
+        },
+        {
+          id: 123131445641568541,
+          from: "me",
+          audio:
+            "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
+        },
+        {
+          id: 123131462428541,
+          from: "teacher",
+          audio:
+            "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
+        },
+      ],
+    };
   },
 };
 </script>
@@ -31,7 +70,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
 }
-.class-tasks-inbox-items-wrapper {
+.class-tasks-inbox-task-items-wrapper {
   display: flex;
   flex-direction: column;
 }
@@ -50,7 +89,7 @@ export default {
   .class-tasks-inbox-header-select-wrapper {
     min-width: 70%;
   }
-  .class-tasks-inbox-items-wrapper {
+  .class-tasks-inbox-task-items-wrapper {
     gap: var(--t-space-12);
   }
 }
@@ -67,7 +106,7 @@ export default {
   .class-tasks-inbox-header-select-wrapper {
     min-width: 50%;
   }
-  .class-tasks-inbox-items-wrapper {
+  .class-tasks-inbox-task-items-wrapper {
     gap: var(--t-space-16);
   }
 }

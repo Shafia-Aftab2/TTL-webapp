@@ -10,18 +10,28 @@
         v-if="!isRead"
       ></div>
     </div>
-    <div class="class-tasks-inbox-task-item-audio-responses-wrapper"></div>
+
+    <div class="class-tasks-inbox-task-item-audio-responses-wrapper">
+      <task-item-response
+        v-for="_response in responses"
+        :key="_response"
+        :alignment="_response.from !== 'me' ? 'left' : 'right'"
+        :responseAudio="_response.audio"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import { TalkieLoader, TalkieAlert } from "@/components/UICore";
+import TaskItemResponse from "./Response";
 
 export default {
   name: "TasksInboxTaskItem",
   components: {
     TalkieLoader,
     TalkieAlert,
+    TaskItemResponse,
   },
   props: {
     title: {
@@ -33,6 +43,9 @@ export default {
     isRead: {
       type: Boolean,
       default: false,
+    },
+    responses: {
+      type: Array,
     },
   },
 };
