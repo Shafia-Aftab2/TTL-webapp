@@ -36,6 +36,27 @@
           />
         </template>
 
+        <!-- Create Message Loader -->
+        <template v-if="state?.responseCreation?.loading">
+          <div class="class-tasks-inbox-task-item-audio-response-right">
+            <talkie-loader :size="'large'" />
+          </div>
+        </template>
+
+        <!-- Create Message Error -->
+        <div
+          class="class-tasks-inbox-task-item-audio-response-right"
+          v-if="
+            state?.responseCreation?.message?.type &&
+            state?.responseCreation?.message?.text
+          "
+        >
+          <talkie-alert
+            :text="state?.responseCreation?.message?.text"
+            :variant="state?.responseCreation?.message?.type"
+          />
+        </div>
+
         <!-- Fetch Messages Error -->
         <div
           class="class-tasks-inbox-task-item-audio-response-centered"
@@ -109,6 +130,13 @@ export default {
       taskItemExpanded: false,
       user: {},
       state: {
+        responseCreation: {
+          loading: false,
+          message: {
+            type: null,
+            text: null,
+          },
+        },
         responsesFetch: {
           loading: false,
           message: {
@@ -199,11 +227,27 @@ export default {
       return uploadedFile;
     },
     async handleResponseCreation(recording) {
+      // update page state
+      this.state.responseCreation = {
+        loading: true,
+        message: {
+          type: null,
+          text: null,
+        },
+      };
+
       // upload audio file
       const uploadedFile = await this.handleFileUpload(recording?.blob);
 
       // failure case
       if (!uploadedFile) {
+        this.state.responseCreation = {
+          loading: false,
+          message: {
+            type: "error",
+            text: "Failed To Create Response..!",
+          },
+        };
         return;
       }
 
@@ -220,8 +264,13 @@ export default {
 
       // failure case
       if (!response) {
-        this.creatingResponseMessage = false;
-        this.createResponseMessageError = "Failed To Create Response..!";
+        this.state.responseCreation = {
+          loading: false,
+          message: {
+            type: "error",
+            text: "Failed To Create Response..!",
+          },
+        };
         return;
       }
 
@@ -235,6 +284,13 @@ export default {
           audio: createdResponse?.voiceRecording,
         },
       ];
+      this.state.responseCreation = {
+        loading: false,
+        message: {
+          type: null,
+          text: null,
+        },
+      };
     },
     async getTaskResponses(taskId) {
       const query = {};
