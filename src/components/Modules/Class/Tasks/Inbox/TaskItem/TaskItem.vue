@@ -63,6 +63,9 @@
         class="class-tasks-inbox-task-item-spacer"
         v-if="taskItemExpanded"
       ></div>
+
+      <!-- Audio Recorder -->
+      <task-item-recorder :onRecordingSendClick="handleResponseCreation" />
     </template>
   </div>
 </template>
@@ -70,8 +73,10 @@
 <script>
 import { TalkieLoader, TalkieAlert } from "@/components/UICore";
 import TaskItemResponse from "./Response";
+import TaskItemRecorder from "./Recorder";
 import authUser from "@/utils/helpers/auth";
-import { ResponseService } from "@/api/services";
+import { ResponseService, FileService } from "@/api/services";
+import FilePurposes from "@/utils/constants/filePurposes";
 
 export default {
   name: "TasksInboxTaskItem",
@@ -79,6 +84,7 @@ export default {
     TalkieLoader,
     TalkieAlert,
     TaskItemResponse,
+    TaskItemRecorder,
   },
   props: {
     id: {
@@ -169,6 +175,66 @@ export default {
           },
         };
       }
+    },
+    async handleFileUpload(recordingBlob) {
+      // payload
+      const payload = new FormData();
+      payload.append(
+        "files",
+        recordingBlob,
+        `talkie-audio-${Math.random() * 123456789}.mp3`
+      );
+
+      // api call
+      const response = await FileService.Upload(
+        { purpose: FilePurposes.TASK_VOICE },
+        payload
+      ).catch(() => null);
+
+      // error case
+      if (!response) return null;
+
+      // success case
+      const uploadedFile = response.data[0].s3Url;
+      return uploadedFile;
+    },
+    async handleResponseCreation(recording) {
+      // upload audio file
+      const uploadedFile = await this.handleFileUpload(recording?.blob);
+
+      // failure case
+      if (!uploadedFile) {
+        return;
+      }
+
+      // payload
+      const payload = {
+        voiceRecording: uploadedFile,
+      };
+
+      // api call (create response)
+      const response = await ResponseService.CreateResponse(
+        this.id,
+        payload
+      ).catch();
+
+      // failure case
+      if (!response) {
+        this.creatingResponseMessage = false;
+        this.createResponseMessageError = "Failed To Create Response..!";
+        return;
+      }
+
+      // success case
+      const createdResponse = response?.data;
+      this.messagesFetched = [
+        ...this.messagesFetched,
+        {
+          id: createdResponse?.id,
+          from: createdResponse?.student,
+          audio: createdResponse?.voiceRecording,
+        },
+      ];
     },
     async getTaskResponses(taskId) {
       const query = {};
