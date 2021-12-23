@@ -46,6 +46,9 @@ export default {
     TaskItemResponse,
   },
   props: {
+    id: {
+      type: String,
+    },
     title: {
       type: String,
     },
