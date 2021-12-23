@@ -27,12 +27,35 @@
     <template v-if="taskItemExpanded">
       <!-- Audio Messages -->
       <div class="class-tasks-inbox-task-item-audio-responses-wrapper">
-        <task-item-response
-          v-for="_response in computedResponses"
-          :key="_response"
-          :alignment="_response.from !== user?.id ? 'left' : 'right'"
-          :responseAudio="_response.audio"
-        />
+        <template v-if="!state?.responsesFetch?.loading">
+          <task-item-response
+            v-for="_response in computedResponses"
+            :key="_response"
+            :alignment="_response.from !== user?.id ? 'left' : 'right'"
+            :responseAudio="_response.audio"
+          />
+        </template>
+
+        <!-- Fetch Messages Error -->
+        <div
+          class="class-tasks-inbox-task-item-audio-response-centered"
+          v-if="
+            state?.responsesFetch?.message?.type &&
+            state?.responsesFetch?.message?.text
+          "
+        >
+          <talkie-alert
+            :text="state?.responsesFetch?.message?.text"
+            :variant="state?.responsesFetch?.message?.type"
+          />
+        </div>
+
+        <!-- Fetch Messages Loader -->
+        <template v-if="state?.responsesFetch?.loading">
+          <div class="class-tasks-inbox-task-item-audio-response-centered">
+            <talkie-loader :size="'large'" />
+          </div>
+        </template>
       </div>
 
       <!-- Spacer -->
@@ -79,6 +102,15 @@ export default {
     return {
       taskItemExpanded: false,
       user: {},
+      state: {
+        responsesFetch: {
+          loading: false,
+          message: {
+            type: null,
+            text: null,
+          },
+        },
+      },
       messagesFetched: [],
     };
   },
@@ -99,6 +131,15 @@ export default {
       }
 
       if (this.taskItemExpanded) {
+        // update page state
+        this.state.responsesFetch = {
+          loading: true,
+          message: {
+            type: null,
+            text: null,
+          },
+        };
+
         // get responses for current task
         const taskResponses = await this.getTaskResponses(this.id);
 
@@ -120,6 +161,13 @@ export default {
           from: x?.student?.id,
           audio: x?.voiceRecording,
         }));
+        this.state.responsesFetch = {
+          loading: false,
+          message: {
+            type: null,
+            text: null,
+          },
+        };
       }
     },
     async getTaskResponses(taskId) {
@@ -165,10 +213,10 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.class-tasks-inbox-task-item-audio-message-centered {
+.class-tasks-inbox-task-item-audio-response-centered {
   margin: auto;
 }
-.class-tasks-inbox-task-item-audio-message-right {
+.class-tasks-inbox-task-item-audio-response-right {
   margin-left: auto;
 }
 
