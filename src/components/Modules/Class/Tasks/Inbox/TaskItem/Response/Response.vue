@@ -5,17 +5,46 @@
       `class-tasks-inbox-task-item-audio-response-${alignment}`,
     ]"
   >
-    <talkie-icon :name="'play'" :variant="'primary'" />
-    <talkie-audio-timeline :percentage="75" />
-    <span class="class-tasks-inbox-task-item-audio-response-timestamps">
-      00:10
-    </span>
+    <talkie-audio-player
+      :source="responseAudio"
+      v-slot="{
+        totalAudioPlaybackTime,
+        startPlayer,
+        stopPlayer,
+        isPlaying,
+        updateAudioPercentage,
+        currentAudioPercentage,
+      }"
+    >
+      <talkie-icon
+        :name="'play'"
+        :variant="'primary'"
+        :onClick="startPlayer"
+        v-if="!isPlaying"
+      />
+      <talkie-icon
+        :name="'pause'"
+        :variant="'primary'"
+        :onClick="stopPlayer"
+        v-if="isPlaying"
+      />
+      <talkie-audio-timeline
+        :percentage="currentAudioPercentage"
+        :onHeadChange="updateAudioPercentage"
+      />
+      <span class="class-tasks-inbox-task-item-audio-response-timestamps">
+        {{ totalAudioPlaybackTime }}
+      </span>
+    </talkie-audio-player>
   </div>
 </template>
 
 <script>
 import { TalkieIcon } from "@/components/UICore";
-import { TalkieAudioTimeline } from "@/components/SubModules/AudioManager";
+import {
+  TalkieAudioPlayer,
+  TalkieAudioTimeline,
+} from "@/components/SubModules/AudioManager";
 
 export default {
   name: "TasksInboxTaskItemMessage",
@@ -24,10 +53,12 @@ export default {
       type: String,
       validator: (val) => ["left", "right"].includes(val),
     },
+    responseAudio: { type: String },
   },
   components: {
     TalkieIcon,
     TalkieAudioTimeline,
+    TalkieAudioPlayer,
   },
 };
 </script>
