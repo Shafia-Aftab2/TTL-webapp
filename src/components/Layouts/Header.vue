@@ -19,56 +19,71 @@
     </ul>
     <!-- Right Side -->
     <ul class="talkie-navbar-links-wrapper" v-if="!hideLinksAndProfile">
-      <template v-if="!hideLinks" class="talkie-navbar">
-        <li class="talkie-navbar-link-item" v-for="link in links" :key="link">
-          <a :href="link.url">{{ link.text }}</a>
+      <template v-if="isLoggedIn">
+        <template v-if="!hideLinks" class="talkie-navbar">
+          <li class="talkie-navbar-link-item" v-for="link in links" :key="link">
+            <a :href="link.url">{{ link.text }}</a>
+          </li>
+        </template>
+        <li class="talkie-navbar-profile-link-item">
+          <div class="talkie-navbar-profile-wrapper" tabindex="0">
+            <a class="talkie-navbar-profile-name" href="#">{{ user.name }}</a>
+            <talkie-icon :size="25" :name="'profile'" :isActive="true" />
+            <div class="talkie-navbar-profile-options-wrapper">
+              <ul class="talkie-navbar-profile-options-list">
+                <li class="talkie-navbar-profile-options-list-item">
+                  <a>Profile</a>
+                </li>
+                <li
+                  class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
+                  v-for="link in links"
+                  :key="link.text"
+                >
+                  <a :href="link.url">{{ link.text }}</a>
+                </li>
+                <li class="talkie-navbar-profile-options-list-item">
+                  <a href="/auth/logout">Logout</a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </li>
       </template>
-      <li class="talkie-navbar-profile-link-item">
-        <div class="talkie-navbar-profile-wrapper" tabindex="0">
-          <a class="talkie-navbar-profile-name" href="#">Ms Joyce</a>
-          <talkie-icon :size="25" :name="'profile'" :isActive="true" />
-          <div class="talkie-navbar-profile-options-wrapper">
-            <ul class="talkie-navbar-profile-options-list">
-              <li class="talkie-navbar-profile-options-list-item">
-                <a>Profile</a>
-              </li>
-              <li
-                class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
-                v-for="link in links"
-                :key="link.text"
-              >
-                <a :href="link.url">{{ link.text }}</a>
-              </li>
-              <li class="talkie-navbar-profile-options-list-item">
-                <a href="/auth/logout">Logout</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </li>
+      <template v-if="!isLoggedIn">
+        <li
+          class="talkie-navbar-link-item talkie-navbar-link-item-always-visiable"
+        >
+          <a href="/auth/login">Login</a>
+          &nbsp;<strong>/</strong>&nbsp;
+          <a href="/auth/signup">Signup</a>
+        </li>
+      </template>
     </ul>
   </nav>
 </template>
 
 <script>
-import LogoTalkie from "../SVGs/LogoTalkie.vue";
-import TalkieIcon from "../UICore/Icon.vue";
+import LogoTalkie from "@/components/SVGs/LogoTalkie.vue";
+import TalkieIcon from "@/components/UICore/Icon.vue";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "Header",
   components: { TalkieIcon, LogoTalkie },
   data: () => ({
     links: [
-      {
-        text: "Upgrade",
-        url: "#",
-      },
-      {
-        text: "Help",
-        url: "#",
-      },
+      // TEMP: nav links hidden for first deployment
+      // {
+      //   text: "Upgrade",
+      //   url: "#",
+      // },
+      // {
+      //   text: "Help",
+      //   url: "#",
+      // },
     ],
+    user: {},
+    isLoggedIn: false,
   }),
   props: {
     hideLinksAndProfile: {
@@ -87,6 +102,29 @@ export default {
       type: Array,
       default: () => ["tablet", "desktop"],
       validator: (val) => ["phone", "tablet", "desktop"].includes(val),
+    },
+  },
+  created() {
+    this.handleAuthUserLoginCheck();
+  },
+  updated() {
+    this.handleAuthUserLoginCheck();
+  },
+  methods: {
+    handleAuthUserLoginCheck() {
+      // get auth user
+      const user = authUser.getUser();
+
+      // failure case
+      if (!user) {
+        this.isLoggedIn = false;
+        this.user = {};
+        return;
+      }
+
+      // success case
+      this.isLoggedIn = true;
+      this.user = user;
     },
   },
 };
@@ -228,6 +266,10 @@ export default {
   }
   .talkie-navbar-link-item {
     display: none;
+    font-size: calc(var(--t-fs-small) * 0.85);
+  }
+  .talkie-navbar-link-item-always-visiable {
+    display: inherit;
   }
   .talkie-navbar-profile-name {
     font-size: calc(var(--t-fs-small) - 2px);

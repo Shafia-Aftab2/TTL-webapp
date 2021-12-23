@@ -7,17 +7,17 @@ import AuthSignup from "../components/Modules/Auth/Signup";
 import AuthLogout from "../components/Modules/Auth/Logout";
 import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
 import ClassHome from "../components/Modules/Class/Home";
-import ClassJoin from "../components/Modules/Class/Join";
+import ClassJoinModule from "../components/Modules/Class/Join/Module";
+import ClassJoinLink from "../components/Modules/Class/Join/Link";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
-import ClassInviteStudents from "../components/Modules/Class/InviteStudents";
+import ClassStudentsInvite from "../components/Modules/Class/Students/Invite";
 import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefault";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTaskResponse from "../components/Modules/Class/Tasks/Response";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
-import StudentClassJoin from "../components/Modules/Students/Onboarding/Join";
 import StudentFeedback from "../components/Modules/Students/Feedback";
 import StudentInbox from "../components/Modules/Students/Inbox";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
@@ -28,6 +28,9 @@ import StudentTranslation from "../components/Modules/Students/Translation";
 import Error404 from "../components/Modules/Error404";
 // route middlware
 import authMiddlware from "./middlewares/auth";
+import accessControlMiddleware from "./middlewares/accessControl";
+// user roles
+import roles from "../utils/constants/roles";
 
 const routes = [
   {
@@ -38,6 +41,11 @@ const routes = [
         name: "Home",
         path: "/",
         component: Home,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
     ],
   },
@@ -79,30 +87,54 @@ const routes = [
         name: "ClassChooseDefault",
         path: "/classes",
         component: ClassChooseDefault,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassHome",
         path: "/classes/:id",
         component: ClassHome,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
       {
         name: "ClassTaskChooseDefault",
         path: "/classes/:classId/tasks",
         component: ClassTaskChooseDefault,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ClassTaskHome",
         path: "/classes/:classId/tasks/:taskId",
         component: ClassTaskHome,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ClassTaskResponse",
         path: "/classes/:classId/tasks/:taskId/respond",
         component: ClassTaskResponse,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.TEACHER],
+          },
+        },
       },
     ],
   },
@@ -112,28 +144,59 @@ const routes = [
     props: { variant: "dark" },
     children: [
       {
-        name: "ClassJoin",
-        path: "/classes/:id/join",
-        component: ClassJoin,
-        meta: { requiresAuth: true },
+        name: "ClassJoinModule",
+        path: "/classes/join",
+        component: ClassJoinModule,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.TEACHER],
+          },
+        },
       },
       {
-        name: "ClassInviteStudents",
-        path: "/classes/:id/invite-students",
-        component: ClassInviteStudents,
-        meta: { requiresAuth: true },
+        name: "ClassJoinLink",
+        path: "/classes/:id/join",
+        component: ClassJoinLink,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.TEACHER],
+          },
+        },
+      },
+      {
+        name: "ClassStudentsInvite",
+        path: "/classes/:id/students/invite",
+        component: ClassStudentsInvite,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ClassTaskCreate",
         path: "/classes/:id/tasks/create",
         component: ClassTaskCreate,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ClassTaskStatus",
         path: "/classes/:classId/tasks/:taskId/status",
         component: ClassTaskStatus,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
     ],
   },
@@ -145,13 +208,23 @@ const routes = [
         name: "ClassCreate",
         path: "/classes/create",
         component: ClassCreate,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ClassChooseTopics",
         path: "/classes/:id/choose-topics",
         component: ClassChooseTopics,
-        meta: { requiresAuth: true },
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
     ],
   },
@@ -164,17 +237,6 @@ const routes = [
         name: "TeacherClassStudents",
         path: "/teachers/class/students",
         component: TeacherClassStudents,
-      },
-    ],
-  },
-  {
-    path: "/",
-    component: Layout,
-    children: [
-      {
-        name: "StudentClassJoin",
-        path: "/students/classes/join",
-        component: StudentClassJoin,
       },
     ],
   },
@@ -231,6 +293,11 @@ const routes = [
         path: "/:catchAll(.*)",
         component: Error404,
       },
+      {
+        name: "NotFound",
+        path: "/404",
+        component: Error404,
+      },
     ],
   },
 ];
@@ -243,13 +310,38 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.meta.requiresAuth) {
+  // get middleware config from route
+  const { middlewareConfig } = to?.meta;
+
+  // check if has any middleware config
+  if (!middlewareConfig || Object.keys(middlewareConfig)?.length === 0) {
+    return next();
+  }
+
+  // check auth and access control
+  if (
+    middlewareConfig?.requiresAuth &&
+    middlewareConfig?.blockedRoles?.length > 0
+  ) {
+    await authMiddlware({
+      failureCallback: () => next({ name: "AuthLogin" }),
+      successCallback: () =>
+        accessControlMiddleware({
+          failureCallback: () => next({ name: "NotFound" }),
+          successCallback: () => next(),
+          blockedRoles: middlewareConfig?.blockedRoles,
+        }),
+    });
+    return;
+  }
+
+  // check auth
+  if (middlewareConfig?.requiresAuth) {
     await authMiddlware({
       failureCallback: () => next({ name: "AuthLogin" }),
       successCallback: () => next(),
     });
-  } else {
-    next();
+    return;
   }
 });
 
