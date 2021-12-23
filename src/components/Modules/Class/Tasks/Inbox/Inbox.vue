@@ -25,71 +25,60 @@ export default {
 .class-tasks-inbox-wrapper {
   display: flex;
   flex-direction: column;
-  margin-top: var(--t-space-50);
-  margin-bottom: var(--t-space-50);
-  padding: 0 var(--t-space-24);
-  gap: var(--t-space-24);
 }
 .class-tasks-inbox-header-wrapper {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--t-space-20);
-}
-
-.class-tasks-inbox-header-select-wrapper {
-  min-width: 40%;
 }
 .class-tasks-inbox-items-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--t-space-16);
 }
 
-.bar-bottom {
-  margin-top: 60px;
-  background-color: var(--t-white);
-  padding: var(--t-space-24);
-  border-radius: var(--t-space-10);
-}
-.messege-bar {
-  margin-bottom: 20px;
-}
-.bar-content {
-  display: grid;
-  gap: 10px;
-  padding: var(--t-space-18);
-}
-.bar {
-  background-color: var(--t-white);
-  padding: var(--t-space-24);
-  border-radius: var(--t-space-10);
-}
-.bar-outline {
-  background-color: var(--t-white);
-  padding: var(--t-space-16);
-  border-radius: var(--t-space-10);
-  border: 2px solid var(--t-gray-home);
-}
-.bar-inline {
-  display: inline-flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5px;
-}
-.back {
-  text-decoration: none;
-}
+/* Responsive variants */
 @media (max-width: 599px) {
+  .class-tasks-inbox-wrapper {
+    margin-top: var(--t-space-24);
+    margin-bottom: var(--t-space-24);
+    padding: 0 var(--t-space-12);
+    gap: var(--t-space-24);
+  }
+  .class-tasks-inbox-header-wrapper {
+    gap: var(--t-space-16);
+  }
+  .class-tasks-inbox-header-select-wrapper {
+    min-width: 70%;
+  }
+  .class-tasks-inbox-items-wrapper {
+    gap: var(--t-space-12);
+  }
 }
 @media (min-width: 600px) {
-}
-@media (min-width: 900px) {
+  .class-tasks-inbox-wrapper {
+    margin-top: var(--t-space-36);
+    margin-bottom: var(--t-space-36);
+    padding: 0 var(--t-space-24);
+    gap: var(--t-space-28);
+  }
+  .class-tasks-inbox-header-wrapper {
+    gap: var(--t-space-20);
+  }
+  .class-tasks-inbox-header-select-wrapper {
+    min-width: 50%;
+  }
+  .class-tasks-inbox-items-wrapper {
+    gap: var(--t-space-16);
+  }
 }
 @media (min-width: 1200px) {
-  .back {
-    position: absolute;
-    left: var(--t-space-50);
+  .class-tasks-inbox-wrapper {
+    margin-top: var(--t-space-50);
+    margin-bottom: var(--t-space-50);
+    gap: var(--t-space-24);
+  }
+  .class-tasks-inbox-header-select-wrapper {
+    min-width: 40%;
   }
 }
 </style>
