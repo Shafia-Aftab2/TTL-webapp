@@ -1,73 +1,49 @@
 <template>
-  <div class="bar-content">
-    <a class="back"><span>&#8592; </span>back</a>
-    <h1>Inbox</h1>
-    <div>
-      <talkie-select placeholder="Filter by Question"></talkie-select>
-    </div>
-    <div class="bar">
-      <p>Favourite App</p>
-    </div>
-    <div class="talkie-icon-bar">
-      <div class="messege-bar">
-        <p>Audios</p>
-      </div>
-      <div class="bar-icons">
-        <talkie-icon
-          :name="'arrow-rounded-left'"
-          :isActive="true"
-          :variant="'secondary'"
-          :size="30"
-        />
-        <talkie-icon
-          :name="'mike-unmuted'"
-          :isActive="true"
-          :variant="'secondary'"
-          :size="50"
-        />
-        <talkie-icon
-          :name="'send'"
-          :isActive="true"
-          :variant="'secondary'"
-          :size="30"
-        />
+  <div class="class-tasks-inbox-wrapper">
+    <div class="class-tasks-inbox-header-wrapper">
+      <h2 class="h2">Speaking Portfolio</h2>
+      <div class="class-tasks-inbox-header-select-wrapper">
+        <talkie-select :placeholder="'Filter by question type'" />
       </div>
     </div>
-    <div class="bar-bottom bar-inline">
-      <p>Least Favourite Subject</p>
-      <talkie-chip label=""></talkie-chip>
-    </div>
+    <div class="class-tasks-inbox-items-wrapper"></div>
   </div>
 </template>
+
 <script>
-import { TalkieIcon, TalkieSelect, TalkieChip } from "@/components/UICore";
+import { TalkieSelect } from "@/components/UICore";
 
 export default {
-  name: "StudentInbox",
-  components: { TalkieIcon, TalkieSelect, TalkieChip },
+  name: "TasksInbox",
+  components: {
+    TalkieSelect,
+  },
 };
 </script>
-<style scoped>
-.talkie-icon-bar {
-  position: relative;
-  background-color: var(--t-white);
-  padding: var(--t-space-24);
-  border-radius: var(--t-space-10);
-}
-.bar-icons {
-  position: absolute;
+
+<style>
+.class-tasks-inbox-wrapper {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  bottom: -50px;
-  left: 35%;
+  flex-direction: column;
+  margin-top: var(--t-space-50);
+  margin-bottom: var(--t-space-50);
+  padding: 0 var(--t-space-24);
+  gap: var(--t-space-24);
 }
-.bar-icons-pg {
-  position: absolute;
+.class-tasks-inbox-header-wrapper {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  left: 30%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--t-space-20);
+}
+
+.class-tasks-inbox-header-select-wrapper {
+  min-width: 40%;
+}
+.class-tasks-inbox-items-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--t-space-16);
 }
 
 .bar-bottom {
