@@ -10,20 +10,26 @@
               ? classTopics.map((x) => x.name)
               : []
           "
+          :onChange="handleTopicFilterChange"
         />
       </div>
     </div>
     <div class="class-tasks-inbox-task-items-wrapper">
       <template v-if="tasksList.length > 0">
-        <task-item
-          v-for="_task in tasksList"
-          :key="_task"
-          :id="_task?.id"
-          :title="_task?.title"
-          :topic="_task?.topic?.name"
-          :responses="_task?.responses"
-          :isRead="false"
-        />
+        <template v-for="_task in tasksList" :key="_task">
+          <task-item
+            v-if="
+              currentTopicFilter
+                ? _task?.topic?.name === currentTopicFilter
+                : true
+            "
+            :id="_task?.id"
+            :title="_task?.title"
+            :topic="_task?.topic?.name"
+            :responses="_task?.responses"
+            :isRead="false"
+          />
+        </template>
       </template>
     </div>
   </div>
@@ -64,6 +70,7 @@ export default {
         },
       ],
       classTopics: [],
+      currentTopicFilter: null,
       user: {},
       classId: null,
       tasksList: [],
@@ -113,6 +120,10 @@ export default {
     }));
   },
   methods: {
+    handleTopicFilterChange(e) {
+      const selectedTopic = e.target.value;
+      this.currentTopicFilter = selectedTopic;
+    },
     async getClassDetails(classId) {
       const response = await ClassService.GetDetails(classId).catch();
 
