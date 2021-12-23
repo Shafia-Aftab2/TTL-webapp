@@ -17,6 +17,12 @@
       ></div>
     </div>
 
+    <!-- Spacer -->
+    <div
+      class="class-tasks-inbox-task-item-spacer"
+      v-if="taskItemExpanded"
+    ></div>
+
     <template v-if="taskItemExpanded">
       <task-item-response
         v-for="_response in responses"
