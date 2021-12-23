@@ -37,8 +37,6 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 50%;
-  gap: var(--t-space-8);
 }
 .class-tasks-inbox-task-item-audio-response-left {
   margin-right: auto;
@@ -48,6 +46,33 @@ export default {
 }
 .class-tasks-inbox-task-item-audio-response-timestamps {
   color: var(--t-black-100);
-  font-size: calc(var(--t-fs-small) * 0.9);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .class-tasks-inbox-task-item-audio-response {
+    max-width: 75%;
+    gap: var(--t-space-5);
+  }
+  .class-tasks-inbox-task-item-audio-response-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
+}
+@media (min-width: 600px) {
+  .class-tasks-inbox-task-item-audio-response {
+    max-width: 60%;
+    gap: var(--t-space-8);
+  }
+  .class-tasks-inbox-task-item-audio-response-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.85);
+  }
+}
+@media (min-width: 1200px) {
+  .class-tasks-inbox-task-item-audio-response {
+    max-width: 50%;
+  }
+  .class-tasks-inbox-task-item-audio-response-timestamps {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
 }
 </style>
