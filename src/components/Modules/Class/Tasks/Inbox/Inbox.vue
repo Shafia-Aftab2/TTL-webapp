@@ -60,26 +60,6 @@ export default {
   },
   data() {
     return {
-      responses: [
-        {
-          id: 123131468541,
-          from: "teacher",
-          audio:
-            "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
-        },
-        {
-          id: 123131445641568541,
-          from: "me",
-          audio:
-            "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
-        },
-        {
-          id: 123131462428541,
-          from: "teacher",
-          audio:
-            "https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3",
-        },
-      ],
       classTopics: [],
       currentTopicFilter: null,
       user: {},
