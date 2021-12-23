@@ -38,12 +38,34 @@ export default {
 .class-tasks-inbox-task-item-audio-recorder-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--t-space-12);
 }
 .class-tasks-inbox-task-item-audio-recorder-buttons-wrapper {
   margin: auto;
   display: flex;
   align-items: center;
-  gap: var(--t-space-50);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .class-tasks-inbox-task-item-audio-recorder-wrapper {
+    gap: var(--t-space-8);
+  }
+
+  .class-tasks-inbox-task-item-audio-recorder-buttons-wrapper {
+    gap: var(--t-space-36);
+  }
+}
+@media (min-width: 600px) {
+  .class-tasks-inbox-task-item-audio-recorder-wrapper {
+    gap: var(--t-space-12);
+  }
+  .class-tasks-inbox-task-item-audio-recorder-buttons-wrapper {
+    gap: var(--t-space-36);
+  }
+}
+@media (min-width: 1200px) {
+  .class-tasks-inbox-task-item-audio-recorder-buttons-wrapper {
+    gap: var(--t-space-50);
+  }
 }
 </style>
