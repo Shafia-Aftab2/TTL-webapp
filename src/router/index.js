@@ -158,6 +158,7 @@ const routes = [
       {
         name: "ClassTasksInbox",
         path: "/classes/tasks/inbox",
+        alias: "/inbox",
         component: ClassTasksInbox,
         meta: {
           middlewareConfig: {
