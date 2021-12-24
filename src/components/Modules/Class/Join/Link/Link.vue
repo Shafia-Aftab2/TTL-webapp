@@ -1,8 +1,10 @@
 <template>
   <div class="class-join-link-wrapper">
-    <!-- Contents -->
-    <template v-if="!loading">
-      <div class="class-join-link-content-wrapper">
+    <!-- Join New Class -->
+    <template v-if="!computedPageLoading">
+      <div
+        class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
+      >
         <h3 class="h3" v-if="isJoined">
           You are now a member of
           <a
@@ -21,7 +23,7 @@
     </template>
 
     <!-- Load wrapper -->
-    <template v-if="loading">
+    <template v-if="computedPageLoading">
       <div class="class-join-link-loading-wrapper">
         <talkie-loader :size="'large'" />
       </div>
@@ -31,6 +33,7 @@
 
 <script>
 import { TalkieLoader, TalkieButton } from "@/components/UICore";
+import { notifications } from "@/components/UIActions";
 import { ClassService, UserService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 
@@ -42,11 +45,16 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      pageLoading: false,
       isJoined: false,
       classId: null,
       classDetails: {},
     };
+  },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
   },
   async created() {
     // get class id from params
@@ -69,7 +77,7 @@ export default {
     },
     async handleClassJoinSequence() {
       // update page state
-      this.loading = true;
+      this.pageLoading = true;
 
       // api call (join class)
       const responseJoin = await ClassService.JoinAsStudent(this.classId).catch(
@@ -79,7 +87,7 @@ export default {
       // failure case
       if (!responseJoin) {
         this.isJoined = false;
-        this.loading = false;
+        this.pageLoading = false;
         return;
       }
 
@@ -89,7 +97,7 @@ export default {
       // failure case
       if (!responseProfile) {
         this.isJoined = false;
-        this.loading = false;
+        this.pageLoading = false;
         return;
       }
 
@@ -106,7 +114,7 @@ export default {
         link: `/classes/${classDetails.id}`,
       };
       this.isJoined = true;
-      this.loading = false;
+      this.pageLoading = false;
     },
   },
 };
@@ -116,18 +124,22 @@ export default {
 .class-join-link-wrapper {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   margin: auto;
   width: 100%;
-  padding: var(--t-space-24);
   transition: 0.2s ease;
-  min-height: 80vh;
+  text-align: center;
+  margin-top: var(--t-space-36);
 }
 .class-join-link-content-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
+}
+.class-join-link-content-centered-wrapper {
+  padding: var(--t-space-50);
 }
 .class-join-link-content-class-name {
   color: var(--t-secondary);
@@ -141,15 +153,16 @@ export default {
   .class-join-link-wrapper {
     gap: var(--t-space-18);
   }
-  .class-join-link-content-wrapper {
+  .class-join-link-content-centered-wrapper {
     gap: var(--t-space-16);
   }
 }
 @media (min-width: 600px) {
   .class-join-link-wrapper {
     gap: var(--t-space-24);
+    padding: var(--t-space-24);
   }
-  .class-join-link-content-wrapper {
+  .class-join-link-content-centered-wrapper {
     gap: var(--t-space-16);
   }
 }
