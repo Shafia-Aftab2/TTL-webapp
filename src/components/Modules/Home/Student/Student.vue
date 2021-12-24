@@ -55,6 +55,17 @@ export default {
     // get auth user
     const user = authUser.getUser();
 
+    // check if user has joined a class
+    const hasJoinedAClass =
+      user?.schools?.length > 0 && user?.schools[0]?.classes?.length > 0
+        ? user?.schools[0]?.classes[0]
+        : null;
+
+    // redirect to join class if not have already
+    if (!hasJoinedAClass) {
+      return this.$router.push(`/classes/join`);
+    }
+
     // redirect to login if no auth user
     if (!user) {
       this.$router.push("/auth/login");
