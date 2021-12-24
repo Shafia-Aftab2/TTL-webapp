@@ -14,8 +14,8 @@
         </h3>
         <h3 class="h3" v-if="!isJoined">Could not join class..!</h3>
 
-        <talkie-button :onClick="handleRedirection">
-          {{ isJoined ? `Go To Class` : `Try Again` }}
+        <talkie-button :onClick="handleCTAButtonClick">
+          {{ isJoined ? `Go To Class Inbox` : `Try Again` }}
         </talkie-button>
       </div>
     </template>
@@ -57,9 +57,9 @@ export default {
     await this.handleClassJoinSequence();
   },
   methods: {
-    handleRedirection() {
+    handleCTAButtonClick() {
       this.$router.push(
-        `/classes/${this.classId}${this.isJoined ? "" : "/join"}`
+        this.isJoined ? `/classes/tasks/inbox` : `/classes/${this.classId}/join`
       );
     },
     async getUserProfile() {
