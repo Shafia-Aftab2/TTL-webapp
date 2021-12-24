@@ -91,6 +91,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -101,6 +102,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
