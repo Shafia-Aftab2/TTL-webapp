@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     handleClassModeButtonClick() {
-      this.$router.push(`/classes`);
+      this.$router.push(`/classes/tasks/inbox`);
     },
   },
 };
