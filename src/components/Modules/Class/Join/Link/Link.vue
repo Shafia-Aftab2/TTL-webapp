@@ -31,7 +31,8 @@
 
 <script>
 import { TalkieLoader, TalkieButton } from "@/components/UICore";
-import { ClassService } from "@/api/services";
+import { ClassService, UserService } from "@/api/services";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "ClassJoinLink",
@@ -61,24 +62,44 @@ export default {
         `/classes/${this.classId}${this.isJoined ? "" : "/join"}`
       );
     },
+    async getUserProfile() {
+      const response = await UserService.GetMyProfile().catch();
+
+      return response?.data || null;
+    },
     async handleClassJoinSequence() {
       // update page state
       this.loading = true;
 
-      // api call
-      const response = await ClassService.JoinAsStudent(this.classId).catch(
+      // api call (join class)
+      const responseJoin = await ClassService.JoinAsStudent(this.classId).catch(
         () => null
       );
 
       // failure case
-      if (!response) {
+      if (!responseJoin) {
+        this.isJoined = false;
+        this.loading = false;
+        return;
+      }
+
+      // api call (user profile)
+      const responseProfile = await this.getUserProfile();
+
+      // failure case
+      if (!responseProfile) {
         this.isJoined = false;
         this.loading = false;
         return;
       }
 
       // success case
-      const classDetails = response.data;
+      const expires = (date) => ({ expires: new Date(date) });
+      const nextDay = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toISOString();
+      authUser.setUser(responseProfile, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
+      const classDetails = responseJoin.data;
       this.classDetails = {
         id: classDetails.id,
         name: classDetails.name,
