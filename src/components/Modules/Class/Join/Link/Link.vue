@@ -1,7 +1,7 @@
 <template>
   <div class="class-join-link-wrapper">
     <!-- Join New Class -->
-    <template v-if="!computedPageLoading">
+    <template v-if="!requiredClassIdToLeave && !computedPageLoading">
       <div
         class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
       >
@@ -20,6 +20,27 @@
           {{ isJoined ? `Go To Class Inbox` : `Try Again` }}
         </talkie-button>
       </div>
+    </template>
+
+    <!-- Leave Existing Class -->
+    <template v-if="requiredClassIdToLeave && !computedPageLoading">
+      <h2 class="h2">Leave {{ classToLeaveDetails?.name }}</h2>
+      <div
+        class="class-join-link-content-wrapper class-join-link-content-card-wrapper"
+      >
+        <h3 class="h3">Are you sure?</h3>
+        <p class="p">
+          It looks like you’ve been sent another invite link to join a different
+          class. By joining a new class, all of your recordings will be deleted.
+          Remember, you can’t undo this action.
+        </p>
+        <talkie-button :onClick="handleJoinNewClass">
+          Join the new class
+        </talkie-button>
+      </div>
+      <a class="class-join-link-content-undo-text" @click="handleBackClick">
+        No, wait! I clicked the link by mistake.
+      </a>
     </template>
 
     <!-- Load wrapper -->
@@ -49,6 +70,8 @@ export default {
       isJoined: false,
       classId: null,
       classDetails: {},
+      requiredClassIdToLeave: null,
+      classToLeaveDetails: {},
     };
   },
   computed: {
@@ -61,10 +84,34 @@ export default {
     const classId = this.$route.params.id;
     this.classId = classId;
 
-    // init join class sequence
-    await this.handleClassJoinSequence();
+    // get user data
+    const user = authUser.getUser();
+
+    // check if user has joined a class
+    const joinedClassId =
+      user?.schools?.length > 0 && user?.schools[0]?.classes?.length > 0
+        ? user?.schools[0]?.classes[0]
+        : null;
+
+    // handle join sequence if no class joined
+    if (!joinedClassId) {
+      await this.handleClassJoinSequence();
+      return;
+    }
+
+    // handle leave if already joined a class
+    this.pageLoading = true;
+    this.requiredClassIdToLeave = joinedClassId;
+    const classToLeaveDetails = await this.getClassDetails(
+      this.requiredClassIdToLeave
+    );
+    this.classToLeaveDetails = classToLeaveDetails;
+    this.pageLoading = false;
   },
   methods: {
+    handleBackClick() {
+      this.$router.go(-1);
+    },
     handleCTAButtonClick() {
       this.$router.push(
         this.isJoined ? `/classes/tasks/inbox` : `/classes/${this.classId}/join`
@@ -72,6 +119,11 @@ export default {
     },
     async getUserProfile() {
       const response = await UserService.GetMyProfile().catch();
+
+      return response?.data || null;
+    },
+    async getClassDetails(classId) {
+      const response = await ClassService.GetDetails(classId).catch();
 
       return response?.data || null;
     },
@@ -116,6 +168,12 @@ export default {
       this.isJoined = true;
       this.pageLoading = false;
     },
+    async handleJoinNewClass() {
+      notifications.show("Failed to join new class..!", {
+        variant: "error",
+        displayIcon: true,
+      });
+    },
   },
 };
 </script>
@@ -141,11 +199,25 @@ export default {
 .class-join-link-content-centered-wrapper {
   padding: var(--t-space-50);
 }
+.class-join-link-content-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--t-white);
+}
 .class-join-link-content-class-name {
   color: var(--t-secondary);
 }
 .class-join-link-loading-wrapper {
   margin: auto;
+}
+.class-join-link-content-undo-text {
+  color: var(--t-black);
+}
+.class-join-link-content-undo-text:visited,
+.class-join-link-content-undo-text:hover {
+  color: var(--t-black);
 }
 
 /* Responsive variants */
@@ -156,6 +228,15 @@ export default {
   .class-join-link-content-centered-wrapper {
     gap: var(--t-space-16);
   }
+  .class-join-link-content-card-wrapper {
+    border-radius: var(--t-br-large);
+    width: 100%;
+    padding: var(--t-space-48) var(--t-space-24);
+    gap: var(--t-space-36);
+  }
+  .class-join-link-content-undo-text {
+    font-size: calc(var(--t-fs-small) * 0.95);
+  }
 }
 @media (min-width: 600px) {
   .class-join-link-wrapper {
@@ -165,10 +246,28 @@ export default {
   .class-join-link-content-centered-wrapper {
     gap: var(--t-space-16);
   }
+  .class-join-link-content-card-wrapper {
+    border-radius: var(--t-br-large);
+    width: 100%;
+    padding: var(--t-space-50);
+    gap: var(--t-space-24);
+  }
+  .class-join-link-content-undo-text {
+    font-size: var(--t-fs-small);
+  }
 }
 @media (min-width: 900px) {
   .class-join-link-wrapper {
     gap: var(--t-space-36);
+  }
+  .class-join-link-content-card-wrapper {
+    border-radius: var(--t-br-large);
+    width: 90%;
+    padding: var(--t-space-70);
+    gap: var(--t-space-36);
+  }
+  .class-join-link-content-undo-text {
+    font-size: var(--t-fs-body);
   }
 }
 
