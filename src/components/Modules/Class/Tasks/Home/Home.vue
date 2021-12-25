@@ -45,13 +45,13 @@
             :studentResponseAudio="_response.audioSource"
             :onFeedbackRecording="
               (recording) =>
-                handleTaskFeedbackRecording(_response.id, recording)
+                handleTaskIndividualFeedbackRecording(_response.id, recording)
             "
             :onFeedbackRecordingDiscard="
-              () => handleTaskFeedbackRecordingDiscard(_response.id)
+              () => handleTaskIndividualFeedbackRecordingDiscard(_response.id)
             "
             :onFeedbackSendClick="
-              async () => await handleTaskFeedbackSend(_response.id)
+              async () => await handleTaskIndividualFeedbackSend(_response.id)
             "
           />
         </template>
@@ -109,7 +109,7 @@ export default {
       classDetails: {},
       taskDetails: {},
       taskResponses: [],
-      taskResponsesFeedbackRecordings: [],
+      taskResponsesIndividualFeedbackRecordings: [],
       isTeacher: false,
       isStudent: false,
       loading: false,
@@ -208,24 +208,24 @@ export default {
     this.loading = false;
   },
   methods: {
-    handleTaskFeedbackRecording(responseId, recording) {
-      this.taskResponsesFeedbackRecordings = [
-        ...this.taskResponsesFeedbackRecordings,
+    handleTaskIndividualFeedbackRecording(responseId, recording) {
+      this.taskResponsesIndividualFeedbackRecordings = [
+        ...this.taskResponsesIndividualFeedbackRecordings,
         {
           responseId,
           recording,
         },
       ];
     },
-    handleTaskFeedbackRecordingDiscard(responseId) {
-      this.taskResponsesFeedbackRecordings = [
-        ...this.taskResponsesFeedbackRecordings.filter(
+    handleTaskIndividualFeedbackRecordingDiscard(responseId) {
+      this.taskResponsesIndividualFeedbackRecordings = [
+        ...this.taskResponsesIndividualFeedbackRecordings.filter(
           (x) => x.responseId !== responseId
         ),
       ];
     },
-    async handleTaskFeedbackSend(responseId) {
-      const taskFeedback = this.taskResponsesFeedbackRecordings.find(
+    async handleTaskIndividualFeedbackSend(responseId) {
+      const taskFeedback = this.taskResponsesIndividualFeedbackRecordings.find(
         (x) => x.responseId === responseId
       );
 
@@ -340,9 +340,10 @@ export default {
       const payload = { voiceRecording };
 
       // api call
-      const response = await FeedbackService.Create(responseId, payload).catch(
-        () => null
-      );
+      const response = await FeedbackService.CreateIndividualFeedback(
+        responseId,
+        payload
+      ).catch(() => null);
 
       // failure case
       if (!response) {
