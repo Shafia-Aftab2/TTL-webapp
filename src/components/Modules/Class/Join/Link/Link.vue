@@ -1,7 +1,32 @@
 <template>
   <div class="class-join-link-wrapper">
+    <!-- Class Already Joined -->
+    <template v-if="classAlreadyJoined">
+      <div
+        class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
+      >
+        <h3 class="h3">
+          You are already a member of
+          <a
+            class="class-join-link-content-class-name"
+            :href="classDetails.link"
+          >
+            {{ classDetails.name }}
+          </a>
+        </h3>
+
+        <talkie-button :onClick="handleCTAButtonClick">
+          Go To Class Inbox
+        </talkie-button>
+      </div>
+    </template>
+
     <!-- Join New Class -->
-    <template v-if="!requiredClassIdToLeave && !computedPageLoading">
+    <template
+      v-if="
+        !classAlreadyJoined && !requiredClassIdToLeave && !computedPageLoading
+      "
+    >
       <div
         class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
       >
@@ -23,7 +48,11 @@
     </template>
 
     <!-- Leave Existing Class -->
-    <template v-if="requiredClassIdToLeave && !computedPageLoading">
+    <template
+      v-if="
+        !classAlreadyJoined && requiredClassIdToLeave && !computedPageLoading
+      "
+    >
       <h2 class="h2">Leave {{ classToLeaveDetails?.name }}</h2>
       <div
         class="class-join-link-content-wrapper class-join-link-content-card-wrapper"
@@ -84,6 +113,7 @@ export default {
       pageLoading: false,
       backdropLoading: false,
       isJoined: false,
+      classAlreadyJoined: false,
       classId: null,
       classDetails: {},
       requiredClassIdToLeave: null,
@@ -113,6 +143,16 @@ export default {
         ? user?.schools[0]?.classes[0]
         : null;
 
+    // handle if class is already joined
+    if (joinedClassId === classId) {
+      this.pageLoading = true;
+      const classDetails = await this.getClassDetails(classId);
+      this.classDetails = classDetails;
+      this.classAlreadyJoined = true;
+      this.pageLoading = false;
+      return;
+    }
+
     // handle join sequence if no class joined
     if (!joinedClassId) {
       await this.handleClassJoinSequence();
@@ -134,7 +174,9 @@ export default {
     },
     handleCTAButtonClick() {
       this.$router.push(
-        this.isJoined ? `/classes/tasks/inbox` : `/classes/${this.classId}/join`
+        this.isJoined || this.classAlreadyJoined
+          ? `/classes/tasks/inbox`
+          : `/classes/${this.classId}/join`
       );
     },
     async getUserProfile() {
