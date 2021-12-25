@@ -34,7 +34,15 @@
           class. By joining a new class, all of your recordings will be deleted.
           Remember, you can’t undo this action.
         </p>
-        <talkie-button :onClick="handleJoinNewClass">
+        <talkie-alert
+          v-if="
+            requiredClassIdToLeaveStatus?.type &&
+            requiredClassIdToLeaveStatus?.message
+          "
+          :variant="requiredClassIdToLeaveStatus?.type"
+          :text="requiredClassIdToLeaveStatus?.message"
+        />
+        <talkie-button :onClick="handleJoinNewClassClick">
           Join the new class
         </talkie-button>
       </div>
@@ -49,12 +57,17 @@
         <talkie-loader :size="'large'" />
       </div>
     </template>
+    <talkie-back-drop-loader v-if="backdropLoading" />
   </div>
 </template>
 
 <script>
-import { TalkieLoader, TalkieButton } from "@/components/UICore";
-import { notifications } from "@/components/UIActions";
+import {
+  TalkieLoader,
+  TalkieButton,
+  TalkieAlert,
+  TalkieBackDropLoader,
+} from "@/components/UICore";
 import { ClassService, UserService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 
@@ -63,14 +76,21 @@ export default {
   components: {
     TalkieLoader,
     TalkieButton,
+    TalkieAlert,
+    TalkieBackDropLoader,
   },
   data() {
     return {
       pageLoading: false,
+      backdropLoading: false,
       isJoined: false,
       classId: null,
       classDetails: {},
       requiredClassIdToLeave: null,
+      requiredClassIdToLeaveStatus: {
+        type: null,
+        message: null,
+      },
       classToLeaveDetails: {},
     };
   },
@@ -127,6 +147,21 @@ export default {
 
       return response?.data || null;
     },
+    async updateUserProfile() {
+      // api call (user profile)
+      const responseProfile = await this.getUserProfile();
+
+      // failure case
+      if (!responseProfile) return false;
+
+      // success case
+      const expires = (date) => ({ expires: new Date(date) });
+      const nextDay = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toISOString();
+      authUser.setUser(responseProfile, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
+      return true;
+    },
     async handleClassJoinSequence() {
       // update page state
       this.pageLoading = true;
@@ -168,11 +203,51 @@ export default {
       this.isJoined = true;
       this.pageLoading = false;
     },
-    async handleJoinNewClass() {
-      notifications.show("Failed to join new class..!", {
-        variant: "error",
-        displayIcon: true,
-      });
+    async handleJoinNewClassClick() {
+      // update page state
+      this.backdropLoading = true;
+      this.requiredClassIdToLeaveStatus = {
+        type: null,
+        message: null,
+      };
+
+      // api call (leave class)
+      const responseLeave = await ClassService.LeaveAsStudent(
+        this.requiredClassIdToLeave
+      ).catch(() => null);
+
+      // failure case
+      if (!responseLeave) {
+        this.backdropLoading = false;
+        this.requiredClassIdToLeaveStatus = {
+          type: "error",
+          message: "Failed To Leave Existing Class..!",
+        };
+        return;
+      }
+
+      // update user profile
+      const isProfileUpdated = await this.updateUserProfile();
+
+      // failure case
+      if (!isProfileUpdated) {
+        this.backdropLoading = false;
+        this.requiredClassIdToLeaveStatus = {
+          type: "error",
+          message: "Failed To Leave Existing Class. Please Try Again..!",
+        };
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.requiredClassIdToLeaveStatus = {
+        type: null,
+        message: null,
+      };
+      this.requiredClassIdToLeave = null;
+      this.classToLeaveDetails = null;
+      await this.handleClassJoinSequence();
     },
   },
 };
