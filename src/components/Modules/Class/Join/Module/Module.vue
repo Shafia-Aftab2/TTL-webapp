@@ -11,6 +11,10 @@
       :placeholder="'Url Here'"
       :onChange="handleUrlChange"
       :customClass="'class-join-module-input'"
+      :hint="{
+        type: formState?.type || null,
+        message: formState?.message || null,
+      }"
     />
 
     <div class="class-join-module-options-wrapper">
@@ -26,15 +30,45 @@ export default {
   data() {
     return {
       joinClassLink: "",
+      formState: {
+        type: null,
+        message: null,
+      },
     };
   },
   components: { TalkieInput, TalkieButton },
   methods: {
+    validURL(url = "") {
+      return url.match(
+        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+      );
+    },
     handleUrlChange(e) {
       this.joinClassLink = e.target.value.trim();
     },
     handleJoinClassClick() {
-      window.location = this.joinClassLink;
+      const url = this.joinClassLink?.trim();
+
+      // validate if there is a url
+      if (url?.length === 0) {
+        this.formState = {
+          type: "error",
+          message: "Url is required..!",
+        };
+        return;
+      }
+
+      // validate if url is valid
+      if (!this.validURL(url)) {
+        this.formState = {
+          type: "error",
+          message: "Invalid URL..!",
+        };
+        return;
+      }
+
+      // redirect to url
+      window.location = url;
     },
   },
 };

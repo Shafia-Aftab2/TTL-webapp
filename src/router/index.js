@@ -17,6 +17,7 @@ import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTaskResponse from "../components/Modules/Class/Tasks/Response";
+import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
 import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
 import StudentFeedback from "../components/Modules/Students/Feedback";
 import StudentInbox from "../components/Modules/Students/Inbox";
@@ -90,6 +91,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -100,6 +102,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
           },
         },
       },
@@ -147,6 +150,18 @@ const routes = [
         name: "ClassJoinModule",
         path: "/classes/join",
         component: ClassJoinModule,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.TEACHER],
+          },
+        },
+      },
+      {
+        name: "ClassTasksInbox",
+        path: "/classes/tasks/inbox",
+        alias: "/inbox",
+        component: ClassTasksInbox,
         meta: {
           middlewareConfig: {
             requiresAuth: true,

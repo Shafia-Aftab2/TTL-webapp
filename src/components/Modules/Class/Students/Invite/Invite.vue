@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     async hanldeCopyButtonClick() {
-      const isCopiedToClipboard = await copyToClipboard(this.classLink);
+      const isCopiedToClipboard = await copyToClipboard(this.computedClassLink);
 
       // error case
       if (!isCopiedToClipboard) {
