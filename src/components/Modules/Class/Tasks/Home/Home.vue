@@ -32,7 +32,14 @@
         </template>
 
         <!-- Whole Class Feedback -->
-        <talkie-feedback-card :fullWidth="true" />
+        <talkie-feedback-card
+          :fullWidth="true"
+          :onFeedbackRecording="handleTaskWholeClassFeedbackRecording"
+          :onFeedbackRecordingDiscard="
+            handleTaskWholeClassFeedbackRecordingDiscard
+          "
+          :onFeedbackSendClick="handleTaskWholeClassFeedbackSend"
+        />
 
         <!-- Student responses -->
         <template v-if="taskResponses && taskResponses.length > 0">
@@ -109,6 +116,7 @@ export default {
       classDetails: {},
       taskDetails: {},
       taskResponses: [],
+      taskResponsesWholeClassFeedbackRecording: null,
       taskResponsesIndividualFeedbackRecordings: [],
       isTeacher: false,
       isStudent: false,
@@ -237,10 +245,37 @@ export default {
         return;
       }
 
-      await this.handleCreateResponseFeedback({
-        responseId,
-        responseFeedbackRecording: taskFeedback.recording,
-      });
+      await this.handleCreateResponseFeedback(
+        {
+          responseId,
+          responseFeedbackRecording: taskFeedback.recording,
+        },
+        false
+      );
+    },
+    handleTaskWholeClassFeedbackRecording(recording) {
+      this.taskResponsesWholeClassFeedbackRecording = recording;
+    },
+    handleTaskWholeClassFeedbackRecordingDiscard() {
+      this.taskResponsesWholeClassFeedbackRecording = null;
+    },
+    async handleTaskWholeClassFeedbackSend() {
+      if (!this.taskResponsesWholeClassFeedbackRecording) {
+        notifications.show("Could not create feedback..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      await this.handleCreateResponseFeedback(
+        {
+          taskId: this.taskId,
+          responseFeedbackRecording:
+            this.taskResponsesWholeClassFeedbackRecording,
+        },
+        true
+      );
     },
     handleStoreMutation(key, value) {
       this.$store.state[key] = value;
@@ -316,12 +351,12 @@ export default {
       const uploadedFile = response.data[0].s3Url;
       return uploadedFile;
     },
-    async handleCreateResponseFeedback(values) {
+    async handleCreateResponseFeedback(values, wholeClass = false) {
       // update page state
       this.backdropLoading = true;
 
       // upload file
-      const { responseId, responseFeedbackRecording } = values;
+      const { taskId, responseId, responseFeedbackRecording } = values;
       const voiceRecording = await this.handleFileUpload(
         responseFeedbackRecording.blob
       );
@@ -340,10 +375,14 @@ export default {
       const payload = { voiceRecording };
 
       // api call
-      const response = await FeedbackService.CreateIndividualFeedback(
-        responseId,
-        payload
-      ).catch(() => null);
+      const response = wholeClass
+        ? await FeedbackService.CreateWholeClassFeedback(taskId, payload).catch(
+            () => null
+          )
+        : await FeedbackService.CreateIndividualFeedback(
+            responseId,
+            payload
+          ).catch(() => null);
 
       // failure case
       if (!response) {
