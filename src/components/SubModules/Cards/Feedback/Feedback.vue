@@ -90,7 +90,7 @@
             :variant="'secondary'"
             :size="40"
             :iconToSizeRatio="1.1"
-            :onClick="onFeedbackSendClick"
+            :onClick="handleRecordingSendClick"
           />
         </span>
       </talkie-audio-player>
@@ -148,6 +148,10 @@ export default {
     handleRecordingReset() {
       this.currentRecording = null;
       this.onFeedbackRecordingDiscard && this.onFeedbackRecordingDiscard();
+    },
+    async handleRecordingSendClick() {
+      this.currentRecording = null;
+      this.onFeedbackSendClick && (await this.onFeedbackSendClick());
     },
   },
 };
