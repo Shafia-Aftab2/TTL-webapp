@@ -190,11 +190,13 @@ export default {
         }
 
         // success case
-        this.messagesFetched = taskResponses?.map((x) => ({
-          id: x?.id,
-          from: x?.student?.id,
-          audio: x?.voiceRecording,
-        }));
+        this.messagesFetched = taskResponses
+          ?.filter((x) => x?.student?.id === this?.user?.id)
+          ?.map((x) => ({
+            id: x?.id,
+            from: x?.student?.id,
+            audio: x?.voiceRecording,
+          }));
         this.state.responsesFetch = {
           loading: false,
           message: {

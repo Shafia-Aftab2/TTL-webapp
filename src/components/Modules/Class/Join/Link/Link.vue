@@ -1,7 +1,32 @@
 <template>
   <div class="class-join-link-wrapper">
+    <!-- Class Already Joined -->
+    <template v-if="classAlreadyJoined">
+      <div
+        class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
+      >
+        <h3 class="h3">
+          You are already a member of
+          <a
+            class="class-join-link-content-class-name"
+            :href="classDetails.link"
+          >
+            {{ classDetails.name }}
+          </a>
+        </h3>
+
+        <talkie-button :onClick="handleCTAButtonClick">
+          Go To Class Inbox
+        </talkie-button>
+      </div>
+    </template>
+
     <!-- Join New Class -->
-    <template v-if="!requiredClassIdToLeave && !computedPageLoading">
+    <template
+      v-if="
+        !classAlreadyJoined && !requiredClassIdToLeave && !computedPageLoading
+      "
+    >
       <div
         class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
       >
@@ -23,7 +48,11 @@
     </template>
 
     <!-- Leave Existing Class -->
-    <template v-if="requiredClassIdToLeave && !computedPageLoading">
+    <template
+      v-if="
+        !classAlreadyJoined && requiredClassIdToLeave && !computedPageLoading
+      "
+    >
       <h2 class="h2">Leave {{ classToLeaveDetails?.name }}</h2>
       <div
         class="class-join-link-content-wrapper class-join-link-content-card-wrapper"
@@ -34,7 +63,15 @@
           class. By joining a new class, all of your recordings will be deleted.
           Remember, you can’t undo this action.
         </p>
-        <talkie-button :onClick="handleJoinNewClass">
+        <talkie-alert
+          v-if="
+            requiredClassIdToLeaveStatus?.type &&
+            requiredClassIdToLeaveStatus?.message
+          "
+          :variant="requiredClassIdToLeaveStatus?.type"
+          :text="requiredClassIdToLeaveStatus?.message"
+        />
+        <talkie-button :onClick="handleJoinNewClassClick">
           Join the new class
         </talkie-button>
       </div>
@@ -49,12 +86,17 @@
         <talkie-loader :size="'large'" />
       </div>
     </template>
+    <talkie-back-drop-loader v-if="backdropLoading" />
   </div>
 </template>
 
 <script>
-import { TalkieLoader, TalkieButton } from "@/components/UICore";
-import { notifications } from "@/components/UIActions";
+import {
+  TalkieLoader,
+  TalkieButton,
+  TalkieAlert,
+  TalkieBackDropLoader,
+} from "@/components/UICore";
 import { ClassService, UserService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 
@@ -63,14 +105,22 @@ export default {
   components: {
     TalkieLoader,
     TalkieButton,
+    TalkieAlert,
+    TalkieBackDropLoader,
   },
   data() {
     return {
       pageLoading: false,
+      backdropLoading: false,
       isJoined: false,
+      classAlreadyJoined: false,
       classId: null,
       classDetails: {},
       requiredClassIdToLeave: null,
+      requiredClassIdToLeaveStatus: {
+        type: null,
+        message: null,
+      },
       classToLeaveDetails: {},
     };
   },
@@ -93,6 +143,16 @@ export default {
         ? user?.schools[0]?.classes[0]
         : null;
 
+    // handle if class is already joined
+    if (joinedClassId === classId) {
+      this.pageLoading = true;
+      const classDetails = await this.getClassDetails(classId);
+      this.classDetails = classDetails;
+      this.classAlreadyJoined = true;
+      this.pageLoading = false;
+      return;
+    }
+
     // handle join sequence if no class joined
     if (!joinedClassId) {
       await this.handleClassJoinSequence();
@@ -114,7 +174,9 @@ export default {
     },
     handleCTAButtonClick() {
       this.$router.push(
-        this.isJoined ? `/classes/tasks/inbox` : `/classes/${this.classId}/join`
+        this.isJoined || this.classAlreadyJoined
+          ? `/classes/tasks/inbox`
+          : `/classes/${this.classId}/join`
       );
     },
     async getUserProfile() {
@@ -126,6 +188,21 @@ export default {
       const response = await ClassService.GetDetails(classId).catch();
 
       return response?.data || null;
+    },
+    async updateUserProfile() {
+      // api call (user profile)
+      const responseProfile = await this.getUserProfile();
+
+      // failure case
+      if (!responseProfile) return false;
+
+      // success case
+      const expires = (date) => ({ expires: new Date(date) });
+      const nextDay = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toISOString();
+      authUser.setUser(responseProfile, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
+      return true;
     },
     async handleClassJoinSequence() {
       // update page state
@@ -168,11 +245,51 @@ export default {
       this.isJoined = true;
       this.pageLoading = false;
     },
-    async handleJoinNewClass() {
-      notifications.show("Failed to join new class..!", {
-        variant: "error",
-        displayIcon: true,
-      });
+    async handleJoinNewClassClick() {
+      // update page state
+      this.backdropLoading = true;
+      this.requiredClassIdToLeaveStatus = {
+        type: null,
+        message: null,
+      };
+
+      // api call (leave class)
+      const responseLeave = await ClassService.LeaveAsStudent(
+        this.requiredClassIdToLeave
+      ).catch(() => null);
+
+      // failure case
+      if (!responseLeave) {
+        this.backdropLoading = false;
+        this.requiredClassIdToLeaveStatus = {
+          type: "error",
+          message: "Failed To Leave Existing Class..!",
+        };
+        return;
+      }
+
+      // update user profile
+      const isProfileUpdated = await this.updateUserProfile();
+
+      // failure case
+      if (!isProfileUpdated) {
+        this.backdropLoading = false;
+        this.requiredClassIdToLeaveStatus = {
+          type: "error",
+          message: "Failed To Leave Existing Class. Please Try Again..!",
+        };
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.requiredClassIdToLeaveStatus = {
+        type: null,
+        message: null,
+      };
+      this.requiredClassIdToLeave = null;
+      this.classToLeaveDetails = null;
+      await this.handleClassJoinSequence();
     },
   },
 };
