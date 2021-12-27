@@ -96,7 +96,7 @@ import { TalkieLoader, TalkieAlert } from "@/components/UICore";
 import TaskItemResponse from "./Response";
 import TaskItemRecorder from "./Recorder";
 import authUser from "@/utils/helpers/auth";
-import { ResponseService, FileService } from "@/api/services";
+import { ResponseService, FileService, FeedbackService } from "@/api/services";
 import FilePurposes from "@/utils/constants/filePurposes";
 
 export default {
@@ -177,6 +177,9 @@ export default {
         // get responses for current task
         const taskResponses = await this.getTaskResponses(this.id);
 
+        // get feedbacks for current task
+        const taskFeedbacks = await this.getTaskFeedbacks(this.id);
+
         // failure case
         if (!taskResponses) {
           this.state.responsesFetch = {
@@ -190,13 +193,42 @@ export default {
         }
 
         // success case
-        this.messagesFetched = taskResponses
-          ?.filter((x) => x?.student?.id === this?.user?.id)
-          ?.map((x) => ({
-            id: x?.id,
-            from: x?.student?.id,
-            audio: x?.voiceRecording,
-          }));
+        const messagesFetched = (() => {
+          let _temp = [];
+
+          // add responses of auth user + transform obj
+          _temp = [
+            ...taskResponses
+              ?.filter((x) => x?.student?.id === this?.user?.id)
+              ?.map((x) => ({
+                id: x?.id,
+                from: x?.student?.id,
+                audio: x?.voiceRecording,
+                dateTime: x?.createdAt,
+              })),
+          ];
+
+          // add feedbacks from of auth user + transform obj
+          _temp = [
+            ..._temp,
+            ...taskFeedbacks?.map((x) => ({
+              id: x?.id,
+              from: x?.teacher,
+              audio: x?.voiceRecording,
+              dateTime: x?.createdAt,
+            })),
+          ];
+
+          // sort responses/feedbacks with dateTime
+          _temp = [..._temp]?.sort(function (a, b) {
+            const aDate = new Date(a?.dateTime);
+            const bDate = new Date(b?.dateTime);
+            return aDate < bDate ? -1 : aDate > bDate ? 1 : 0;
+          });
+
+          return _temp;
+        })();
+        this.messagesFetched = messagesFetched;
         this.state.responsesFetch = {
           loading: false,
           message: {
@@ -296,7 +328,18 @@ export default {
     },
     async getTaskResponses(taskId) {
       const query = {};
+
       const responseAPI = await ResponseService.QueryClassTaskResponses(
+        taskId,
+        query
+      ).catch();
+
+      return responseAPI?.data || null;
+    },
+    async getTaskFeedbacks(taskId) {
+      const query = {};
+
+      const responseAPI = await FeedbackService.QueryClassTaskFeedbacks(
         taskId,
         query
       ).catch();
