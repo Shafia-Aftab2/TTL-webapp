@@ -177,11 +177,45 @@ export default {
         // get responses for current task
         const taskResponses = await this.getTaskResponses(this.id);
 
-        // get feedbacks for current task
-        const taskFeedbacks = await this.getTaskFeedbacks(this.id);
+        // get feedbacks (whole class) for current task
+        const taskFeedbacksWholeClass = await this.getTaskFeedbacks({
+          taskId: this.id,
+        });
+
+        // get feedbacks (individual response) for current task
+        const taskFeedbacksIndividualResponse = await (async () => {
+          // get responses of current student
+          const studentResponseIds = [
+            ...taskResponses
+              ?.filter((x) => x?.student?.id === this?.user?.id)
+              ?.map((x) => x?.id),
+          ];
+
+          // storage
+          let _temp = [];
+
+          // get feedbacks of individual responses
+          await Promise.all(
+            studentResponseIds?.map(async (x) => {
+              const _feedbackForResponse = await this.getTaskFeedbacks({
+                taskId: this.id,
+                responseId: x,
+              });
+
+              _temp = [..._temp, ..._feedbackForResponse];
+            })
+          );
+
+          // return list of individual response feedbacks
+          return _temp;
+        })();
 
         // failure case
-        if (!taskResponses) {
+        if (
+          !taskResponses ||
+          !taskFeedbacksWholeClass ||
+          !taskFeedbacksIndividualResponse
+        ) {
           this.state.responsesFetch = {
             loading: false,
             message: {
@@ -211,7 +245,10 @@ export default {
           // add feedbacks from of auth user + transform obj
           _temp = [
             ..._temp,
-            ...taskFeedbacks?.map((x) => ({
+            ...[
+              ...taskFeedbacksWholeClass,
+              ...taskFeedbacksIndividualResponse,
+            ]?.map((x) => ({
               id: x?.id,
               from: x?.teacher,
               audio: x?.voiceRecording,
@@ -336,8 +373,8 @@ export default {
 
       return responseAPI?.data || null;
     },
-    async getTaskFeedbacks(taskId) {
-      const query = {};
+    async getTaskFeedbacks({ taskId, responseId = null }) {
+      const query = { ...(responseId && { responseId }) };
 
       const responseAPI = await FeedbackService.QueryClassTaskFeedbacks(
         taskId,
