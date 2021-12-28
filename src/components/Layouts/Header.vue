@@ -109,9 +109,6 @@ export default {
   created() {
     this.handleAuthUserLoginCheck();
   },
-  updated() {
-    this.handleAuthUserLoginCheck();
-  },
   methods: {
     handleAuthUserLoginCheck() {
       // get auth user
