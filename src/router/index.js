@@ -180,6 +180,7 @@ const routes = [
       {
         name: "ServicesUpgrade",
         path: "/Services/Upgrade",
+        props: { type: "sidebar", variant: "dark" },
         component: ServicesUpgrade,
       },
     ],
