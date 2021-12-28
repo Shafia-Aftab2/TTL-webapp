@@ -20,9 +20,11 @@ import { defineAsyncComponent } from "vue";
 
 export default {
   name: "TalkieIcon",
-  data: () => ({
-    icon: "",
-  }),
+  data() {
+    return {
+      icon: "",
+    };
+  },
   props: {
     type: {
       type: String,

@@ -70,21 +70,23 @@ import authUser from "@/utils/helpers/auth";
 export default {
   name: "Header",
   components: { TalkieIcon, LogoTalkie },
-  data: () => ({
-    links: [
-      // TEMP: nav links hidden for first deployment
-      // {
-      //   text: "Upgrade",
-      //   url: "#",
-      // },
-      // {
-      //   text: "Help",
-      //   url: "#",
-      // },
-    ],
-    user: {},
-    isLoggedIn: false,
-  }),
+  data() {
+    return {
+      links: [
+        // TEMP: nav links hidden for first deployment
+        // {
+        //   text: "Upgrade",
+        //   url: "#",
+        // },
+        // {
+        //   text: "Help",
+        //   url: "#",
+        // },
+      ],
+      user: {},
+      isLoggedIn: false,
+    };
+  },
   props: {
     hideLinksAndProfile: {
       type: Boolean,
