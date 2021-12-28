@@ -32,12 +32,10 @@ export default {
     },
     name: {
       type: String,
-      required: true,
       default: "",
     },
     size: {
       type: Number,
-      required: true,
       default: 25,
     },
     iconToSizeRatio: {
