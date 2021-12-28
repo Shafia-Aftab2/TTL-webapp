@@ -103,7 +103,7 @@ export default {
     hideSideBarIconOn: {
       type: Array,
       default: () => ["tablet", "desktop"],
-      validator: (val) => ["phone", "tablet", "desktop"].includes(val),
+      // validator: (val) => ["phone", "tablet", "desktop"].includes(val), TODO: fix validation
     },
   },
   created() {
