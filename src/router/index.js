@@ -176,11 +176,11 @@ const routes = [
   {
     path: "/Services",
     component: Layout,
+    props: { variant: "dark" },
     children: [
       {
         name: "ServicesUpgrade",
         path: "/Services/Upgrade",
-        props: { type: "sidebar", variant: "dark" },
         component: ServicesUpgrade,
       },
     ],
