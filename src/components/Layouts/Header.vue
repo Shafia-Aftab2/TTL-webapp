@@ -19,7 +19,7 @@
     </ul>
     <!-- Right Side -->
     <ul class="talkie-navbar-links-wrapper" v-if="!hideLinksAndProfile">
-      <template v-if="isLoggedIn">
+      <template v-if="computedIsLoggedIn">
         <template v-if="!hideLinks" class="talkie-navbar">
           <li class="talkie-navbar-link-item" v-for="link in links" :key="link">
             <a :href="link.url">{{ link.text }}</a>
@@ -27,7 +27,9 @@
         </template>
         <li class="talkie-navbar-profile-link-item">
           <div class="talkie-navbar-profile-wrapper" tabindex="0">
-            <a class="talkie-navbar-profile-name" href="#">{{ user.name }}</a>
+            <a class="talkie-navbar-profile-name" href="#">{{
+              computedUser?.name
+            }}</a>
             <talkie-icon :size="25" :name="'profile'" :isActive="true" />
             <div class="talkie-navbar-profile-options-wrapper">
               <ul class="talkie-navbar-profile-options-list">
@@ -49,7 +51,7 @@
           </div>
         </li>
       </template>
-      <template v-if="!isLoggedIn">
+      <template v-if="!computedIsLoggedIn">
         <li
           class="talkie-navbar-link-item talkie-navbar-link-item-always-visiable"
         >
@@ -83,9 +85,15 @@ export default {
         //   url: "#",
         // },
       ],
-      user: {},
-      isLoggedIn: false,
     };
+  },
+  computed: {
+    computedUser() {
+      return this.$store.state.user;
+    },
+    computedIsLoggedIn() {
+      return Object.keys(this.$store.state.user)?.length > 0;
+    },
   },
   props: {
     hideLinksAndProfile: {
