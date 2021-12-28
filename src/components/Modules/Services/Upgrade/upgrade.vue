@@ -7,4 +7,4 @@
 export default {
   name: "ServicesUpgrade",
 };
-</script>
+</script>;

@@ -31,7 +31,6 @@ import Error404 from "../components/Modules/Error404";
 import authMiddlware from "./middlewares/auth";
 
 const routes = [
-  
   {
     path: "/",
     component: Layout,
@@ -181,9 +180,9 @@ const routes = [
       {
         name: "ServicesUpgrade",
         path: "/Services/Upgrade",
-        component: ServicesUpgrade
-      }
-    ]
+        component: ServicesUpgrade,
+      },
+    ],
   },
   {
     path: "/students",
