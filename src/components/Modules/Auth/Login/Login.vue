@@ -139,6 +139,7 @@ export default {
 
       // success case
       const { user, tokens } = response.data;
+      this.handleStoreMutation("user", user);
       const expires = (date) => ({ expires: new Date(date) });
       authUser.setUser(user, expires(tokens.refresh.expiry));
       authUser.setAccessToken(
@@ -155,6 +156,9 @@ export default {
         message: "Login Successfull. Redirecting..!",
       };
       this.$router.push("/");
+    },
+    handleStoreMutation(key, value) {
+      this.$store.state[key] = value;
     },
   },
 };

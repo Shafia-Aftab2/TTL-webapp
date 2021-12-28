@@ -51,9 +51,15 @@ export default {
       // update page state
       this.loading = false;
 
+      // update global state
+      this.handleStoreMutation("user", {});
+
       // redirect to login
       this.handleRemoveUserCookies();
       this.$router.push("/auth/login");
+    },
+    handleStoreMutation(key, value) {
+      this.$store.state[key] = value;
     },
   },
 };

@@ -308,6 +308,13 @@ const routes = [
         path: "/:catchAll(.*)",
         component: Error404,
       },
+    ],
+  },
+  {
+    path: "/404",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
       {
         name: "NotFound",
         path: "/404",
