@@ -25,11 +25,13 @@ import StudentStatistics from "../components/Modules/Students/Stats";
 import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
+import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 
 const routes = [
+  
   {
     path: "/",
     component: Layout,
@@ -171,6 +173,17 @@ const routes = [
         component: StudentClassJoin,
       },
     ],
+  },
+  {
+    path: "/Services",
+    component: Layout,
+    children: [
+      {
+        name: "ServicesUpgrade",
+        path: "/Services/Upgrade",
+        component: ServicesUpgrade
+      }
+    ]
   },
   {
     path: "/students",
