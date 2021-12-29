@@ -69,6 +69,16 @@
               />
             </span>
           </talkie-audio-player>
+          <!-- Record Button -->
+          <talkie-icon
+            :name="'mike-unmuted'"
+            :isActive="true"
+            :variant="'secondary'"
+            :size="40"
+            :iconToSizeRatio="1.1"
+            :onClick="handleCardBodyClick"
+            v-if="!isRecording"
+          />
           <!-- Feedback Stars -->
           <talkie-icon
             :name="'star'"
