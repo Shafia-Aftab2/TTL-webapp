@@ -20,10 +20,18 @@
         <p>>Create up to 8 classes (max of 32 students)</p>
         <p></p>
         <p>>Access all features</p>
+        <p></p>
         <p>>Set an unlimited number of questions accross all topics</p>
         <p></p>
         <p>>Students get unlimited access to all quizzes (March 2022)</p>
         <p></p>
+        <div class="yellow-text">
+          <p>Limited Offer</p>
+        </div>
+        <div class="annual">
+          <h2>£30 individual teacher / annual</h2>
+        </div>
+        <h1>£2.50/month</h1>
       </div>
     </div>
   </div>
@@ -72,6 +80,11 @@ export default {
 .text-style {
   font-size: 20px;
   color: var(--t-secondary);
+}
+.yellow-text {
+  color: rgb(255, 174, 0);
+  font-size: 20px;
+  font-weight: bold;
 }
 .back {
   text-decoration: none;
