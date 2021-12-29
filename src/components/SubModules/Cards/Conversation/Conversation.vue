@@ -1,5 +1,11 @@
 <template>
-  <div class="talkie-conversation-card" @click="handleCardBodyClick">
+  <div
+    :class="[
+      'talkie-conversation-card',
+      `talkie-conversation-card-${userMode}-mode`,
+    ]"
+    @click="handleCardBodyClick"
+  >
     <!-- Conversation Header -->
     <div
       class="talkie-conversation-card-header-wrapper"
@@ -577,6 +583,9 @@ export default {
   .talkie-conversation-card {
     gap: var(--t-space-8);
     border-radius: var(--t-br-medium);
+  }
+  .talkie-conversation-card-student-mode,
+  .talkie-conversation-card-teacher-mode {
     padding: var(--t-space-20);
   }
   .talkie-conversation-card-spacer {
@@ -607,7 +616,12 @@ export default {
   .talkie-conversation-card {
     gap: var(--t-space-8);
     border-radius: var(--t-br-large);
+  }
+  .talkie-conversation-card-student-mode {
     padding: var(--t-space-24);
+  }
+  .talkie-conversation-card-teacher-mode {
+    padding: var(--t-space-16);
   }
   .talkie-conversation-card-spacer {
     margin: var(--t-space-16) 0;
