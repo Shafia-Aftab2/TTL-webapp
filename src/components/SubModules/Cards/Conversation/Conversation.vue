@@ -5,25 +5,31 @@
       class="talkie-conversation-card-header-wrapper"
       @click="handleCardBodyClick"
     >
-      <div class="talkie-conversation-card-header" @click="handleCardBodyClick">
-        <p class="p" v-if="taskTitle" @click="handleCardBodyClick">
-          {{ taskTitle }}
-        </p>
-        <p class="p" v-if="taskTopic" @click="handleCardBodyClick">
-          {{ taskTopic }}
-        </p>
-      </div>
-      <div
-        class="talkie-conversation-card-header-status"
-        v-if="!taskIsRead"
-      ></div>
+      <!-- Student Mode -->
+      <template v-if="userMode === 'student'">
+        <div
+          class="talkie-conversation-card-header"
+          @click="handleCardBodyClick"
+        >
+          <p class="p" v-if="taskTitle" @click="handleCardBodyClick">
+            {{ taskTitle }}
+          </p>
+          <p class="p" v-if="taskTopic" @click="handleCardBodyClick">
+            {{ taskTopic }}
+          </p>
+        </div>
+        <div
+          class="talkie-conversation-card-header-status"
+          v-if="!taskIsRead"
+        ></div>
+      </template>
     </div>
 
     <!-- Spacer -->
     <div class="talkie-conversation-card-spacer" v-if="cardExpanded"></div>
 
     <template v-if="cardExpanded">
-      <!-- Audio Messages -->
+      <!-- Conversation Messages -->
       <div class="talkie-conversation-card-audio-messages-wrapper">
         <template v-if="!state?.responsesFetch?.loading">
           <conversation-message
@@ -81,7 +87,9 @@
       <div class="talkie-conversation-card-spacer" v-if="cardExpanded"></div>
 
       <!-- Conversation Recorder -->
-      <conversation-recorder :onRecordingSendClick="handleMessageCreation" />
+      <template v-if="userMode === 'student'">
+        <conversation-recorder :onRecordingSendClick="handleMessageCreation" />
+      </template>
     </template>
   </div>
 </template>
@@ -103,6 +111,14 @@ export default {
     ConversationRecorder,
   },
   props: {
+    userMode: {
+      type: String,
+      validator: (val) => ["student", "teacher"].includes(val),
+    },
+    messages: {
+      type: Array,
+    },
+    // student mode
     taskId: {
       type: String,
     },
@@ -115,9 +131,6 @@ export default {
     taskIsRead: {
       type: Boolean,
       default: false,
-    },
-    messages: {
-      type: Array,
     },
   },
   data() {
