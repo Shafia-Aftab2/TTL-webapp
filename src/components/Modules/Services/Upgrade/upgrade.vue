@@ -5,6 +5,27 @@
         <a class="back"><span>&#8592; </span>back</a>
       </div>
     </div>
+    <div class="box-content">
+      <div class="text-center box-header">
+        <p></p>
+        <p></p>
+        <p></p>
+        <h1>Upgrade - Pricing</h1>
+        <p>When you upgrade your account, you get to:</p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p>>Create up to 8 classes (max of 32 students)</p>
+        <p></p>
+        <p>>Access all features</p>
+        <p>>Set an unlimited number of questions accross all topics</p>
+        <p></p>
+        <p>>Students get unlimited access to all quizzes (March 2022)</p>
+        <p></p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -14,18 +35,6 @@ export default {
 };
 </script>
 <style scoped>
-.bar-outline {
-  background-color: var(--t-white);
-  padding: var(--t-space-16);
-  border-radius: var(--t-space-10);
-  border: 2px solid var(--t-gray-home);
-}
-.bar-inline {
-  display: inline-flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5px;
-}
 .box-container {
   position: relative;
   display: flex;
@@ -43,9 +52,6 @@ export default {
   padding: var(--t-space-20);
   gap: 10px;
 }
-.text-center {
-  text-align: center;
-}
 .box-header {
   display: grid;
   gap: 10px;
@@ -53,6 +59,19 @@ export default {
 .box-head {
   display: flex;
   justify-content: space-between;
+}
+.bar-outline {
+  background-color: var(--t-white);
+  padding: var(--t-space-16);
+  border-radius: var(--t-space-10);
+  border: 2px solid var(--t-gray-home);
+}
+.text-center {
+  text-align: center;
+}
+.text-style {
+  font-size: 20px;
+  color: var(--t-secondary);
 }
 .back {
   text-decoration: none;
@@ -65,14 +84,25 @@ export default {
     padding: 110px 15px var(--t-space-50) 10px;
   }
 }
+
 @media (min-width: 600px) {
+  .content {
+    width: 50%;
+    padding: var(--t-space-10);
+  }
   .back-default {
     position: absolute;
     left: 160px;
   }
 }
+
 @media (min-width: 900px) {
+  .content {
+    width: 35%;
+    padding: var(--t-space-50);
+  }
 }
+
 @media (min-width: 1200px) {
   .back-default {
     position: absolute;
