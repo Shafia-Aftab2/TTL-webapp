@@ -120,6 +120,7 @@ import authUser from "@/utils/helpers/auth";
 import { ResponseService, FileService, FeedbackService } from "@/api/services";
 import FilePurposes from "@/utils/constants/filePurposes";
 import rolesList from "@/utils/constants/roles";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ConversationCard",
@@ -351,6 +352,15 @@ export default {
       return uploadedFile;
     },
     async handleMessageCreation(recording) {
+      // if teacher has no response to give feedback for
+      if (!this.computedResponseId && this.userMode === rolesList.TEACHER) {
+        notifications.show("No Student Responses To Give Feedback For..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
       // update page state
       this.state.messageCreation = {
         loading: true,
