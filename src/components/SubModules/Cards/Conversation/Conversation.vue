@@ -101,6 +101,7 @@ import ConversationRecorder from "./Recorder";
 import authUser from "@/utils/helpers/auth";
 import { ResponseService, FileService, FeedbackService } from "@/api/services";
 import FilePurposes from "@/utils/constants/filePurposes";
+import rolesList from "@/utils/constants/roles";
 
 export default {
   name: "ConversationCard",
@@ -162,6 +163,20 @@ export default {
   computed: {
     computedMessages() {
       return [...this.messages, ...this.messagesFetched];
+    },
+    computedResponseId() {
+      const responseId = (() => {
+        const _studentMessages = this.computedMessages.filter(
+          (x) => x?.from === this.studentId
+        );
+
+        const lastStudentMessage =
+          _studentMessages[_studentMessages?.length - 1];
+
+        return lastStudentMessage?.id;
+      })();
+
+      return responseId || null;
     },
   },
   created() {
@@ -328,7 +343,9 @@ export default {
           loading: false,
           message: {
             type: "error",
-            text: "Failed To Create Response..!",
+            text: `Failed To Create ${
+              this.userMode === rolesList.STUDENT ? "Response" : "Feedback"
+            }..!`,
           },
         };
         return;
@@ -339,11 +356,14 @@ export default {
         voiceRecording: uploadedFile,
       };
 
-      // api call (create response)
-      const response = await ResponseService.CreateResponse(
-        this.taskId,
-        payload
-      ).catch();
+      // api call (create response/feedback)
+      const response =
+        this.userMode === rolesList.STUDENT
+          ? await ResponseService.CreateResponse(this.taskId, payload).catch()
+          : await FeedbackService.CreateIndividualFeedback(
+              this.computedResponseId,
+              payload
+            ).catch();
 
       // failure case
       if (!response) {
@@ -351,7 +371,9 @@ export default {
           loading: false,
           message: {
             type: "error",
-            text: "Failed To Create Response..!",
+            text: `Failed To Create ${
+              this.userMode === rolesList.STUDENT ? "Response" : "Feedback"
+            }..!`,
           },
         };
         return;
