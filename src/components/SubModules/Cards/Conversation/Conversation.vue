@@ -83,14 +83,14 @@
             v-if="!isRecording"
           />
           <!-- Feedback Stars -->
-          <talkie-icon
+          <!-- <talkie-icon
             :name="'star'"
             :isActive="true"
             :variant="'primary'"
             :size="40"
             :iconToSizeRatio="1.1"
             :onClick="onRatingStarClick"
-          />
+          /> -->
         </div>
       </template>
     </div>
