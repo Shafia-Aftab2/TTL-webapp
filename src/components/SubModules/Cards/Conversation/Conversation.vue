@@ -421,7 +421,8 @@ export default {
         ...this.messagesFetched,
         {
           id: createdMessage?.id,
-          from: createdMessage?.student,
+          from:
+            this.userMode === rolesList.STUDENT ? this.studentId : this.user.id,
           audio: createdMessage?.voiceRecording,
         },
       ];
