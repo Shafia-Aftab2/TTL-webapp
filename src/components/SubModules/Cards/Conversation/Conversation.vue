@@ -31,7 +31,7 @@
     <template v-if="cardExpanded">
       <!-- Conversation Messages -->
       <div class="talkie-conversation-card-audio-messages-wrapper">
-        <template v-if="!state?.responsesFetch?.loading">
+        <template v-if="!state?.messagesFetch?.loading">
           <conversation-message
             v-for="_response in computedMessages"
             :key="_response"
@@ -41,7 +41,7 @@
         </template>
 
         <!-- Create Message Loader -->
-        <template v-if="state?.responseCreation?.loading">
+        <template v-if="state?.messageCreation?.loading">
           <div class="talkie-conversation-card-audio-message-right">
             <talkie-loader :size="'large'" />
           </div>
@@ -51,13 +51,13 @@
         <div
           class="talkie-conversation-card-audio-message-right"
           v-if="
-            state?.responseCreation?.message?.type &&
-            state?.responseCreation?.message?.text
+            state?.messageCreation?.message?.type &&
+            state?.messageCreation?.message?.text
           "
         >
           <talkie-alert
-            :text="state?.responseCreation?.message?.text"
-            :variant="state?.responseCreation?.message?.type"
+            :text="state?.messageCreation?.message?.text"
+            :variant="state?.messageCreation?.message?.type"
           />
         </div>
 
@@ -65,18 +65,18 @@
         <div
           class="talkie-conversation-card-audio-message-centered"
           v-if="
-            state?.responsesFetch?.message?.type &&
-            state?.responsesFetch?.message?.text
+            state?.messagesFetch?.message?.type &&
+            state?.messagesFetch?.message?.text
           "
         >
           <talkie-alert
-            :text="state?.responsesFetch?.message?.text"
-            :variant="state?.responsesFetch?.message?.type"
+            :text="state?.messagesFetch?.message?.text"
+            :variant="state?.messagesFetch?.message?.type"
           />
         </div>
 
         <!-- Fetch Messages Loader -->
-        <template v-if="state?.responsesFetch?.loading">
+        <template v-if="state?.messagesFetch?.loading">
           <div class="talkie-conversation-card-audio-message-centered">
             <talkie-loader :size="'large'" />
           </div>
@@ -118,6 +118,9 @@ export default {
     messages: {
       type: Array,
     },
+    studentId: {
+      type: String,
+    },
     // student mode
     taskId: {
       type: String,
@@ -138,14 +141,14 @@ export default {
       cardExpanded: false,
       user: {},
       state: {
-        responseCreation: {
+        messageCreation: {
           loading: false,
           message: {
             type: null,
             text: null,
           },
         },
-        responsesFetch: {
+        messagesFetch: {
           loading: false,
           message: {
             type: null,
@@ -172,116 +175,117 @@ export default {
 
       this.cardExpanded = !this.cardExpanded;
 
-      if (this.cardExpanded) {
-        // update page state
-        this.state.responsesFetch = {
-          loading: true,
+      if (this.cardExpanded) await this.getConversationMessages();
+    },
+    async getConversationMessages() {
+      // update page state
+      this.state.messagesFetch = {
+        loading: true,
+        message: {
+          type: null,
+          text: null,
+        },
+      };
+
+      // get responses for current task
+      const taskResponses = await this.getTaskResponses(this.taskId);
+
+      // get feedbacks (whole class) for current task
+      const taskFeedbacksWholeClass = await this.getTaskFeedbacks({
+        taskId: this.taskId,
+      });
+
+      // get feedbacks (individual response) for current task
+      const taskFeedbacksIndividualResponse = await (async () => {
+        // get responses of current student
+        const studentResponseIds = [
+          ...taskResponses
+            ?.filter((x) => x?.student?.id === this?.studentId)
+            ?.map((x) => x?.id),
+        ];
+
+        // storage
+        let _temp = [];
+
+        // get feedbacks of individual responses
+        await Promise.all(
+          studentResponseIds?.map(async (x) => {
+            const _feedbackForResponse = await this.getTaskFeedbacks({
+              taskId: this.taskId,
+              responseId: x,
+            });
+
+            _temp = [..._temp, ..._feedbackForResponse];
+          })
+        );
+
+        // return list of individual response feedbacks
+        return _temp;
+      })();
+
+      // failure case
+      if (
+        !taskResponses ||
+        !taskFeedbacksWholeClass ||
+        !taskFeedbacksIndividualResponse
+      ) {
+        this.state.messagesFetch = {
+          loading: false,
           message: {
-            type: null,
-            text: null,
+            type: "error",
+            text: "Failed to load latest responses..!",
           },
         };
+        return;
+      }
 
-        // get responses for current task
-        const taskResponses = await this.getTaskResponses(this.taskId);
+      // success case
+      const messagesFetched = (() => {
+        let _temp = [];
 
-        // get feedbacks (whole class) for current task
-        const taskFeedbacksWholeClass = await this.getTaskFeedbacks({
-          taskId: this.taskId,
-        });
-
-        // get feedbacks (individual response) for current task
-        const taskFeedbacksIndividualResponse = await (async () => {
-          // get responses of current student
-          const studentResponseIds = [
-            ...taskResponses
-              ?.filter((x) => x?.student?.id === this?.user?.id)
-              ?.map((x) => x?.id),
-          ];
-
-          // storage
-          let _temp = [];
-
-          // get feedbacks of individual responses
-          await Promise.all(
-            studentResponseIds?.map(async (x) => {
-              const _feedbackForResponse = await this.getTaskFeedbacks({
-                taskId: this.taskId,
-                responseId: x,
-              });
-
-              _temp = [..._temp, ..._feedbackForResponse];
-            })
-          );
-
-          // return list of individual response feedbacks
-          return _temp;
-        })();
-
-        // failure case
-        if (
-          !taskResponses ||
-          !taskFeedbacksWholeClass ||
-          !taskFeedbacksIndividualResponse
-        ) {
-          this.state.responsesFetch = {
-            loading: false,
-            message: {
-              type: "error",
-              text: "Failed to load latest responses..!",
-            },
-          };
-          return;
-        }
-
-        // success case
-        const messagesFetched = (() => {
-          let _temp = [];
-
-          // add responses of auth user + transform obj
-          _temp = [
-            ...taskResponses
-              ?.filter((x) => x?.student?.id === this?.user?.id)
-              ?.map((x) => ({
-                id: x?.id,
-                from: x?.student?.id,
-                audio: x?.voiceRecording,
-                dateTime: x?.createdAt,
-              })),
-          ];
-
-          // add feedbacks from of auth user + transform obj
-          _temp = [
-            ..._temp,
-            ...[
-              ...taskFeedbacksWholeClass,
-              ...taskFeedbacksIndividualResponse,
-            ]?.map((x) => ({
+        // add responses of auth user + transform obj
+        _temp = [
+          ...taskResponses
+            ?.filter((x) => x?.student?.id === this?.studentId)
+            ?.map((x) => ({
               id: x?.id,
-              from: x?.teacher,
+              from: x?.student?.id,
               audio: x?.voiceRecording,
               dateTime: x?.createdAt,
             })),
-          ];
+        ];
 
-          // sort responses/feedbacks with dateTime
-          _temp = [..._temp]?.sort(function (a, b) {
-            const aDate = new Date(a?.dateTime);
-            const bDate = new Date(b?.dateTime);
-            return aDate < bDate ? -1 : aDate > bDate ? 1 : 0;
-          });
+        // add feedbacks for auth user + transform obj
+        _temp = [
+          ..._temp,
+          ...[
+            ...taskFeedbacksWholeClass,
+            ...taskFeedbacksIndividualResponse,
+          ]?.map((x) => ({
+            id: x?.id,
+            from: x?.teacher,
+            audio: x?.voiceRecording,
+            dateTime: x?.createdAt,
+          })),
+        ];
 
-          return _temp;
-        })();
-        this.messagesFetched = messagesFetched;
-        this.state.responsesFetch = {
-          loading: false,
-          message: {
-            type: null,
-            text: null,
-          },
-        };
-      }
+        // sort responses/feedbacks with dateTime
+        _temp = [..._temp]?.sort(function (a, b) {
+          const aDate = new Date(a?.dateTime);
+          const bDate = new Date(b?.dateTime);
+          return aDate < bDate ? -1 : aDate > bDate ? 1 : 0;
+        });
+
+        return _temp;
+      })();
+      this.messagesFetched = messagesFetched;
+      this.state.messagesFetch = {
+        loading: false,
+        message: {
+          type: null,
+          text: null,
+        },
+      };
     },
     async handleFileUpload(recordingBlob) {
       // payload
@@ -307,7 +311,7 @@ export default {
     },
     async handleMessageCreation(recording) {
       // update page state
-      this.state.responseCreation = {
+      this.state.messageCreation = {
         loading: true,
         message: {
           type: null,
@@ -320,7 +324,7 @@ export default {
 
       // failure case
       if (!uploadedFile) {
-        this.state.responseCreation = {
+        this.state.messageCreation = {
           loading: false,
           message: {
             type: "error",
@@ -343,7 +347,7 @@ export default {
 
       // failure case
       if (!response) {
-        this.state.responseCreation = {
+        this.state.messageCreation = {
           loading: false,
           message: {
             type: "error",
@@ -354,16 +358,16 @@ export default {
       }
 
       // success case
-      const createdResponse = response?.data;
+      const createdMessage = response?.data;
       this.messagesFetched = [
         ...this.messagesFetched,
         {
-          id: createdResponse?.id,
-          from: createdResponse?.student,
-          audio: createdResponse?.voiceRecording,
+          id: createdMessage?.id,
+          from: createdMessage?.student,
+          audio: createdMessage?.voiceRecording,
         },
       ];
-      this.state.responseCreation = {
+      this.state.messageCreation = {
         loading: false,
         message: {
           type: null,
