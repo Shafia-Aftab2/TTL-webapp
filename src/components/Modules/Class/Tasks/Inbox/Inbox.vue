@@ -19,7 +19,7 @@
       <div class="class-tasks-inbox-task-items-wrapper">
         <template v-if="tasksList.length > 0">
           <template v-for="_task in tasksList" :key="_task">
-            <task-item
+            <talkie-conversation-card
               v-if="
                 currentTopicFilter
                   ? _task?.topic?.name === currentTopicFilter
@@ -47,7 +47,7 @@
 
 <script>
 import { TalkieSelect, TalkieLoader } from "@/components/UICore";
-import TaskItem from "./TaskItem";
+import { TalkieConversationCard } from "@/components/SubModules/Cards";
 import { ClassService, TaskService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 
@@ -56,7 +56,7 @@ export default {
   components: {
     TalkieSelect,
     TalkieLoader,
-    TaskItem,
+    TalkieConversationCard,
   },
   data() {
     return {
