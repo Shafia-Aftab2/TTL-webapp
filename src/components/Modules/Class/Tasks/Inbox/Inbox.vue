@@ -25,6 +25,7 @@
                   ? _task?.topic?.name === currentTopicFilter
                   : true
               "
+              :userMode="'student'"
               :taskId="_task?.id"
               :taskTitle="_task?.title"
               :taskTopic="_task?.topic?.name"
