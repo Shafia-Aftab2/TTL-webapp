@@ -11,6 +11,7 @@
         <p></p>
         <p></p>
         <h1>Upgrade - Pricing</h1>
+        <p></p>
         <p>When you upgrade your account, you get to:</p>
         <p></p>
         <p></p>
