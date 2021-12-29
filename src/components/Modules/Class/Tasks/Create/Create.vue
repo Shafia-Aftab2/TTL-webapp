@@ -194,7 +194,9 @@
       </talkie-audio-recorder>
     </talkie-form>
     <div class="class-start-convo-footer">
-      <a href="#" class="class-start-convo-footer-link">Not now</a>
+      <a :href="`/classes/${classId}`" class="class-start-convo-footer-link">
+        Not now
+      </a>
     </div>
   </template>
   <!-- loading -->
@@ -222,7 +224,7 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import { createQandATopicSchema } from "@/utils/validations/task.validation";
-import { FileService, TaskService, TopicService } from "@/api/services";
+import { FileService, TaskService, ClassService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
 
@@ -294,17 +296,21 @@ export default {
     const classId = this.$route.params.id;
     this.classId = classId;
 
-    // get class topics
-    const topics = await this.getClassTopics();
-
-    // error case
-    if (!topics) return this.$router.push("/404");
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
 
     // success case
-    this.topics = topics;
+    this.topics = classDetails.topics;
     this.pageLoading = false;
   },
   methods: {
+    handleRedirection(link, timeout = 100) {
+      const self = this;
+      setTimeout(function () {
+        self.$router.push(link);
+      }, timeout);
+    },
     handleRecordedItem(recording) {
       this.currentRecording = recording;
       this.setFormValue("voiceForQnA", recording.blob);
@@ -426,13 +432,16 @@ export default {
         message: "Conversation Created. Redirecting..!",
         animateEllipse: false,
       };
+      const taskId = response?.data?.id;
+      this.handleRedirection(
+        `/classes/${this.classId}/tasks/${taskId}/status?status=created`,
+        200
+      );
     },
-    async getClassTopics() {
-      const query = {};
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
 
-      const response = await TopicService.Query(query).catch(() => null);
-
-      return !!response.data ? response.data.results : null;
+      return response.data || null;
     },
   },
 };

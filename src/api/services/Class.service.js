@@ -20,4 +20,8 @@ export default class ClassRoutes {
   static async JoinAsStudent(id) {
     return HTTPClient.patch(`/class/${id}/join`);
   }
+
+  static async LeaveAsStudent(id) {
+    return HTTPClient.delete(`/class/${id}/leave`);
+  }
 }

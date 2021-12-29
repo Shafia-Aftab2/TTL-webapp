@@ -10,7 +10,7 @@
       :validationSchema="createClassSchema"
       :onSubmit="handleSubmit"
     >
-      <h3 class="h3">¡Hola, Ms. Joyce!</h3>
+      <h3 class="h3">¡Hola, {{ user?.name }}!</h3>
       <h5 class="create-class-form-header h5">
         Let’s create your first class...
       </h5>
@@ -90,12 +90,15 @@ export default {
         type: null,
         message: null,
       },
+      user: {},
     };
   },
   created() {
-    // get school id from user
+    // get auth user
     const user = authUser.getUser();
+    this.user = user;
 
+    // get school id from user
     const schoolId =
       user.schools && user.schools.length > 0 ? user.schools[0]._id : null;
 
@@ -154,6 +157,8 @@ export default {
         type: "success",
         message: "Class Created. Redirecting..!",
       };
+      const classId = response?.data?.id;
+      this.$router.push(`/classes/${classId}/choose-topics`);
     },
   },
 };

@@ -1,6 +1,9 @@
 {
   "name": "talkie_webapp",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.15.0"
+  },
   "description": "Talkie the App",
   "author": "ahmadthd <ahmed@techchaps.com>",
   "private": true,
@@ -14,7 +17,7 @@
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "js-cookie": "^3.0.1",
-    "lamejs": "^1.2.0",
+    "lamejs": "1.2.0",
     "postcss-import": "11.1.0",
     "postcss-preset-env": "6.0.5",
     "vee-validate": "4.5.6",

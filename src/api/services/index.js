@@ -5,6 +5,7 @@ import TaskService from "./Task.service";
 import TopicService from "./Topic.service";
 import ResponseService from "./Response.service";
 import FeedbackService from "./Feedback.service";
+import UserService from "./User.service";
 
 export {
   AuthService,
@@ -14,4 +15,5 @@ export {
   TopicService,
   ResponseService,
   FeedbackService,
+  UserService,
 };

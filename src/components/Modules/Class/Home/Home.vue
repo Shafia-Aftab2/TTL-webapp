@@ -148,7 +148,11 @@ export default {
       newTaskOptions: [
         {
           name: "Question",
-          onClick: () => {},
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create`,
+              100
+            ),
         },
         {
           name: "Photo",
@@ -252,7 +256,7 @@ export default {
         outlined: true,
         loading: false,
         disabled: false,
-        onClick: () => console.log("Button Clicked"),
+        onClick: () => this.$router.push("/classes/create"),
       },
     ];
     this.handleSidebarMutation({
