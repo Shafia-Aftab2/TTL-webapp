@@ -34,7 +34,7 @@
             <div class="talkie-navbar-profile-options-wrapper">
               <ul class="talkie-navbar-profile-options-list">
                 <li class="talkie-navbar-profile-options-list-item">
-                  <a>Profile</a>
+                  <a href="/coming-soon">Profile</a>
                 </li>
                 <li
                   class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
