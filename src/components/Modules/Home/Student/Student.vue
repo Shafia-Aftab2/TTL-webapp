@@ -16,7 +16,8 @@
         </talkie-button>
         <p class="student-home-content-item-header">Class Mode</p>
         <p class="student-home-content-item-description">
-          You have <strong>3 new </strong>tasks
+          <!-- You have <strong>3 new </strong>tasks -->
+          You may have due tasks
         </p>
       </div>
       <div class="student-home-content-item">
