@@ -40,7 +40,10 @@
         </div>
 
         <!-- right side -->
-        <div class="talkie-conversation-card-header-options">
+        <div
+          class="talkie-conversation-card-header-options"
+          v-if="!cardExpanded"
+        >
           <talkie-audio-player
             v-if="computedMessages?.length > 0 && computedMessages[0]?.audio"
             v-slot="{ isPlaying, startPlayer, stopPlayer }"
