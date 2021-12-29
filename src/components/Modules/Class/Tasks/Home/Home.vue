@@ -28,6 +28,7 @@
             :centered="false"
             :fullWidth="true"
             :audioSource="taskDetails.audioSource"
+            :onDeleteClick="handleTaskDeleteClick"
           />
         </template>
 
@@ -72,12 +73,26 @@
       </div>
     </template>
     <talkie-back-drop-loader v-if="backdropLoading" />
+
+    <!-- Task delete modal -->
+    <talkie-modal
+      :type="'confirm'"
+      :contentPadded="true"
+      :closeButton="true"
+      :centered="true"
+      :title="'Are You Sure'"
+      :description="'Your students responses and your feedbacks will also be deleted.'"
+      :onClose="handleTaskDeleteReset"
+      :onConfirm="handleTaskDeletion"
+      v-if="showDeleteTaskDialog"
+    />
   </div>
 </template>
 
 <script>
 import {
   TalkieIcon,
+  TalkieModal,
   TalkieLoader,
   TalkieBackDropLoader,
 } from "@/components/UICore";
@@ -104,6 +119,7 @@ export default {
   components: {
     TalkieIcon,
     TalkieLoader,
+    TalkieModal,
     TalkieQuestionCard,
     TalkieStudentCard,
     TalkieFeedbackCard,
@@ -122,6 +138,7 @@ export default {
       isStudent: false,
       loading: false,
       backdropLoading: false,
+      showDeleteTaskDialog: false,
     };
   },
   async created() {
@@ -216,6 +233,12 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleTaskDeleteClick() {
+      this.showDeleteTaskDialog = true;
+    },
+    handleTaskDeleteReset() {
+      this.showDeleteTaskDialog = false;
+    },
     handleTaskIndividualFeedbackRecording(responseId, recording) {
       this.taskResponsesIndividualFeedbackRecordings = [
         ...this.taskResponsesIndividualFeedbackRecordings,
@@ -400,6 +423,31 @@ export default {
         displayIcon: true,
       });
       this.backdropLoading = false;
+    },
+    async handleTaskDeletion() {
+      this.backdropLoading = true;
+      this.showDeleteTaskDialog = false;
+
+      // api call
+      const response = await TaskService.Delete(this.taskId).catch(() => null);
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Failed To Delete Task..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Task Deleted Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.$router.push(`/classes/${this.classId}`);
     },
   },
 };
