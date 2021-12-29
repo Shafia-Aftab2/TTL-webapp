@@ -1,2 +1,2 @@
-import TaskItem from "./TaskItem.vue";
-export default TaskItem;
+import Conversation from "./Conversation.vue";
+export default Conversation;

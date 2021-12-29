@@ -1,51 +1,49 @@
 <template>
-  <div class="class-tasks-inbox-task-item" @click="handleItemBodyClick">
-    <!-- Item Header -->
+  <div class="talkie-conversation-card" @click="handleCardBodyClick">
+    <!-- Conversation Header -->
     <div
-      class="class-tasks-inbox-task-item-header-wrapper"
-      @click="handleItemBodyClick"
+      class="talkie-conversation-card-header-wrapper"
+      @click="handleCardBodyClick"
     >
-      <div
-        class="class-tasks-inbox-task-item-header"
-        @click="handleItemBodyClick"
-      >
-        <p class="p" v-if="title" @click="handleItemBodyClick">{{ title }}</p>
-        <p class="p" v-if="topic" @click="handleItemBodyClick">{{ topic }}</p>
+      <div class="talkie-conversation-card-header" @click="handleCardBodyClick">
+        <p class="p" v-if="taskTitle" @click="handleCardBodyClick">
+          {{ taskTitle }}
+        </p>
+        <p class="p" v-if="taskTopic" @click="handleCardBodyClick">
+          {{ taskTopic }}
+        </p>
       </div>
       <div
-        class="class-tasks-inbox-task-item-header-status"
-        v-if="!isRead"
+        class="talkie-conversation-card-header-status"
+        v-if="!taskIsRead"
       ></div>
     </div>
 
     <!-- Spacer -->
-    <div
-      class="class-tasks-inbox-task-item-spacer"
-      v-if="taskItemExpanded"
-    ></div>
+    <div class="talkie-conversation-card-spacer" v-if="cardExpanded"></div>
 
-    <template v-if="taskItemExpanded">
+    <template v-if="cardExpanded">
       <!-- Audio Messages -->
-      <div class="class-tasks-inbox-task-item-audio-responses-wrapper">
+      <div class="talkie-conversation-card-audio-messages-wrapper">
         <template v-if="!state?.responsesFetch?.loading">
-          <task-item-response
-            v-for="_response in computedResponses"
+          <conversation-message
+            v-for="_response in computedMessages"
             :key="_response"
             :alignment="_response.from !== user?.id ? 'left' : 'right'"
-            :responseAudio="_response.audio"
+            :messageAudio="_response.audio"
           />
         </template>
 
         <!-- Create Message Loader -->
         <template v-if="state?.responseCreation?.loading">
-          <div class="class-tasks-inbox-task-item-audio-response-right">
+          <div class="talkie-conversation-card-audio-message-right">
             <talkie-loader :size="'large'" />
           </div>
         </template>
 
         <!-- Create Message Error -->
         <div
-          class="class-tasks-inbox-task-item-audio-response-right"
+          class="talkie-conversation-card-audio-message-right"
           v-if="
             state?.responseCreation?.message?.type &&
             state?.responseCreation?.message?.text
@@ -59,7 +57,7 @@
 
         <!-- Fetch Messages Error -->
         <div
-          class="class-tasks-inbox-task-item-audio-response-centered"
+          class="talkie-conversation-card-audio-message-centered"
           v-if="
             state?.responsesFetch?.message?.type &&
             state?.responsesFetch?.message?.text
@@ -73,61 +71,58 @@
 
         <!-- Fetch Messages Loader -->
         <template v-if="state?.responsesFetch?.loading">
-          <div class="class-tasks-inbox-task-item-audio-response-centered">
+          <div class="talkie-conversation-card-audio-message-centered">
             <talkie-loader :size="'large'" />
           </div>
         </template>
       </div>
 
       <!-- Spacer -->
-      <div
-        class="class-tasks-inbox-task-item-spacer"
-        v-if="taskItemExpanded"
-      ></div>
+      <div class="talkie-conversation-card-spacer" v-if="cardExpanded"></div>
 
-      <!-- Audio Recorder -->
-      <task-item-recorder :onRecordingSendClick="handleResponseCreation" />
+      <!-- Conversation Recorder -->
+      <conversation-recorder :onRecordingSendClick="handleMessageCreation" />
     </template>
   </div>
 </template>
 
 <script>
 import { TalkieLoader, TalkieAlert } from "@/components/UICore";
-import TaskItemResponse from "./Response";
-import TaskItemRecorder from "./Recorder";
+import ConversationMessage from "./Message";
+import ConversationRecorder from "./Recorder";
 import authUser from "@/utils/helpers/auth";
 import { ResponseService, FileService, FeedbackService } from "@/api/services";
 import FilePurposes from "@/utils/constants/filePurposes";
 
 export default {
-  name: "TasksInboxTaskItem",
+  name: "ConversationCard",
   components: {
     TalkieLoader,
     TalkieAlert,
-    TaskItemResponse,
-    TaskItemRecorder,
+    ConversationMessage,
+    ConversationRecorder,
   },
   props: {
-    id: {
+    taskId: {
       type: String,
     },
-    title: {
+    taskTitle: {
       type: String,
     },
-    topic: {
+    taskTopic: {
       type: String,
     },
-    isRead: {
+    taskIsRead: {
       type: Boolean,
       default: false,
     },
-    responses: {
+    messages: {
       type: Array,
     },
   },
   data() {
     return {
-      taskItemExpanded: false,
+      cardExpanded: false,
       user: {},
       state: {
         responseCreation: {
@@ -149,8 +144,8 @@ export default {
     };
   },
   computed: {
-    computedResponses() {
-      return [...this.responses, ...this.messagesFetched];
+    computedMessages() {
+      return [...this.messages, ...this.messagesFetched];
     },
   },
   created() {
@@ -159,12 +154,12 @@ export default {
     this.user = user;
   },
   methods: {
-    async handleItemBodyClick(e) {
+    async handleCardBodyClick(e) {
       if (e.target !== e.currentTarget) return;
 
-      this.taskItemExpanded = !this.taskItemExpanded;
+      this.cardExpanded = !this.cardExpanded;
 
-      if (this.taskItemExpanded) {
+      if (this.cardExpanded) {
         // update page state
         this.state.responsesFetch = {
           loading: true,
@@ -175,11 +170,11 @@ export default {
         };
 
         // get responses for current task
-        const taskResponses = await this.getTaskResponses(this.id);
+        const taskResponses = await this.getTaskResponses(this.taskId);
 
         // get feedbacks (whole class) for current task
         const taskFeedbacksWholeClass = await this.getTaskFeedbacks({
-          taskId: this.id,
+          taskId: this.taskId,
         });
 
         // get feedbacks (individual response) for current task
@@ -198,7 +193,7 @@ export default {
           await Promise.all(
             studentResponseIds?.map(async (x) => {
               const _feedbackForResponse = await this.getTaskFeedbacks({
-                taskId: this.id,
+                taskId: this.taskId,
                 responseId: x,
               });
 
@@ -297,7 +292,7 @@ export default {
       const uploadedFile = response.data[0].s3Url;
       return uploadedFile;
     },
-    async handleResponseCreation(recording) {
+    async handleMessageCreation(recording) {
       // update page state
       this.state.responseCreation = {
         loading: true,
@@ -329,7 +324,7 @@ export default {
 
       // api call (create response)
       const response = await ResponseService.CreateResponse(
-        this.id,
+        this.taskId,
         payload
       ).catch();
 
@@ -388,93 +383,93 @@ export default {
 </script>
 
 <style>
-.class-tasks-inbox-task-item {
+.talkie-conversation-card {
   display: flex;
   flex-direction: column;
   background: var(--t-white);
   cursor: pointer;
 }
-.class-tasks-inbox-task-item-header-wrapper {
+.talkie-conversation-card-header-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.class-tasks-inbox-task-item-spacer {
+.talkie-conversation-card-spacer {
   height: var(--t-space-2);
   width: 100%;
   background: var(--t-gray-75);
 }
-.class-tasks-inbox-task-item-header {
+.talkie-conversation-card-header {
   display: flex;
   flex-direction: column;
 }
-.class-tasks-inbox-task-item-header-status {
+.talkie-conversation-card-header-status {
   display: block;
   border-radius: 50%;
   background: var(--t-primary);
 }
-.class-tasks-inbox-task-item-audio-responses-wrapper {
+.talkie-conversation-card-audio-messages-wrapper {
   display: flex;
   flex-direction: column;
 }
-.class-tasks-inbox-task-item-audio-response-centered {
+.talkie-conversation-card-audio-message-centered {
   margin: auto;
 }
-.class-tasks-inbox-task-item-audio-response-right {
+.talkie-conversation-card-audio-message-right {
   margin-left: auto;
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .class-tasks-inbox-task-item {
+  .talkie-conversation-card {
     gap: var(--t-space-8);
     border-radius: var(--t-br-medium);
     padding: var(--t-space-20);
   }
-  .class-tasks-inbox-task-item-spacer {
+  .talkie-conversation-card-spacer {
     margin: var(--t-space-12) 0;
   }
-  .class-tasks-inbox-task-item-header {
+  .talkie-conversation-card-header {
     gap: var(--t-space-8);
   }
-  .class-tasks-inbox-task-item-header-status {
+  .talkie-conversation-card-header-status {
     width: var(--t-space-12);
     height: var(--t-space-12);
   }
-  .class-tasks-inbox-task-item-audio-responses-wrapper {
+  .talkie-conversation-card-audio-messages-wrapper {
     gap: var(--t-space-8);
     padding: var(--t-space-8) 0;
   }
 }
 @media (min-width: 600px) {
-  .class-tasks-inbox-task-item {
+  .talkie-conversation-card {
     gap: var(--t-space-8);
     border-radius: var(--t-br-large);
     padding: var(--t-space-24);
   }
-  .class-tasks-inbox-task-item-spacer {
+  .talkie-conversation-card-spacer {
     margin: var(--t-space-16) 0;
   }
-  .class-tasks-inbox-task-item-header {
+  .talkie-conversation-card-header {
     gap: var(--t-space-8);
   }
-  .class-tasks-inbox-task-item-header-status {
+  .talkie-conversation-card-header-status {
     width: var(--t-space-16);
     height: var(--t-space-16);
   }
-  .class-tasks-inbox-task-item-audio-responses-wrapper {
+  .talkie-conversation-card-audio-messages-wrapper {
     gap: var(--t-space-10);
     padding: var(--t-space-10) 0;
   }
 }
 @media (min-width: 1200px) {
-  .class-tasks-inbox-task-item {
+  .talkie-conversation-card {
     gap: var(--t-space-16);
   }
-  .class-tasks-inbox-task-item-spacer {
+  .talkie-conversation-card-spacer {
     margin: var(--t-space-24) 0;
   }
-  .class-tasks-inbox-task-item-audio-responses-wrapper {
+  .talkie-conversation-card-audio-messages-wrapper {
     gap: var(--t-space-12);
     padding: var(--t-space-12) 0;
   }
