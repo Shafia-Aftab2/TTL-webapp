@@ -25,11 +25,11 @@
                   ? _task?.topic?.name === currentTopicFilter
                   : true
               "
-              :id="_task?.id"
-              :title="_task?.title"
-              :topic="_task?.topic?.name"
-              :responses="_task?.responses"
-              :isRead="false"
+              :taskId="_task?.id"
+              :taskTitle="_task?.title"
+              :taskTopic="_task?.topic?.name"
+              :taskIsRead="false"
+              :messages="_task?.responses"
             />
           </template>
         </template>
