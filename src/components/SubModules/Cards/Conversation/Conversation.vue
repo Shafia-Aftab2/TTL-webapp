@@ -8,7 +8,7 @@
       <!-- Student Mode -->
       <template v-if="userMode === 'student'">
         <div
-          class="talkie-conversation-card-header"
+          class="talkie-conversation-card-header talkie-conversation-card-header-col"
           @click="handleCardBodyClick"
         >
           <p class="p" v-if="taskTitle" @click="handleCardBodyClick">
@@ -22,6 +22,24 @@
           class="talkie-conversation-card-header-status"
           v-if="!taskIsRead"
         ></div>
+      </template>
+      <!-- Teacher Mode -->
+      <template v-if="userMode === 'teacher'">
+        <!-- left side -->
+        <div
+          class="talkie-conversation-card-header talkie-conversation-card-header-row talkie-conversation-card-header-row-center"
+        >
+          <img
+            class="talkie-conversation-card-header-image"
+            :src="studentAvatar"
+            v-if="studentAvatar"
+          />
+          <p class="p" style="margin-bottom: 0 !important" v-if="studentName">
+            {{ studentName }}
+          </p>
+        </div>
+
+        <!-- right side -->
       </template>
     </div>
 
@@ -118,14 +136,15 @@ export default {
     },
     messages: {
       type: Array,
+      default: () => [],
+    },
+    taskId: {
+      type: String,
     },
     studentId: {
       type: String,
     },
     // student mode
-    taskId: {
-      type: String,
-    },
     taskTitle: {
       type: String,
     },
@@ -135,6 +154,13 @@ export default {
     taskIsRead: {
       type: Boolean,
       default: false,
+    },
+    // teacher mode
+    studentName: {
+      type: String,
+    },
+    studentAvatar: {
+      type: String,
     },
   },
   data() {
@@ -440,7 +466,23 @@ export default {
 }
 .talkie-conversation-card-header {
   display: flex;
+}
+.talkie-conversation-card-header-col {
   flex-direction: column;
+}
+.talkie-conversation-card-header-row {
+  flex-direction: row;
+}
+.talkie-conversation-card-header-row-center {
+  align-items: center;
+}
+.talkie-conversation-card-header-image {
+  border-radius: 50%;
+  object-fit: cover;
+  min-height: var(--image-size);
+  min-width: var(--image-size);
+  height: var(--image-size);
+  width: var(--image-size);
 }
 .talkie-conversation-card-header-status {
   display: block;
@@ -468,8 +510,14 @@ export default {
   .talkie-conversation-card-spacer {
     margin: var(--t-space-12) 0;
   }
-  .talkie-conversation-card-header {
+  .talkie-conversation-card-header-col {
     gap: var(--t-space-8);
+  }
+  .talkie-conversation-card-header-row {
+    gap: var(--t-space-12);
+  }
+  .talkie-conversation-card-header-image {
+    --image-size: var(--t-space-56);
   }
   .talkie-conversation-card-header-status {
     width: var(--t-space-12);
@@ -489,8 +537,14 @@ export default {
   .talkie-conversation-card-spacer {
     margin: var(--t-space-16) 0;
   }
-  .talkie-conversation-card-header {
+  .talkie-conversation-card-header-col {
     gap: var(--t-space-8);
+  }
+  .talkie-conversation-card-header-row {
+    gap: var(--t-space-16);
+  }
+  .talkie-conversation-card-header-image {
+    --image-size: var(--t-space-63);
   }
   .talkie-conversation-card-header-status {
     width: var(--t-space-16);
@@ -504,6 +558,9 @@ export default {
 @media (min-width: 1200px) {
   .talkie-conversation-card {
     gap: var(--t-space-16);
+  }
+  .talkie-conversation-card-header-image {
+    --image-size: var(--t-space-70);
   }
   .talkie-conversation-card-spacer {
     margin: var(--t-space-24) 0;
