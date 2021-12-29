@@ -1,10 +1,10 @@
 <template>
-  <div class="comming-soon-wrapper">
+  <div class="coming-soon-wrapper">
     <img
       :src="require(`@/assets/images/warning-logo.png`)"
-      class="comming-soon-image"
+      class="coming-soon-image"
     />
-    <h4 class="h4">Comming Soon</h4>
+    <h4 class="h4">Coming Soon</h4>
     <p class="p">This page is under construction. Stay Tuned..!</p>
     <talkie-button
       :size="'medium'"
@@ -20,7 +20,7 @@
 import { TalkieButton } from "@/components/UICore";
 
 export default {
-  name: "CommingSoon",
+  name: "ComingSoon",
   components: {
     TalkieButton,
   },
@@ -33,38 +33,38 @@ export default {
 </script>
 
 <style scoped>
-.comming-soon-wrapper {
+.coming-soon-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 80vh;
 }
-.comming-soon-image {
+.coming-soon-image {
   height: var(--image-size);
   width: var(--image-size);
 }
 
 /* Responsive Variants */
 @media (max-width: 599px) {
-  .comming-soon-wrapper {
+  .coming-soon-wrapper {
     gap: var(--t-space-16);
     flex-direction: column;
   }
-  .comming-soon-image {
+  .coming-soon-image {
     --image-size: calc(var(--t-space-70) * 1.2);
   }
 }
 @media (min-width: 600px) {
-  .comming-soon-wrapper {
+  .coming-soon-wrapper {
     gap: var(--t-space-24);
   }
-  .comming-soon-image {
+  .coming-soon-image {
     --image-size: calc(var(--t-space-70) * 1.7);
   }
 }
 @media (min-width: 900px) {
-  .comming-soon-image {
+  .coming-soon-image {
     --image-size: calc(var(--t-space-70) * 2);
   }
 }

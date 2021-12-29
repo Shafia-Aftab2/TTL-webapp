@@ -27,7 +27,7 @@ import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
 import Error404 from "../components/Modules/Error404";
-import CommingSoon from "../components/Modules/CommingSoon";
+import ComingSoon from "../components/Modules/ComingSoon";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -323,16 +323,16 @@ const routes = [
       },
     ],
   },
-  // comming soon page
+  // coming soon page
   {
-    path: "/comming-soon",
+    path: "/coming-soon",
     component: Layout,
     props: { variant: "dark" },
     children: [
       {
-        name: "CommingSoon",
-        path: "/comming-soon",
-        component: CommingSoon,
+        name: "ComingSoon",
+        path: "/coming-soon",
+        component: ComingSoon,
       },
     ],
   },
