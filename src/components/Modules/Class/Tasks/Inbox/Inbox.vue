@@ -26,6 +26,7 @@
                   : true
               "
               :userMode="'student'"
+              :studentId="user?.id"
               :taskId="_task?.id"
               :taskTitle="_task?.title"
               :taskTopic="_task?.topic?.name"
