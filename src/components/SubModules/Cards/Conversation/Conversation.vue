@@ -105,9 +105,7 @@
       <div class="talkie-conversation-card-spacer" v-if="cardExpanded"></div>
 
       <!-- Conversation Recorder -->
-      <template v-if="userMode === 'student'">
-        <conversation-recorder :onRecordingSendClick="handleMessageCreation" />
-      </template>
+      <conversation-recorder :onRecordingSendClick="handleMessageCreation" />
     </template>
   </div>
 </template>
