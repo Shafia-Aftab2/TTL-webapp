@@ -40,6 +40,36 @@
         </div>
 
         <!-- right side -->
+        <div class="talkie-conversation-card-header-options">
+          <talkie-audio-player
+            v-if="computedMessages?.length > 0 && computedMessages[0]?.audio"
+            v-slot="{ isPlaying, startPlayer, stopPlayer }"
+            :source="computedMessages[0]?.audio"
+          >
+            <span
+              class="talkie-conversation-card-header-options-audio-player-icons"
+            >
+              <talkie-icon
+                :name="'play'"
+                :isActive="true"
+                :variant="'primary'"
+                :size="40"
+                :iconToSizeRatio="1.1"
+                :onClick="startPlayer"
+                v-if="!isPlaying"
+              />
+              <talkie-icon
+                :name="'pause'"
+                :isActive="true"
+                :variant="'primary'"
+                :size="40"
+                :iconToSizeRatio="1.1"
+                :onClick="stopPlayer"
+                v-if="isPlaying"
+              />
+            </span>
+          </talkie-audio-player>
+        </div>
       </template>
     </div>
 
@@ -111,7 +141,7 @@
 </template>
 
 <script>
-import { TalkieLoader, TalkieAlert } from "@/components/UICore";
+import { TalkieLoader, TalkieAlert, TalkieIcon } from "@/components/UICore";
 import ConversationMessage from "./Message";
 import ConversationRecorder from "./Recorder";
 import authUser from "@/utils/helpers/auth";
@@ -119,14 +149,21 @@ import { ResponseService, FileService, FeedbackService } from "@/api/services";
 import FilePurposes from "@/utils/constants/filePurposes";
 import rolesList from "@/utils/constants/roles";
 import { notifications } from "@/components/UIActions";
+import {
+  TalkieAudioRecorder,
+  TalkieAudioPlayer,
+} from "@/components/SubModules/AudioManager";
 
 export default {
   name: "ConversationCard",
   components: {
     TalkieLoader,
     TalkieAlert,
+    TalkieIcon,
     ConversationMessage,
     ConversationRecorder,
+    TalkieAudioRecorder,
+    TalkieAudioPlayer,
   },
   props: {
     userMode: {
@@ -498,6 +535,10 @@ export default {
   border-radius: 50%;
   background: var(--t-primary);
 }
+.talkie-conversation-card-header-options {
+  display: flex;
+  align-items: center;
+}
 .talkie-conversation-card-audio-messages-wrapper {
   display: flex;
   flex-direction: column;
@@ -532,6 +573,9 @@ export default {
     width: var(--t-space-12);
     height: var(--t-space-12);
   }
+  .talkie-conversation-card-header-options {
+    gap: var(--t-space-12);
+  }
   .talkie-conversation-card-audio-messages-wrapper {
     gap: var(--t-space-8);
     padding: var(--t-space-8) 0;
@@ -558,6 +602,9 @@ export default {
   .talkie-conversation-card-header-status {
     width: var(--t-space-16);
     height: var(--t-space-16);
+  }
+  .talkie-conversation-card-header-options {
+    gap: var(--t-space-12);
   }
   .talkie-conversation-card-audio-messages-wrapper {
     gap: var(--t-space-10);
