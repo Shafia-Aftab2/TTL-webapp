@@ -35,7 +35,9 @@
       </div>
     </div>
     <talkie-button :outlined="true">View my Inbox</talkie-button>
-    <talkie-button :outlined="true">View my Stats</talkie-button>
+    <talkie-button :outlined="true" :onClick="redirectToCommingSoonPage">
+      View my Stats
+    </talkie-button>
   </div>
 </template>
 
@@ -76,6 +78,9 @@ export default {
     this.studentName = user?.name;
   },
   methods: {
+    redirectToCommingSoonPage() {
+      this.$router.push(`/coming-soon`);
+    },
     handleClassModeButtonClick() {
       this.$router.push(`/classes/tasks/inbox`);
     },
