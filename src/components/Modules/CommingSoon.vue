@@ -20,7 +20,7 @@
 import { TalkieButton } from "@/components/UICore";
 
 export default {
-  name: "Error404",
+  name: "CommingSoon",
   components: {
     TalkieButton,
   },

@@ -27,6 +27,7 @@ import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
 import Error404 from "../components/Modules/Error404";
+import CommingSoon from "../components/Modules/CommingSoon";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -319,6 +320,19 @@ const routes = [
         name: "NotFound",
         path: "/404",
         component: Error404,
+      },
+    ],
+  },
+  // comming soon page
+  {
+    path: "/comming-soon",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
+      {
+        name: "CommingSoon",
+        path: "/comming-soon",
+        component: CommingSoon,
       },
     ],
   },
