@@ -24,4 +24,8 @@ export default class ClassRoutes {
   static async LeaveAsStudent(id) {
     return HTTPClient.delete(`/class/${id}/leave`);
   }
+
+  static async Delete(id) {
+    return HTTPClient.delete(`/class/${id}/delete`);
+  }
 }

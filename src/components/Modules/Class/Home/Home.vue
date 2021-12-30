@@ -14,6 +14,11 @@
               :name="'setting'"
               :onClick="redirectToCommingSoonPage"
             />
+            <!-- TODO: ADD THIS BUTTON TO MANAGE CLASS PAGE | TEMP ADDED HERE -->
+            <talkie-icon
+              :name="'trash'"
+              :onClick="handleShowClassDeleteConfirmation"
+            />
           </div>
         </div>
         <div class="class-home-header-tabs-wrapper">
@@ -119,6 +124,19 @@
 
     <!-- Backdrop load wrapper -->
     <talkie-back-drop-loader v-if="backdropLoading" />
+
+    <!-- Delete class modal -->
+    <talkie-modal
+      :type="'confirm'"
+      :contentPadded="true"
+      :closeButton="true"
+      :centered="true"
+      :title="'Are You Sure'"
+      :description="'Your students, feedbacks, responses, tasks, leaderboards and other data related to this class will be deleted permanently.'"
+      :onClose="handleShowClassDeleteConfirmationReset"
+      :onConfirm="handleClassDeletion"
+      v-if="showClassDeleteConfirmationModal"
+    />
   </div>
 </template>
 
@@ -159,6 +177,7 @@ export default {
   data() {
     return {
       taskToDelete: null,
+      showClassDeleteConfirmationModal: false,
       newTaskOptions: [
         {
           name: "Question",
@@ -303,6 +322,38 @@ export default {
   methods: {
     redirectToCommingSoonPage() {
       this.$router.push(`/coming-soon`);
+    },
+    handleShowClassDeleteConfirmation() {
+      this.showClassDeleteConfirmationModal = true;
+    },
+    handleShowClassDeleteConfirmationReset() {
+      this.showClassDeleteConfirmationModal = false;
+    },
+    async handleClassDeletion() {
+      this.showClassDeleteConfirmationModal = false;
+      this.backdropLoading = true;
+
+      // api call
+      const response = await ClassService.Delete(this.classId).catch(
+        () => null
+      );
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Failed To Delete Class..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Class Deleted Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
     },
     handleRedirection(link, timeout = 100) {
       const self = this;
