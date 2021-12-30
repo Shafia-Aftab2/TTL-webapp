@@ -16,7 +16,6 @@ import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefa
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
-import ClassTaskResponse from "../components/Modules/Class/Tasks/Response";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
@@ -127,17 +126,6 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT],
-          },
-        },
-      },
-      {
-        name: "ClassTaskResponse",
-        path: "/classes/:classId/tasks/:taskId/respond",
-        component: ClassTaskResponse,
-        meta: {
-          middlewareConfig: {
-            requiresAuth: true,
-            blockedRoles: [roles.TEACHER],
           },
         },
       },
