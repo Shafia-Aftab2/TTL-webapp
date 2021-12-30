@@ -1,12 +1,12 @@
 <template>
   <div
     :class="[
-      'class-tasks-inbox-task-item-audio-response',
-      `class-tasks-inbox-task-item-audio-response-${alignment}`,
+      'talkie-conversation-card-message',
+      `talkie-conversation-card-message-${alignment}`,
     ]"
   >
     <talkie-audio-player
-      :source="responseAudio"
+      :source="messageAudio"
       v-slot="{
         totalAudioPlaybackTime,
         startPlayer,
@@ -32,7 +32,7 @@
         :percentage="currentAudioPercentage"
         :onHeadChange="updateAudioPercentage"
       />
-      <span class="class-tasks-inbox-task-item-audio-response-timestamps">
+      <span class="talkie-conversation-card-message-timestamps">
         {{ totalAudioPlaybackTime }}
       </span>
     </talkie-audio-player>
@@ -47,13 +47,13 @@ import {
 } from "@/components/SubModules/AudioManager";
 
 export default {
-  name: "TasksInboxTaskItemResponse",
+  name: "ConversationCardMessage",
   props: {
     alignment: {
       type: String,
       validator: (val) => ["left", "right"].includes(val),
     },
-    responseAudio: { type: String },
+    messageAudio: { type: String },
   },
   components: {
     TalkieIcon,
@@ -64,45 +64,45 @@ export default {
 </script>
 
 <style>
-.class-tasks-inbox-task-item-audio-response {
+.talkie-conversation-card-message {
   display: flex;
   align-items: center;
   width: 100%;
 }
-.class-tasks-inbox-task-item-audio-response-left {
+.talkie-conversation-card-message-left {
   margin-right: auto;
 }
-.class-tasks-inbox-task-item-audio-response-right {
+.talkie-conversation-card-message-right {
   margin-left: auto;
 }
-.class-tasks-inbox-task-item-audio-response-timestamps {
+.talkie-conversation-card-message-timestamps {
   color: var(--t-black-100);
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .class-tasks-inbox-task-item-audio-response {
+  .talkie-conversation-card-message {
     max-width: 75%;
     gap: var(--t-space-5);
   }
-  .class-tasks-inbox-task-item-audio-response-timestamps {
+  .talkie-conversation-card-message-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
 }
 @media (min-width: 600px) {
-  .class-tasks-inbox-task-item-audio-response {
+  .talkie-conversation-card-message {
     max-width: 60%;
     gap: var(--t-space-8);
   }
-  .class-tasks-inbox-task-item-audio-response-timestamps {
+  .talkie-conversation-card-message-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
 }
 @media (min-width: 1200px) {
-  .class-tasks-inbox-task-item-audio-response {
+  .talkie-conversation-card-message {
     max-width: 50%;
   }
-  .class-tasks-inbox-task-item-audio-response-timestamps {
+  .talkie-conversation-card-message-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
 }
