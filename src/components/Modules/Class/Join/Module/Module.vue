@@ -79,7 +79,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin: auto;
-  margin-top: var(--t-space-36);
   background-color: var(--t-white);
 }
 .class-join-module-info-wrapper,
@@ -114,8 +113,9 @@ export default {
 @media (max-width: 599px) {
   .class-join-module-wrapper {
     max-width: 100%;
-    gap: var(--t-space-24);
+    gap: var(--t-space-36);
     padding: var(--t-space-32);
+    margin-top: var(--t-space-48);
     border-radius: var(--t-br-medium);
   }
   .class-join-module-input {
@@ -131,8 +131,9 @@ export default {
 @media (min-width: 600px) {
   .class-join-module-wrapper {
     max-width: 65%;
-    gap: var(--t-space-36);
+    gap: var(--t-space-48);
     padding: var(--t-space-48);
+    margin-top: var(--t-space-70);
     border-radius: var(--t-br-medium);
   }
   .class-join-module-input {
