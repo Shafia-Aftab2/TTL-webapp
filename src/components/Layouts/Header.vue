@@ -114,26 +114,6 @@ export default {
       // validator: (val) => ["phone", "tablet", "desktop"].includes(val), TODO: fix validation
     },
   },
-  created() {
-    this.handleAuthUserLoginCheck();
-  },
-  methods: {
-    handleAuthUserLoginCheck() {
-      // get auth user
-      const user = authUser.getUser();
-
-      // failure case
-      if (!user) {
-        this.isLoggedIn = false;
-        this.user = {};
-        return;
-      }
-
-      // success case
-      this.isLoggedIn = true;
-      this.user = user;
-    },
-  },
 };
 </script>
 

@@ -1,12 +1,12 @@
 <template>
-  <div class="class-tasks-inbox-task-item-audio-recorder-wrapper">
+  <div class="talkie-conversation-card-recorder-wrapper">
     <talkie-audio-recorder
       v-slot="{ startRecording, stopRecording, isRecording }"
       :onRecordingStopped="handleRecordedItem"
     >
       <!-- Player Timeline/Progress  -->
       <div
-        class="class-tasks-inbox-task-item-audio-player-timeline-wrapper"
+        class="talkie-conversation-card-player-timeline-wrapper"
         v-if="currentRecording"
       >
         <talkie-audio-player
@@ -29,14 +29,14 @@
             :percentage="currentAudioPercentage"
             :onHeadChange="updateAudioPercentage"
           />
-          <span class="class-tasks-inbox-task-item-audio-player-timestamps"
+          <span class="talkie-conversation-card-player-timestamps"
             >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
           </span>
         </talkie-audio-player>
       </div>
 
       <!-- Record Buttons -->
-      <div class="class-tasks-inbox-task-item-audio-recorder-buttons-wrapper">
+      <div class="talkie-conversation-card-recorder-buttons-wrapper">
         <talkie-icon
           :name="'arrow-rounded-left'"
           :isActive="true"
@@ -58,7 +58,7 @@
           :variant="'secondary'"
           :size="50"
           :iconToSizeRatio="1.5"
-          :customClass="'class-start-convo-form-options-stop-recording-button'"
+          :customClass="'talkie-conversation-card-options-stop-recording-button'"
           :onClick="stopRecording"
           v-if="isRecording && !currentRecording"
         />
@@ -136,70 +136,70 @@ export default {
 </script>
 
 <style>
-.class-tasks-inbox-task-item-audio-recorder-wrapper {
+.talkie-conversation-card-recorder-wrapper {
   display: flex;
   flex-direction: column;
 }
-.class-tasks-inbox-task-item-audio-player-timeline-wrapper {
+.talkie-conversation-card-player-timeline-wrapper {
   margin: auto;
 }
-.class-tasks-inbox-task-item-audio-player-timestamps {
+.talkie-conversation-card-player-timestamps {
   margin-left: auto;
   color: var(--t-black-100);
 }
-.class-tasks-inbox-task-item-audio-recorder-buttons-wrapper {
+.talkie-conversation-card-recorder-buttons-wrapper {
   margin: auto;
   display: flex;
   align-items: center;
 }
-.class-start-convo-form-options-stop-recording-button {
+.talkie-conversation-card-options-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .class-tasks-inbox-task-item-audio-recorder-wrapper {
+  .talkie-conversation-card-recorder-wrapper {
     gap: var(--t-space-8);
   }
-  .class-tasks-inbox-task-item-audio-player-timeline-wrapper {
+  .talkie-conversation-card-player-timeline-wrapper {
     width: 100%;
   }
-  .class-tasks-inbox-task-item-audio-player-timestamps {
+  .talkie-conversation-card-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-tasks-inbox-task-item-audio-recorder-buttons-wrapper {
+  .talkie-conversation-card-recorder-buttons-wrapper {
     gap: var(--t-space-36);
   }
-  .class-start-convo-form-options-stop-recording-button {
+  .talkie-conversation-card-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
   }
 }
 @media (min-width: 600px) {
-  .class-tasks-inbox-task-item-audio-recorder-wrapper {
+  .talkie-conversation-card-recorder-wrapper {
     gap: var(--t-space-12);
   }
-  .class-tasks-inbox-task-item-audio-player-timeline-wrapper {
+  .talkie-conversation-card-player-timeline-wrapper {
     width: 65%;
   }
-  .class-tasks-inbox-task-item-audio-player-timestamps {
+  .talkie-conversation-card-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-tasks-inbox-task-item-audio-recorder-buttons-wrapper {
+  .talkie-conversation-card-recorder-buttons-wrapper {
     gap: var(--t-space-36);
   }
-  .class-start-convo-form-options-stop-recording-button {
+  .talkie-conversation-card-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
   }
 }
 @media (min-width: 1200px) {
-  .class-tasks-inbox-task-item-audio-player-timeline-wrapper {
+  .talkie-conversation-card-player-timeline-wrapper {
     width: 55%;
   }
-  .class-tasks-inbox-task-item-audio-player-timestamps {
+  .talkie-conversation-card-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-tasks-inbox-task-item-audio-recorder-buttons-wrapper {
+  .talkie-conversation-card-recorder-buttons-wrapper {
     gap: var(--t-space-50);
   }
 }

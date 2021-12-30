@@ -32,6 +32,10 @@ import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
 // user roles
 import roles from "../utils/constants/roles";
+// user data
+import authUser from "../utils/helpers/auth";
+// global store
+import store from "../store";
 
 const routes = [
   {
@@ -332,6 +336,10 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  // update store with current user cookie
+  const user = authUser.getUser();
+  store.state.user = user || {};
+
   // get middleware config from route
   const { middlewareConfig } = to?.meta;
 
