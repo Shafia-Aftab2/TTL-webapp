@@ -6,8 +6,14 @@
         <div class="class-home-header-details-wrapper">
           <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
           <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
-            <talkie-icon :name="'trophy'" />
-            <talkie-icon :name="'setting'" />
+            <talkie-icon
+              :name="'trophy'"
+              :onClick="redirectToCommingSoonPage"
+            />
+            <talkie-icon
+              :name="'setting'"
+              :onClick="redirectToCommingSoonPage"
+            />
           </div>
         </div>
       </div>
@@ -28,6 +34,7 @@
             :centered="false"
             :fullWidth="true"
             :audioSource="taskDetails.audioSource"
+            :onEditClick="redirectToCommingSoonPage"
             :onDeleteClick="handleTaskDeleteClick"
           />
         </template>
@@ -258,6 +265,9 @@ export default {
     this.loading = false;
   },
   methods: {
+    redirectToCommingSoonPage() {
+      this.$router.push(`/coming-soon`);
+    },
     handleTaskDeleteClick() {
       this.showDeleteTaskDialog = true;
     },

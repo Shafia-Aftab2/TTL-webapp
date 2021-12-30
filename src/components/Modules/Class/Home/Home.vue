@@ -6,8 +6,14 @@
         <div class="class-home-header-details-wrapper">
           <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
           <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
-            <talkie-icon :name="'trophy'" />
-            <talkie-icon :name="'setting'" />
+            <talkie-icon
+              :name="'trophy'"
+              :onClick="redirectToCommingSoonPage"
+            />
+            <talkie-icon
+              :name="'setting'"
+              :onClick="redirectToCommingSoonPage"
+            />
           </div>
         </div>
         <div class="class-home-header-tabs-wrapper">
@@ -75,6 +81,7 @@
                 :centered="false"
                 :audioSource="_question.audioSource"
                 :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
+                :onEditClick="redirectToCommingSoonPage"
                 :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
               />
             </template>
@@ -163,15 +170,15 @@ export default {
         },
         {
           name: "Photo",
-          onClick: () => {},
+          onClick: () => this.redirectToCommingSoonPage(),
         },
         {
           name: "Emoji Story",
-          onClick: () => {},
+          onClick: () => this.redirectToCommingSoonPage(),
         },
         {
           name: "Translation",
-          onClick: () => {},
+          onClick: () => this.redirectToCommingSoonPage(),
         },
       ],
       classId: null,
@@ -294,6 +301,9 @@ export default {
     this.loading = false;
   },
   methods: {
+    redirectToCommingSoonPage() {
+      this.$router.push(`/coming-soon`);
+    },
     handleRedirection(link, timeout = 100) {
       const self = this;
       setTimeout(function () {

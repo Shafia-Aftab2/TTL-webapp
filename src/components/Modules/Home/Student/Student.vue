@@ -16,7 +16,8 @@
         </talkie-button>
         <p class="student-home-content-item-header">Class Mode</p>
         <p class="student-home-content-item-description">
-          You have <strong>3 new </strong>tasks
+          <!-- You have <strong>3 new </strong>tasks -->
+          You may have due tasks
         </p>
       </div>
       <div class="student-home-content-item">
@@ -34,8 +35,9 @@
         </p>
       </div>
     </div>
-    <talkie-button :outlined="true">View my Inbox</talkie-button>
-    <talkie-button :outlined="true">View my Stats</talkie-button>
+    <talkie-button :outlined="true" :onClick="redirectToCommingSoonPage">
+      View my Stats
+    </talkie-button>
   </div>
 </template>
 
@@ -76,6 +78,9 @@ export default {
     this.studentName = user?.name;
   },
   methods: {
+    redirectToCommingSoonPage() {
+      this.$router.push(`/coming-soon`);
+    },
     handleClassModeButtonClick() {
       this.$router.push(`/classes/tasks/inbox`);
     },
