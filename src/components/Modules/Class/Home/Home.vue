@@ -354,6 +354,7 @@ export default {
         variant: "success",
         displayIcon: true,
       });
+      this.$router.push("/");
     },
     handleRedirection(link, timeout = 100) {
       const self = this;
