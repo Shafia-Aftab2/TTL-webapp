@@ -184,7 +184,7 @@ export default {
         type: "success",
         message: "Class Topics Added. Redirecting..!",
       };
-      this.$router.push(`/classes/${classId}/invite-students`);
+      this.$router.push(`/classes/${classId}/students/invite`);
     },
     async getTopicsList() {
       const query = {};
