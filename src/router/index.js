@@ -16,11 +16,7 @@ import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefa
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
-import ClassTaskResponse from "../components/Modules/Class/Tasks/Response";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
-import TeacherClassStudents from "../components/Modules/Teachers/Classes/Students";
-import StudentFeedback from "../components/Modules/Students/Feedback";
-import StudentInbox from "../components/Modules/Students/Inbox";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
 import StudentQA from "../components/Modules/Students/QA";
@@ -133,17 +129,6 @@ const routes = [
           },
         },
       },
-      {
-        name: "ClassTaskResponse",
-        path: "/classes/:classId/tasks/:taskId/respond",
-        component: ClassTaskResponse,
-        meta: {
-          middlewareConfig: {
-            requiresAuth: true,
-            blockedRoles: [roles.TEACHER],
-          },
-        },
-      },
     ],
   },
   {
@@ -249,32 +234,10 @@ const routes = [
     ],
   },
   {
-    path: "/teachers",
-    component: Layout,
-    props: { variant: "dark", type: "sidebar" },
-    children: [
-      {
-        name: "TeacherClassStudents",
-        path: "/teachers/class/students",
-        component: TeacherClassStudents,
-      },
-    ],
-  },
-  {
     path: "/students",
     component: Layout,
     props: { variant: "dark", type: "sidebar" },
     children: [
-      {
-        name: "StudentFeedback",
-        path: "/students/feedback",
-        component: StudentFeedback,
-      },
-      {
-        name: "StudentInbox",
-        path: "/students/inbox",
-        component: StudentInbox,
-      },
       {
         name: "StudentLeaderboard",
         path: "/students/leaderboard",
