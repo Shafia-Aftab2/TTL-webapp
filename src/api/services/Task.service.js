@@ -16,4 +16,8 @@ export default class TaskRoutes {
       )}`
     );
   }
+
+  static async Delete(id) {
+    return HTTPClient.delete(`/tasks/${id}`);
+  }
 }

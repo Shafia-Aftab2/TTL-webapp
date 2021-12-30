@@ -21,6 +21,16 @@ const addToURL = (queryParamName, queryParamValue) => {
   _updateURL(searchParams);
 };
 
+const removeFromURL = (queryParamName) => {
+  if (!queryParamName) return;
+
+  const searchParams = _getParams();
+
+  searchParams.delete(queryParamName);
+
+  _updateURL(searchParams);
+};
+
 const getURLParam = (queryParamName) => {
   if (!queryParamName) return;
 
@@ -29,6 +39,6 @@ const getURLParam = (queryParamName) => {
   return searchParams.get(queryParamName);
 };
 
-export { addToURL, getURLParam };
+export { addToURL, removeFromURL, getURLParam };
 
-export default { addToURL, getURLParam };
+export default { addToURL, removeFromURL, getURLParam };
