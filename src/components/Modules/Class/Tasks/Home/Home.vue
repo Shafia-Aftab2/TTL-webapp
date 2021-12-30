@@ -104,7 +104,6 @@ import {
 } from "@/components/UICore";
 import {
   TalkieQuestionCard,
-  TalkieStudentCard,
   TalkieFeedbackCard,
   TalkieConversationCard,
 } from "@/components/SubModules/Cards";
@@ -128,7 +127,6 @@ export default {
     TalkieLoader,
     TalkieModal,
     TalkieQuestionCard,
-    TalkieStudentCard,
     TalkieFeedbackCard,
     TalkieBackDropLoader,
     TalkieConversationCard,

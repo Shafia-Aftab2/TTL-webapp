@@ -67,7 +67,6 @@
 <script>
 import LogoTalkie from "@/components/SVGs/LogoTalkie.vue";
 import TalkieIcon from "@/components/UICore/Icon.vue";
-import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "Header",
