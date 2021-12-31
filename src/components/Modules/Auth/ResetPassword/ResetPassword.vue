@@ -87,6 +87,7 @@ import {
 } from "@/components/UICore";
 import { AuthService } from "@/api/services";
 import { resetPasswordSchema } from "@/utils/validations/auth.validation";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "AuthResetPassword",
@@ -109,11 +110,19 @@ export default {
     };
   },
   created() {
+    // logout user on visiting this link
+    this.handleUserLogout();
+
     // get reset password token from url
     const resetPasswordToken = this.$route.params.resetPasswordToken;
     this.resetPasswordToken = resetPasswordToken;
   },
   methods: {
+    handleUserLogout() {
+      authUser.deleteUser();
+      authUser.deleteAccessToken();
+      authUser.deleteRefreshToken();
+    },
     handleLoginRedirect() {
       this.$router.push(`/auth/login`);
     },
