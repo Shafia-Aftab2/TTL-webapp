@@ -50,11 +50,6 @@ export default {
   flex-direction: column;
   margin: auto;
   background-color: var(--t-white);
-  gap: var(--t-space-48);
-  margin-top: var(--t-space-70);
-  max-width: 80%;
-  padding: var(--t-space-48);
-  border-radius: var(--t-br-large);
 }
 .auth-reset-password-info-wrapper,
 .auth-reset-password-options-wrapper {
@@ -72,28 +67,60 @@ export default {
   justify-content: center;
   margin: auto;
   gap: var(--t-space-12);
-  width: 80%;
 }
 .auth-reset-password-input {
   margin: auto;
-  max-width: 100%;
 }
 .auth-reset-password-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: auto;
-  margin-top: var(--t-space-24);
-  padding: var(--t-space-36);
 }
 .auth-reset-password-footer-link {
   text-decoration: underline;
-  font-size: var(--t-fs-small);
 }
 .auth-reset-password-footer-link,
 .auth-reset-password-footer-link:hover,
 .auth-reset-password-footer-link:visited {
   text-decoration: underline;
   color: var(--t-black);
+}
+
+/* Responsive variants */
+@media (min-width: 600px) {
+  .auth-reset-password-wrapper {
+    max-width: 65%;
+    gap: var(--t-space-48);
+    padding: var(--t-space-48);
+    margin-top: var(--t-space-70);
+    border-radius: var(--t-br-medium);
+  }
+  .auth-reset-password-fields-wrapper {
+    width: 80%;
+  }
+  .auth-reset-password-input {
+    max-width: 100%;
+  }
+  .auth-reset-password-footer {
+    margin-top: var(--t-space-24);
+    padding: var(--t-space-36);
+  }
+  .auth-reset-password-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
+}
+@media (min-width: 1200px) {
+  .auth-reset-password-wrapper {
+    max-width: 80%;
+    padding: var(--t-space-48);
+    border-radius: var(--t-br-large);
+  }
+  .auth-reset-password-input {
+    max-width: 85%;
+  }
+  .auth-reset-password-footer-link {
+    font-size: var(--t-fs-small);
+  }
 }
 </style>
