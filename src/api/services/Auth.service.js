@@ -16,4 +16,8 @@ export default class AuthRoutes {
   static async RefreshTokens(payload) {
     return HTTPClient.post(`/auth/refresh-tokens`, payload);
   }
+
+  static async ForgotPassword(payload) {
+    return HTTPClient.post(`/auth/forgot-password`, payload);
+  }
 }
