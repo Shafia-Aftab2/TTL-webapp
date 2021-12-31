@@ -26,6 +26,16 @@
           message: errors.password ? errors.password : null,
         }"
       />
+      <p
+        class="auth-split-form-options-info auth-split-form-options-info-right"
+      >
+        <a
+          class="auth-split-form-options-info-link"
+          href="/auth/forgot-password"
+        >
+          Forgot Password?
+        </a>
+      </p>
       <talkie-alert
         :text="formStatus.message"
         :variant="formStatus.type"
@@ -183,6 +193,9 @@ export default {
 .auth-split-form-options-info {
   padding: var(--t-space-4);
   text-align: center;
+}
+.auth-split-form-options-info-right {
+  text-align: right !important;
 }
 .auth-split-form-options-info-link {
   text-decoration: none;
