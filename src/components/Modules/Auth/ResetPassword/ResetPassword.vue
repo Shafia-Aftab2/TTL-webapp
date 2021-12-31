@@ -103,9 +103,19 @@ export default {
       const response = await AuthService.ResetPassword(
         this.resetPasswordToken,
         payload
-      ).catch(() => {
+      ).catch((e) => {
+        const errorMap = {
+          ["token not found"]: "Invalid Reset Link..!",
+          ["password must be at least 8 characters"]:
+            "Password must contain at least 8 characters..!",
+          ["password must contain at least 1 letter and 1 number"]:
+            "Password must contain at least 1 letter and 1 number..!",
+        };
+
         return {
-          error: "Failed to change password..!",
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            "Failed to change password..!",
         };
       });
 
