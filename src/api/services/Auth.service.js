@@ -20,4 +20,8 @@ export default class AuthRoutes {
   static async ForgotPassword(payload) {
     return HTTPClient.post(`/auth/forgot-password`, payload);
   }
+
+  static async ResetPassword(resetToken, payload) {
+    return HTTPClient.patch(`/auth/reset-password/${resetToken}`, payload);
+  }
 }
