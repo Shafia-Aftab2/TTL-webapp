@@ -1,5 +1,10 @@
 <template>
-  <div class="auth-forgot-password-wrapper">
+  <talkie-form
+    :customClass="'auth-forgot-password-wrapper'"
+    v-slot="{ errors }"
+    :validationSchema="forgotPasswordSchema"
+    :onSubmit="handleSubmit"
+  >
     <div class="auth-forgot-password-info-wrapper">
       <h2 class="h2">Forgot your password?</h2>
       <p class="p" style="margin-bottom: 0 !important">
@@ -10,13 +15,24 @@
 
     <div class="auth-forgot-password-fields-wrapper">
       <talkie-input
+        :name="'email'"
         :placeholder="'Email address'"
         :customClass="'auth-forgot-password-input'"
+        :hint="{
+          type: errors.email ? 'error' : null,
+          message: errors.email ? errors.email : null,
+        }"
+      />
+
+      <talkie-alert
+        :text="formStatus.message"
+        :variant="formStatus.type"
+        v-if="formStatus.type && formStatus.message"
       />
     </div>
 
     <div class="auth-forgot-password-options-wrapper">
-      <talkie-button :size="'medium'" :type="'submit'">
+      <talkie-button :size="'medium'" :type="'submit'" :loading="loading">
         Reset my Password
       </talkie-button>
     </div>
@@ -24,17 +40,79 @@
     <div class="auth-forgot-password-footer">
       <a class="auth-forgot-password-footer-link"> Back to Login </a>
     </div>
-  </div>
+  </talkie-form>
 </template>
 
 <script>
-import { TalkieInput, TalkieButton } from "@/components/UICore";
+import {
+  TalkieForm,
+  TalkieInput,
+  TalkieButton,
+  TalkieAlert,
+} from "@/components/UICore";
+import { AuthService } from "@/api/services";
+import { forgotPasswordSchema } from "@/utils/validations/auth.validation";
 
 export default {
   name: "AuthForgotPassword",
   components: {
+    TalkieForm,
     TalkieInput,
     TalkieButton,
+    TalkieAlert,
+  },
+  data() {
+    return {
+      forgotPasswordSchema: forgotPasswordSchema,
+      clientRedirectURI: null,
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+      },
+    };
+  },
+  created() {
+    const clientRedirectURI = `${window.location.origin}/auth/reset-password`;
+    this.clientRedirectURI = clientRedirectURI;
+  },
+  methods: {
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { email } = values;
+
+      // payload
+      const payload = { email, clientRedirectURI: this.clientRedirectURI };
+
+      // api call
+      const response = await AuthService.ForgotPassword(payload).catch(() => {
+        return {
+          error: "Could not make reset password request..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message:
+          "Password Reset Link Sent To Your Email..! Please check your inbox for more details.",
+      };
+    },
   },
 };
 </script>
