@@ -52,9 +52,11 @@ import {
 } from "@/components/UICore";
 import { AuthService } from "@/api/services";
 import { forgotPasswordSchema } from "@/utils/validations/auth.validation";
+import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
 
 export default {
   name: "AuthForgotPassword",
+  mixins: [handleAlreadyLogginIn],
   components: {
     TalkieForm,
     TalkieInput,
