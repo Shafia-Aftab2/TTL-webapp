@@ -5,6 +5,7 @@ import Home from "../components/Modules/Home";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
 import AuthForgotPassword from "../components/Modules/Auth/ForgotPassword";
+import AuthResetPassword from "../components/Modules/Auth/ResetPassword";
 import AuthLogout from "../components/Modules/Auth/Logout";
 import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
 import ClassHome from "../components/Modules/Class/Home";
@@ -83,6 +84,11 @@ const routes = [
         name: "AuthForgotPassword",
         path: "/auth/forgot-password",
         component: AuthForgotPassword,
+      },
+      {
+        name: "AuthResetPassword",
+        path: "/auth/reset-password/:resetPasswordToken",
+        component: AuthResetPassword,
       },
     ],
   },
