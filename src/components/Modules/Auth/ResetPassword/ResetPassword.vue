@@ -49,7 +49,9 @@
     </div>
 
     <div class="auth-reset-password-footer">
-      <a class="auth-reset-password-footer-link"> Request Password Change </a>
+      <a class="auth-reset-password-footer-link" href="/auth/forgot-password">
+        Request Password Change
+      </a>
     </div>
   </talkie-form>
 </template>
