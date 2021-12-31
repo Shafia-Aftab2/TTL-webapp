@@ -4,6 +4,7 @@ import Layout from "../components/Layouts/_layout.vue";
 import Home from "../components/Modules/Home";
 import AuthLogin from "../components/Modules/Auth/Login";
 import AuthSignup from "../components/Modules/Auth/Signup";
+import AuthForgotPassword from "../components/Modules/Auth/ForgotPassword";
 import AuthLogout from "../components/Modules/Auth/Logout";
 import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
 import ClassHome from "../components/Modules/Class/Home";
@@ -77,6 +78,11 @@ const routes = [
         name: "AuthLogout",
         path: "/auth/logout",
         component: AuthLogout,
+      },
+      {
+        name: "AuthForgotPassword",
+        path: "/auth/forgot-password",
+        component: AuthForgotPassword,
       },
     ],
   },
