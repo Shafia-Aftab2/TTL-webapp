@@ -23,4 +23,16 @@ const teacherSignupSchema = yup.object({
   password: yup.string().required("Password is required."),
 });
 
-export { loginSchema, studentSignupSchema, teacherSignupSchema };
+const forgotPasswordSchema = yup.object({
+  email: yup
+    .string()
+    .email("Email must be valid.")
+    .required("Email is required."),
+});
+
+export {
+  loginSchema,
+  studentSignupSchema,
+  teacherSignupSchema,
+  forgotPasswordSchema,
+};
