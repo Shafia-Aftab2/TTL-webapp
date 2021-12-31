@@ -38,7 +38,9 @@
     </div>
 
     <div class="auth-forgot-password-footer">
-      <a class="auth-forgot-password-footer-link"> Back to Login </a>
+      <a class="auth-forgot-password-footer-link" href="/auth/login">
+        Back to Login
+      </a>
     </div>
   </talkie-form>
 </template>
