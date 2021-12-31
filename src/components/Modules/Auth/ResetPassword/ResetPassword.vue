@@ -1,5 +1,10 @@
 <template>
-  <div class="auth-reset-password-wrapper">
+  <talkie-form
+    :customClass="'auth-reset-password-wrapper'"
+    v-slot="{ errors }"
+    :validationSchema="resetPasswordSchema"
+    :onSubmit="handleSubmit"
+  >
     <div class="auth-reset-password-info-wrapper">
       <h2 class="h2">Reset your password?</h2>
       <p class="p" style="margin-bottom: 0 !important">
@@ -9,20 +14,36 @@
 
     <div class="auth-reset-password-fields-wrapper">
       <talkie-input
+        :name="'password'"
         :type="'password'"
         :placeholder="'Password'"
         :customClass="'auth-reset-password-input'"
+        :hint="{
+          type: errors.password ? 'error' : null,
+          message: errors.password ? errors.password : null,
+        }"
       />
 
       <talkie-input
+        :name="'confirmPassword'"
         :type="'password'"
         :placeholder="'Confirm Password'"
         :customClass="'auth-reset-password-input'"
+        :hint="{
+          type: errors.confirmPassword ? 'error' : null,
+          message: errors.confirmPassword ? errors.confirmPassword : null,
+        }"
+      />
+
+      <talkie-alert
+        :text="formStatus.message"
+        :variant="formStatus.type"
+        v-if="formStatus.type && formStatus.message"
       />
     </div>
 
     <div class="auth-reset-password-options-wrapper">
-      <talkie-button :size="'medium'" :type="'submit'">
+      <talkie-button :size="'medium'" :type="'submit'" :loading="loading">
         Reset Password
       </talkie-button>
     </div>
@@ -30,16 +51,81 @@
     <div class="auth-reset-password-footer">
       <a class="auth-reset-password-footer-link"> Request Password Change </a>
     </div>
-  </div>
+  </talkie-form>
 </template>
 <script>
-import { TalkieInput, TalkieButton } from "@/components/UICore";
+import {
+  TalkieForm,
+  TalkieInput,
+  TalkieButton,
+  TalkieAlert,
+} from "@/components/UICore";
+import { AuthService } from "@/api/services";
+import { resetPasswordSchema } from "@/utils/validations/auth.validation";
 
 export default {
   name: "AuthResetPassword",
   components: {
+    TalkieForm,
     TalkieInput,
     TalkieButton,
+    TalkieAlert,
+  },
+  data() {
+    return {
+      resetPasswordSchema: resetPasswordSchema,
+      resetPasswordToken: null,
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+      },
+    };
+  },
+  created() {
+    // get reset password token from url
+    const resetPasswordToken = this.$route.params.resetPasswordToken;
+    this.resetPasswordToken = resetPasswordToken;
+  },
+  methods: {
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { password } = values;
+
+      // payload
+      const payload = { password };
+
+      // api call
+      const response = await AuthService.ResetPassword(
+        this.resetPasswordToken,
+        payload
+      ).catch(() => {
+        return {
+          error: "Failed to change password..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Password reset successfull..!",
+      };
+    },
   },
 };
 </script>
@@ -88,6 +174,27 @@ export default {
 }
 
 /* Responsive variants */
+@media (max-width: 599px) {
+  .auth-reset-password-wrapper {
+    max-width: 100%;
+    gap: var(--t-space-36);
+    padding: var(--t-space-32);
+    margin-top: var(--t-space-50);
+    border-radius: var(--t-br-medium);
+  }
+  .auth-reset-password-fields-wrapper {
+    width: 100%;
+  }
+  .auth-reset-password-input {
+    max-width: 100%;
+  }
+  .auth-reset-password-footer {
+    padding: var(--t-space-50);
+  }
+  .auth-reset-password-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
+}
 @media (min-width: 600px) {
   .auth-reset-password-wrapper {
     max-width: 65%;
