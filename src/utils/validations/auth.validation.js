@@ -30,9 +30,19 @@ const forgotPasswordSchema = yup.object({
     .required("Email is required."),
 });
 
+const resetPasswordSchema = yup.object({
+  password: yup.string().required("Password is required."),
+  confirmPassword: yup
+    .string()
+    .test("passwords-match", "Passwords must match.", function (value) {
+      return this.parent.password === value;
+    }),
+});
+
 export {
   loginSchema,
   studentSignupSchema,
   teacherSignupSchema,
   forgotPasswordSchema,
+  resetPasswordSchema,
 };
