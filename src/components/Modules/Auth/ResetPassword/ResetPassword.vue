@@ -1,59 +1,82 @@
 <template>
-  <talkie-form
-    :customClass="'auth-reset-password-wrapper'"
-    v-slot="{ errors }"
-    :validationSchema="resetPasswordSchema"
-    :onSubmit="handleSubmit"
-  >
-    <div class="auth-reset-password-info-wrapper">
-      <h2 class="h2">Reset your password?</h2>
-      <p class="p" style="margin-bottom: 0 !important">
-        Please enter your new password below
-      </p>
+  <template v-if="!isPasswordChanged">
+    <talkie-form
+      :customClass="'auth-reset-password-wrapper'"
+      v-slot="{ errors }"
+      :validationSchema="resetPasswordSchema"
+      :onSubmit="handleSubmit"
+    >
+      <div class="auth-reset-password-info-wrapper">
+        <h2 class="h2">Reset your password?</h2>
+        <p class="p" style="margin-bottom: 0 !important">
+          Please enter your new password below
+        </p>
+      </div>
+
+      <div class="auth-reset-password-fields-wrapper">
+        <talkie-input
+          :name="'password'"
+          :type="'password'"
+          :placeholder="'Password'"
+          :customClass="'auth-reset-password-input'"
+          :hint="{
+            type: errors.password ? 'error' : null,
+            message: errors.password ? errors.password : null,
+          }"
+        />
+
+        <talkie-input
+          :name="'confirmPassword'"
+          :type="'password'"
+          :placeholder="'Confirm Password'"
+          :customClass="'auth-reset-password-input'"
+          :hint="{
+            type: errors.confirmPassword ? 'error' : null,
+            message: errors.confirmPassword ? errors.confirmPassword : null,
+          }"
+        />
+
+        <talkie-alert
+          :text="formStatus.message"
+          :variant="formStatus.type"
+          v-if="formStatus.type && formStatus.message"
+        />
+      </div>
+
+      <div class="auth-reset-password-options-wrapper">
+        <talkie-button :size="'medium'" :type="'submit'" :loading="loading">
+          Reset Password
+        </talkie-button>
+      </div>
+
+      <div class="auth-reset-password-footer">
+        <a class="auth-reset-password-footer-link" href="/auth/forgot-password">
+          Request Password Change
+        </a>
+      </div>
+    </talkie-form>
+  </template>
+
+  <template v-if="isPasswordChanged">
+    <div class="auth-reset-password-wrapper">
+      <div class="auth-reset-password-info-wrapper" v-if="isPasswordChanged">
+        <h2 class="h2">Password Reset Successfull</h2>
+        <p class="p" style="margin-bottom: 0 !important">
+          Please login to your account with the new password
+        </p>
+      </div>
+
+      <div class="auth-reset-password-options-wrapper">
+        <talkie-button
+          :size="'medium'"
+          :type="'button'"
+          :onClick="handleLoginRedirect"
+        >
+          Continue to Login
+        </talkie-button>
+      </div>
     </div>
-
-    <div class="auth-reset-password-fields-wrapper">
-      <talkie-input
-        :name="'password'"
-        :type="'password'"
-        :placeholder="'Password'"
-        :customClass="'auth-reset-password-input'"
-        :hint="{
-          type: errors.password ? 'error' : null,
-          message: errors.password ? errors.password : null,
-        }"
-      />
-
-      <talkie-input
-        :name="'confirmPassword'"
-        :type="'password'"
-        :placeholder="'Confirm Password'"
-        :customClass="'auth-reset-password-input'"
-        :hint="{
-          type: errors.confirmPassword ? 'error' : null,
-          message: errors.confirmPassword ? errors.confirmPassword : null,
-        }"
-      />
-
-      <talkie-alert
-        :text="formStatus.message"
-        :variant="formStatus.type"
-        v-if="formStatus.type && formStatus.message"
-      />
-    </div>
-
-    <div class="auth-reset-password-options-wrapper">
-      <talkie-button :size="'medium'" :type="'submit'" :loading="loading">
-        Reset Password
-      </talkie-button>
-    </div>
-
-    <div class="auth-reset-password-footer">
-      <a class="auth-reset-password-footer-link" href="/auth/forgot-password">
-        Request Password Change
-      </a>
-    </div>
-  </talkie-form>
+  </template>
 </template>
 <script>
 import {
@@ -82,6 +105,7 @@ export default {
         type: null,
         message: null,
       },
+      isPasswordChanged: false,
     };
   },
   created() {
@@ -90,6 +114,9 @@ export default {
     this.resetPasswordToken = resetPasswordToken;
   },
   methods: {
+    handleLoginRedirect() {
+      this.$router.push(`/auth/login`);
+    },
     async handleSubmit(values) {
       // update page state
       this.loading = true;
@@ -137,6 +164,7 @@ export default {
         type: "success",
         message: "Password reset successfull..!",
       };
+      this.isPasswordChanged = true;
     },
   },
 };
