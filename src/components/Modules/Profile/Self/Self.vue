@@ -305,6 +305,7 @@ export default {
           ['"name" contains bad word']: "Name should not be unethical..!",
           ['"displayname" contains bad word']:
             "Display name should not be unethical..!",
+          ["username already exists"]: "Username already exists..!",
         };
 
         return {
@@ -330,7 +331,7 @@ export default {
         type: null,
         message: null,
       };
-      notifications.show("Profile update successfully..!", {
+      notifications.show("Profile updated successfully..!", {
         variant: "success",
         displayIcon: true,
       });
