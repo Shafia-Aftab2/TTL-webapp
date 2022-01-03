@@ -255,6 +255,11 @@ const routes = [
         name: "ProfileSelf",
         path: "/profile/self",
         component: ProfileSelf,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+          },
+        },
       },
     ],
   },
