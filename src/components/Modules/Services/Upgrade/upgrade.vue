@@ -18,20 +18,20 @@
         <p></p>
         <p></p>
         <p></p>
-        <p>>Create up to 8 classes (max of 32 students)</p>
-        <p></p>
-        <p>>Access all features</p>
-        <p></p>
-        <p>>Set an unlimited number of questions accross all topics</p>
-        <p></p>
-        <p>>Students get unlimited access to all quizzes (March 2022)</p>
-        <p></p>
+        <div class="text-left">
+          <p>>Create up to 8 classes (max of 32 students)</p>
+          <p></p>
+          <p>>Access all features</p>
+          <p></p>
+          <p>>Set an unlimited number of questions accross all topics</p>
+          <p></p>
+          <p>>Students get unlimited access to all quizzes (March 2022)</p>
+          <p></p>
+        </div>
         <div class="yellow-text">
           <p>Limited Offer</p>
         </div>
-        <div class="annual">
-          <h2>£30 individual teacher / annual</h2>
-        </div>
+        <h2>£30 individual teacher / annual</h2>
         <h1>£2.50/month</h1>
       </div>
     </div>
@@ -43,6 +43,7 @@ export default {
   name: "ServicesUpgrade",
 };
 </script>
+
 <style scoped>
 .box-container {
   position: relative;
@@ -60,6 +61,7 @@ export default {
   border-radius: var(--t-br-medium);
   padding: var(--t-space-20);
   gap: 10px;
+  margin-top: 20px;
 }
 .box-header {
   display: grid;
@@ -75,6 +77,9 @@ export default {
   border-radius: var(--t-space-10);
   border: 2px solid var(--t-gray-home);
 }
+.text-left {
+  text-align: left;
+}
 .text-center {
   text-align: center;
 }
@@ -83,7 +88,7 @@ export default {
   color: var(--t-secondary);
 }
 .yellow-text {
-  color: rgb(255, 174, 0);
+  color: rgb(255, 166, 0);
   font-size: 20px;
   font-weight: bold;
 }
