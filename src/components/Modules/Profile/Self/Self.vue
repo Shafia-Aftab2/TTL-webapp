@@ -6,18 +6,29 @@
     </div>
 
     <div class="profile-fields-wrapper">
-      <talkie-input :placeholder="'Name'" :customClass="'profile-input'" />
       <talkie-input
+        :value="user?.name"
+        :placeholder="'Name'"
+        :customClass="'profile-input'"
+        :disabled="true"
+      />
+      <talkie-input
+        :value="user?.displayName"
         :placeholder="'Display Name'"
         :customClass="'profile-input'"
+        :disabled="true"
       />
       <talkie-input
+        :value="user?.schoolName"
         :placeholder="'School Name'"
         :customClass="'profile-input'"
+        :disabled="true"
       />
       <talkie-input
+        :value="user?.email"
         :placeholder="'Email Address'"
         :customClass="'profile-input'"
+        :disabled="true"
       />
     </div>
 
@@ -32,12 +43,28 @@
 
 <script>
 import { TalkieInput, TalkieButton } from "@/components/UICore";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "ProfileSelf",
   components: {
     TalkieInput,
     TalkieButton,
+  },
+  data() {
+    return {
+      user: {},
+    };
+  },
+  created() {
+    // get auth user from cookies
+    const user = authUser.getUser();
+    this.user = {
+      schoolName: user?.schools[0]?.name || null,
+      displayName: user?.displayName,
+      email: user?.email,
+      name: user?.name,
+    };
   },
 };
 </script>
