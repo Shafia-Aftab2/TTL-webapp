@@ -138,7 +138,13 @@
 
     <div class="profile-options-wrapper">
       <div class="profile-footer" v-if="user?.role === rolesList.TEACHER">
-        <a class="profile-footer-link" v-if="!editMode"> Change my password </a>
+        <a
+          class="profile-footer-link"
+          v-if="!editMode"
+          @click="handleChangePasswordRedirection"
+        >
+          Change my password
+        </a>
       </div>
 
       <talkie-button
@@ -233,6 +239,12 @@ export default {
     }
   },
   methods: {
+    handleChangePasswordRedirection() {
+      authUser.deleteUser();
+      authUser.deleteAccessToken();
+      authUser.deleteRefreshToken();
+      this.$router.push("/auth/forgot-password");
+    },
     handleEditButtonClick() {
       this.editMode = true;
     },
