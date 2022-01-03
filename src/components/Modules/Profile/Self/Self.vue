@@ -209,8 +209,17 @@ export default {
 
       // api call
       const response = await UserService.UpdateProfile(payload).catch((e) => {
+        const errorMap = {
+          ["email already exists"]: "Email Already Exists..!",
+          ['"name" contains bad word']: "Name should not be unethical..!",
+          ['"displayname" contains bad word']:
+            "Display name should not be unethical..!",
+        };
+
         return {
-          error: "Failed to update profile..!",
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            "Failed to update profile..!",
         };
       });
 
