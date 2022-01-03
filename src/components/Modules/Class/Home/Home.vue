@@ -6,8 +6,19 @@
         <div class="class-home-header-details-wrapper">
           <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
           <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
-            <talkie-icon :name="'trophy'" />
-            <talkie-icon :name="'setting'" />
+            <talkie-icon
+              :name="'trophy'"
+              :onClick="redirectToCommingSoonPage"
+            />
+            <talkie-icon
+              :name="'setting'"
+              :onClick="redirectToCommingSoonPage"
+            />
+            <!-- TODO: ADD THIS BUTTON TO MANAGE CLASS PAGE | TEMP ADDED HERE -->
+            <talkie-icon
+              :name="'trash'"
+              :onClick="handleShowClassDeleteConfirmation"
+            />
           </div>
         </div>
         <div class="class-home-header-tabs-wrapper">
@@ -55,9 +66,10 @@
             :closeButton="true"
             :centered="true"
             :title="'Are You Sure'"
-            :description="'Your students responses will also be deleted.'"
+            :description="'Your students responses and your feedbacks will also be deleted.'"
             :onClose="handleTopicDeleteDialogClose"
-            v-if="showDeleteDialog"
+            :onConfirm="handleTaskDeletion"
+            v-if="taskToDelete"
           />
           <template v-if="classTasks && classTasks.length > 0">
             <template v-for="_question in classTasks" :key="_question">
@@ -74,7 +86,8 @@
                 :centered="false"
                 :audioSource="_question.audioSource"
                 :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
-                :onDeleteClick="handleTopicCardDeleteClick"
+                :onEditClick="redirectToCommingSoonPage"
+                :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
               />
             </template>
           </template>
@@ -108,6 +121,22 @@
         <talkie-loader :size="'large'" />
       </div>
     </template>
+
+    <!-- Backdrop load wrapper -->
+    <talkie-back-drop-loader v-if="backdropLoading" />
+
+    <!-- Delete class modal -->
+    <talkie-modal
+      :type="'confirm'"
+      :contentPadded="true"
+      :closeButton="true"
+      :centered="true"
+      :title="'Are You Sure'"
+      :description="'Your students, feedbacks, responses, tasks, leaderboards and other data related to this class will be deleted permanently.'"
+      :onClose="handleShowClassDeleteConfirmationReset"
+      :onConfirm="handleClassDeletion"
+      v-if="showClassDeleteConfirmationModal"
+    />
   </div>
 </template>
 
@@ -119,6 +148,7 @@ import {
   TalkieModal,
   TalkieLoader,
   TalkieButtonDropDown,
+  TalkieBackDropLoader,
 } from "@/components/UICore";
 import {
   TalkieQuestionCard,
@@ -129,6 +159,7 @@ import TaskTypes from "@/utils/constants/taskTypes";
 import URLModifier from "@/utils/helpers/URLModifier";
 import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ClassHome",
@@ -139,28 +170,34 @@ export default {
     TalkieModal,
     TalkieButtonDropDown,
     TalkieLoader,
+    TalkieBackDropLoader,
     TalkieQuestionCard,
     TalkieStudentCard,
   },
   data() {
     return {
-      showDeleteDialog: false,
+      taskToDelete: null,
+      showClassDeleteConfirmationModal: false,
       newTaskOptions: [
         {
           name: "Question",
-          onClick: () => {},
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create`,
+              100
+            ),
         },
         {
           name: "Photo",
-          onClick: () => {},
+          onClick: () => this.redirectToCommingSoonPage(),
         },
         {
           name: "Emoji Story",
-          onClick: () => {},
+          onClick: () => this.redirectToCommingSoonPage(),
         },
         {
           name: "Translation",
-          onClick: () => {},
+          onClick: () => this.redirectToCommingSoonPage(),
         },
       ],
       classId: null,
@@ -171,6 +208,7 @@ export default {
       isTeacher: false,
       isStudent: false,
       loading: false,
+      backdropLoading: false,
       activeTab: "questions",
       tabs: ["Questions", "Students"],
       currentTopicFilter: null,
@@ -252,7 +290,7 @@ export default {
         outlined: true,
         loading: false,
         disabled: false,
-        onClick: () => console.log("Button Clicked"),
+        onClick: () => this.$router.push("/classes/create"),
       },
     ];
     this.handleSidebarMutation({
@@ -282,6 +320,42 @@ export default {
     this.loading = false;
   },
   methods: {
+    redirectToCommingSoonPage() {
+      this.$router.push(`/coming-soon`);
+    },
+    handleShowClassDeleteConfirmation() {
+      this.showClassDeleteConfirmationModal = true;
+    },
+    handleShowClassDeleteConfirmationReset() {
+      this.showClassDeleteConfirmationModal = false;
+    },
+    async handleClassDeletion() {
+      this.showClassDeleteConfirmationModal = false;
+      this.backdropLoading = true;
+
+      // api call
+      const response = await ClassService.Delete(this.classId).catch(
+        () => null
+      );
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Failed To Delete Class..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Class Deleted Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.$router.push("/");
+    },
     handleRedirection(link, timeout = 100) {
       const self = this;
       setTimeout(function () {
@@ -291,11 +365,37 @@ export default {
     handleTopicCardBodyClick(taskId) {
       this.handleRedirection(`/classes/${this.classId}/tasks/${taskId}`, 1);
     },
-    handleTopicCardDeleteClick() {
-      this.showDeleteDialog = !this.showDeleteDialog;
+    handleTopicCardDeleteClick(id) {
+      this.taskToDelete = id;
     },
     handleTopicDeleteDialogClose() {
-      this.showDeleteDialog = !this.showDeleteDialog;
+      this.taskToDelete = null;
+    },
+    async handleTaskDeletion() {
+      const taskId = this.taskToDelete;
+      this.taskToDelete = null;
+      this.backdropLoading = true;
+
+      // api call
+      const response = await TaskService.Delete(taskId).catch(() => null);
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Failed To Delete Task..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Task Deleted Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.classTasks = this.classTasks?.filter((x) => x?.id !== taskId);
     },
     handleTabChange(x) {
       this.activeTab = x.toLowerCase();

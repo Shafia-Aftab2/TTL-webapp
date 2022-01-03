@@ -9,7 +9,19 @@ export default class AuthRoutes {
     return HTTPClient.post(`/auth/login`, payload);
   }
 
+  static async Logout(payload) {
+    return HTTPClient.post(`/auth/logout`, payload);
+  }
+
   static async RefreshTokens(payload) {
     return HTTPClient.post(`/auth/refresh-tokens`, payload);
+  }
+
+  static async ForgotPassword(payload) {
+    return HTTPClient.post(`/auth/forgot-password`, payload);
+  }
+
+  static async ResetPassword(resetToken, payload) {
+    return HTTPClient.patch(`/auth/reset-password/${resetToken}`, payload);
   }
 }

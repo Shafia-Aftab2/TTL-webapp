@@ -41,13 +41,16 @@ export default {
     },
   },
   created() {
-    const color =
-      this.variant === "light" ? "var(--t-white)" : "var(--t-white-100)";
-
-    this.handleBodyBackColorChange(color);
+    this.handleUpdateBackgroundColor();
+  },
+  updated() {
+    this.handleUpdateBackgroundColor();
   },
   methods: {
-    handleBodyBackColorChange(color) {
+    handleUpdateBackgroundColor() {
+      const color =
+        this.variant === "light" ? "var(--t-white)" : "var(--t-white-100)";
+
       document.body.style.backgroundColor = color;
     },
     handleSidebarToggle() {

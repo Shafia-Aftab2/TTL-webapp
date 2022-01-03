@@ -18,6 +18,7 @@ module.exports = {
     ],
     "no-prototype-builtins": "off",
     "no-extra-boolean-cast": "off",
+    "no-useless-escape": "off",
   },
   overrides: [
     {

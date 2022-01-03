@@ -26,6 +26,16 @@
           message: errors.password ? errors.password : null,
         }"
       />
+      <p
+        class="auth-split-form-options-info auth-split-form-options-info-right"
+      >
+        <a
+          class="auth-split-form-options-info-link"
+          href="/auth/forgot-password"
+        >
+          Forgot Password?
+        </a>
+      </p>
       <talkie-alert
         :text="formStatus.message"
         :variant="formStatus.type"
@@ -38,18 +48,18 @@
         <div>
           <p class="auth-split-form-options-info">View Talkie’s</p>
           <p class="auth-split-form-options-info">
-            <a class="auth-split-form-options-info-link" href="#"
-              >Terms of Service</a
-            >
+            <a class="auth-split-form-options-info-link" href="#">
+              Terms of Service
+            </a>
             and
-            <a class="auth-split-form-options-info-link" href="#"
-              >Privacy Policy.</a
-            >
+            <a class="auth-split-form-options-info-link" href="#">
+              Privacy Policy.
+            </a>
           </p>
         </div>
         <p class="auth-split-form-options-info">
           Don't have an account?
-          <a class="auth-split-form-options-info-link" href="#">
+          <a class="auth-split-form-options-info-link" href="/auth/signup">
             Create Account
           </a>
         </p>
@@ -69,9 +79,11 @@ import { AuthService } from "@/api/services";
 import { loginSchema } from "@/utils/validations/auth.validation";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
+import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
 
 export default {
   name: "AuthLogin",
+  mixins: [handleAlreadyLogginIn],
   data() {
     return {
       loginSchema: loginSchema,
@@ -137,6 +149,7 @@ export default {
 
       // success case
       const { user, tokens } = response.data;
+      this.handleStoreMutation("user", user);
       const expires = (date) => ({ expires: new Date(date) });
       authUser.setUser(user, expires(tokens.refresh.expiry));
       authUser.setAccessToken(
@@ -152,6 +165,10 @@ export default {
         type: "success",
         message: "Login Successfull. Redirecting..!",
       };
+      this.$router.push("/");
+    },
+    handleStoreMutation(key, value) {
+      this.$store.state[key] = value;
     },
   },
 };
@@ -176,6 +193,9 @@ export default {
 .auth-split-form-options-info {
   padding: var(--t-space-4);
   text-align: center;
+}
+.auth-split-form-options-info-right {
+  text-align: right !important;
 }
 .auth-split-form-options-info-link {
   text-decoration: none;

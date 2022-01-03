@@ -27,7 +27,7 @@
         ]"
         @click="_item.onClick"
         v-for="_item in dropDownItems"
-        :key="_item * Math.random() * 9641631"
+        :key="_item"
       >
         {{ _item.name }}
       </li>

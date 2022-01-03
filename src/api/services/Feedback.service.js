@@ -1,7 +1,19 @@
 import HTTPClient from "../HTTPClient";
 
 export default class FeedbackRoutes {
-  static async Create(responseId, payload) {
-    return HTTPClient.post(`/feedbacks/${responseId}`, payload);
+  static async QueryClassTaskFeedbacks(taskId, query) {
+    return HTTPClient.get(
+      `/feedbacks/${taskId}?${Object.entries(query).map(
+        ([key, value]) => `${key}=${encodeURIComponent(value)}&`
+      )}`
+    );
+  }
+
+  static async CreateIndividualFeedback(responseId, payload) {
+    return HTTPClient.post(`/feedbacks/individual/${responseId}`, payload);
+  }
+
+  static async CreateWholeClassFeedback(responseId, payload) {
+    return HTTPClient.post(`/feedbacks/all/${responseId}`, payload);
   }
 }
