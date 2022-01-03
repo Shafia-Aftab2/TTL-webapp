@@ -97,6 +97,7 @@
         :size="'medium'"
         v-if="editMode"
         :onClick="triggerFormSubmission"
+        :loading="loading"
       >
         Save Changes
       </talkie-button>
