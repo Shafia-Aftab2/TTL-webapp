@@ -2,7 +2,7 @@
   <div class="profile-wrapper">
     <div class="profile-info-wrapper">
       <h2 class="h2">Profile Info</h2>
-      <p class="p" style="margin-bottom: 0 !important">Avatar</p>
+      <!-- <p class="p" style="margin-bottom: 0 !important">Avatar</p> -->
     </div>
 
     <template v-if="!editMode">
