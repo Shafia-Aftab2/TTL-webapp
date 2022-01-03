@@ -137,7 +137,7 @@
     </template>
 
     <div class="profile-options-wrapper">
-      <div class="profile-footer">
+      <div class="profile-footer" v-if="user?.role === rolesList.TEACHER">
         <a class="profile-footer-link" v-if="!editMode"> Change my password </a>
       </div>
 
