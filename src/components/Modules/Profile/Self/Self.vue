@@ -5,55 +5,145 @@
       <p class="p" style="margin-bottom: 0 !important">Avatar</p>
     </div>
 
-    <div class="profile-fields-wrapper">
-      <talkie-input
-        :value="user?.name"
-        :placeholder="'Name'"
-        :customClass="'profile-input'"
-        :disabled="true"
-      />
-      <talkie-input
-        :value="user?.displayName"
-        :placeholder="'Display Name'"
-        :customClass="'profile-input'"
-        :disabled="true"
-      />
-      <talkie-input
-        :value="user?.schoolName"
-        :placeholder="'School Name'"
-        :customClass="'profile-input'"
-        :disabled="true"
-      />
-      <talkie-input
-        :value="user?.email"
-        :placeholder="'Email Address'"
-        :customClass="'profile-input'"
-        :disabled="true"
-      />
-    </div>
+    <template v-if="!editMode">
+      <div class="profile-fields-wrapper">
+        <talkie-input
+          :value="user?.name"
+          :placeholder="'Name'"
+          :customClass="'profile-input'"
+          :disabled="true"
+        />
+        <talkie-input
+          :value="user?.displayName"
+          :placeholder="'Display Name'"
+          :customClass="'profile-input'"
+          :disabled="true"
+        />
+        <talkie-input
+          :value="user?.email"
+          :placeholder="'Email Address'"
+          :customClass="'profile-input'"
+          :disabled="true"
+        />
+      </div>
+    </template>
+
+    <template v-if="editMode">
+      <talkie-form
+        :customClass="'profile-fields-wrapper'"
+        v-slot="{ errors, triggerFormSubmit }"
+        :validationSchema="updateProfileSchema"
+        :initialValues="{
+          name: user?.name,
+          displayName: user?.displayName,
+          email: user?.email,
+        }"
+        :onSubmit="handleSubmit"
+      >
+        <span hidden>
+          <!-- TODO: updated these states via a handler -->
+          {{ (this.triggerFormSubmission = triggerFormSubmit) }}
+        </span>
+        <talkie-input
+          :name="'name'"
+          :placeholder="'Name'"
+          :customClass="'profile-input'"
+          :hint="{
+            type: errors.name ? 'error' : null,
+            message: errors.name ? errors.name : null,
+          }"
+        />
+        <talkie-input
+          :name="'displayName'"
+          :placeholder="'Display Name'"
+          :customClass="'profile-input'"
+          :hint="{
+            type: errors.displayName ? 'error' : null,
+            message: errors.displayName ? errors.displayName : null,
+          }"
+        />
+        <talkie-input
+          :name="'email'"
+          :placeholder="'Email Address'"
+          :customClass="'profile-input'"
+          :hint="{
+            type: errors.email ? 'error' : null,
+            message: errors.email ? errors.email : null,
+          }"
+        />
+
+        <talkie-alert
+          :text="formStatus.message"
+          :variant="formStatus.type"
+          v-if="formStatus.type && formStatus.message"
+        />
+      </talkie-form>
+    </template>
 
     <div class="profile-options-wrapper">
       <div class="profile-footer">
-        <a class="profile-footer-link"> Change my password </a>
+        <a class="profile-footer-link" v-if="!editMode"> Change my password </a>
       </div>
-      <talkie-button :size="'medium'"> Edit Profile </talkie-button>
+
+      <talkie-button
+        :size="'medium'"
+        v-if="!editMode"
+        :onClick="handleEditButtonClick"
+      >
+        Edit Profile
+      </talkie-button>
+
+      <talkie-button
+        :size="'medium'"
+        v-if="editMode"
+        :onClick="triggerFormSubmission"
+      >
+        Save Changes
+      </talkie-button>
+
+      <talkie-button
+        :variant="'danger'"
+        :size="'medium'"
+        v-if="editMode"
+        :onClick="handleCancelEditButtonClick"
+      >
+        Cancel
+      </talkie-button>
     </div>
   </div>
 </template>
 
 <script>
-import { TalkieInput, TalkieButton } from "@/components/UICore";
+import {
+  TalkieForm,
+  TalkieInput,
+  TalkieButton,
+  TalkieAlert,
+} from "@/components/UICore";
+import { UserService } from "@/api/services";
+import { updateProfileSchema } from "@/utils/validations/user.validation";
 import authUser from "@/utils/helpers/auth";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ProfileSelf",
   components: {
+    TalkieForm,
     TalkieInput,
     TalkieButton,
+    TalkieAlert,
   },
   data() {
     return {
       user: {},
+      editMode: false,
+      triggerFormSubmission: () => {},
+      updateProfileSchema: updateProfileSchema,
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+      },
     };
   },
   created() {
@@ -65,6 +155,88 @@ export default {
       email: user?.email,
       name: user?.name,
     };
+  },
+  methods: {
+    handleEditButtonClick() {
+      this.editMode = true;
+    },
+    handleSaveEditButtonClick() {
+      this.editMode = false;
+    },
+    handleCancelEditButtonClick() {
+      this.editMode = false;
+    },
+    async getUserProfile() {
+      const response = await UserService.GetMyProfile().catch();
+
+      return response?.data || null;
+    },
+    async updateUserProfile() {
+      // api call (user profile)
+      const responseProfile = await this.getUserProfile();
+
+      // failure case
+      if (!responseProfile) return false;
+
+      // success case
+      const expires = (date) => ({ expires: new Date(date) });
+      const nextDay = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toISOString();
+      authUser.setUser(responseProfile, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
+      this.user = {
+        schoolName: responseProfile?.schools[0]?.name || null,
+        displayName: responseProfile?.displayName,
+        email: responseProfile?.email,
+        name: responseProfile?.name,
+      };
+      return true;
+    },
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null };
+
+      // form data
+      const { email, name, displayName } = values;
+
+      // payload
+      const payload = {
+        name,
+        displayName,
+        email,
+      };
+
+      // api call
+      const response = await UserService.UpdateProfile(payload).catch((e) => {
+        return {
+          error: "Failed to update profile..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: null,
+        message: null,
+      };
+      notifications.show("Profile update successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      await this.updateUserProfile();
+      this.editMode = false;
+    },
   },
 };
 </script>
