@@ -7,24 +7,46 @@
 
     <template v-if="!editMode">
       <div class="profile-fields-wrapper">
-        <talkie-input
-          :value="user?.name"
-          :placeholder="'Name'"
-          :customClass="'profile-input'"
-          :disabled="true"
-        />
-        <talkie-input
-          :value="user?.displayName"
-          :placeholder="'Display Name'"
-          :customClass="'profile-input'"
-          :disabled="true"
-        />
-        <talkie-input
-          :value="user?.email"
-          :placeholder="'Email Address'"
-          :customClass="'profile-input'"
-          :disabled="true"
-        />
+        <template v-if="user?.role === rolesList.STUDENT">
+          <talkie-input
+            :value="user?.firstName"
+            :placeholder="'First Name'"
+            :customClass="'profile-input'"
+            :disabled="true"
+          />
+          <talkie-input
+            :value="user?.lastName"
+            :placeholder="'Last Name'"
+            :customClass="'profile-input'"
+            :disabled="true"
+          />
+          <talkie-input
+            :value="user?.username"
+            :placeholder="'Username'"
+            :customClass="'profile-input'"
+            :disabled="true"
+          />
+        </template>
+        <template v-if="user?.role === rolesList.TEACHER">
+          <talkie-input
+            :value="user?.name"
+            :placeholder="'Name'"
+            :customClass="'profile-input'"
+            :disabled="true"
+          />
+          <talkie-input
+            :value="user?.displayName"
+            :placeholder="'Display Name'"
+            :customClass="'profile-input'"
+            :disabled="true"
+          />
+          <talkie-input
+            :value="user?.email"
+            :placeholder="'Email Address'"
+            :customClass="'profile-input'"
+            :disabled="true"
+          />
+        </template>
       </div>
     </template>
 
@@ -37,6 +59,9 @@
           name: user?.name,
           displayName: user?.displayName,
           email: user?.email,
+          firstName: user?.firstName,
+          lastName: user?.lastName,
+          username: user?.username,
         }"
         :onSubmit="handleSubmit"
       >
@@ -44,33 +69,64 @@
           <!-- TODO: updated these states via a handler -->
           {{ (this.triggerFormSubmission = triggerFormSubmit) }}
         </span>
-        <talkie-input
-          :name="'name'"
-          :placeholder="'Name'"
-          :customClass="'profile-input'"
-          :hint="{
-            type: errors.name ? 'error' : null,
-            message: errors.name ? errors.name : null,
-          }"
-        />
-        <talkie-input
-          :name="'displayName'"
-          :placeholder="'Display Name'"
-          :customClass="'profile-input'"
-          :hint="{
-            type: errors.displayName ? 'error' : null,
-            message: errors.displayName ? errors.displayName : null,
-          }"
-        />
-        <talkie-input
-          :name="'email'"
-          :placeholder="'Email Address'"
-          :customClass="'profile-input'"
-          :hint="{
-            type: errors.email ? 'error' : null,
-            message: errors.email ? errors.email : null,
-          }"
-        />
+        <template v-if="user?.role === rolesList.TEACHER">
+          <talkie-input
+            :name="'name'"
+            :placeholder="'Name'"
+            :customClass="'profile-input'"
+            :hint="{
+              type: errors.name ? 'error' : null,
+              message: errors.name ? errors.name : null,
+            }"
+          />
+          <talkie-input
+            :name="'displayName'"
+            :placeholder="'Display Name'"
+            :customClass="'profile-input'"
+            :hint="{
+              type: errors.displayName ? 'error' : null,
+              message: errors.displayName ? errors.displayName : null,
+            }"
+          />
+          <talkie-input
+            :name="'email'"
+            :placeholder="'Email Address'"
+            :customClass="'profile-input'"
+            :hint="{
+              type: errors.email ? 'error' : null,
+              message: errors.email ? errors.email : null,
+            }"
+          />
+        </template>
+        <template v-if="user?.role === rolesList.STUDENT">
+          <talkie-input
+            :name="'firstName'"
+            :placeholder="'First Name'"
+            :customClass="'profile-input'"
+            :hint="{
+              type: errors.firstName ? 'error' : null,
+              message: errors.firstName ? errors.firstName : null,
+            }"
+          />
+          <talkie-input
+            :name="'lastName'"
+            :placeholder="'Last Name'"
+            :customClass="'profile-input'"
+            :hint="{
+              type: errors.lastName ? 'error' : null,
+              message: errors.lastName ? errors.lastName : null,
+            }"
+          />
+          <talkie-input
+            :name="'username'"
+            :placeholder="'Username'"
+            :customClass="'profile-input'"
+            :hint="{
+              type: errors.username ? 'error' : null,
+              message: errors.username ? errors.username : null,
+            }"
+          />
+        </template>
 
         <talkie-alert
           :text="formStatus.message"
@@ -122,9 +178,13 @@ import {
   TalkieAlert,
 } from "@/components/UICore";
 import { UserService } from "@/api/services";
-import { updateProfileSchema } from "@/utils/validations/user.validation";
+import {
+  updateTeacherProfileSchema,
+  updateStudentProfileSchema,
+} from "@/utils/validations/user.validation";
 import authUser from "@/utils/helpers/auth";
 import { notifications } from "@/components/UIActions";
+import rolesList from "@/utils/constants/roles";
 
 export default {
   name: "ProfileSelf",
@@ -139,7 +199,8 @@ export default {
       user: {},
       editMode: false,
       triggerFormSubmission: () => {},
-      updateProfileSchema: updateProfileSchema,
+      updateProfileSchema: {},
+      rolesList: rolesList,
       loading: false,
       formStatus: {
         type: null,
@@ -155,7 +216,21 @@ export default {
       displayName: user?.displayName,
       email: user?.email,
       name: user?.name,
+      role: user?.role,
+      username: user?.username,
     };
+
+    const userFullName = user?.name?.split(" ");
+    this.user.firstName = userFullName?.length > 0 ? userFullName[0] : "";
+    this.user.lastName =
+      userFullName?.shift()?.length > 0 ? userFullName?.join(" ") : "";
+
+    if (user?.role === rolesList.STUDENT) {
+      this.updateProfileSchema = updateStudentProfileSchema;
+    }
+    if (user?.role === rolesList.TEACHER) {
+      this.updateProfileSchema = updateTeacherProfileSchema;
+    }
   },
   methods: {
     handleEditButtonClick() {
@@ -190,7 +265,15 @@ export default {
         displayName: responseProfile?.displayName,
         email: responseProfile?.email,
         name: responseProfile?.name,
+        role: responseProfile?.role,
+        username: responseProfile?.username,
       };
+
+      const userFullName = responseProfile?.name?.split(" ");
+      this.user.firstName = userFullName?.length > 0 ? userFullName[0] : "";
+      this.user.lastName =
+        userFullName?.shift()?.length > 0 ? userFullName?.join(" ") : "";
+
       return true;
     },
     async handleSubmit(values) {
@@ -199,13 +282,20 @@ export default {
       this.formStatus = { type: null, message: null };
 
       // form data
-      const { email, name, displayName } = values;
+      const { email, name, firstName, lastName, username, displayName } =
+        values;
 
       // payload
       const payload = {
-        name,
-        displayName,
-        email,
+        ...(this.user?.role === rolesList.TEACHER && {
+          name,
+          displayName,
+          email,
+        }),
+        ...(this.user?.role === rolesList.STUDENT && {
+          name: `${firstName} ${lastName}`,
+          username,
+        }),
       };
 
       // api call
