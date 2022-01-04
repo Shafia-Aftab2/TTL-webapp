@@ -7,9 +7,6 @@
     </div>
     <div class="box-content">
       <div class="text-center box-header">
-        <p></p>
-        <p></p>
-        <p></p>
         <h1>Upgrade - Pricing</h1>
         <p></p>
         <p>When you upgrade your account, you get to:</p>
@@ -34,8 +31,10 @@
 </template>
 
 <script>
+import { TalkieButton } from "@/components/UICore";
 export default {
   name: "ServicesUpgrade",
+  components: TalkieButton
 };
 </script>
 
@@ -43,13 +42,13 @@ export default {
 .box-benefits {
   text-align: left;
   display: grid;
-  width: 80%;
+  width: 70%;
   background-color: white;
   border-radius: var(--t-br-medium);
   padding: var(--t-space-20);
   gap: 10px;
   margin-top: 20px;
-  margin-left: 100px;
+  margin-left: 245px;
 }
 .box-container {
   position: relative;
@@ -62,10 +61,10 @@ export default {
 }
 .box-content {
   display: grid;
-  width: 70%;
+  width: 100%;
   background-color: white;
   border-radius: var(--t-br-medium);
-  padding: var(--t-space-20);
+  padding: var(--t-space-70);
   gap: 10px;
   margin-top: 20px;
 }
@@ -131,7 +130,7 @@ export default {
 @media (min-width: 1200px) {
   .back-default {
     position: absolute;
-    left: 160px;
+    left: 5px;
   }
 }
 </style>
