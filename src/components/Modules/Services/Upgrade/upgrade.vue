@@ -25,6 +25,10 @@
         </div>
         <h2>£30 individual teacher / annual</h2>
         <h1>£2.50/month</h1>
+        <p></p>
+        <div class="upgrade">
+          <talkie-button>Upgrade</talkie-button>
+        </div>
       </div>
     </div>
   </div>
@@ -34,7 +38,7 @@
 import { TalkieButton } from "@/components/UICore";
 export default {
   name: "ServicesUpgrade",
-  components: TalkieButton
+  components: { TalkieButton },
 };
 </script>
 
@@ -91,6 +95,9 @@ export default {
 .text-style {
   font-size: 20px;
   color: var(--t-secondary);
+}
+.upgrade {
+  font-weight: bold;
 }
 .yellow-text {
   color: rgb(255, 166, 0);
