@@ -19,6 +19,7 @@ import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
+import ProfileSelf from "../components/Modules/Profile/Self";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
 import StudentQA from "../components/Modules/Students/QA";
@@ -240,6 +241,23 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT],
+          },
+        },
+      },
+    ],
+  },
+  {
+    path: "/profile/self",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
+      {
+        name: "ProfileSelf",
+        path: "/profile/self",
+        component: ProfileSelf,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
           },
         },
       },
