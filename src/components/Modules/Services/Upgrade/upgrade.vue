@@ -13,19 +13,14 @@
         <h1>Upgrade - Pricing</h1>
         <p></p>
         <p>When you upgrade your account, you get to:</p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <div class="text-left">
-          <p>>Create up to 8 classes (max of 32 students)</p>
+        <div class="box-benefits">
+          <p>> Create up to 8 classes (max of 32 students)</p>
           <p></p>
-          <p>>Access all features</p>
+          <p>> Access all features</p>
           <p></p>
-          <p>>Set an unlimited number of questions accross all topics</p>
+          <p>> Set an unlimited number of questions across all topics</p>
           <p></p>
-          <p>>Students get unlimited access to all quizzes (March 2022)</p>
+          <p>> Students get unlimited access to all quizzes (March 2022)</p>
           <p></p>
         </div>
         <div class="yellow-text">
@@ -45,6 +40,17 @@ export default {
 </script>
 
 <style scoped>
+.box-benefits {
+  text-align: left;
+  display: grid;
+  width: 80%;
+  background-color: white;
+  border-radius: var(--t-br-medium);
+  padding: var(--t-space-20);
+  gap: 10px;
+  margin-top: 20px;
+  margin-left: 100px;
+}
 .box-container {
   position: relative;
   display: flex;
