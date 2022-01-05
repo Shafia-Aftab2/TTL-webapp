@@ -5,6 +5,16 @@
         <a><span>&#8592; </span>back</a>
       </div>
     </div>
+    <div class="box-content">
+      <div class="text-center box-header">
+        <div>
+          <img
+            src="../../../../assets/images/Ellipse_55.png"
+            alt="Image here"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
