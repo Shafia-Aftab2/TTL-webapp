@@ -1,2 +1,2 @@
-import Leaderboard from ".Leaderboard.vue";
+import Leaderboard from "./Leaderboard.vue";
 export default Leaderboard;

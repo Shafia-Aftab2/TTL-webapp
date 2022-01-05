@@ -27,7 +27,7 @@ import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
-import Leaderboard from "/components/Modules/Class/Leaderboard";
+import LeaderboardClasses from "../components/Modules/Class/Leaderboard";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -176,7 +176,7 @@ const routes = [
       {
         name: "LeaderboardClasses",
         path: "/classes/leaderboard",
-        component: Leaderboard,
+        component: LeaderboardClasses,
       },
       {
         name: "ClassJoinLink",
