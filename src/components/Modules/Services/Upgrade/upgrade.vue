@@ -52,16 +52,22 @@
       </div>
     </div>
   </div>
+  <talkie-back-drop-loader v-if="backdropLoading" />
 </template>
 
 <script>
-import { TalkieButton } from "@/components/UICore";
+import { TalkieButton, TalkieBackDropLoader } from "@/components/UICore";
 import { AuthService } from "@/api/services";
 import { loadStripe } from "@stripe/stripe-js";
 
 export default {
   name: "ServicesUpgrade",
-  components: { TalkieButton },
+  components: { TalkieButton, TalkieBackDropLoader },
+  data() {
+    return {
+      backdropLoading: false,
+    };
+  },
   async mounted() {
     await this.mountStripePaymentElementsFormToUI();
   },
@@ -97,6 +103,9 @@ export default {
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
+        // update page state
+        this.backdropLoading = true;
+
         // setup options
         const confirmSetupOptions = {
           elements,
@@ -111,12 +120,16 @@ export default {
 
         // failure case
         if (error) {
+          this.backdropLoading = false;
           const errorMessageContainer = document.querySelector(
             "#talkie-stripe-payments-form-error-message-wrapper"
           );
           errorMessageContainer.textContent = error.message;
           return;
         }
+
+        // success case
+        this.backdropLoading = false;
       });
     },
   },
