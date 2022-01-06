@@ -27,7 +27,13 @@
         <h1>£2.50/month</h1>
         <p></p>
 
-        <div class="talkie-stripe-payments-form-wrapper">
+        <div
+          class="talkie-stripe-payments-form-wrapper"
+          :class="
+            !showPaymentCardDetailsForm &&
+            'talkie-stripe-payments-form-wrapper-hidden'
+          "
+        >
           <h3 class="h3">Add Payment Method</h3>
           <form
             class="talkie-stripe-payments-form"
@@ -42,13 +48,19 @@
             >
               <!-- Display error message to your customers here -->
             </div>
-            <talkie-button :type="'submit'">Submit</talkie-button>
+            <talkie-button :type="'submit'">Upgrade</talkie-button>
           </form>
         </div>
 
         <div class="upgrade">
-          <talkie-button :onClick="handleUpgradeAccountFlow">
+          <talkie-button
+            :onClick="handleUpgradeAccountFlow"
+            v-if="!showPaymentCardDetailsForm"
+          >
             Upgrade
+          </talkie-button>
+          <talkie-button :onClick="handleDowngradeAccountFlow">
+            Downgrade
           </talkie-button>
         </div>
       </div>
@@ -72,6 +84,7 @@ export default {
       user: {},
       backdropLoading: false,
       userHasPaymentMethod: false,
+      showPaymentCardDetailsForm: false,
     };
   },
   async created() {
@@ -149,10 +162,18 @@ export default {
         }
 
         // success case
+        await new Promise((r) => setTimeout(r, 2000));
         this.backdropLoading = false;
+        await this.handleUpgradeAccountFlow(false);
       });
     },
-    async handleUpgradeAccountFlow() {
+    async handleUpgradeAccountFlow(handleCardCheck = true) {
+      // check if user has a payment method
+      if (!this.userHasPaymentMethod && handleCardCheck) {
+        this.showPaymentCardDetailsForm = true;
+        return;
+      }
+
       // update page state
       this.backdropLoading = true;
 
@@ -208,6 +229,9 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: var(--t-space-24);
+}
+.talkie-stripe-payments-form-wrapper-hidden {
+  display: none;
 }
 .talkie-stripe-payments-form {
   width: 100%;
