@@ -63,7 +63,7 @@ export default {
   name: "ServicesUpgrade",
   components: { TalkieButton },
   async mounted() {
-    await this.mountStripePaymentElementsToUI();
+    await this.mountStripePaymentElementsFormToUI();
   },
   methods: {
     async getStripeClientSecret() {
@@ -71,7 +71,7 @@ export default {
 
       return response?.data?.client_secret || null;
     },
-    async mountStripePaymentElementsToUI() {
+    async mountStripePaymentElementsFormToUI() {
       //  get stripe pk from env
       const stripePK = process.env.VUE_APP_TALKIE_MONO_API_STRIPE_PK;
 
@@ -89,6 +89,35 @@ export default {
       // mount stripe elements to ui
       const paymentElement = elements.create("payment");
       paymentElement.mount("#talkie-stripe-payments-element");
+
+      // get stripe payments element form
+      const form = document.getElementById("talkie-stripe-payments-form");
+
+      // add submit handler
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        // setup options
+        const confirmSetupOptions = {
+          elements,
+          confirmParams: { return_url: window.location.origin },
+          redirect: "if_required",
+        };
+
+        // api call (add payment method)
+        const { error, setupIntent } = await stripe.confirmSetup(
+          confirmSetupOptions
+        );
+
+        // failure case
+        if (error) {
+          const errorMessageContainer = document.querySelector(
+            "#talkie-stripe-payments-form-error-message-wrapper"
+          );
+          errorMessageContainer.textContent = error.message;
+          return;
+        }
+      });
     },
   },
 };
