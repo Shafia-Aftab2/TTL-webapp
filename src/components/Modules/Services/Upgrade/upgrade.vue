@@ -47,7 +47,9 @@
         </div>
 
         <div class="upgrade">
-          <talkie-button>Upgrade</talkie-button>
+          <talkie-button :onClick="handleUpgradeAccountFlow">
+            Upgrade
+          </talkie-button>
         </div>
       </div>
     </div>
@@ -57,8 +59,9 @@
 
 <script>
 import { TalkieButton, TalkieBackDropLoader } from "@/components/UICore";
-import { AuthService } from "@/api/services";
+import { AuthService, SubscriptionService } from "@/api/services";
 import { loadStripe } from "@stripe/stripe-js";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ServicesUpgrade",
@@ -130,6 +133,36 @@ export default {
 
         // success case
         this.backdropLoading = false;
+      });
+    },
+    async handleUpgradeAccountFlow() {
+      // update page state
+      this.backdropLoading = true;
+
+      // api call
+      const response = await SubscriptionService.CreateSubscription().catch(
+        () => {
+          return {
+            error: "Failed to create subscription..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Subscription created successfully..!", {
+        variant: "success",
+        displayIcon: true,
       });
     },
   },
