@@ -56,9 +56,41 @@
 
 <script>
 import { TalkieButton } from "@/components/UICore";
+import { AuthService } from "@/api/services";
+import { loadStripe } from "@stripe/stripe-js";
+
 export default {
   name: "ServicesUpgrade",
   components: { TalkieButton },
+  async mounted() {
+    await this.mountStripePaymentElementsToUI();
+  },
+  methods: {
+    async getStripeClientSecret() {
+      const response = await AuthService.GenerateClientSecret().catch();
+
+      return response?.data?.client_secret || null;
+    },
+    async mountStripePaymentElementsToUI() {
+      //  get stripe pk from env
+      const stripePK = process.env.VUE_APP_TALKIE_MONO_API_STRIPE_PK;
+
+      // init stripe
+      const stripe = await loadStripe(stripePK);
+
+      // generate client secret (+ failure case)
+      const stripeClientSecret = await this.getStripeClientSecret();
+      if (!stripeClientSecret) return this.$router.push("/404");
+
+      // create stripe elements
+      const options = { clientSecret: stripeClientSecret };
+      const elements = stripe.elements(options);
+
+      // mount stripe elements to ui
+      const paymentElement = elements.create("payment");
+      paymentElement.mount("#talkie-stripe-payments-element");
+    },
+  },
 };
 </script>
 
