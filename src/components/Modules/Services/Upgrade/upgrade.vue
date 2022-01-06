@@ -71,6 +71,7 @@ export default {
     return {
       user: {},
       backdropLoading: false,
+      userHasPaymentMethod: false,
     };
   },
   async created() {
@@ -81,6 +82,11 @@ export default {
     // get auth user data
     const user = authUser.getUser();
     this.user = user;
+
+    // check if user has a payment method
+    const userHasPaymentMethod =
+      user?.stripe?.customer?.paymentMethods?.length > 0;
+    this.userHasPaymentMethod = userHasPaymentMethod;
   },
   async mounted() {
     await this.mountStripePaymentElementsFormToUI();
