@@ -59,17 +59,28 @@
 
 <script>
 import { TalkieButton, TalkieBackDropLoader } from "@/components/UICore";
-import { AuthService, SubscriptionService } from "@/api/services";
+import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { loadStripe } from "@stripe/stripe-js";
 import { notifications } from "@/components/UIActions";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "ServicesUpgrade",
   components: { TalkieButton, TalkieBackDropLoader },
   data() {
     return {
+      user: {},
       backdropLoading: false,
     };
+  },
+  async created() {
+    // update user profile data (+failure case)
+    const isProfileUpdated = await this.updateUserProfile();
+    if (!isProfileUpdated) return this.$router.push("/404");
+
+    // get auth user data
+    const user = authUser.getUser();
+    this.user = user;
   },
   async mounted() {
     await this.mountStripePaymentElementsFormToUI();
@@ -164,6 +175,21 @@ export default {
         variant: "success",
         displayIcon: true,
       });
+    },
+    async updateUserProfile() {
+      // api call
+      const response = await UserService.GetMyProfile().catch();
+
+      // failure case
+      if (!response?.data) return false;
+
+      // success case
+      const expires = (date) => ({ expires: new Date(date) });
+      const nextDay = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toISOString();
+      authUser.setUser(response?.data, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
+      return true;
     },
   },
 };
