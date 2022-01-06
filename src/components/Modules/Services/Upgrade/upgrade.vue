@@ -26,6 +26,26 @@
         <h2>£30 individual teacher / annual</h2>
         <h1>£2.50/month</h1>
         <p></p>
+
+        <div class="talkie-stripe-payments-form-wrapper">
+          <h3 class="h3">Add Payment Method</h3>
+          <form
+            class="talkie-stripe-payments-form"
+            id="talkie-stripe-payments-form"
+          >
+            <div id="talkie-stripe-payments-element">
+              <!-- Elements will create form elements here -->
+            </div>
+            <div
+              class="talkie-stripe-payments-form-error-message-wrapper"
+              id="talkie-stripe-payments-form-error-message-wrapper"
+            >
+              <!-- Display error message to your customers here -->
+            </div>
+            <talkie-button :type="'submit'">Submit</talkie-button>
+          </form>
+        </div>
+
         <div class="upgrade">
           <talkie-button>Upgrade</talkie-button>
         </div>
@@ -43,6 +63,25 @@ export default {
 </script>
 
 <style scoped>
+.talkie-stripe-payments-form-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--t-space-24);
+}
+.talkie-stripe-payments-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--t-space-16);
+}
+.talkie-stripe-payments-form-error-message-wrapper {
+  color: var(--t-red);
+  font-size: var(--t-fs-small);
+}
+
 .box-benefits {
   text-align: left;
   display: grid;
