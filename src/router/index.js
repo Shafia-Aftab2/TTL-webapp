@@ -265,13 +265,13 @@ const routes = [
     ],
   },
   {
-    path: "/Services",
+    path: "/services",
     component: Layout,
     props: { variant: "dark" },
     children: [
       {
         name: "ServicesUpgrade",
-        path: "/Services/Upgrade",
+        path: "/services/upgrade",
         component: ServicesUpgrade,
       },
     ],

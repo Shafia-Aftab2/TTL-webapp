@@ -75,10 +75,10 @@ export default {
     return {
       links: [
         // TEMP: nav links hidden for first deployment
-        // {
-        //   text: "Upgrade",
-        //   url: "#",
-        // },
+        {
+          text: "Upgrade",
+          url: "/services/upgrade",
+        },
         // {
         //   text: "Help",
         //   url: "#",

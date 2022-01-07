@@ -1,2 +1,2 @@
-import ServicesUpgrade from "./upgrade.vue";
+import ServicesUpgrade from "./Upgrade.vue";
 export default ServicesUpgrade;

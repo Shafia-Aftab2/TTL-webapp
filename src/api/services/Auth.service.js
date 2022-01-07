@@ -24,4 +24,8 @@ export default class AuthRoutes {
   static async ResetPassword(resetToken, payload) {
     return HTTPClient.patch(`/auth/reset-password/${resetToken}`, payload);
   }
+
+  static async GenerateClientSecret() {
+    return HTTPClient.get(`/auth/stripe/client-secret`);
+  }
 }
