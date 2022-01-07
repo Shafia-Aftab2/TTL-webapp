@@ -7,22 +7,27 @@
     </div>
     <div class="box-content">
       <div class="text-center box-header">
-        <h1>Upgrade - Pricing</h1>
-        <p></p>
-        <p>When you upgrade your account, you get to:</p>
-        <div class="box-benefits">
-          <p>> Create up to 8 classes (max of 32 students)</p>
+        <h1 v-if="!userIsSubscribed">Upgrade - Pricing</h1>
+        <h1 v-if="userIsSubscribed">You account is Already Upgraded..!</h1>
+
+        <template v-if="!userIsSubscribed">
           <p></p>
-          <p>> Access all features</p>
-          <p></p>
-          <p>> Set an unlimited number of questions across all topics</p>
-          <p></p>
-          <p>> Students get unlimited access to all quizzes (March 2022)</p>
-          <p></p>
-        </div>
-        <div class="yellow-text">
-          <p>Limited Offer</p>
-        </div>
+          <p>When you upgrade your account, you get to:</p>
+          <div class="box-benefits">
+            <p>> Create up to 8 classes (max of 32 students)</p>
+            <p></p>
+            <p>> Access all features</p>
+            <p></p>
+            <p>> Set an unlimited number of questions across all topics</p>
+            <p></p>
+            <p>> Students get unlimited access to all quizzes (March 2022)</p>
+            <p></p>
+          </div>
+          <div class="yellow-text">
+            <p>Limited Offer</p>
+          </div>
+        </template>
+
         <h2>£30 individual teacher / annual</h2>
         <h1>£2.50/month</h1>
         <p></p>
@@ -52,13 +57,16 @@
           </form>
         </div>
 
-        <div class="upgrade">
+        <div class="upgrade" v-if="!userIsSubscribed">
           <talkie-button
             :onClick="handleUpgradeAccountFlow"
             v-if="!showPaymentCardDetailsForm"
           >
             Upgrade
           </talkie-button>
+        </div>
+
+        <div class="upgrade" v-if="userIsSubscribed">
           <talkie-button :onClick="handleDowngradeAccountFlow">
             Downgrade
           </talkie-button>
@@ -84,6 +92,7 @@ export default {
       user: {},
       backdropLoading: false,
       userHasPaymentMethod: false,
+      userIsSubscribed: false,
       showPaymentCardDetailsForm: false,
     };
   },
@@ -198,7 +207,39 @@ export default {
 
       // success case
       this.backdropLoading = false;
+      this.userIsSubscribed = true;
       notifications.show("Subscription created successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
+    async handleDowngradeAccountFlow() {
+      // update page state
+      this.backdropLoading = true;
+
+      // api call
+      const response = await SubscriptionService.RemoveSubscription().catch(
+        () => {
+          return {
+            error: "Failed to remove subscription..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.userIsSubscribed = false;
+      notifications.show("Subscription removed successfully..!", {
         variant: "success",
         displayIcon: true,
       });
