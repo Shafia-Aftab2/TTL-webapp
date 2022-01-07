@@ -109,6 +109,10 @@ export default {
     const userHasPaymentMethod =
       user?.stripe?.customer?.paymentMethods?.length > 0;
     this.userHasPaymentMethod = userHasPaymentMethod;
+
+    // check if the user is subscribed
+    const isSubscribed = await this.getMySubscription();
+    this.userIsSubscribed = isSubscribed;
   },
   async mounted() {
     await this.mountStripePaymentElementsFormToUI();
@@ -258,6 +262,13 @@ export default {
       ).toISOString();
       authUser.setUser(response?.data, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
       return true;
+    },
+    async getMySubscription() {
+      const response = await SubscriptionService.GetMySubscription().catch(
+        () => null
+      );
+
+      return response?.data || null;
     },
   },
 };
