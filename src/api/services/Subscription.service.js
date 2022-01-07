@@ -8,4 +8,8 @@ export default class SubscriptionRoutes {
   static async RemoveSubscription() {
     return HTTPClient.delete(`/subscriptions`);
   }
+
+  static async GetMySubscription() {
+    return HTTPClient.get(`/subscriptions`);
+  }
 }
