@@ -4,6 +4,7 @@
       'talkie-student-card-wrapper',
       fullWidth && 'talkie-student-card-fullwidth-wrapper',
       computedShouldWrap && 'talkie-student-card-wrap-content-wrapper',
+      customClass.toString(),
     ]"
   >
     <!-- Left Content -->
@@ -262,6 +263,10 @@ export default {
     fullWidth: {
       type: Boolean,
       default: true,
+    },
+    customClass: {
+      type: String,
+      default: "",
     },
     // feedback
     // info
