@@ -13,6 +13,17 @@
             alt="Image here"
           />
         </div>
+        <br />
+        <br />
+        <div class="student-box">
+          <div class="student_name">
+            <p>Harris D</p>
+          </div>
+          <div class="points">
+            <p>1432</p>
+          </div>
+        </div>
+        <br />
         <div>
           <img src="../../../../assets/images/trophy.png" alt="Image here" />
         </div>
@@ -37,15 +48,35 @@ export default {
 }
 .box-content {
   display: grid;
-  width: 70%;
+  width: 100%;
   background-color: white;
   border-radius: var(--t-br-medium);
-  padding: var(--t-space-20);
+  padding: var(--t-space-70);
   gap: 10px;
+  margin-top: 20px;
+  align-items: center;
   justify-content: center;
 }
 .back {
   text-decoration: none;
+}
+.student-box {
+  display: grid;
+  width: 100%;
+  background-color: white;
+  border-radius: var(--t-br-medium);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  left: 20px;
+}
+.student_name {
+  font-size: 30px;
+  font-weight: bold;
+}
+.points {
+  font-size: 30px;
+  font-weight: bold;
 }
 @media (max-width: 599px) {
   .box-content {
@@ -66,7 +97,7 @@ export default {
 @media (min-width: 1200px) {
   .back-default {
     position: absolute;
-    left: 160px;
+    left: 5px;
   }
 }
 </style>
