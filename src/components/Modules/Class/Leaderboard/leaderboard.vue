@@ -7,7 +7,7 @@
     </div>
     <div class="box-content">
       <div class="text-center box-header">
-        <div>
+        <div class="ellipse">
           <img
             src="../../../../assets/images/Ellipse_55.png"
             alt="Image here"
@@ -24,8 +24,14 @@
           </div>
         </div>
         <br />
-        <div>
+        <div class="trophy">
           <img src="../../../../assets/images/trophy.png" alt="Image here" />
+        </div>
+        <div class="box-1">
+          <img
+            src="../../../../assets/images/Ellipse_55.png"
+            alt="Image here"
+          />
         </div>
       </div>
     </div>
@@ -37,6 +43,13 @@ export default {
 };
 </script>
 <style scoped>
+.box-1 {
+  margin: 20px;
+  position: relative;
+  border-radius: 16px;
+  background: #f9e5d6;
+  padding: 10px;
+}
 .box-container {
   position: relative;
   display: flex;
@@ -68,7 +81,6 @@ export default {
   align-items: center;
   justify-content: center;
   text-align: center;
-  left: 20px;
 }
 .student_name {
   font-size: 30px;
