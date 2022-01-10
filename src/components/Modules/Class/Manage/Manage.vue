@@ -84,10 +84,6 @@ export default {
   margin-top: var(--t-space-36);
   margin-bottom: var(--t-space-36);
   background-color: var(--t-white);
-  max-width: 90%;
-  padding: var(--t-space-48);
-  border-radius: var(--t-br-large);
-  gap: calc(var(--t-space-36) * 2);
 }
 .class-manage-header-wrapper {
   display: flex;
@@ -99,26 +95,22 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: var(--t-space-16);
 }
 .class-manage-header-details-tab-options-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--t-space-12);
 }
 .class-manage-header-details-manage-options-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   align-self: flex-start;
-  gap: var(--t-space-5);
 }
 .class-manage-content-wrapper {
   flex-direction: column;
   display: flex;
   justify-content: center;
-  gap: var(--t-space-12);
 }
 .class-manage-content-card {
   border: var(--t-space-1) solid var(--t-gray-75);
@@ -140,5 +132,64 @@ export default {
 .class-manage-modal-invite-students-input-wrapper,
 .class-manage-modal-invite-students-input-wrapper > div {
   min-width: 80% !important;
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .class-manage-wrapper {
+    max-width: 100%;
+    padding: var(--t-space-32);
+    border-radius: var(--t-br-medium);
+    gap: calc(var(--t-space-24) * 2);
+  }
+  .class-manage-header-details-wrapper {
+    gap: var(--t-space-8);
+  }
+  .class-manage-header-details-tab-options-wrapper {
+    gap: var(--t-space-8);
+  }
+  .class-manage-header-details-manage-options-wrapper {
+    gap: var(--t-space-3);
+  }
+  .class-manage-content-wrapper {
+    gap: var(--t-space-8);
+  }
+}
+@media (min-width: 600px) {
+  .class-manage-wrapper {
+    max-width: 80%;
+    padding: var(--t-space-48);
+    border-radius: var(--t-br-medium);
+    gap: calc(var(--t-space-16) * 2);
+  }
+  .class-manage-header-details-wrapper {
+    gap: var(--t-space-8);
+  }
+  .class-manage-header-details-tab-options-wrapper {
+    gap: var(--t-space-8);
+  }
+  .class-manage-header-details-manage-options-wrapper {
+    gap: var(--t-space-5);
+  }
+  .class-manage-content-wrapper {
+    gap: var(--t-space-8);
+  }
+}
+@media (min-width: 1200px) {
+  .class-manage-wrapper {
+    max-width: 90%;
+    padding: var(--t-space-48);
+    border-radius: var(--t-br-large);
+    gap: calc(var(--t-space-36) * 2);
+  }
+  .class-manage-header-details-wrapper {
+    gap: var(--t-space-16);
+  }
+  .class-manage-header-details-tab-options-wrapper {
+    gap: var(--t-space-12);
+  }
+  .class-manage-content-wrapper {
+    gap: var(--t-space-12);
+  }
 }
 </style>
