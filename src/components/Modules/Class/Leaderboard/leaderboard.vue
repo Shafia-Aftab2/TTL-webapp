@@ -13,6 +13,9 @@
             alt="Image here"
           />
         </div>
+        <div>
+          <img src="../../../../assets/images/trophy.png" alt="Image here" />
+        </div>
       </div>
     </div>
   </div>
@@ -39,6 +42,7 @@ export default {
   border-radius: var(--t-br-medium);
   padding: var(--t-space-20);
   gap: 10px;
+  justify-content: center;
 }
 .back {
   text-decoration: none;
