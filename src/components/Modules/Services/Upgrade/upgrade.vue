@@ -1,69 +1,52 @@
 <template>
-  <div class="box-container">
-    <div>
-      <div class="back-default">
-        <a class="back"><span>&#8592; </span>back</a>
-      </div>
+  <div class="upgrade-wrapper">
+    <div class="upgrade-info-wrapper">
+      <h2 class="h2" v-if="!userIsSubscribed">Upgrade - Pricing</h2>
+      <h2 class="h2" v-if="userIsSubscribed">
+        You account is Already Upgraded..!
+      </h2>
+
+      <h4 class="h4">£30 individual teacher / annual</h4>
+      <h3 class="h3">£2.50/month</h3>
     </div>
-    <div class="box-content">
-      <div class="text-center box-header">
-        <h1>Upgrade - Pricing</h1>
-        <p></p>
-        <p>When you upgrade your account, you get to:</p>
-        <div class="box-benefits">
-          <p>> Create up to 8 classes (max of 32 students)</p>
-          <p></p>
-          <p>> Access all features</p>
-          <p></p>
-          <p>> Set an unlimited number of questions across all topics</p>
-          <p></p>
-          <p>> Students get unlimited access to all quizzes (March 2022)</p>
-          <p></p>
-        </div>
-        <div class="yellow-text">
-          <p>Limited Offer</p>
-        </div>
-        <h2>£30 individual teacher / annual</h2>
-        <h1>£2.50/month</h1>
-        <p></p>
 
+    <div
+      class="upgrade-fields-wrapper"
+      :class="!showPaymentCardDetailsForm && 'upgrade-fields-wrapper-hidden'"
+    >
+      <form
+        class="talkie-stripe-payments-form"
+        id="talkie-stripe-payments-form"
+      >
+        <h3 class="h3">Add Payment Method</h3>
+        <div id="talkie-stripe-payments-element">
+          <!-- Elements will create form elements here -->
+        </div>
         <div
-          class="talkie-stripe-payments-form-wrapper"
-          :class="
-            !showPaymentCardDetailsForm &&
-            'talkie-stripe-payments-form-wrapper-hidden'
-          "
+          class="talkie-stripe-payments-form-error-message-wrapper"
+          id="talkie-stripe-payments-form-error-message-wrapper"
         >
-          <h3 class="h3">Add Payment Method</h3>
-          <form
-            class="talkie-stripe-payments-form"
-            id="talkie-stripe-payments-form"
-          >
-            <div id="talkie-stripe-payments-element">
-              <!-- Elements will create form elements here -->
-            </div>
-            <div
-              class="talkie-stripe-payments-form-error-message-wrapper"
-              id="talkie-stripe-payments-form-error-message-wrapper"
-            >
-              <!-- Display error message to your customers here -->
-            </div>
-            <talkie-button :type="'submit'">Upgrade</talkie-button>
-          </form>
+          <!-- Display error message to your customers here -->
         </div>
+        <talkie-button :type="'submit'">Upgrade</talkie-button>
+      </form>
+      <div class="talkie-stripe-payments-form-wrapper"></div>
+    </div>
 
-        <div class="upgrade">
-          <talkie-button
-            :onClick="handleUpgradeAccountFlow"
-            v-if="!showPaymentCardDetailsForm"
-          >
-            Upgrade
-          </talkie-button>
-          <talkie-button :onClick="handleDowngradeAccountFlow">
-            Downgrade
-          </talkie-button>
-        </div>
-      </div>
+    <div class="upgrade-options-wrapper">
+      <talkie-button
+        :onClick="handleUpgradeAccountFlow"
+        v-if="!userIsSubscribed && !showPaymentCardDetailsForm"
+      >
+        Upgrade
+      </talkie-button>
+
+      <talkie-button
+        :onClick="handleDowngradeAccountFlow"
+        v-if="userIsSubscribed"
+      >
+        Downgrade
+      </talkie-button>
     </div>
   </div>
   <talkie-back-drop-loader v-if="backdropLoading" />
@@ -84,6 +67,7 @@ export default {
       user: {},
       backdropLoading: false,
       userHasPaymentMethod: false,
+      userIsSubscribed: false,
       showPaymentCardDetailsForm: false,
     };
   },
@@ -100,6 +84,10 @@ export default {
     const userHasPaymentMethod =
       user?.stripe?.customer?.paymentMethods?.length > 0;
     this.userHasPaymentMethod = userHasPaymentMethod;
+
+    // check if the user is subscribed
+    const isSubscribed = await this.getMySubscription();
+    this.userIsSubscribed = isSubscribed;
   },
   async mounted() {
     await this.mountStripePaymentElementsFormToUI();
@@ -198,7 +186,39 @@ export default {
 
       // success case
       this.backdropLoading = false;
+      this.userIsSubscribed = true;
       notifications.show("Subscription created successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
+    async handleDowngradeAccountFlow() {
+      // update page state
+      this.backdropLoading = true;
+
+      // api call
+      const response = await SubscriptionService.RemoveSubscription().catch(
+        () => {
+          return {
+            error: "Failed to remove subscription..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.userIsSubscribed = false;
+      notifications.show("Subscription removed successfully..!", {
         variant: "success",
         displayIcon: true,
       });
@@ -218,128 +238,117 @@ export default {
       authUser.setUser(response?.data, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
       return true;
     },
+    async getMySubscription() {
+      const response = await SubscriptionService.GetMySubscription().catch(
+        () => null
+      );
+
+      return response?.data || null;
+    },
   },
 };
 </script>
 
 <style scoped>
-.talkie-stripe-payments-form-wrapper {
-  width: 100%;
+.upgrade-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--t-space-24);
+  margin: auto;
+  background-color: var(--t-white);
 }
-.talkie-stripe-payments-form-wrapper-hidden {
-  display: none;
-}
-.talkie-stripe-payments-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--t-space-16);
-}
-.talkie-stripe-payments-form-error-message-wrapper {
-  color: var(--t-red);
-  font-size: var(--t-fs-small);
-}
-
-.box-benefits {
-  text-align: left;
-  display: grid;
-  width: 70%;
-  background-color: white;
-  border-radius: var(--t-br-medium);
-  padding: var(--t-space-20);
-  gap: 10px;
-  margin-top: 20px;
-  margin-left: 245px;
-}
-.box-container {
-  position: relative;
+.upgrade-info-wrapper,
+.upgrade-options-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 100px 0 var(--t-space-50) 0;
-  gap: 10px;
+  margin: auto;
+  gap: var(--t-space-12);
 }
-.box-content {
-  display: grid;
-  width: 100%;
-  background-color: white;
-  border-radius: var(--t-br-medium);
-  padding: var(--t-space-70);
-  gap: 10px;
-  margin-top: 20px;
-}
-.box-header {
-  display: grid;
-  gap: 10px;
-}
-.box-head {
+.upgrade-fields-wrapper {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  gap: var(--t-space-12);
 }
-.bar-outline {
-  background-color: var(--t-white);
-  padding: var(--t-space-16);
-  border-radius: var(--t-space-10);
-  border: 2px solid var(--t-gray-home);
+.upgrade-fields-wrapper-hidden {
+  display: none;
 }
-.text-left {
-  text-align: left;
+.upgrade-input {
+  margin: auto;
 }
-.text-center {
-  text-align: center;
+.upgrade-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
 }
-.text-style {
-  font-size: 20px;
-  color: var(--t-secondary);
+.upgrade-footer-link {
+  text-decoration: underline;
 }
-.upgrade {
-  font-weight: bold;
+.upgrade-footer-link,
+.upgrade-footer-link:hover,
+.upgrade-footer-link:visited {
+  text-decoration: underline;
+  color: var(--t-black);
 }
-.yellow-text {
-  color: rgb(255, 166, 0);
-  font-size: 20px;
-  font-weight: bold;
-}
-.back {
-  text-decoration: none;
-}
+
+/* Responsive variants */
 @media (max-width: 599px) {
-  .box-content {
+  .upgrade-wrapper {
+    max-width: 100%;
+    gap: var(--t-space-36);
+    padding: var(--t-space-32);
+    margin-top: var(--t-space-50);
+    border-radius: var(--t-br-medium);
+  }
+  .upgrade-fields-wrapper {
     width: 100%;
   }
-  .box-container {
-    padding: 110px 15px var(--t-space-50) 10px;
+  .upgrade-input {
+    max-width: 100%;
   }
-}
-
-@media (min-width: 600px) {
-  .content {
-    width: 50%;
-    padding: var(--t-space-10);
-  }
-  .back-default {
-    position: absolute;
-    left: 160px;
-  }
-}
-
-@media (min-width: 900px) {
-  .content {
-    width: 35%;
+  .upgrade-footer {
     padding: var(--t-space-50);
   }
+  .upgrade-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
 }
-
+@media (min-width: 600px) {
+  .upgrade-wrapper {
+    max-width: 65%;
+    gap: var(--t-space-48);
+    padding: var(--t-space-48);
+    margin-top: var(--t-space-70);
+    border-radius: var(--t-br-medium);
+  }
+  .upgrade-fields-wrapper {
+    width: 80%;
+  }
+  .upgrade-input {
+    max-width: 100%;
+  }
+  .upgrade-footer {
+    margin-top: var(--t-space-24);
+    padding: var(--t-space-36);
+  }
+  .upgrade-footer-link {
+    font-size: calc(var(--t-fs-small) * 0.9);
+  }
+}
 @media (min-width: 1200px) {
-  .back-default {
-    position: absolute;
-    left: 5px;
+  .upgrade-wrapper {
+    max-width: 80%;
+    padding: var(--t-space-48);
+    border-radius: var(--t-br-large);
+  }
+  .upgrade-input {
+    max-width: 85%;
+  }
+  .upgrade-footer-link {
+    font-size: var(--t-fs-small);
   }
 }
 </style>
