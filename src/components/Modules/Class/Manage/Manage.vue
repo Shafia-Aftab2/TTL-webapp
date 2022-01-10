@@ -35,6 +35,7 @@
         <talkie-student-card
           :mode="'add'"
           :customClass="'class-manage-content-card'"
+          :onAddClick="handleAddStudentButtonClick"
         />
         <talkie-student-card
           v-for="_student in studentsList"
@@ -43,6 +44,7 @@
           :customClass="'class-manage-content-card'"
           :studentAvatar="_student.avatar"
           :studentName="_student.name"
+          :onDeleteClick="handleStudentRemoveClick"
         />
       </template>
 
@@ -58,10 +60,50 @@
       </template>
     </div>
   </div>
+
+  <!-- Modal Content -->
+  <talkie-modal
+    :contentPadded="true"
+    :closeButton="true"
+    :onClose="handleModalClose"
+    :maxWidth="750"
+    v-if="modalMode"
+  >
+    <!-- Invite Students -->
+    <template v-if="modalMode === 'invite-students'">
+      <div class="class-manage-modal-invite-students">
+        <div class="class-manage-modal-invite-students-header-wrapper">
+          <h3 class="h3">Invite your students</h3>
+          <p class="p">Copy and paste the url below</p>
+        </div>
+        <div class="class-manage-modal-invite-students-input-wrapper">
+          <talkie-input :value="'url here'" />
+        </div>
+        <talkie-button> Copy </talkie-button>
+      </div>
+    </template>
+
+    <!-- Remove Student -->
+    <template v-if="modalMode === 'remove-student'">
+      <div class="class-manage-modal-invite-students">
+        <div class="class-manage-modal-invite-students-header-wrapper">
+          <h3 class="h3">Remove Student</h3>
+          <p class="p">Sure to remove this student from the class?</p>
+        </div>
+        <talkie-button :variant="'danger'"> Yes, Remove </talkie-button>
+      </div>
+    </template>
+  </talkie-modal>
 </template>
 
 <script>
-import { TalkieTab, TalkieIcon } from "@/components/UICore";
+import {
+  TalkieInput,
+  TalkieButton,
+  TalkieTab,
+  TalkieIcon,
+  TalkieModal,
+} from "@/components/UICore";
 import {
   TalkieStudentCard,
   TalkieTopicCard,
@@ -71,8 +113,11 @@ import URLModifier from "@/utils/helpers/URLModifier";
 export default {
   name: "ClassManage",
   components: {
+    TalkieInput,
+    TalkieButton,
     TalkieTab,
     TalkieIcon,
+    TalkieModal,
     TalkieStudentCard,
     TalkieTopicCard,
   },
@@ -98,6 +143,7 @@ export default {
           name: "🏡 Where I live",
         },
       ],
+      modalMode: null,
     };
   },
   async created() {
@@ -110,6 +156,15 @@ export default {
     handleTabChange(x) {
       this.activeTab = x.toLowerCase();
       URLModifier.addToURL("tab", x.toLowerCase());
+    },
+    handleAddStudentButtonClick() {
+      this.modalMode = "invite-students";
+    },
+    handleStudentRemoveClick() {
+      this.modalMode = "remove-student";
+    },
+    handleModalClose() {
+      this.modalMode = null;
     },
   },
 };
