@@ -9,6 +9,7 @@
             <talkie-tab
               :label="tabName"
               :active="tabName.toLowerCase() === activeTab"
+              :onClick="() => handleTabChange(tabName.toLowerCase())"
             />
           </template>
         </div>
@@ -30,25 +31,42 @@
     </div>
     <div class="class-manage-content-wrapper">
       <!-- Students tab -->
-      <talkie-student-card
-        :mode="'add'"
-        :customClass="'class-manage-content-card'"
-      />
-      <talkie-student-card
-        v-for="_student in studentsList"
-        :key="_student"
-        :mode="'manage'"
-        :customClass="'class-manage-content-card'"
-        :studentAvatar="_student.avatar"
-        :studentName="_student.name"
-      />
+      <template v-if="activeTab === 'students'">
+        <talkie-student-card
+          :mode="'add'"
+          :customClass="'class-manage-content-card'"
+        />
+        <talkie-student-card
+          v-for="_student in studentsList"
+          :key="_student"
+          :mode="'manage'"
+          :customClass="'class-manage-content-card'"
+          :studentAvatar="_student.avatar"
+          :studentName="_student.name"
+        />
+      </template>
+
+      <!-- Topics tab -->
+      <template v-if="activeTab === 'topics'">
+        <h4 class="h4">Beginners / Intermediate</h4>
+        <talkie-topic-card
+          v-for="_topic in topicsList"
+          :key="_topic"
+          :topicName="_topic.name"
+          :customClass="'class-manage-content-card'"
+        />
+      </template>
     </div>
   </div>
 </template>
 
 <script>
 import { TalkieTab, TalkieIcon } from "@/components/UICore";
-import { TalkieStudentCard } from "@/components/SubModules/Cards";
+import {
+  TalkieStudentCard,
+  TalkieTopicCard,
+} from "@/components/SubModules/Cards";
+import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "ClassManage",
@@ -56,6 +74,7 @@ export default {
     TalkieTab,
     TalkieIcon,
     TalkieStudentCard,
+    TalkieTopicCard,
   },
   data() {
     return {
@@ -71,7 +90,27 @@ export default {
           avatar: "https://via.placeholder.com/150",
         },
       ],
+      topicsList: [
+        {
+          name: "😊 Me, my family and friends",
+        },
+        {
+          name: "🏡 Where I live",
+        },
+      ],
     };
+  },
+  async created() {
+    // get current tab from url
+    const tab = URLModifier.getURLParam("tab");
+    if (!tab) URLModifier.addToURL("tab", "students");
+    if (["students", "topics"].includes(tab)) this.activeTab = tab;
+  },
+  methods: {
+    handleTabChange(x) {
+      this.activeTab = x.toLowerCase();
+      URLModifier.addToURL("tab", x.toLowerCase());
+    },
   },
 };
 </script>
@@ -132,6 +171,14 @@ export default {
 .class-manage-modal-invite-students-input-wrapper,
 .class-manage-modal-invite-students-input-wrapper > div {
   min-width: 80% !important;
+}
+.class-manage-load-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  align-items: center;
+  margin-top: var(--t-space-36);
+  margin-bottom: var(--t-space-36);
 }
 
 /* Responsive variants */
