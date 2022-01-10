@@ -12,6 +12,7 @@ import IconHamburger from "./IconHamburger.vue";
 import IconXMark from "./IconXMark.vue";
 import IconSetting from "./IconSetting.vue";
 import IconTrophy from "./IconTrophy.vue";
+import IconPencil from "./IconPencil.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
@@ -32,6 +33,7 @@ export {
   IconXMark,
   IconSetting,
   IconTrophy,
+  IconPencil,
   // Logos
   LogoTalkie,
   LogoAuthSignup,
