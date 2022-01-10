@@ -1,5 +1,11 @@
 <template>
-  <div :class="['talkie-topic-card-wrapper', customClass.toString()]">
+  <div
+    :class="[
+      'talkie-topic-card-wrapper',
+      fullWidth && 'talkie-topic-card-fullwidth-wrapper',
+      customClass.toString(),
+    ]"
+  >
     <talkie-check-box :defaultChecked="topicSelected" :label="topicName" />
   </div>
 </template>
@@ -23,6 +29,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    fullWidth: {
+      type: Boolean,
+      default: true,
+    },
     customClass: {
       type: String,
       default: "",
@@ -38,6 +48,12 @@ export default {
   align-items: center;
   background-color: var(--t-white);
   width: fit-content;
+}
+.talkie-topic-card-fullwidth-wrapper {
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* Responsive variants */
