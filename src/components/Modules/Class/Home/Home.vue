@@ -10,10 +10,7 @@
               :name="'trophy'"
               :onClick="redirectToCommingSoonPage"
             />
-            <talkie-icon
-              :name="'setting'"
-              :onClick="redirectToCommingSoonPage"
-            />
+            <talkie-icon :name="'setting'" :onClick="handleClassManageClick" />
           </div>
         </div>
         <div class="class-home-header-tabs-wrapper">
@@ -309,6 +306,9 @@ export default {
       setTimeout(function () {
         self.$router.push(link);
       }, timeout);
+    },
+    handleClassManageClick() {
+      this.handleRedirection(`/classes/${this.classId}/manage`, 1);
     },
     handleTopicCardBodyClick(taskId) {
       this.handleRedirection(`/classes/${this.classId}/tasks/${taskId}`, 1);
