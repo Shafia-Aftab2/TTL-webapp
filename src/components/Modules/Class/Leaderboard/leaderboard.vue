@@ -6,32 +6,39 @@
       </div>
     </div>
     <div class="box-content">
-      <div class="text-center box-header">
-        <div class="ellipse">
-          <img
-            src="../../../../assets/images/Ellipse_55.png"
-            alt="Image here"
-          />
-        </div>
-        <br />
-        <br />
-        <div class="student-box">
-          <div class="student_name">
-            <p>Harris D</p>
+      <div class="box-header">
+        <div class="overview">
+          <div class="ellipse">
+            <img
+              src="../../../../assets/images/Ellipse_55.png"
+              alt="Image here"
+            />
           </div>
-          <div class="points">
-            <p>1432</p>
+          <div class="student-box">
+            <div class="student_name">
+              <p>Harris D</p>
+            </div>
+            <div class="points">
+              <p>1432</p>
+            </div>
           </div>
-        </div>
-        <br />
-        <div class="trophy">
-          <img src="../../../../assets/images/trophy.png" alt="Image here" />
+          <div class="trophy">
+            <img src="../../../../assets/images/trophy.png" alt="Image here" />
+          </div>
         </div>
         <div class="box-1">
-          <img
-            src="../../../../assets/images/Ellipse_56.png"
-            alt="Image here"
-          />
+          <div class="img">
+            <img
+              src="../../../../assets/images/Ellipse_56.png"
+              alt="Image here"
+            />
+          </div>
+          <div class="name">
+            <p>Harris D</p>
+          </div>
+          <div class="tt">
+            <p>1432 TTs</p>
+          </div>
         </div>
         <div class="box-2">
           <img src="../../../../assets/images/icon2.png" alt="Image here" />
@@ -52,6 +59,8 @@ export default {
 };
 </script>
 <style scoped>
+.overview {
+}
 .bar-outline {
   background-color: var(--t-white);
   padding: var(--t-space-16);
@@ -64,6 +73,9 @@ export default {
   border-radius: 16px;
   background: #f9e5d6;
   padding: 10px;
+  display: flex;
+  align-items: left;
+  width: 370%;
 }
 .box-2 {
   margin: 20px;
@@ -71,24 +83,29 @@ export default {
   border-radius: 16px;
   background: #fbf6de;
   padding: 10px;
+  display: flex;
+  width: 370%;
 }
 .box-3 {
   margin: 20px;
   position: relative;
   border-radius: 16px;
   padding: 10px;
+  display: flex;
+  width: 370%;
 }
 .box-4 {
   margin: 20px;
   position: relative;
   border-radius: 16px;
   padding: 10px;
+  display: flex;
+  width: 370%;
 }
 .box-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   padding: 100px 0 var(--t-space-50) 0;
   gap: 10px;
@@ -101,8 +118,7 @@ export default {
   padding: var(--t-space-70);
   gap: 10px;
   margin-top: 20px;
-  align-items: center;
-  justify-content: center;
+  display: flex;
 }
 .back {
   text-decoration: none;
@@ -115,6 +131,9 @@ export default {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+.name {
+  flex: 3;
 }
 .student_name {
   font-size: 30px;
