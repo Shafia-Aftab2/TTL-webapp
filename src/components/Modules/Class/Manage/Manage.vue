@@ -68,6 +68,9 @@
     <talkie-loader :size="'large'" />
   </div>
 
+  <!-- Backdrop load wrapper -->
+  <talkie-back-drop-loader v-if="backdropLoading" />
+
   <!-- Modal Content -->
   <talkie-modal
     :contentPadded="true"
@@ -127,6 +130,7 @@ import {
   TalkieIcon,
   TalkieModal,
   TalkieLoader,
+  TalkieBackDropLoader,
 } from "@/components/UICore";
 import {
   TalkieStudentCard,
@@ -145,6 +149,7 @@ export default {
     TalkieIcon,
     TalkieModal,
     TalkieLoader,
+    TalkieBackDropLoader,
     TalkieStudentCard,
     TalkieTopicCard,
   },
@@ -158,6 +163,7 @@ export default {
       classStudents: [],
       classTopics: [],
       pageLoading: false,
+      backdropLoading: false,
     };
   },
   computed: {
@@ -225,6 +231,7 @@ export default {
     async handleClassDeletion() {
       // update page state
       this.modalMode = null;
+      this.backdropLoading = true;
 
       // api call
       const response = await ClassService.Delete(this.classId).catch(
@@ -233,6 +240,7 @@ export default {
 
       // failure case
       if (!response) {
+        this.backdropLoading = false;
         notifications.show("Failed To Delete Class..!", {
           variant: "error",
           displayIcon: true,
@@ -241,6 +249,7 @@ export default {
       }
 
       // success case
+      this.backdropLoading = false;
       notifications.show("Class Deleted Successfully..!", {
         variant: "success",
         displayIcon: true,
