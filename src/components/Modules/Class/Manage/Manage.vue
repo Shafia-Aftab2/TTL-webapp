@@ -1,5 +1,6 @@
 <template>
-  <div class="class-manage-wrapper">
+  <!-- Content Wrapper -->
+  <div class="class-manage-wrapper" v-if="!computedPageLoading">
     <div class="class-manage-header-wrapper">
       <div class="class-manage-header-details-wrapper">
         <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
@@ -61,6 +62,11 @@
     </div>
   </div>
 
+  <!-- Load Wrapper -->
+  <div class="class-manage-load-wrapper" v-if="computedPageLoading">
+    <talkie-loader :size="'large'" />
+  </div>
+
   <!-- Modal Content -->
   <talkie-modal
     :contentPadded="true"
@@ -103,6 +109,7 @@ import {
   TalkieTab,
   TalkieIcon,
   TalkieModal,
+  TalkieLoader,
 } from "@/components/UICore";
 import {
   TalkieStudentCard,
@@ -119,6 +126,7 @@ export default {
     TalkieTab,
     TalkieIcon,
     TalkieModal,
+    TalkieLoader,
     TalkieStudentCard,
     TalkieTopicCard,
   },
@@ -131,9 +139,18 @@ export default {
       classDetails: {},
       classStudents: [],
       classTopics: [],
+      pageLoading: false,
     };
   },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
+  },
   async created() {
+    // update page state
+    this.pageLoading = true;
+
     // get current tab from url
     const tab = URLModifier.getURLParam("tab");
     if (!tab) URLModifier.addToURL("tab", "students");
@@ -163,6 +180,7 @@ export default {
       type: x?.type,
       name: x?.name,
     }));
+    this.pageLoading = false;
   },
   methods: {
     handleTabChange(x) {
