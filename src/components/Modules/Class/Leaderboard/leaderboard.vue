@@ -29,9 +29,18 @@
         </div>
         <div class="box-1">
           <img
-            src="../../../../assets/images/Ellipse_55.png"
+            src="../../../../assets/images/Ellipse_56.png"
             alt="Image here"
           />
+        </div>
+        <div class="box-2">
+          <img src="../../../../assets/images/icon2.png" alt="Image here" />
+        </div>
+        <div class="box-3">
+          <img src="../../../../assets/images/icon3.png" alt="Image here" />
+        </div>
+        <div class="box-4">
+          <img src="../../../../assets/images/icon4.png" alt="Image here" />
         </div>
       </div>
     </div>
@@ -48,6 +57,25 @@ export default {
   position: relative;
   border-radius: 16px;
   background: #f9e5d6;
+  padding: 10px;
+}
+.box-2 {
+  margin: 20px;
+  position: relative;
+  border-radius: 16px;
+  background: #fbf6de;
+  padding: 10px;
+}
+.box-3 {
+  margin: 20px;
+  position: relative;
+  border-radius: 16px;
+  padding: 10px;
+}
+.box-4 {
+  margin: 20px;
+  position: relative;
+  border-radius: 16px;
   padding: 10px;
 }
 .box-container {
