@@ -126,24 +126,6 @@ export default {
     return {
       activeTab: "students",
       tabs: ["students", "topics"],
-      studentsList: [
-        {
-          name: "Jamie S",
-          avatar: "https://via.placeholder.com/150",
-        },
-        {
-          name: "Lucy M",
-          avatar: "https://via.placeholder.com/150",
-        },
-      ],
-      topicsList: [
-        {
-          name: "😊 Me, my family and friends",
-        },
-        {
-          name: "🏡 Where I live",
-        },
-      ],
       modalMode: null,
       classId: null,
       classDetails: {},
