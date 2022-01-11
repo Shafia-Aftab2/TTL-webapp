@@ -60,6 +60,13 @@ export default {
 </script>
 <style scoped>
 .overview {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+.box-header {
+  width: 370%;
 }
 .bar-outline {
   background-color: var(--t-white);
@@ -75,7 +82,7 @@ export default {
   padding: 10px;
   display: flex;
   align-items: left;
-  width: 370%;
+  width: 100%;
 }
 .box-2 {
   margin: 20px;
@@ -84,7 +91,7 @@ export default {
   background: #fbf6de;
   padding: 10px;
   display: flex;
-  width: 370%;
+  width: 100%;
 }
 .box-3 {
   margin: 20px;
@@ -92,7 +99,7 @@ export default {
   border-radius: 16px;
   padding: 10px;
   display: flex;
-  width: 370%;
+  width: 100%;
 }
 .box-4 {
   margin: 20px;
@@ -100,7 +107,7 @@ export default {
   border-radius: 16px;
   padding: 10px;
   display: flex;
-  width: 370%;
+  width: 100%;
 }
 .box-container {
   position: relative;
