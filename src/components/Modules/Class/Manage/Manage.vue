@@ -27,7 +27,7 @@
           :variant="'neutral'"
           :size="35"
           :iconToSizeRatio="1.2"
-          :onClick="handleClassDeletion"
+          :onClick="handleClassDeleteClick"
         />
       </div>
     </div>
@@ -98,6 +98,22 @@
           <p class="p">Sure to remove this student from the class?</p>
         </div>
         <talkie-button :variant="'danger'"> Yes, Remove </talkie-button>
+      </div>
+    </template>
+
+    <!-- Class Delete -->
+    <template v-if="modalMode === 'class-delete'">
+      <div class="class-manage-modal-invite-students">
+        <div class="class-manage-modal-invite-students-header-wrapper">
+          <h3 class="h3">Delete Class</h3>
+          <p class="p">
+            Your students, feedbacks, responses, tasks, leaderboards and other
+            data related to this class will be deleted permanently.?
+          </p>
+        </div>
+        <talkie-button :variant="'danger'" :onClick="handleClassDeletion">
+          Yes, Delete
+        </talkie-button>
       </div>
     </template>
   </talkie-modal>
@@ -195,6 +211,9 @@ export default {
     handleStudentRemoveClick() {
       this.modalMode = "remove-student";
     },
+    handleClassDeleteClick() {
+      this.modalMode = "class-delete";
+    },
     handleModalClose() {
       this.modalMode = null;
     },
@@ -204,6 +223,9 @@ export default {
       return response.data || null;
     },
     async handleClassDeletion() {
+      // update page state
+      this.modalMode = null;
+
       // api call
       const response = await ClassService.Delete(this.classId).catch(
         () => null
