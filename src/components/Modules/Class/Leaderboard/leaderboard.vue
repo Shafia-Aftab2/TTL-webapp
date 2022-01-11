@@ -36,10 +36,10 @@
         <div class="box-2">
           <img src="../../../../assets/images/icon2.png" alt="Image here" />
         </div>
-        <div class="box-3">
+        <div class="box-3 bar-outline">
           <img src="../../../../assets/images/icon3.png" alt="Image here" />
         </div>
-        <div class="box-4">
+        <div class="box-4 bar-outline">
           <img src="../../../../assets/images/icon4.png" alt="Image here" />
         </div>
       </div>
@@ -52,6 +52,12 @@ export default {
 };
 </script>
 <style scoped>
+.bar-outline {
+  background-color: var(--t-white);
+  padding: var(--t-space-16);
+  border-radius: var(--t-space-10);
+  border: 2px solid var(--t-gray-home);
+}
 .box-1 {
   margin: 20px;
   position: relative;
