@@ -2,7 +2,7 @@
   <div class="class-manage-wrapper">
     <div class="class-manage-header-wrapper">
       <div class="class-manage-header-details-wrapper">
-        <h2 class="h2">10A Spanish</h2>
+        <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
         <div class="class-manage-header-details-tab-options-wrapper">
           <p class="p">Manage:</p>
           <template v-for="tabName in tabs" :key="tabName">
@@ -38,7 +38,7 @@
           :onAddClick="handleAddStudentButtonClick"
         />
         <talkie-student-card
-          v-for="_student in studentsList"
+          v-for="_student in classStudents"
           :key="_student"
           :mode="'manage'"
           :customClass="'class-manage-content-card'"
@@ -52,7 +52,7 @@
       <template v-if="activeTab === 'topics'">
         <h4 class="h4">Beginners / Intermediate</h4>
         <talkie-topic-card
-          v-for="_topic in topicsList"
+          v-for="_topic in classTopics"
           :key="_topic"
           :topicName="_topic.name"
           :customClass="'class-manage-content-card'"
@@ -109,6 +109,7 @@ import {
   TalkieTopicCard,
 } from "@/components/SubModules/Cards";
 import URLModifier from "@/utils/helpers/URLModifier";
+import { ClassService } from "@/api/services";
 
 export default {
   name: "ClassManage",
@@ -144,6 +145,10 @@ export default {
         },
       ],
       modalMode: null,
+      classId: null,
+      classDetails: {},
+      classStudents: [],
+      classTopics: [],
     };
   },
   async created() {
@@ -151,6 +156,31 @@ export default {
     const tab = URLModifier.getURLParam("tab");
     if (!tab) URLModifier.addToURL("tab", "students");
     if (["students", "topics"].includes(tab)) this.activeTab = tab;
+
+    // class id from params
+    const classId = this.$route.params.classId;
+    this.classId = classId;
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
+
+    // success case
+    this.classDetails = {
+      id: classDetails.id,
+      name: classDetails.name,
+      langugage: classDetails.langugage,
+    };
+    this.classStudents = classDetails?.students?.map((x) => ({
+      id: x?.id,
+      name: x?.name,
+      avatar: "https://via.placeholder.com/150",
+    }));
+    this.classTopics = classDetails?.topics?.map((x) => ({
+      id: x?.id,
+      type: x?.type,
+      name: x?.name,
+    }));
   },
   methods: {
     handleTabChange(x) {
@@ -165,6 +195,11 @@ export default {
     },
     handleModalClose() {
       this.modalMode = null;
+    },
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
     },
   },
 };
