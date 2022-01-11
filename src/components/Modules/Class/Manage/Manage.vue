@@ -27,6 +27,7 @@
           :variant="'neutral'"
           :size="35"
           :iconToSizeRatio="1.2"
+          :onClick="handleClassDeletion"
         />
       </div>
     </div>
@@ -117,6 +118,7 @@ import {
 } from "@/components/SubModules/Cards";
 import URLModifier from "@/utils/helpers/URLModifier";
 import { ClassService } from "@/api/services";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ClassManage",
@@ -200,6 +202,28 @@ export default {
       const response = await ClassService.GetDetails(id).catch(() => null);
 
       return response.data || null;
+    },
+    async handleClassDeletion() {
+      // api call
+      const response = await ClassService.Delete(this.classId).catch(
+        () => null
+      );
+
+      // failure case
+      if (!response) {
+        notifications.show("Failed To Delete Class..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      notifications.show("Class Deleted Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.$router.push("/");
     },
   },
 };
