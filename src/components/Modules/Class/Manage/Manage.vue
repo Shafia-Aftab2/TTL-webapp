@@ -100,7 +100,15 @@
       <template v-if="activeTab === 'topics'">
         <h4 class="h4">Beginners / Intermediate</h4>
         <talkie-topic-card
-          v-for="_topic in classTopics"
+          v-for="_topic in topicsList.intermediate"
+          :key="_topic"
+          :topicName="_topic.name"
+          :customClass="'class-manage-content-card'"
+        />
+
+        <h4 class="h4">Beginners</h4>
+        <talkie-topic-card
+          v-for="_topic in topicsList.beginner"
           :key="_topic"
           :topicName="_topic.name"
           :customClass="'class-manage-content-card'"
@@ -184,9 +192,10 @@ import {
   TalkieTopicCard,
 } from "@/components/SubModules/Cards";
 import URLModifier from "@/utils/helpers/URLModifier";
-import { ClassService } from "@/api/services";
+import { ClassService, TopicService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
 import { updateClassSchema } from "@/utils/validations/class.validation";
+import topicTypes from "@/utils/constants/topicTypes";
 
 export default {
   name: "ClassManage",
@@ -208,6 +217,7 @@ export default {
       tabs: ["students", "topics"],
       modalMode: null,
       editClassMode: false,
+      topicsList: [],
       classId: null,
       classDetails: {},
       classStudents: [],
@@ -242,6 +252,10 @@ export default {
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
 
+    // get topics list (+ failure case)
+    const topicsList = await this.getTopicsList();
+    if (!topicsList) return this.$router.push("/404");
+
     // success case
     this.classDetails = {
       id: classDetails.id,
@@ -258,6 +272,13 @@ export default {
       type: x?.type,
       name: x?.name,
     }));
+    this.topicsList = {
+      beginner: topicsList.filter((x) => x.type === topicTypes.BEGINNER),
+      intermediate: topicsList.filter(
+        (x) => x.type === topicTypes.INTERMEDIATE
+      ),
+      advanced: topicsList.filter((x) => x.type === topicTypes.ADVANCED),
+    };
     this.pageLoading = false;
   },
   methods: {
@@ -287,6 +308,13 @@ export default {
       const response = await ClassService.GetDetails(id).catch(() => null);
 
       return response.data || null;
+    },
+    async getTopicsList() {
+      const query = {};
+
+      const response = await TopicService.Query(query).catch(() => null);
+
+      return !!response.data ? response.data.results : null;
     },
     async handleClassDeletion() {
       // update page state
