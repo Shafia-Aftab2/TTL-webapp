@@ -25,6 +25,10 @@ export default class ClassRoutes {
     return HTTPClient.delete(`/class/${id}/leave`);
   }
 
+  static async RemoveStudents(id, payload) {
+    return HTTPClient.delete(`/class/${id}/remove-students`, payload);
+  }
+
   static async Update(id, payload) {
     return HTTPClient.put(`/class/${id}/update`, payload);
   }
