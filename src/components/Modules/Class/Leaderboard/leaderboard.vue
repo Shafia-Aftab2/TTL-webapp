@@ -42,12 +42,30 @@
         </div>
         <div class="box-2">
           <img src="../../../../assets/images/icon2.png" alt="Image here" />
+          <div class="name">
+            <p>Jamie S</p>
+          </div>
+          <div class="tt">
+            <p>1211 TTs</p>
+          </div>
         </div>
         <div class="box-3 bar-outline">
           <img src="../../../../assets/images/icon3.png" alt="Image here" />
+          <div class="name">
+            <p>Mia P</p>
+          </div>
+          <div class="tt">
+            <p>1204 TTs</p>
+          </div>
         </div>
         <div class="box-4 bar-outline">
           <img src="../../../../assets/images/icon4.png" alt="Image here" />
+          <div class="name">
+            <p>Alice G</p>
+          </div>
+          <div class="tt">
+            <p>989 TTs</p>
+          </div>
         </div>
       </div>
     </div>
@@ -130,6 +148,12 @@ export default {
 .back {
   text-decoration: none;
 }
+.ellipse {
+  margin: 20px;
+}
+.trophy {
+  margin: 20px;
+}
 .student-box {
   display: grid;
   width: 100%;
@@ -141,6 +165,11 @@ export default {
 }
 .name {
   flex: 3;
+  padding: 10px;
+}
+.tt {
+  padding: 10px;
+  font-weight: bold;
 }
 .student_name {
   font-size: 30px;
