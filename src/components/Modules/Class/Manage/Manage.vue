@@ -323,6 +323,17 @@ export default {
       // form data
       const { name } = values;
 
+      // if name is same then return
+      if (name === this.classDetails.name) {
+        this.backdropLoading = false;
+        this.editClassMode = false;
+        notifications.show("Class updated successfully..!", {
+          variant: "success",
+          displayIcon: true,
+        });
+        return;
+      }
+
       // payload
       const payload = { name };
 
