@@ -329,8 +329,16 @@ export default {
       // api call
       const response = await ClassService.Update(this.classId, payload).catch(
         (e) => {
+          const errorMap = {
+            ['"name" contains bad word']: "Name should not be unethical..!",
+            ["class already exists in school"]:
+              "Class with same name already exists..!",
+          };
+
           return {
-            error: "Could not update class..!",
+            error:
+              errorMap[e.response.data.message.toLowerCase()] ||
+              "Could not update class..!",
           };
         }
       );
