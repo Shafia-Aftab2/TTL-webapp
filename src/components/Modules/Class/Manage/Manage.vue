@@ -3,7 +3,7 @@
   <div class="class-manage-wrapper" v-if="!computedPageLoading">
     <div class="class-manage-header-wrapper">
       <div class="class-manage-header-details-wrapper">
-        <h2 class="h2" v-if="classDetails.name">
+        <h2 class="h2" v-if="classDetails.name && !editClassMode">
           <a
             :href="computedClassHomeLink"
             class="class-manage-header-details-class-name-link"
@@ -11,6 +11,42 @@
             {{ classDetails.name }}
           </a>
         </h2>
+        <talkie-form
+          :customClass="'class-manage-header-details-update-form-wrapper'"
+          v-if="editClassMode"
+          v-slot="{ errors }"
+          :initialValues="{
+            name: classDetails.name,
+          }"
+          :validationSchema="updateClassSchema"
+          :onSubmit="handleEditClassSubmit"
+        >
+          <talkie-input
+            :name="'name'"
+            :size="'large'"
+            :placeholder="'Class Name'"
+            :hint="{
+              type: errors.name ? 'error' : null,
+              message: errors.name ? errors.name : null,
+            }"
+          />
+          <talkie-icon
+            :type="'submit'"
+            :name="'tick-mark'"
+            :variant="'success'"
+            :isActive="true"
+            :size="30"
+            :iconToSizeRatio="1.5"
+          />
+          <talkie-icon
+            :name="'x-mark'"
+            :variant="'danger'"
+            :isActive="true"
+            :size="30"
+            :iconToSizeRatio="1.5"
+            :onClick="handleUnsetEditClassMode"
+          />
+        </talkie-form>
 
         <div class="class-manage-header-details-tab-options-wrapper">
           <p class="p">Manage:</p>
@@ -29,6 +65,8 @@
           :variant="'secondary'"
           :size="35"
           :iconToSizeRatio="1.2"
+          :onClick="handleSetEditClassMode"
+          v-if="!editClassMode"
         />
         <talkie-icon
           :name="'trash'"
@@ -138,6 +176,7 @@ import {
   TalkieIcon,
   TalkieModal,
   TalkieLoader,
+  TalkieForm,
   TalkieBackDropLoader,
 } from "@/components/UICore";
 import {
@@ -147,6 +186,7 @@ import {
 import URLModifier from "@/utils/helpers/URLModifier";
 import { ClassService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
+import { updateClassSchema } from "@/utils/validations/class.validation";
 
 export default {
   name: "ClassManage",
@@ -157,6 +197,7 @@ export default {
     TalkieIcon,
     TalkieModal,
     TalkieLoader,
+    TalkieForm,
     TalkieBackDropLoader,
     TalkieStudentCard,
     TalkieTopicCard,
@@ -166,12 +207,14 @@ export default {
       activeTab: "students",
       tabs: ["students", "topics"],
       modalMode: null,
+      editClassMode: false,
       classId: null,
       classDetails: {},
       classStudents: [],
       classTopics: [],
       pageLoading: false,
       backdropLoading: false,
+      updateClassSchema: updateClassSchema,
     };
   },
   computed: {
@@ -234,6 +277,12 @@ export default {
     handleModalClose() {
       this.modalMode = null;
     },
+    handleSetEditClassMode() {
+      this.editClassMode = true;
+    },
+    handleUnsetEditClassMode() {
+      this.editClassMode = false;
+    },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
 
@@ -266,6 +315,9 @@ export default {
         displayIcon: true,
       });
       this.$router.push("/");
+    },
+    async handleEditClassSubmit(values) {
+      console.log("values => ", values);
     },
   },
 };
@@ -358,6 +410,9 @@ export default {
   .class-manage-header-details-wrapper {
     gap: var(--t-space-8);
   }
+  .class-manage-header-details-update-form-wrapper {
+    gap: var(--t-space-5);
+  }
   .class-manage-header-details-tab-options-wrapper {
     gap: var(--t-space-8);
   }
@@ -378,6 +433,9 @@ export default {
   .class-manage-header-details-wrapper {
     gap: var(--t-space-8);
   }
+  .class-manage-header-details-update-form-wrapper {
+    gap: var(--t-space-10);
+  }
   .class-manage-header-details-tab-options-wrapper {
     gap: var(--t-space-8);
   }
@@ -397,6 +455,9 @@ export default {
   }
   .class-manage-header-details-wrapper {
     gap: var(--t-space-16);
+  }
+  .class-manage-header-details-update-form-wrapper {
+    gap: var(--t-space-12);
   }
   .class-manage-header-details-tab-options-wrapper {
     gap: var(--t-space-12);
