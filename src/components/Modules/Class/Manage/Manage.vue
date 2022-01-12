@@ -1,8 +1,9 @@
 <template>
-  <div class="class-manage-wrapper">
+  <!-- Content Wrapper -->
+  <div class="class-manage-wrapper" v-if="!computedPageLoading">
     <div class="class-manage-header-wrapper">
       <div class="class-manage-header-details-wrapper">
-        <h2 class="h2">10A Spanish</h2>
+        <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
         <div class="class-manage-header-details-tab-options-wrapper">
           <p class="p">Manage:</p>
           <template v-for="tabName in tabs" :key="tabName">
@@ -26,6 +27,7 @@
           :variant="'neutral'"
           :size="35"
           :iconToSizeRatio="1.2"
+          :onClick="handleClassDeleteClick"
         />
       </div>
     </div>
@@ -38,7 +40,7 @@
           :onAddClick="handleAddStudentButtonClick"
         />
         <talkie-student-card
-          v-for="_student in studentsList"
+          v-for="_student in classStudents"
           :key="_student"
           :mode="'manage'"
           :customClass="'class-manage-content-card'"
@@ -52,7 +54,7 @@
       <template v-if="activeTab === 'topics'">
         <h4 class="h4">Beginners / Intermediate</h4>
         <talkie-topic-card
-          v-for="_topic in topicsList"
+          v-for="_topic in classTopics"
           :key="_topic"
           :topicName="_topic.name"
           :customClass="'class-manage-content-card'"
@@ -60,6 +62,14 @@
       </template>
     </div>
   </div>
+
+  <!-- Load Wrapper -->
+  <div class="class-manage-load-wrapper" v-if="computedPageLoading">
+    <talkie-loader :size="'large'" />
+  </div>
+
+  <!-- Backdrop load wrapper -->
+  <talkie-back-drop-loader v-if="backdropLoading" />
 
   <!-- Modal Content -->
   <talkie-modal
@@ -93,6 +103,22 @@
         <talkie-button :variant="'danger'"> Yes, Remove </talkie-button>
       </div>
     </template>
+
+    <!-- Class Delete -->
+    <template v-if="modalMode === 'class-delete'">
+      <div class="class-manage-modal-invite-students">
+        <div class="class-manage-modal-invite-students-header-wrapper">
+          <h3 class="h3">Delete Class</h3>
+          <p class="p">
+            Your students, feedbacks, responses, tasks, leaderboards and other
+            data related to this class will be deleted permanently.?
+          </p>
+        </div>
+        <talkie-button :variant="'danger'" :onClick="handleClassDeletion">
+          Yes, Delete
+        </talkie-button>
+      </div>
+    </template>
   </talkie-modal>
 </template>
 
@@ -103,12 +129,16 @@ import {
   TalkieTab,
   TalkieIcon,
   TalkieModal,
+  TalkieLoader,
+  TalkieBackDropLoader,
 } from "@/components/UICore";
 import {
   TalkieStudentCard,
   TalkieTopicCard,
 } from "@/components/SubModules/Cards";
 import URLModifier from "@/utils/helpers/URLModifier";
+import { ClassService } from "@/api/services";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ClassManage",
@@ -118,6 +148,8 @@ export default {
     TalkieTab,
     TalkieIcon,
     TalkieModal,
+    TalkieLoader,
+    TalkieBackDropLoader,
     TalkieStudentCard,
     TalkieTopicCard,
   },
@@ -125,32 +157,54 @@ export default {
     return {
       activeTab: "students",
       tabs: ["students", "topics"],
-      studentsList: [
-        {
-          name: "Jamie S",
-          avatar: "https://via.placeholder.com/150",
-        },
-        {
-          name: "Lucy M",
-          avatar: "https://via.placeholder.com/150",
-        },
-      ],
-      topicsList: [
-        {
-          name: "😊 Me, my family and friends",
-        },
-        {
-          name: "🏡 Where I live",
-        },
-      ],
       modalMode: null,
+      classId: null,
+      classDetails: {},
+      classStudents: [],
+      classTopics: [],
+      pageLoading: false,
+      backdropLoading: false,
     };
   },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
+  },
   async created() {
+    // update page state
+    this.pageLoading = true;
+
     // get current tab from url
     const tab = URLModifier.getURLParam("tab");
     if (!tab) URLModifier.addToURL("tab", "students");
     if (["students", "topics"].includes(tab)) this.activeTab = tab;
+
+    // class id from params
+    const classId = this.$route.params.classId;
+    this.classId = classId;
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
+
+    // success case
+    this.classDetails = {
+      id: classDetails.id,
+      name: classDetails.name,
+      langugage: classDetails.langugage,
+    };
+    this.classStudents = classDetails?.students?.map((x) => ({
+      id: x?.id,
+      name: x?.name,
+      avatar: "https://via.placeholder.com/150",
+    }));
+    this.classTopics = classDetails?.topics?.map((x) => ({
+      id: x?.id,
+      type: x?.type,
+      name: x?.name,
+    }));
+    this.pageLoading = false;
   },
   methods: {
     handleTabChange(x) {
@@ -163,8 +217,44 @@ export default {
     handleStudentRemoveClick() {
       this.modalMode = "remove-student";
     },
+    handleClassDeleteClick() {
+      this.modalMode = "class-delete";
+    },
     handleModalClose() {
       this.modalMode = null;
+    },
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async handleClassDeletion() {
+      // update page state
+      this.modalMode = null;
+      this.backdropLoading = true;
+
+      // api call
+      const response = await ClassService.Delete(this.classId).catch(
+        () => null
+      );
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Failed To Delete Class..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Class Deleted Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.$router.push("/");
     },
   },
 };

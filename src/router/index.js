@@ -19,6 +19,7 @@ import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
+import ClassManage from "../components/Modules/Class/Manage";
 import ProfileSelf from "../components/Modules/Profile/Self";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
@@ -210,6 +211,17 @@ const routes = [
         name: "ClassTaskStatus",
         path: "/classes/:classId/tasks/:taskId/status",
         component: ClassTaskStatus,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
+      },
+      {
+        name: "ClassManage",
+        path: "/classes/:classId/manage",
+        component: ClassManage,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
