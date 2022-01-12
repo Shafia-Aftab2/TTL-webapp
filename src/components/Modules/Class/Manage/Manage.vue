@@ -317,7 +317,42 @@ export default {
       this.$router.push("/");
     },
     async handleEditClassSubmit(values) {
-      console.log("values => ", values);
+      // update page state
+      this.backdropLoading = true;
+
+      // form data
+      const { name } = values;
+
+      // payload
+      const payload = { name };
+
+      // api call
+      const response = await ClassService.Update(this.classId, payload).catch(
+        (e) => {
+          return {
+            error: "Could not update class..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.classDetails.name = name; // update class name in state
+      this.backdropLoading = false;
+      this.editClassMode = false;
+      notifications.show("Class updated successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
     },
   },
 };
