@@ -153,9 +153,11 @@
           <p class="p">Copy and paste the url below</p>
         </div>
         <div class="class-manage-modal-invite-students-input-wrapper">
-          <talkie-input :value="'url here'" />
+          <talkie-input :value="computedClassJoinLink" />
         </div>
-        <talkie-button> Copy </talkie-button>
+        <talkie-button :onClick="hanldeClassJoinLinkCopyButtonClick">
+          Copy
+        </talkie-button>
       </div>
     </template>
 
@@ -210,6 +212,7 @@ import { ClassService, TopicService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
 import { updateClassSchema } from "@/utils/validations/class.validation";
 import topicTypes from "@/utils/constants/topicTypes";
+import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
 
 export default {
   name: "ClassManage",
@@ -246,6 +249,9 @@ export default {
   computed: {
     computedClassHomeLink() {
       return `${window.location.origin}/classes/${this.classId}`;
+    },
+    computedClassJoinLink() {
+      return `${window.location.origin}/classes/${this.classId}/join`;
     },
     computedPageLoading() {
       return this.pageLoading;
@@ -299,6 +305,26 @@ export default {
     this.pageLoading = false;
   },
   methods: {
+    async hanldeClassJoinLinkCopyButtonClick() {
+      const isCopiedToClipboard = await copyToClipboard(
+        this.computedClassJoinLink
+      );
+
+      // error case
+      if (!isCopiedToClipboard) {
+        notifications.show("Failed To Copy To Clipboard..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      notifications.show("Copied To Clipboard..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
     async handleTopicSelectToggle(isSelected, topicId) {
       if (isSelected) {
         this.activeClassTopicIds = [...this.activeClassTopicIds, topicId];
