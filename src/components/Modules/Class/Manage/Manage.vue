@@ -92,7 +92,9 @@
           :customClass="'class-manage-content-card'"
           :studentAvatar="_student.avatar"
           :studentName="_student.name"
-          :onDeleteClick="handleStudentRemoveClick"
+          :onDeleteClick="
+            async () => await handleStudentRemoveClick(_student?.id)
+          "
         />
       </template>
 
@@ -164,7 +166,9 @@
           <h3 class="h3">Remove Student</h3>
           <p class="p">Sure to remove this student from the class?</p>
         </div>
-        <talkie-button :variant="'danger'"> Yes, Remove </talkie-button>
+        <talkie-button :variant="'danger'" :onClick="handleStudentRemove">
+          Yes, Remove
+        </talkie-button>
       </div>
     </template>
 
@@ -226,6 +230,7 @@ export default {
       activeTab: "students",
       tabs: ["students", "topics"],
       modalMode: null,
+      modalData: {},
       editClassMode: false,
       topicsList: [],
       classId: null,
@@ -349,14 +354,18 @@ export default {
     handleAddStudentButtonClick() {
       this.modalMode = "invite-students";
     },
-    handleStudentRemoveClick() {
+    handleStudentRemoveClick(studentId) {
       this.modalMode = "remove-student";
+      this.modalData = {
+        studentToRemove: studentId,
+      };
     },
     handleClassDeleteClick() {
       this.modalMode = "class-delete";
     },
     handleModalClose() {
       this.modalMode = null;
+      this.modalData = {};
     },
     handleSetEditClassMode() {
       this.editClassMode = true;
@@ -403,6 +412,50 @@ export default {
         displayIcon: true,
       });
       this.$router.push("/");
+    },
+    async handleStudentRemove() {
+      // form data
+      const studentId = this.modalData.studentToRemove;
+
+      // update page state
+      this.modalMode = null;
+      this.modalData = {};
+      this.backdropLoading = true;
+
+      // payload
+      const payload = {
+        students: [studentId],
+      };
+
+      // api call
+      const response = await ClassService.RemoveStudents(
+        this.classId,
+        payload
+      ).catch(() => {
+        return {
+          error: "Could not remove student..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.classStudents = [
+        ...this.classStudents.filter((x) => x?.id !== studentId),
+      ];
+      notifications.show("Student removed successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
     },
     async handleEditClassSubmit(values) {
       // update page state
