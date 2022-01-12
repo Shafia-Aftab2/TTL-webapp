@@ -3,7 +3,15 @@
   <div class="class-manage-wrapper" v-if="!computedPageLoading">
     <div class="class-manage-header-wrapper">
       <div class="class-manage-header-details-wrapper">
-        <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
+        <h2 class="h2" v-if="classDetails.name">
+          <a
+            :href="computedClassHomeLink"
+            class="class-manage-header-details-class-name-link"
+          >
+            {{ classDetails.name }}
+          </a>
+        </h2>
+
         <div class="class-manage-header-details-tab-options-wrapper">
           <p class="p">Manage:</p>
           <template v-for="tabName in tabs" :key="tabName">
@@ -167,6 +175,9 @@ export default {
     };
   },
   computed: {
+    computedClassHomeLink() {
+      return `${window.location.origin}/classes/${this.classId}`;
+    },
     computedPageLoading() {
       return this.pageLoading;
     },
@@ -279,6 +290,16 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+}
+.class-manage-header-details-class-name-link,
+.class-manage-header-details-class-name-link:visited {
+  text-decoration: none;
+  color: var(--t-black);
+}
+.class-manage-header-details-update-form-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .class-manage-header-details-tab-options-wrapper {
   display: flex;
