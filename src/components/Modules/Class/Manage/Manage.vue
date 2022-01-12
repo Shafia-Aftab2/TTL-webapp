@@ -104,6 +104,7 @@
           :key="_topic"
           :topicName="_topic.name"
           :customClass="'class-manage-content-card'"
+          :topicSelected="activeClassTopicIds?.includes(_topic.id)"
         />
 
         <h4 class="h4">Beginners</h4>
@@ -112,6 +113,7 @@
           :key="_topic"
           :topicName="_topic.name"
           :customClass="'class-manage-content-card'"
+          :topicSelected="activeClassTopicIds?.includes(_topic.id)"
         />
       </template>
     </div>
@@ -222,6 +224,7 @@ export default {
       classDetails: {},
       classStudents: [],
       classTopics: [],
+      activeClassTopicIds: [],
       pageLoading: false,
       backdropLoading: false,
       updateClassSchema: updateClassSchema,
@@ -272,6 +275,7 @@ export default {
       type: x?.type,
       name: x?.name,
     }));
+    this.activeClassTopicIds = (classDetails?.topics || [])?.map((x) => x?.id);
     this.topicsList = {
       beginner: topicsList.filter((x) => x.type === topicTypes.BEGINNER),
       intermediate: topicsList.filter(
