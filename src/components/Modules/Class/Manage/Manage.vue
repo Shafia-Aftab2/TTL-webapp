@@ -105,6 +105,10 @@
           :topicName="_topic.name"
           :customClass="'class-manage-content-card'"
           :topicSelected="activeClassTopicIds?.includes(_topic.id)"
+          :onTopicCheckToggle="
+            async (isSelected) =>
+              await handleTopicSelectToggle(isSelected, _topic.id)
+          "
         />
 
         <h4 class="h4">Beginners</h4>
@@ -114,6 +118,10 @@
           :topicName="_topic.name"
           :customClass="'class-manage-content-card'"
           :topicSelected="activeClassTopicIds?.includes(_topic.id)"
+          :onTopicCheckToggle="
+            async (isSelected) =>
+              await handleTopicSelectToggle(isSelected, _topic.id)
+          "
         />
       </template>
     </div>
@@ -286,6 +294,54 @@ export default {
     this.pageLoading = false;
   },
   methods: {
+    async handleTopicSelectToggle(isSelected, topicId) {
+      if (isSelected) {
+        this.activeClassTopicIds = [...this.activeClassTopicIds, topicId];
+      } else {
+        this.activeClassTopicIds = [...this.activeClassTopicIds]?.filter(
+          (x) => x !== topicId
+        );
+      }
+
+      await this.handleUpdateClassTopics();
+    },
+    async handleUpdateClassTopics() {
+      // update page state
+      this.backdropLoading = true;
+
+      // active topics data
+      const topics = this.activeClassTopicIds;
+
+      // payload
+      const classId = this.classId;
+      const payload = { topics };
+
+      // api call
+      const response = await ClassService.AddTopics(classId, payload).catch(
+        () => {
+          return {
+            error: "Could not update class topic/s..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Class topics updated..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
     handleTabChange(x) {
       this.activeTab = x.toLowerCase();
       URLModifier.addToURL("tab", x.toLowerCase());
