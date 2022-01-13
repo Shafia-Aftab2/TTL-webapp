@@ -29,6 +29,13 @@ export default class ClassRoutes {
     return HTTPClient.delete(`/class/${id}/remove-students`, payload);
   }
 
+  static async ChangeStudentPassword(id, studentId, payload) {
+    return HTTPClient.patch(
+      `/class/${id}/student-password/${studentId}`,
+      payload
+    );
+  }
+
   static async Update(id, payload) {
     return HTTPClient.put(`/class/${id}/update`, payload);
   }
