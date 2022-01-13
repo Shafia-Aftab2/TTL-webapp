@@ -6,7 +6,11 @@
       customClass.toString(),
     ]"
   >
-    <talkie-check-box :defaultChecked="topicSelected" :label="topicName" />
+    <talkie-check-box
+      :defaultChecked="topicSelected"
+      :label="topicName"
+      :onToggle="onTopicCheckToggle"
+    />
   </div>
 </template>
 
@@ -28,6 +32,10 @@ export default {
     topicSelected: {
       type: Boolean,
       default: false,
+    },
+    onTopicCheckToggle: {
+      type: Function,
+      default: () => {},
     },
     fullWidth: {
       type: Boolean,

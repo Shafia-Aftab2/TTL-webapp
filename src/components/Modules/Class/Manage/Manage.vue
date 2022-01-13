@@ -3,7 +3,51 @@
   <div class="class-manage-wrapper" v-if="!computedPageLoading">
     <div class="class-manage-header-wrapper">
       <div class="class-manage-header-details-wrapper">
-        <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
+        <h2 class="h2" v-if="classDetails.name && !editClassMode">
+          <a
+            :href="computedClassHomeLink"
+            class="class-manage-header-details-class-name-link"
+          >
+            {{ classDetails.name }}
+          </a>
+        </h2>
+        <talkie-form
+          :customClass="'class-manage-header-details-update-form-wrapper'"
+          v-if="editClassMode"
+          v-slot="{ errors }"
+          :initialValues="{
+            name: classDetails.name,
+          }"
+          :validationSchema="updateClassSchema"
+          :onSubmit="handleEditClassSubmit"
+        >
+          <talkie-input
+            :name="'name'"
+            :size="'large'"
+            :placeholder="'Class Name'"
+            :hint="{
+              type: errors.name ? 'error' : null,
+              message: errors.name ? errors.name : null,
+            }"
+          />
+          <talkie-icon
+            :type="'submit'"
+            :name="'tick-mark'"
+            :variant="'success'"
+            :isActive="true"
+            :size="30"
+            :iconToSizeRatio="1.5"
+          />
+          <talkie-icon
+            :name="'x-mark'"
+            :variant="'danger'"
+            :isActive="true"
+            :size="30"
+            :iconToSizeRatio="1.5"
+            :onClick="handleUnsetEditClassMode"
+          />
+        </talkie-form>
+
         <div class="class-manage-header-details-tab-options-wrapper">
           <p class="p">Manage:</p>
           <template v-for="tabName in tabs" :key="tabName">
@@ -21,6 +65,8 @@
           :variant="'secondary'"
           :size="35"
           :iconToSizeRatio="1.2"
+          :onClick="handleSetEditClassMode"
+          v-if="!editClassMode"
         />
         <talkie-icon
           :name="'trash'"
@@ -46,7 +92,9 @@
           :customClass="'class-manage-content-card'"
           :studentAvatar="_student.avatar"
           :studentName="_student.name"
-          :onDeleteClick="handleStudentRemoveClick"
+          :onDeleteClick="
+            async () => await handleStudentRemoveClick(_student?.id)
+          "
         />
       </template>
 
@@ -54,10 +102,28 @@
       <template v-if="activeTab === 'topics'">
         <h4 class="h4">Beginners / Intermediate</h4>
         <talkie-topic-card
-          v-for="_topic in classTopics"
+          v-for="_topic in topicsList.intermediate"
           :key="_topic"
           :topicName="_topic.name"
           :customClass="'class-manage-content-card'"
+          :topicSelected="activeClassTopicIds?.includes(_topic.id)"
+          :onTopicCheckToggle="
+            async (isSelected) =>
+              await handleTopicSelectToggle(isSelected, _topic.id)
+          "
+        />
+
+        <h4 class="h4">Beginners</h4>
+        <talkie-topic-card
+          v-for="_topic in topicsList.beginner"
+          :key="_topic"
+          :topicName="_topic.name"
+          :customClass="'class-manage-content-card'"
+          :topicSelected="activeClassTopicIds?.includes(_topic.id)"
+          :onTopicCheckToggle="
+            async (isSelected) =>
+              await handleTopicSelectToggle(isSelected, _topic.id)
+          "
         />
       </template>
     </div>
@@ -87,9 +153,11 @@
           <p class="p">Copy and paste the url below</p>
         </div>
         <div class="class-manage-modal-invite-students-input-wrapper">
-          <talkie-input :value="'url here'" />
+          <talkie-input :value="computedClassJoinLink" />
         </div>
-        <talkie-button> Copy </talkie-button>
+        <talkie-button :onClick="hanldeClassJoinLinkCopyButtonClick">
+          Copy
+        </talkie-button>
       </div>
     </template>
 
@@ -100,7 +168,9 @@
           <h3 class="h3">Remove Student</h3>
           <p class="p">Sure to remove this student from the class?</p>
         </div>
-        <talkie-button :variant="'danger'"> Yes, Remove </talkie-button>
+        <talkie-button :variant="'danger'" :onClick="handleStudentRemove">
+          Yes, Remove
+        </talkie-button>
       </div>
     </template>
 
@@ -130,6 +200,7 @@ import {
   TalkieIcon,
   TalkieModal,
   TalkieLoader,
+  TalkieForm,
   TalkieBackDropLoader,
 } from "@/components/UICore";
 import {
@@ -137,8 +208,11 @@ import {
   TalkieTopicCard,
 } from "@/components/SubModules/Cards";
 import URLModifier from "@/utils/helpers/URLModifier";
-import { ClassService } from "@/api/services";
+import { ClassService, TopicService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
+import { updateClassSchema } from "@/utils/validations/class.validation";
+import topicTypes from "@/utils/constants/topicTypes";
+import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
 
 export default {
   name: "ClassManage",
@@ -149,6 +223,7 @@ export default {
     TalkieIcon,
     TalkieModal,
     TalkieLoader,
+    TalkieForm,
     TalkieBackDropLoader,
     TalkieStudentCard,
     TalkieTopicCard,
@@ -158,15 +233,26 @@ export default {
       activeTab: "students",
       tabs: ["students", "topics"],
       modalMode: null,
+      modalData: {},
+      editClassMode: false,
+      topicsList: [],
       classId: null,
       classDetails: {},
       classStudents: [],
       classTopics: [],
+      activeClassTopicIds: [],
       pageLoading: false,
       backdropLoading: false,
+      updateClassSchema: updateClassSchema,
     };
   },
   computed: {
+    computedClassHomeLink() {
+      return `${window.location.origin}/classes/${this.classId}`;
+    },
+    computedClassJoinLink() {
+      return `${window.location.origin}/classes/${this.classId}/join`;
+    },
     computedPageLoading() {
       return this.pageLoading;
     },
@@ -188,6 +274,10 @@ export default {
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
 
+    // get topics list (+ failure case)
+    const topicsList = await this.getTopicsList();
+    if (!topicsList) return this.$router.push("/404");
+
     // success case
     this.classDetails = {
       id: classDetails.id,
@@ -204,9 +294,85 @@ export default {
       type: x?.type,
       name: x?.name,
     }));
+    this.activeClassTopicIds = (classDetails?.topics || [])?.map((x) => x?.id);
+    this.topicsList = {
+      beginner: topicsList.filter((x) => x.type === topicTypes.BEGINNER),
+      intermediate: topicsList.filter(
+        (x) => x.type === topicTypes.INTERMEDIATE
+      ),
+      advanced: topicsList.filter((x) => x.type === topicTypes.ADVANCED),
+    };
     this.pageLoading = false;
   },
   methods: {
+    async hanldeClassJoinLinkCopyButtonClick() {
+      const isCopiedToClipboard = await copyToClipboard(
+        this.computedClassJoinLink
+      );
+
+      // error case
+      if (!isCopiedToClipboard) {
+        notifications.show("Failed To Copy To Clipboard..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      notifications.show("Copied To Clipboard..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
+    async handleTopicSelectToggle(isSelected, topicId) {
+      if (isSelected) {
+        this.activeClassTopicIds = [...this.activeClassTopicIds, topicId];
+      } else {
+        this.activeClassTopicIds = [...this.activeClassTopicIds]?.filter(
+          (x) => x !== topicId
+        );
+      }
+
+      await this.handleUpdateClassTopics();
+    },
+    async handleUpdateClassTopics() {
+      // update page state
+      this.backdropLoading = true;
+
+      // active topics data
+      const topics = this.activeClassTopicIds;
+
+      // payload
+      const classId = this.classId;
+      const payload = { topics };
+
+      // api call
+      const response = await ClassService.AddTopics(classId, payload).catch(
+        () => {
+          return {
+            error: "Could not update class topic/s..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Class topics updated..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
     handleTabChange(x) {
       this.activeTab = x.toLowerCase();
       URLModifier.addToURL("tab", x.toLowerCase());
@@ -214,19 +380,36 @@ export default {
     handleAddStudentButtonClick() {
       this.modalMode = "invite-students";
     },
-    handleStudentRemoveClick() {
+    handleStudentRemoveClick(studentId) {
       this.modalMode = "remove-student";
+      this.modalData = {
+        studentToRemove: studentId,
+      };
     },
     handleClassDeleteClick() {
       this.modalMode = "class-delete";
     },
     handleModalClose() {
       this.modalMode = null;
+      this.modalData = {};
+    },
+    handleSetEditClassMode() {
+      this.editClassMode = true;
+    },
+    handleUnsetEditClassMode() {
+      this.editClassMode = false;
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
 
       return response.data || null;
+    },
+    async getTopicsList() {
+      const query = {};
+
+      const response = await TopicService.Query(query).catch(() => null);
+
+      return !!response.data ? response.data.results : null;
     },
     async handleClassDeletion() {
       // update page state
@@ -256,6 +439,107 @@ export default {
       });
       this.$router.push("/");
     },
+    async handleStudentRemove() {
+      // form data
+      const studentId = this.modalData.studentToRemove;
+
+      // update page state
+      this.modalMode = null;
+      this.modalData = {};
+      this.backdropLoading = true;
+
+      // payload
+      const payload = {
+        students: [studentId],
+      };
+
+      // api call
+      const response = await ClassService.RemoveStudents(
+        this.classId,
+        payload
+      ).catch(() => {
+        return {
+          error: "Could not remove student..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.classStudents = [
+        ...this.classStudents.filter((x) => x?.id !== studentId),
+      ];
+      notifications.show("Student removed successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
+    async handleEditClassSubmit(values) {
+      // update page state
+      this.backdropLoading = true;
+
+      // form data
+      const { name } = values;
+
+      // if name is same then return
+      if (name === this.classDetails.name) {
+        this.backdropLoading = false;
+        this.editClassMode = false;
+        notifications.show("Class updated successfully..!", {
+          variant: "success",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // payload
+      const payload = { name };
+
+      // api call
+      const response = await ClassService.Update(this.classId, payload).catch(
+        (e) => {
+          const errorMap = {
+            ['"name" contains bad word']: "Name should not be unethical..!",
+            ["class already exists in school"]:
+              "Class with same name already exists..!",
+          };
+
+          return {
+            error:
+              errorMap[e.response.data.message.toLowerCase()] ||
+              "Could not update class..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.classDetails.name = name; // update class name in state
+      this.backdropLoading = false;
+      this.editClassMode = false;
+      notifications.show("Class updated successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
   },
 };
 </script>
@@ -279,6 +563,16 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+}
+.class-manage-header-details-class-name-link,
+.class-manage-header-details-class-name-link:visited {
+  text-decoration: none;
+  color: var(--t-black);
+}
+.class-manage-header-details-update-form-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .class-manage-header-details-tab-options-wrapper {
   display: flex;
@@ -337,6 +631,9 @@ export default {
   .class-manage-header-details-wrapper {
     gap: var(--t-space-8);
   }
+  .class-manage-header-details-update-form-wrapper {
+    gap: var(--t-space-5);
+  }
   .class-manage-header-details-tab-options-wrapper {
     gap: var(--t-space-8);
   }
@@ -357,6 +654,9 @@ export default {
   .class-manage-header-details-wrapper {
     gap: var(--t-space-8);
   }
+  .class-manage-header-details-update-form-wrapper {
+    gap: var(--t-space-10);
+  }
   .class-manage-header-details-tab-options-wrapper {
     gap: var(--t-space-8);
   }
@@ -376,6 +676,9 @@ export default {
   }
   .class-manage-header-details-wrapper {
     gap: var(--t-space-16);
+  }
+  .class-manage-header-details-update-form-wrapper {
+    gap: var(--t-space-12);
   }
   .class-manage-header-details-tab-options-wrapper {
     gap: var(--t-space-12);
