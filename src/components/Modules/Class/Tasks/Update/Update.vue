@@ -160,8 +160,17 @@ export default {
       // api call
       const response = await TaskService.Update(this.taskId, payload).catch(
         (e) => {
+          const errorMap = {
+            ['"title" contains bad word']: "Title should not be unethical..!",
+            ['"questiontext" contains bad word']:
+              "Question text should not be unethical..!",
+            ['"topic" must be a valid mongo id']: "Invalid Topic",
+          };
+
           return {
-            error: "Could not update task..!",
+            error:
+              errorMap[e.response.data.message.toLowerCase()] ||
+              "Could not update task..!",
           };
         }
       );
