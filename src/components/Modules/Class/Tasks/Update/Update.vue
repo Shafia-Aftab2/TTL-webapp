@@ -1,28 +1,80 @@
 <template>
-  <div class="class-update-convo-wrapper">
-    <h2 class="class-update-convo-header h2">Edit Task</h2>
-    <div class="class-update-convo-form">
-      <talkie-select :name="'topic'" :placeholder="'Choose topic'" />
-      <talkie-input :name="'title'" :placeholder="'Title (required)'" />
-      <talkie-input
-        :multiline="true"
-        :name="'questionText'"
-        :placeholder="'Question text (optional)'"
-      />
+  <!-- content -->
+  <template v-if="!computedPageLoading">
+    <talkie-form
+      v-slot="{ errors }"
+      :initialValues="{
+        topic: taskDetails.topic,
+        title: taskDetails.title,
+        questionText: taskDetails.questionText,
+      }"
+      :validationSchema="updateQandATopicSchema"
+      :onSubmit="handleSubmit"
+      :customClass="'class-update-convo-wrapper'"
+    >
+      <h2 class="class-update-convo-header h2">Edit Task</h2>
+      <div class="class-update-convo-form">
+        <talkie-select
+          :name="'topic'"
+          :placeholder="'Choose topic'"
+          :options="topics.map((x) => x.name)"
+          :hint="{
+            type: errors.topic ? 'error' : null,
+            message: errors.topic ? errors.topic : null,
+          }"
+        />
+        <talkie-input
+          :name="'title'"
+          :placeholder="'Title (required)'"
+          :hint="{
+            type: errors.title ? 'error' : null,
+            message: errors.title ? errors.title : null,
+          }"
+        />
+        <talkie-input
+          :multiline="true"
+          :name="'questionText'"
+          :placeholder="'Question text (optional)'"
+        />
+        <talkie-alert
+          :text="formStatus.message"
+          :variant="formStatus.type"
+          :animateEllipse="formStatus.animateEllipse"
+          v-if="formStatus.type && formStatus.message"
+        />
+      </div>
+      <div class="class-update-convo-form-options">
+        <talkie-button :type="'submit'" :loading="loading">
+          Update
+        </talkie-button>
+      </div>
+    </talkie-form>
+    <div class="class-update-convo-footer">
+      <a :href="`/classes/${classId}`" class="class-update-convo-footer-link">
+        Not now
+      </a>
     </div>
-    <div class="class-update-convo-form-options">
-      <talkie-button> Update </talkie-button>
+  </template>
+
+  <!-- loading -->
+  <template v-if="computedPageLoading">
+    <div class="class-update-convo-loading-wrapper">
+      <talkie-loader :size="'large'" />
     </div>
-  </div>
-  <div class="class-update-convo-footer">
-    <a :href="`/classes/${classId}`" class="class-update-convo-footer-link">
-      Not now
-    </a>
-  </div>
+  </template>
 </template>
 
 <script>
-import { TalkieInput, TalkieButton, TalkieSelect } from "@/components/UICore";
+import {
+  TalkieInput,
+  TalkieButton,
+  TalkieSelect,
+  TalkieAlert,
+  TalkieForm,
+  TalkieLoader,
+} from "@/components/UICore";
+import { updateQandATopicSchema } from "@/utils/validations/task.validation";
+import { TaskService, ClassService } from "@/api/services";
 
 export default {
   name: "ClassTaskUpdate",
@@ -30,14 +82,36 @@ export default {
     TalkieInput,
     TalkieButton,
     TalkieSelect,
+    TalkieAlert,
+    TalkieForm,
+    TalkieLoader,
   },
   data() {
     return {
+      topics: [],
+      updateQandATopicSchema: updateQandATopicSchema,
+      pageLoading: false,
+      loading: false,
+      formStatus: {
+        type: null,
+        message: null,
+        animateEllipse: false,
+      },
       classId: null,
       taskId: null,
+      classDetails: {},
+      taskDetails: {},
     };
   },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
+  },
   async created() {
+    // update page state
+    this.pageLoading = true;
+
     // class id from params
     const classId = this.$route.params.id;
     this.classId = classId;
@@ -45,6 +119,85 @@ export default {
     // task id from params
     const taskId = this.$route.params.taskId;
     this.taskId = taskId;
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
+
+    // task details (+ failure case)
+    const taskDetails = await this.getTaskDetails(taskId);
+    if (!taskDetails) return this.$router.push("/404");
+
+    // success case
+    this.topics = classDetails.topics;
+    this.taskDetails = {
+      topic: taskDetails?.topic?.name,
+      title: taskDetails?.title,
+      questionText: taskDetails?.questionText,
+      voiceForQnA: taskDetails?.voiceForQnA,
+    };
+    this.pageLoading = false;
+  },
+  methods: {
+    async handleSubmit(values) {
+      // update page state
+      this.loading = true;
+      this.formStatus = { type: null, message: null, animateEllipse: false };
+
+      // form data
+      const { title, topic: topicName, questionText } = values;
+      const voiceForQnA = this.taskDetails.voiceForQnA;
+      const topicId = this.topics.find((x) => x.name === topicName).id;
+
+      // payload
+      const payload = {
+        title,
+        topic: topicId,
+        voiceForQnA,
+      };
+      if (questionText) payload.questionText = questionText;
+
+      // api call
+      const response = await TaskService.Update(this.taskId, payload).catch(
+        (e) => {
+          return {
+            error: "Could not update task..!",
+          };
+        }
+      );
+
+      // failure case
+      if (response.error) {
+        this.loading = false;
+        this.formStatus = {
+          type: "error",
+          message: response.error,
+          animateEllipse: false,
+        };
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.formStatus = {
+        type: "success",
+        message: "Task Updated. Redirecting..!",
+        animateEllipse: false,
+      };
+      this.$router.push(
+        `/classes/${this.classId}/tasks/${this.taskId}/status?status=edited`
+      );
+    },
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async getTaskDetails(id) {
+      const response = await TaskService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
   },
 };
 </script>
