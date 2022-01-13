@@ -78,7 +78,7 @@
                 :centered="false"
                 :audioSource="_question.audioSource"
                 :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
-                :onEditClick="redirectToCommingSoonPage"
+                :onEditClick="() => handleTopicCardEditClick(_question.id)"
                 :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
               />
             </template>
@@ -312,6 +312,12 @@ export default {
     },
     handleTopicCardBodyClick(taskId) {
       this.handleRedirection(`/classes/${this.classId}/tasks/${taskId}`, 1);
+    },
+    handleTopicCardEditClick(taskId) {
+      this.handleRedirection(
+        `/classes/${this.classId}/tasks/${taskId}/edit`,
+        1
+      );
     },
     handleTopicCardDeleteClick(id) {
       this.taskToDelete = id;
