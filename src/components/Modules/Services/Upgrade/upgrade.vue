@@ -88,7 +88,11 @@ export default {
 
     // check if the user is subscribed
     const subscription = await this.getMySubscription();
-    const isActive = subscription.status === subscriptionStatus.ACTIVE;
+    const isActive = [
+      subscriptionStatus.ACTIVE,
+      subscriptionStatus.PAST_DUE,
+      subscriptionStatus.UNPAID,
+    ]?.includes(subscription?.status);
     this.userIsSubscribed = isActive;
   },
   async mounted() {
