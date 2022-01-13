@@ -58,6 +58,7 @@ import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { loadStripe } from "@stripe/stripe-js";
 import { notifications } from "@/components/UIActions";
 import authUser from "@/utils/helpers/auth";
+import subscriptionStatus from "@/utils/constants/subscriptionStatus";
 
 export default {
   name: "ServicesUpgrade",
@@ -86,8 +87,9 @@ export default {
     this.userHasPaymentMethod = userHasPaymentMethod;
 
     // check if the user is subscribed
-    const isSubscribed = await this.getMySubscription();
-    this.userIsSubscribed = isSubscribed;
+    const subscription = await this.getMySubscription();
+    const isActive = subscription.status === subscriptionStatus.ACTIVE;
+    this.userIsSubscribed = isActive;
   },
   async mounted() {
     await this.mountStripePaymentElementsFormToUI();
