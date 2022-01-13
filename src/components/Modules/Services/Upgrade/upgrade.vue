@@ -135,9 +135,7 @@ export default {
         };
 
         // api call (add payment method)
-        const { error, setupIntent } = await stripe.confirmSetup(
-          confirmSetupOptions
-        );
+        const { error } = await stripe.confirmSetup(confirmSetupOptions);
 
         // failure case
         if (error) {
