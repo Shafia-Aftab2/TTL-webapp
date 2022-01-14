@@ -92,6 +92,13 @@
           :customClass="'class-manage-content-card'"
           :studentAvatar="_student.avatar"
           :studentName="_student.name"
+          :onKeyClick="
+            async () =>
+              await handleStudentPasswordChangeClick(
+                _student?.id,
+                _student?.name
+              )
+          "
           :onDeleteClick="
             async () => await handleStudentRemoveClick(_student?.id)
           "
@@ -162,6 +169,35 @@
     </template>
 
     <!-- Remove Student -->
+    <template v-if="modalMode === 'change-student-password'">
+      <talkie-form
+        :customClass="'class-manage-modal-invite-students'"
+        v-slot="{ errors }"
+        :validationSchema="changeStudentPasswordSchema"
+        :onSubmit="handleStudentPasswordChange"
+      >
+        <div class="class-manage-modal-invite-students-header-wrapper">
+          <h3 class="h3">Change Student Password</h3>
+          <p class="p">
+            Enter new password for {{ modalData.changePasswordForStudent.name }}
+          </p>
+        </div>
+
+        <talkie-input
+          :name="'password'"
+          :type="'password'"
+          :placeholder="'Enter new password.'"
+          :hint="{
+            type: errors.password ? 'error' : null,
+            message: errors.password ? errors.password : null,
+          }"
+        />
+
+        <talkie-button :type="'submit'"> Update Password </talkie-button>
+      </talkie-form>
+    </template>
+
+    <!-- Remove Student -->
     <template v-if="modalMode === 'remove-student'">
       <div class="class-manage-modal-invite-students">
         <div class="class-manage-modal-invite-students-header-wrapper">
@@ -210,7 +246,10 @@ import {
 import URLModifier from "@/utils/helpers/URLModifier";
 import { ClassService, TopicService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
-import { updateClassSchema } from "@/utils/validations/class.validation";
+import {
+  updateClassSchema,
+  changeStudentPasswordSchema,
+} from "@/utils/validations/class.validation";
 import topicTypes from "@/utils/constants/topicTypes";
 import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
 
@@ -244,6 +283,7 @@ export default {
       pageLoading: false,
       backdropLoading: false,
       updateClassSchema: updateClassSchema,
+      changeStudentPasswordSchema: changeStudentPasswordSchema,
     };
   },
   computed: {
@@ -380,6 +420,15 @@ export default {
     handleAddStudentButtonClick() {
       this.modalMode = "invite-students";
     },
+    handleStudentPasswordChangeClick(studentId, studentName) {
+      this.modalMode = "change-student-password";
+      this.modalData = {
+        changePasswordForStudent: {
+          id: studentId,
+          name: studentName,
+        },
+      };
+    },
     handleStudentRemoveClick(studentId) {
       this.modalMode = "remove-student";
       this.modalData = {
@@ -479,6 +528,47 @@ export default {
         ...this.classStudents.filter((x) => x?.id !== studentId),
       ];
       notifications.show("Student removed successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
+    async handleStudentPasswordChange(values) {
+      // form data
+      const studentId = this.modalData.changePasswordForStudent.id;
+      const { password } = values;
+
+      // update page state
+      this.modalMode = null;
+      this.modalData = {};
+      this.backdropLoading = true;
+
+      // payload
+      const payload = { password };
+
+      // api call
+      const response = await ClassService.ChangeStudentPassword(
+        this.classId,
+        studentId,
+        payload
+      ).catch(() => {
+        return {
+          error: "Could not update student password..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Student password updated successfully..!", {
         variant: "success",
         displayIcon: true,
       });
@@ -606,6 +696,7 @@ export default {
   justify-content: center;
   align-items: center;
   gap: var(--t-space-5);
+  text-align: center;
 }
 .class-manage-modal-invite-students-input-wrapper,
 .class-manage-modal-invite-students-input-wrapper > div {
