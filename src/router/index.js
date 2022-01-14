@@ -16,6 +16,7 @@ import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassStudentsInvite from "../components/Modules/Class/Students/Invite";
 import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefault";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
+import ClassTaskEdit from "../components/Modules/Class/Tasks/Update";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
@@ -200,6 +201,17 @@ const routes = [
         name: "ClassTaskCreate",
         path: "/classes/:id/tasks/create",
         component: ClassTaskCreate,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
+      },
+      {
+        name: "ClassTaskEdit",
+        path: "/classes/:id/tasks/:taskId/edit",
+        component: ClassTaskEdit,
         meta: {
           middlewareConfig: {
             requiresAuth: true,

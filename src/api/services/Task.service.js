@@ -5,6 +5,10 @@ export default class TaskRoutes {
     return HTTPClient.post(`/tasks/${classId}`, payload);
   }
 
+  static async Update(taskId, payload) {
+    return HTTPClient.put(`/tasks/${taskId}`, payload);
+  }
+
   static async GetDetails(taskId) {
     return HTTPClient.get(`/tasks/${taskId}/details`);
   }

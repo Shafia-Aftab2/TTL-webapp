@@ -34,7 +34,7 @@
             :centered="false"
             :fullWidth="true"
             :audioSource="taskDetails.audioSource"
-            :onEditClick="redirectToCommingSoonPage"
+            :onEditClick="handleTaskEditClick"
             :onDeleteClick="handleTaskDeleteClick"
           />
         </template>
@@ -265,6 +265,9 @@ export default {
   methods: {
     redirectToCommingSoonPage() {
       this.$router.push(`/coming-soon`);
+    },
+    handleTaskEditClick() {
+      this.$router.push(`/classes/${this.classId}/tasks/${this.taskId}/edit`);
     },
     handleTaskDeleteClick() {
       this.showDeleteTaskDialog = true;

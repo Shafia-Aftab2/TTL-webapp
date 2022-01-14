@@ -9,4 +9,11 @@ const createQandATopicSchema = yup.object({
   voiceForQnA: yup.string().required("Audio is required."),
 });
 
-export { createQandATopicSchema };
+const updateQandATopicSchema = yup.object({
+  topic: yup.string().required("Topic is required."),
+  title: yup.string().required("Title is required."),
+  type: yup.string().default(taskTypes.QUESTION_ANSWER).required(),
+  questionText: yup.string().optional(),
+});
+
+export { createQandATopicSchema, updateQandATopicSchema };
