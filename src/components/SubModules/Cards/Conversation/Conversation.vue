@@ -533,6 +533,13 @@ export default {
   flex-direction: column;
   background: var(--t-white);
   cursor: pointer;
+  transition: 0.1s ease;
+  border-color: var(--t-gray-75);
+  border-style: solid;
+}
+.talkie-conversation-card:hover {
+  border-width: var(--t-space-1);
+  transform: scale(0.99);
 }
 .talkie-conversation-card-header-wrapper {
   display: flex;
