@@ -145,6 +145,13 @@ export default {
   flex-direction: column;
   background-color: var(--t-white);
   width: 100%;
+  transition: 0.1s ease;
+  border-color: var(--t-gray-75);
+  border-style: solid;
+}
+.talkie-question-card-wrapper:hover {
+  border-width: var(--t-space-1);
+  transform: scale(0.99);
 }
 .talkie-question-card-fullwidth-wrapper {
   flex-direction: row;
