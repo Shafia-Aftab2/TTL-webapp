@@ -103,6 +103,17 @@
               :studentAvatar="_student.avatar"
             />
           </template>
+          <template v-if="classStudents?.length === 0">
+            <img
+              :src="require(`@/assets/images/warning-logo.png`)"
+              class="class-home-content-error-image"
+            />
+            <p class="p class-home-content-error-info">
+              Hmm..! It looks like there are no students in your class. You can
+              invite them from the class management page.
+              <a :href="`/classes/${classId}/manage`">Click Here</a>
+            </p>
+          </template>
         </div>
       </template>
     </template>
@@ -461,6 +472,17 @@ export default {
 .class-home-content-wrapper {
   display: grid;
 }
+.class-home-content-error-image {
+  height: var(--image-size);
+  width: var(--image-size);
+  margin: auto;
+}
+.class-home-content-error-info {
+  margin: auto;
+  max-width: 80%;
+  text-align: center;
+  line-height: 1.5;
+}
 .class-home-loading-wrapper {
   margin: auto;
 }
@@ -497,6 +519,9 @@ export default {
   .class-home-content-wrapper-multi-col {
     grid-template-columns: 1fr;
   }
+  .class-home-content-error-image {
+    --image-size: calc(var(--t-space-70) * 1.2);
+  }
 }
 @media (min-width: 600px) {
   .class-home-wrapper {
@@ -529,6 +554,9 @@ export default {
   .class-home-content-wrapper-multi-col {
     grid-template-columns: 1fr;
   }
+  .class-home-content-error-image {
+    --image-size: calc(var(--t-space-70) * 1.7);
+  }
 }
 @media (min-width: 900px) {
   .class-home-wrapper {
@@ -539,6 +567,9 @@ export default {
   }
   .class-home-content-wrapper-multi-col {
     grid-template-columns: 1fr 1fr;
+  }
+  .class-home-content-error-image {
+    --image-size: calc(var(--t-space-70) * 2);
   }
 }
 </style>
