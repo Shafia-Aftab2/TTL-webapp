@@ -9,6 +9,14 @@
       <div class="title">
         <p>My Stats</p>
       </div>
+      <div class="overview">
+        <div class="ellipse">
+          <img
+            src="../../../../assets/images/Ellipse_55.png"
+            alt="Image here"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,16 +37,22 @@ export default {
 }
 .box-content {
   display: grid;
-  width: 100%;
   background-color: white;
   border-radius: var(--t-br-medium);
   padding: var(--t-space-70);
   gap: 10px;
+  width: 100%;
   margin-top: 20px;
   justify-content: center;
+  align-items: center;
+}
+.ellipse {
+  margin-top: 20px;
+  position: relative;
+  left: 14px;
 }
 .title {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: bolder;
   gap: 10px;
 }
