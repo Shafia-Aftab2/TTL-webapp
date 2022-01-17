@@ -16,6 +16,12 @@
             alt="Image here"
           />
         </div>
+        <div class="title">
+          <p>Yasmin D</p>
+        </div>
+        <div class="class-name orange">
+          <p>Spanish 10C</p>
+        </div>
       </div>
     </div>
   </div>
@@ -44,7 +50,12 @@ export default {
   width: 100%;
   margin-top: 20px;
   justify-content: center;
-  align-items: center;
+}
+.class-name {
+  font-size: 34px;
+  font-weight: bolder;
+  gap: 10px;
+  margin-left: -36px;
 }
 .ellipse {
   margin-top: 20px;
@@ -55,6 +66,10 @@ export default {
   font-size: 28px;
   font-weight: bolder;
   gap: 10px;
+  margin-top: 20px;
+}
+.orange {
+  color: #ffa15f;
 }
 @media (max-width: 599px) {
   .box-content {
