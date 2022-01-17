@@ -20,6 +20,7 @@ import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
 import ProfileSelf from "../components/Modules/Profile/Self";
+import Stats from "../components/Modules/Class/Stats";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
 import StudentQA from "../components/Modules/Students/QA";
@@ -216,6 +217,11 @@ const routes = [
             blockedRoles: [roles.STUDENT],
           },
         },
+      },
+      {
+        name: "Stats",
+        path: "/classes/stats",
+        component: Stats,
       },
     ],
   },
