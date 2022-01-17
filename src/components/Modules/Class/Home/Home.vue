@@ -31,8 +31,8 @@
             :placeholder="'Filter by topic'"
             :customClass="'class-home-options-custom-talkie-select'"
             :options="
-              classTopics && classTopics.length > 0
-                ? classTopics.map((x) => x.name)
+              classDetails?.topics && classDetails?.topics?.length > 0
+                ? classDetails?.topics?.map((x) => x.name)
                 : []
             "
             :onChange="handleTopicFilterChange"
