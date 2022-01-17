@@ -5,6 +5,11 @@
         <a class="back"><span>&#8592; </span>back</a>
       </div>
     </div>
+    <div class="box-content">
+      <div class="title">
+        <p>My Stats</p>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -30,6 +35,12 @@ export default {
   padding: var(--t-space-70);
   gap: 10px;
   margin-top: 20px;
+  justify-content: center;
+}
+.title {
+  font-size: 36px;
+  font-weight: bolder;
+  gap: 10px;
 }
 @media (max-width: 599px) {
   .box-content {
