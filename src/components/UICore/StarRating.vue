@@ -1,15 +1,40 @@
 <template>
   <div class="talkie-rating-container-wrapper">
     <div class="talkie-rating-stars-wrapper">
-      <input type="radio" name="rating" id="talkie-rating-star-5" />
+      <input
+        type="radio"
+        name="rating"
+        id="talkie-rating-star-5"
+        @change="handleRatingChange"
+      />
       <label for="talkie-rating-star-5"></label>
-      <input type="radio" name="rating" id="talkie-rating-star-4" />
+      <input
+        type="radio"
+        name="rating"
+        id="talkie-rating-star-4"
+        @change="handleRatingChange"
+      />
       <label for="talkie-rating-star-4"></label>
-      <input type="radio" name="rating" id="talkie-rating-star-3" />
+      <input
+        type="radio"
+        name="rating"
+        id="talkie-rating-star-3"
+        @change="handleRatingChange"
+      />
       <label for="talkie-rating-star-3"></label>
-      <input type="radio" name="rating" id="talkie-rating-star-2" />
+      <input
+        type="radio"
+        name="rating"
+        id="talkie-rating-star-2"
+        @change="handleRatingChange"
+      />
       <label for="talkie-rating-star-2"></label>
-      <input type="radio" name="rating" id="talkie-rating-star-1" />
+      <input
+        type="radio"
+        name="rating"
+        id="talkie-rating-star-1"
+        @change="handleRatingChange"
+      />
       <label for="talkie-rating-star-1"></label>
       <div class="talkie-rating-emoji-wrapper">
         <div class="talkie-rating-emoji">
@@ -304,6 +329,35 @@
 <script>
 export default {
   name: "TalkieStarRating",
+  data() {
+    return {
+      rating: 0,
+    };
+  },
+  props: {
+    onRatingChange: {
+      type: Function,
+      default: () => {},
+    },
+  },
+  methods: {
+    async handleRatingChange(e) {
+      const ratingMap = {
+        ["talkie-rating-star-1"]: 1,
+        ["talkie-rating-star-2"]: 2,
+        ["talkie-rating-star-3"]: 3,
+        ["talkie-rating-star-4"]: 4,
+        ["talkie-rating-star-5"]: 5,
+      };
+
+      const currentRating = ratingMap[e.target.id];
+      const isChecked = e.target.checked;
+
+      if (isChecked) this.rating = currentRating;
+
+      this.onRatingChange && (await this.onRatingChange(currentRating));
+    },
+  },
 };
 </script>
 
