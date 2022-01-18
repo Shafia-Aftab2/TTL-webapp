@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       taskStatus: {
-        CREATED: "Woop..! Its out there",
+        CREATED: "Sent!",
         EDITED: "Saved!",
         DELETED: "Deleted!",
       },
