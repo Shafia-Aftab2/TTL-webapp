@@ -39,12 +39,16 @@
           <p>0</p>
         </div>
       </div>
+      <talkie-button> View leaderboard </talkie-button>
+      <talkie-button> View my portfolio </talkie-button>
     </div>
   </div>
 </template>
 <script>
+import { TalkieButton } from "@/components/UICore";
 export default {
   name: "Stats",
+  components: { TalkieButton },
 };
 </script>
 <style scoped>
@@ -91,6 +95,10 @@ export default {
   margin-top: 20px;
   position: relative;
   left: 14px;
+}
+.talkie-button {
+  margin-left: 340px;
+  margin-top: 20px;
 }
 .title {
   font-size: 28px;
