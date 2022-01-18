@@ -16,11 +16,27 @@
             alt="Image here"
           />
         </div>
-        <div class="title">
+        <div class="title-name">
           <p>Yasmin D</p>
         </div>
         <div class="class-name orange">
           <p>Spanish 10C</p>
+        </div>
+      </div>
+      <div class="box bar-outline">
+        <div class="box-text">
+          <p>TOTAL NO. OF POINTS</p>
+        </div>
+        <div class="title-no orange">
+          <p>0</p>
+        </div>
+      </div>
+      <div class="box bar-outline">
+        <div class="box-text">
+          <p>CURRENT RUN STREAK</p>
+        </div>
+        <div class="title-no orange">
+          <p>0</p>
         </div>
       </div>
     </div>
@@ -32,11 +48,26 @@ export default {
 };
 </script>
 <style scoped>
+.bar-outline {
+  background-color: var(--t-white);
+  padding: var(--t-space-16);
+  border-radius: var(--t-space-10);
+  border: 2px solid var(--t-gray-home);
+}
+.box {
+  margin: 20px;
+  border-radius: 16px;
+  padding: 10px;
+  width: 100%;
+}
+.box-text {
+  margin-left: 325px;
+  margin-top: 20px;
+}
 .box-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   padding: 100px 0 var(--t-space-50) 0;
   gap: 10px;
@@ -49,7 +80,6 @@ export default {
   gap: 10px;
   width: 100%;
   margin-top: 20px;
-  justify-content: center;
 }
 .class-name {
   font-size: 34px;
@@ -67,9 +97,27 @@ export default {
   font-weight: bolder;
   gap: 10px;
   margin-top: 20px;
+  margin-left: 375px;
+}
+.title-name {
+  font-size: 28px;
+  font-weight: bolder;
+  gap: 10px;
+  margin-top: 20px;
+}
+.title-no {
+  font-size: 28px;
+  font-weight: bolder;
+  gap: 20px;
+  margin-top: 20px;
+  margin-left: 400px;
+  margin-bottom: 20px;
 }
 .orange {
   color: #ffa15f;
+}
+.overview {
+  margin-left: 375px;
 }
 @media (max-width: 599px) {
   .box-content {
