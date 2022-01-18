@@ -199,6 +199,9 @@
       </talkie-button>
     </div>
   </talkie-modal>
+
+  <!-- Backdrop load wrapper -->
+  <talkie-back-drop-loader v-if="backdropLoading" />
 </template>
 
 <script>
@@ -209,6 +212,7 @@ import {
   TalkieModal,
   TalkieStarRating,
   TalkieButton,
+  TalkieBackDropLoader,
 } from "@/components/UICore";
 import ConversationMessage from "./Message";
 import ConversationRecorder from "./Recorder";
@@ -228,6 +232,7 @@ export default {
     TalkieModal,
     TalkieButton,
     TalkieStarRating,
+    TalkieBackDropLoader,
     ConversationMessage,
     ConversationRecorder,
     TalkieAudioPlayer,
@@ -292,6 +297,7 @@ export default {
       messagesFetched: [],
       showRatingStarModal: false,
       responseRating: 0,
+      backdropLoading: false,
     };
   },
   computed: {
@@ -355,6 +361,7 @@ export default {
       }
 
       // update page state
+      this.backdropLoading = true;
       this.showRatingStarModal = false;
       this.responseRating = 0;
 
@@ -373,6 +380,7 @@ export default {
 
       // failure case
       if (response.error) {
+        this.backdropLoading = false;
         notifications.show(response.error, {
           variant: "error",
           displayIcon: true,
@@ -381,6 +389,7 @@ export default {
       }
 
       // success case
+      this.backdropLoading = false;
       notifications.show("Rating response added successfully..!", {
         variant: "success",
         displayIcon: true,
