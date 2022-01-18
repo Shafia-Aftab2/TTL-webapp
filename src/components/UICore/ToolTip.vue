@@ -1,5 +1,5 @@
 <template>
-  <span :tooltip="tooltip">
+  <span :tooltip="tooltip" :position="position">
     <slot />
   </span>
 </template>
@@ -11,6 +11,11 @@ export default {
     tooltip: {
       type: String,
       default: "ToolTip",
+    },
+    position: {
+      type: String,
+      default: "bottom",
+      validator: (val) => ["top", "bottom", "left", "right"].includes(val),
     },
   },
 };
@@ -57,6 +62,70 @@ export default {
 [tooltip]:hover::before,
 [tooltip]:hover::after {
   display: block;
+}
+
+/* Positioning */
+
+/* top */
+[tooltip]:not([position])::before,
+[tooltip][position^="top"]::before {
+  bottom: 100%;
+  border-bottom-width: 0;
+  border-top-color: var(--t-white);
+}
+[tooltip]:not([position])::after,
+[tooltip][position^="top"]::after {
+  bottom: calc(100% + var(--t-space-5));
+}
+[tooltip]:not([position])::before,
+[tooltip]:not([position])::after,
+[tooltip][position^="top"]::before,
+[tooltip][position^="top"]::after {
+  left: 50%;
+  transform: translate(-50%, -0.5em);
+}
+
+/* bottom */
+[tooltip][position^="bottom"]::before {
+  top: 100%;
+  border-top-width: 0;
+  border-bottom-color: var(--t-white);
+}
+[tooltip][position^="bottom"]::after {
+  top: calc(100% + var(--t-space-5));
+}
+[tooltip][position^="bottom"]::before,
+[tooltip][position^="bottom"]::after {
+  left: 50%;
+  transform: translate(-50%, 0.5em);
+}
+
+/* Left */
+[tooltip][position^="left"]::before {
+  top: 50%;
+  border-right-width: 0;
+  border-left-color: var(--t-white);
+  left: calc(0em - var(--t-space-5));
+  transform: translate(-0.5em, -50%);
+}
+[tooltip][position^="left"]::after {
+  top: 50%;
+  right: calc(100% + var(--t-space-5));
+  transform: translate(-0.5em, -50%);
+}
+
+/* Right */
+[tooltip][position^="right"]::before {
+  top: 50%;
+  border-left-width: 0;
+  border-right-color: var(--t-white);
+  right: calc(0em - var(--t-space-5));
+  transform: translate(0.5em, -50%);
+}
+[tooltip][position^="right"]::after {
+  top: 50%;
+  left: calc(100% + var(--t-space-5));
+  transform: translate(0.5em, -50%);
 }
 
 /* Animation */
