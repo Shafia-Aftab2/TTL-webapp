@@ -23,6 +23,13 @@
           <p class="p" v-if="taskTopic" @click="handleCardBodyClick">
             {{ taskTopic }}
           </p>
+          <p
+            class="p talkie-conversation-card-header-description"
+            v-if="taskDescription"
+            @click="handleCardBodyClick"
+          >
+            {{ taskDescription }}
+          </p>
         </div>
         <div
           class="talkie-conversation-card-header-status"
@@ -206,6 +213,9 @@ export default {
     },
     // student mode
     taskTitle: {
+      type: String,
+    },
+    taskDescription: {
       type: String,
     },
     taskTopic: {
@@ -523,6 +533,13 @@ export default {
   flex-direction: column;
   background: var(--t-white);
   cursor: pointer;
+  transition: 0.1s ease;
+  border-color: var(--t-gray-75);
+  border-style: solid;
+}
+.talkie-conversation-card:hover {
+  border-width: var(--t-space-1);
+  transform: scale(0.99);
 }
 .talkie-conversation-card-header-wrapper {
   display: flex;
@@ -536,6 +553,10 @@ export default {
 }
 .talkie-conversation-card-header {
   display: flex;
+}
+.talkie-conversation-card-header-description {
+  margin-top: var(--t-space-5);
+  color: var(--t-gray-50);
 }
 .talkie-conversation-card-header-col {
   flex-direction: column;

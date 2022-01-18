@@ -29,6 +29,7 @@
               :studentId="user?.id"
               :taskId="_task?.id"
               :taskTitle="_task?.title"
+              :taskDescription="_task?.description"
               :taskTopic="_task?.topic?.name"
               :taskIsRead="false"
               :messages="_task?.responses"
@@ -108,6 +109,7 @@ export default {
       id: x?.id,
       type: x?.type,
       title: x?.title,
+      description: x?.questionText,
       topic: {
         id: x?.topic?.id,
         name: x?.topic?.name,
