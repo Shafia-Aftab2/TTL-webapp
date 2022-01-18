@@ -64,6 +64,12 @@ export default {
   display: block;
 }
 
+/* Hide empty tooltips */
+[tooltip=""]::before,
+[tooltip=""]::after {
+  display: none !important;
+}
+
 /* Positioning */
 
 /* top */
