@@ -1,6 +1,9 @@
 <template>
   <talkie-back-drop>
-    <div class="talkie-modal-content-wrapper">
+    <div
+      class="talkie-modal-content-wrapper"
+      :style="`--max-width: ${maxWidth}px`"
+    >
       <!-- Close Icon -->
       <div
         :class="['talkie-modal-content-header']"
@@ -95,6 +98,10 @@ export default {
     contentPadded: {
       type: Boolean,
     },
+    maxWidth: {
+      type: Number,
+      default: 445,
+    },
     customClass: {
       type: String,
       default: "",
@@ -128,7 +135,7 @@ export default {
   display: flex;
   flex-direction: column;
   z-index: var(--t-zindex-70);
-  max-width: 445px;
+  max-width: var(--max-width);
   width: 100%;
 }
 .talkie-modal-content-header {
@@ -143,7 +150,7 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: var(--t-white);
-  max-width: 445px;
+  max-width: var(--max-width);
   width: 100%;
 }
 .talkie-modal-content-centered {
@@ -157,7 +164,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: auto;
-  max-width: 445px;
+  max-width: var(--max-width);
   gap: var(--t-space-16);
 }
 
