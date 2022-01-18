@@ -96,14 +96,14 @@
             v-if="!isRecording"
           />
           <!-- Feedback Stars -->
-          <!-- <talkie-icon
+          <talkie-icon
             :name="'star'"
             :isActive="true"
             :variant="'primary'"
             :size="40"
             :iconToSizeRatio="1.1"
-            :onClick="onRatingStarClick"
-          /> -->
+            :onClick="handleRatingStarClick"
+          />
         </div>
       </template>
     </div>
@@ -173,10 +173,43 @@
       <conversation-recorder :onRecordingSendClick="handleMessageCreation" />
     </template>
   </div>
+
+  <!-- Modal Content -->
+  <talkie-modal
+    :contentPadded="true"
+    :closeButton="true"
+    :onClose="handleModalClose"
+    :maxWidth="750"
+    v-if="showRatingStarModal"
+  >
+    <div class="class-manage-modal-invite-students">
+      <div class="class-manage-modal-invite-students-header-wrapper">
+        <h3 class="h3">Rate Response</h3>
+      </div>
+
+      <div style="display: block">
+        <talkie-star-rating :onRatingChange="handleRatingStarChange" />
+      </div>
+
+      <talkie-button
+        :onClick="handleRateStudentResponse"
+        :disabled="responseRating === 0"
+      >
+        Continue
+      </talkie-button>
+    </div>
+  </talkie-modal>
 </template>
 
 <script>
-import { TalkieLoader, TalkieAlert, TalkieIcon } from "@/components/UICore";
+import {
+  TalkieLoader,
+  TalkieAlert,
+  TalkieIcon,
+  TalkieModal,
+  TalkieStarRating,
+  TalkieButton,
+} from "@/components/UICore";
 import ConversationMessage from "./Message";
 import ConversationRecorder from "./Recorder";
 import authUser from "@/utils/helpers/auth";
@@ -192,6 +225,9 @@ export default {
     TalkieLoader,
     TalkieAlert,
     TalkieIcon,
+    TalkieModal,
+    TalkieButton,
+    TalkieStarRating,
     ConversationMessage,
     ConversationRecorder,
     TalkieAudioPlayer,
@@ -254,6 +290,8 @@ export default {
         },
       },
       messagesFetched: [],
+      showRatingStarModal: false,
+      responseRating: 0,
     };
   },
   computed: {
@@ -281,6 +319,73 @@ export default {
     this.user = user;
   },
   methods: {
+    handleRatingStarClick() {
+      this.showRatingStarModal = true;
+      this.responseRating = 0;
+    },
+    handleModalClose() {
+      this.showRatingStarModal = false;
+      this.responseRating = 0;
+    },
+    handleRatingStarChange(rating) {
+      this.responseRating = rating;
+    },
+    async handleRateStudentResponse() {
+      // form data
+      const score = this.responseRating;
+      const responseId = (() => {
+        const studentResponses = this.computedMessages?.filter(
+          (x) => x?.from !== this?.user?.id
+        );
+
+        const lastStudentResponse =
+          studentResponses.length > 0 &&
+          studentResponses[studentResponses.length - 1];
+
+        return lastStudentResponse?.id;
+      })();
+
+      // validate form data
+      if (!responseId) {
+        notifications.show("No student response to add rating for..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // update page state
+      this.showRatingStarModal = false;
+      this.responseRating = 0;
+
+      // payload
+      const payload = { score };
+
+      // api call
+      const response = await ResponseService.AddResponseScore(
+        responseId,
+        payload
+      ).catch(() => {
+        return {
+          error: "Could not add response rating..!",
+        };
+      });
+
+      // failure case
+      if (response.error) {
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      notifications.show("Rating response added successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
     async handleCardBodyClick(e) {
       if (e.target !== e.currentTarget) return;
 
@@ -593,6 +698,25 @@ export default {
 }
 .talkie-conversation-card-audio-message-right {
   margin-left: auto;
+}
+.talkie-conversation-card-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--t-space-30);
+}
+.talkie-conversation-card-modal-header-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--t-space-5);
+  text-align: center;
+}
+.talkie-conversation-card-modal-input-wrapper,
+.talkie-conversation-card-modal-input-wrapper > div {
+  min-width: 80% !important;
 }
 
 /* Responsive variants */
