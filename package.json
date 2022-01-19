@@ -16,6 +16,7 @@
   "dependencies": {
     "@dicebear/adventurer": "^4.10.2",
     "@dicebear/avatars": "^4.10.2",
+    "@dicebear/avatars-avataaars-sprites": "^4.10.2",
     "@dicebear/micah": "^4.10.2",
     "@stripe/stripe-js": "^1.22.0",
     "axios": "^0.24.0",

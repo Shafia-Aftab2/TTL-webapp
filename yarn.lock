@@ -940,6 +940,11 @@
   resolved "https://registry.yarnpkg.com/@dicebear/adventurer/-/adventurer-4.10.2.tgz#ee08627f2ba86838fcde5ce7f09169af88665cd5"
   integrity sha512-thH6gNfVO0S6M4Vfk2smztoBSunA80eQKJ/UKM8XAn+fejgHHqfeIXHGqDCFO2EMZ75jagE8K3XCTCOSPjcRYQ==
 
+"@dicebear/avatars-avataaars-sprites@^4.10.2":
+  version "4.10.2"
+  resolved "https://registry.yarnpkg.com/@dicebear/avatars-avataaars-sprites/-/avatars-avataaars-sprites-4.10.2.tgz#194b4c46e571d0573cc75ad4556de62c06745494"
+  integrity sha512-rnzPlMWUXfIIC56Mxu7hAgwm5PLlcLE3x4hxdwmW8gMHEbuHnlbkFxN+hOBJMDutDqosaw5h3LWItBdu3mA86A==
+
 "@dicebear/avatars@^4.10.2":
   version "4.10.2"
   resolved "https://registry.yarnpkg.com/@dicebear/avatars/-/avatars-4.10.2.tgz#140ff080752d2923ffdba7f4664c8937999bfd3f"
