@@ -40,7 +40,7 @@
         </div>
       </div>
       <talkie-button> View leaderboard </talkie-button>
-      <talkie-button> View my portfolio </talkie-button>
+      <talkie-button :outlined="true"> View my portfolio </talkie-button>
     </div>
   </div>
 </template>
