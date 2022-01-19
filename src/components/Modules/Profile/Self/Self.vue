@@ -459,6 +459,7 @@ export default {
       });
       await this.updateUserProfile();
       this.editMode = false;
+      this.$store.state.user = { ...response.data };
     },
   },
 };
