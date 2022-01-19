@@ -935,6 +935,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
+"@dicebear/adventurer@^4.10.2":
+  version "4.10.2"
+  resolved "https://registry.yarnpkg.com/@dicebear/adventurer/-/adventurer-4.10.2.tgz#ee08627f2ba86838fcde5ce7f09169af88665cd5"
+  integrity sha512-thH6gNfVO0S6M4Vfk2smztoBSunA80eQKJ/UKM8XAn+fejgHHqfeIXHGqDCFO2EMZ75jagE8K3XCTCOSPjcRYQ==
+
 "@dicebear/avatars@^4.10.2":
   version "4.10.2"
   resolved "https://registry.yarnpkg.com/@dicebear/avatars/-/avatars-4.10.2.tgz#140ff080752d2923ffdba7f4664c8937999bfd3f"
