@@ -4,6 +4,13 @@
       <h2 class="h2">Profile Info</h2>
       <span v-if="pickedAvatar?.svg" class="profile-avatar" id="avatar-picked">
       </span>
+      <span
+        v-html="user?.image"
+        v-if="user?.image && !pickedAvatar?.svg"
+        class="profile-avatar"
+        id="user-avatar"
+      >
+      </span>
       <div class="profile-info-options-wrapper">
         <talkie-chip
           :label="'Pick an avatar'"
@@ -259,7 +266,7 @@ export default {
       },
     };
   },
-  created() {
+  async created() {
     // get auth user from cookies
     const user = authUser.getUser();
     this.user = {
@@ -269,6 +276,9 @@ export default {
       name: user?.name,
       role: user?.role,
       username: user?.username,
+      ...(user?.image && {
+        image: await generateAvatar(user?.image?.split("-")[1], user?.image),
+      }),
     };
 
     const userFullName = user?.name?.split(" ");
