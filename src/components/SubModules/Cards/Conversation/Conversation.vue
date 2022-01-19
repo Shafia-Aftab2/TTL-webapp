@@ -44,9 +44,15 @@
         >
           <img
             class="talkie-conversation-card-header-image"
-            :src="studentAvatar"
-            v-if="studentAvatar"
+            :src="require(`@/assets/images/person-placeholder-image.png`)"
+            v-if="!isValidAvatar(studentAvatar)"
           />
+          <span
+            class="talkie-conversation-card-header-image"
+            v-if="isValidAvatar(studentAvatar)"
+            v-html="studentAvatar"
+          >
+          </span>
           <p class="p" style="margin-bottom: 0 !important" v-if="studentName">
             {{ studentName }}
           </p>
@@ -325,6 +331,9 @@ export default {
     this.user = user;
   },
   methods: {
+    isValidAvatar(avatar) {
+      return avatar?.toString()?.includes("svg");
+    },
     handleRatingStarClick() {
       this.showRatingStarModal = true;
       this.responseRating = 0;
