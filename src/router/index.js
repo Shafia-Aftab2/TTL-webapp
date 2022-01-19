@@ -29,6 +29,7 @@ import StudentTranslation from "../components/Modules/Students/Translation";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
+import AdminSummary from "../components/Modules/Admin/Summary";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -312,6 +313,11 @@ const routes = [
         path: "/students/translation",
         component: StudentTranslation,
       },
+      {
+        name: "AdminSummary",
+        path: "/admin/summary",
+        component: AdminSummary,
+      }
     ],
   },
   // 404 page
