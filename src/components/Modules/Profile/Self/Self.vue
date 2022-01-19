@@ -2,7 +2,16 @@
   <div class="profile-wrapper">
     <div class="profile-info-wrapper">
       <h2 class="h2">Profile Info</h2>
-      <!-- <p class="p" style="margin-bottom: 0 !important">Avatar</p> -->
+      <span v-if="pickedAvatar?.svg" class="profile-avatar" id="avatar-picked">
+      </span>
+      <div class="profile-info-options-wrapper">
+        <talkie-chip
+          :label="'Pick an avatar'"
+          :variant="'neutral'"
+          :onClick="handleShowAvatarModal"
+          v-if="editMode"
+        />
+      </div>
     </div>
 
     <template v-if="!editMode">
@@ -174,6 +183,28 @@
       </talkie-button>
     </div>
   </div>
+
+  <!-- Modal Content -->
+  <talkie-modal
+    :contentPadded="true"
+    :closeButton="true"
+    :onClose="handleModalCloseClick"
+    :maxWidth="820"
+    v-if="avatarModal"
+  >
+    <div class="profile-avatars-list-header">
+      <h2 class="h2">Pick An Avatar</h2>
+      <talkie-button :onClick="changeAvatarStyles" :size="'small'">
+        Change Styling
+      </talkie-button>
+    </div>
+
+    <div class="profile-avatars-list-loader" v-if="loadingAvatars">
+      <talkie-loader :size="'large'" />
+    </div>
+
+    <div class="profile-avatars-list-wrapper" id="profile-avatar-holder"></div>
+  </talkie-modal>
 </template>
 
 <script>
@@ -182,6 +213,9 @@ import {
   TalkieInput,
   TalkieButton,
   TalkieAlert,
+  TalkieModal,
+  TalkieChip,
+  TalkieLoader,
 } from "@/components/UICore";
 import { UserService } from "@/api/services";
 import {
@@ -191,6 +225,7 @@ import {
 import authUser from "@/utils/helpers/auth";
 import { notifications } from "@/components/UIActions";
 import rolesList from "@/utils/constants/roles";
+import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 
 export default {
   name: "ProfileSelf",
@@ -199,18 +234,28 @@ export default {
     TalkieInput,
     TalkieButton,
     TalkieAlert,
+    TalkieModal,
+    TalkieChip,
+    TalkieLoader,
   },
   data() {
     return {
+      avatarModal: false,
+      avatarStyling: "adventurer",
       user: {},
       editMode: false,
       triggerFormSubmission: () => {},
       updateProfileSchema: {},
       rolesList: rolesList,
       loading: false,
+      loadingAvatars: false,
       formStatus: {
         type: null,
         message: null,
+      },
+      pickedAvatar: {
+        svg: null,
+        seed: null,
       },
     };
   },
@@ -239,6 +284,59 @@ export default {
     }
   },
   methods: {
+    handleModalCloseClick() {
+      this.avatarModal = false;
+    },
+    async handleShowAvatarModal() {
+      this.avatarModal = true;
+      await this.createAvatars();
+    },
+    async createAvatars() {
+      document.getElementById("profile-avatar-holder").innerHTML = await "";
+      const avatarsContainer = document.getElementById("profile-avatar-holder");
+      avatarsContainer.classList.add("hidden");
+      this.loadingAvatars = true;
+
+      // generate 100 avatars
+      for (let i = 0; i < 100; i++) {
+        const seed = `${Math.random() * 486131613}-${this.avatarStyling}`;
+        const avatarSVG = await generateAvatar(this.avatarStyling, seed);
+
+        const avatarElement = document.createElement("span");
+        avatarElement.classList.add("profile-avatar");
+        avatarElement.innerHTML = avatarSVG;
+        avatarElement.addEventListener(
+          "click",
+          async () => await this.handleAvatarClick(avatarSVG, seed)
+        );
+
+        avatarsContainer.appendChild(avatarElement);
+      }
+
+      await new Promise((r) => setTimeout(r, 100));
+      avatarsContainer.classList.remove("hidden");
+      this.loadingAvatars = false;
+    },
+    async changeAvatarStyles() {
+      const currentStyling = this.avatarStyling;
+
+      const replaceStyle = {
+        ["adventurer"]: "micah",
+        ["micah"]: "avataaars",
+        ["avataaars"]: "adventurer",
+      };
+
+      this.avatarStyling = replaceStyle[currentStyling];
+
+      await this.createAvatars();
+    },
+    async handleAvatarClick(avatarSVG, seed) {
+      this.pickedAvatar = { svg: avatarSVG, seed };
+      this.avatarModal = false;
+      await new Promise((r) => setTimeout(r, 10)); // wait for the element to mount
+      const avatarElement = document.getElementById("avatar-picked");
+      avatarElement.innerHTML = avatarSVG;
+    },
     handleChangePasswordRedirection() {
       authUser.deleteUser();
       authUser.deleteAccessToken();
@@ -296,6 +394,7 @@ export default {
       // form data
       const { email, name, firstName, lastName, username, displayName } =
         values;
+      const image = this.pickedAvatar?.seed;
 
       // payload
       const payload = {
@@ -308,6 +407,7 @@ export default {
           name: `${firstName} ${lastName}`,
           username,
         }),
+        ...(image && { image }),
       };
 
       // api call
@@ -354,6 +454,38 @@ export default {
 };
 </script>
 
+<style>
+.profile-avatars-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.profile-avatars-list-loader {
+  margin: auto;
+}
+.profile-avatars-list-wrapper {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: var(--t-space-10);
+  max-height: calc(var(--t-space-50) * 5);
+  overflow: scroll;
+}
+.profile-avatar {
+  height: calc(var(--t-space-40) * 2);
+  width: calc(var(--t-space-40) * 2);
+  border-radius: var(--t-br-small);
+  cursor: pointer;
+}
+.profile-avatar:hover {
+  background: var(--t-gray-75);
+}
+.hidden {
+  display: none;
+}
+</style>
+
 <style scoped>
 .profile-wrapper {
   display: flex;
@@ -365,6 +497,14 @@ export default {
 .profile-options-wrapper {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  gap: var(--t-space-12);
+  width: 100%;
+}
+.profile-info-options-wrapper {
+  display: flex;
   justify-content: center;
   align-items: center;
   margin: auto;
