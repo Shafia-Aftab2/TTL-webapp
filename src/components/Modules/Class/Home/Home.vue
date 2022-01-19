@@ -300,7 +300,9 @@ export default {
     this.classStudents = classDetails.students.map((x) => ({
       id: x.id,
       name: x.name,
-      image: generateAvatar(x?.image?.split("-")[1], x?.image),
+      image: x?.image
+        ? generateAvatar(x?.image?.split("-")[1], x?.image)
+        : null,
     }));
 
     this.classTopics = classTopics;

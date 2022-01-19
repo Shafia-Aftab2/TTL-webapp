@@ -103,10 +103,12 @@ export default {
       return {
         ...this.$store.state.user,
         ...(this.$store.state.user?.image && {
-          image: generateAvatar(
-            this.$store.state.user?.image?.split("-")[1],
-            this.$store.state.user?.image
-          ),
+          image: this.$store.state.user?.image
+            ? generateAvatar(
+                this.$store.state.user?.image?.split("-")[1],
+                this.$store.state.user?.image
+              )
+            : null,
         }),
       };
     },
