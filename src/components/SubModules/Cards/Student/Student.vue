@@ -20,9 +20,15 @@
       >
         <img
           class="talkie-student-card-details-image"
-          :src="studentAvatar"
-          v-if="studentAvatar"
+          :src="require(`@/assets/images/person-placeholder-image.png`)"
+          v-if="!isValidAvatar(studentAvatar)"
         />
+        <span
+          class="talkie-student-card-details-image"
+          v-if="isValidAvatar(studentAvatar)"
+          v-html="studentAvatar"
+        >
+        </span>
         <p class="p" style="margin-bottom: 0 !important" v-if="studentName">
           {{ studentName }}
         </p>
@@ -327,6 +333,9 @@ export default {
     },
   },
   methods: {
+    isValidAvatar(avatar) {
+      return avatar?.toString()?.includes("svg");
+    },
     handleRecordedItem(recording) {
       this.currentRecording = recording;
       this.onFeedbackRecording && this.onFeedbackRecording(recording);

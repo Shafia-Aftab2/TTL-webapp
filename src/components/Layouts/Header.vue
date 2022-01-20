@@ -27,10 +27,21 @@
         </template>
         <li class="talkie-navbar-profile-link-item">
           <div class="talkie-navbar-profile-wrapper" tabindex="0">
-            <a class="talkie-navbar-profile-name" href="#">{{
-              computedUser?.name
-            }}</a>
-            <talkie-icon :size="25" :name="'profile'" :isActive="true" />
+            <a class="talkie-navbar-profile-name" href="#"
+              >{{ computedUser?.name }}
+            </a>
+            <talkie-icon
+              v-if="!computedUser?.image"
+              :size="25"
+              :name="'profile'"
+              :isActive="true"
+            />
+            <span
+              class="talkie-navbar-profile-avatar"
+              v-html="computedUser?.image"
+              v-if="computedUser?.image"
+            >
+            </span>
             <div class="talkie-navbar-profile-options-wrapper">
               <ul class="talkie-navbar-profile-options-list">
                 <li class="talkie-navbar-profile-options-list-item">
@@ -67,6 +78,7 @@
 <script>
 import LogoTalkie from "@/components/SVGs/LogoTalkie.vue";
 import TalkieIcon from "@/components/UICore/Icon.vue";
+import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 
 export default {
   name: "Header",
@@ -88,7 +100,17 @@ export default {
   },
   computed: {
     computedUser() {
-      return this.$store.state.user;
+      return {
+        ...this.$store.state.user,
+        ...(this.$store.state.user?.image && {
+          image: this.$store.state.user?.image
+            ? generateAvatar(
+                this.$store.state.user?.image?.split("-")[1],
+                this.$store.state.user?.image
+              )
+            : null,
+        }),
+      };
     },
     computedIsLoggedIn() {
       return Object.keys(this.$store.state.user)?.length > 0;
@@ -177,6 +199,13 @@ export default {
   opacity: 1;
   visibility: visible;
 }
+.talkie-navbar-profile-avatar {
+  min-height: var(--profile-avatar-size);
+  min-width: var(--profile-avatar-size);
+  max-height: var(--profile-avatar-size);
+  max-width: var(--profile-avatar-size);
+  cursor: pointer;
+}
 .talkie-navbar-profile-name {
   text-decoration: none;
   transition: 0.1s ease;
@@ -250,6 +279,9 @@ export default {
   .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-24);
   }
+  .talkie-navbar-profile-avatar {
+    --profile-avatar-size: var(--t-space-38);
+  }
   .talkie-navbar-link-item {
     display: none;
     font-size: calc(var(--t-fs-small) * 0.85);
@@ -290,6 +322,9 @@ export default {
   }
   .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-28);
+  }
+  .talkie-navbar-profile-avatar {
+    --profile-avatar-size: var(--t-space-44);
   }
   .talkie-navbar-link-item,
   .talkie-navbar-profile-name {
@@ -336,6 +371,9 @@ export default {
   }
   .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-33);
+  }
+  .talkie-navbar-profile-avatar {
+    --profile-avatar-size: var(--t-space-50);
   }
   .talkie-navbar-link-item {
     font-size: var(--t-fs-base);
