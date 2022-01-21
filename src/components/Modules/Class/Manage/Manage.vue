@@ -90,7 +90,7 @@
           :key="_student"
           :mode="'manage'"
           :customClass="'class-manage-content-card'"
-          :studentAvatar="_student.avatar"
+          :studentAvatar="_student.image"
           :studentName="_student.name"
           :onKeyClick="
             async () =>
@@ -252,6 +252,7 @@ import {
 } from "@/utils/validations/class.validation";
 import topicTypes from "@/utils/constants/topicTypes";
 import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
+import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 
 export default {
   name: "ClassManage",
@@ -327,7 +328,9 @@ export default {
     this.classStudents = classDetails?.students?.map((x) => ({
       id: x?.id,
       name: x?.name,
-      avatar: "https://via.placeholder.com/150",
+      image: x?.image
+        ? generateAvatar(x?.image?.split("-")[1], x?.image)
+        : null,
     }));
     this.classTopics = classDetails?.topics?.map((x) => ({
       id: x?.id,
