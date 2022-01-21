@@ -76,6 +76,7 @@
                 :description="_question.description"
                 :manageMode="isTeacher"
                 :centered="false"
+                :hoverAnimation="true"
                 :audioSource="_question.audioSource"
                 :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
                 :onEditClick="() => handleTopicCardEditClick(_question.id)"
