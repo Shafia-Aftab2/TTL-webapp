@@ -10,10 +10,7 @@
               :name="'trophy'"
               :onClick="redirectToCommingSoonPage"
             />
-            <talkie-icon
-              :name="'setting'"
-              :onClick="redirectToCommingSoonPage"
-            />
+            <talkie-icon :name="'setting'" :onClick="handleClassManageClick" />
           </div>
         </div>
       </div>
@@ -269,6 +266,9 @@ export default {
     },
     handleTaskEditClick() {
       this.$router.push(`/classes/${this.classId}/tasks/${this.taskId}/edit`);
+    },
+    handleClassManageClick() {
+      this.$router.push(`/classes/${this.classId}/manage`);
     },
     handleTaskDeleteClick() {
       this.showDeleteTaskDialog = true;
