@@ -2,6 +2,7 @@
   <div
     :class="[
       'talkie-question-card-wrapper',
+      hoverAnimation && 'talkie-question-card-hover-wrapper',
       fullWidth && 'talkie-question-card-fullwidth-wrapper',
       centered && 'talkie-question-card-centered-wrapper',
     ]"
@@ -104,6 +105,10 @@ export default {
     audioRecording: {
       type: Object,
     },
+    hoverAnimation: {
+      type: Boolean,
+      default: false,
+    },
     fullWidth: {
       type: Boolean,
       default: false,
@@ -149,7 +154,7 @@ export default {
   border-color: var(--t-gray-75);
   border-style: solid;
 }
-.talkie-question-card-wrapper:hover {
+.talkie-question-card-hover-wrapper:hover {
   border-width: var(--t-space-1);
   transform: scale(0.99);
 }

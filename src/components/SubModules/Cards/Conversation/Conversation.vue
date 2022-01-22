@@ -59,47 +59,12 @@
         </div>
 
         <!-- right side -->
-        <div
-          class="talkie-conversation-card-header-options"
-          v-if="!cardExpanded"
-        >
-          <talkie-audio-player
-            v-if="computedMessages?.length > 0 && computedMessages[0]?.audio"
-            v-slot="{ isPlaying, startPlayer, stopPlayer }"
-            :source="computedMessages[0]?.audio"
-          >
-            <span
-              class="talkie-conversation-card-header-options-audio-player-icons"
-            >
-              <talkie-icon
-                :name="'play'"
-                :isActive="true"
-                :variant="'primary'"
-                :size="40"
-                :iconToSizeRatio="1.1"
-                :onClick="startPlayer"
-                v-if="!isPlaying"
-              />
-              <talkie-icon
-                :name="'pause'"
-                :isActive="true"
-                :variant="'primary'"
-                :size="40"
-                :iconToSizeRatio="1.1"
-                :onClick="stopPlayer"
-                v-if="isPlaying"
-              />
-            </span>
-          </talkie-audio-player>
-          <!-- Record Button -->
-          <talkie-icon
-            :name="'mike-unmuted'"
-            :isActive="true"
-            :variant="'secondary'"
-            :size="40"
-            :iconToSizeRatio="1.1"
+        <div class="talkie-conversation-card-header-options">
+          <talkie-chip
+            :label="'Click To Expand'"
+            :variant="'neutral'"
+            v-if="!cardExpanded"
             :onClick="handleCardBodyClick"
-            v-if="!isRecording"
           />
           <!-- Feedback Stars -->
           <talkie-icon
@@ -109,6 +74,7 @@
             :size="40"
             :iconToSizeRatio="1.1"
             :onClick="handleRatingStarClick"
+            v-if="cardExpanded"
           />
         </div>
       </template>
@@ -218,6 +184,7 @@ import {
   TalkieModal,
   TalkieStarRating,
   TalkieButton,
+  TalkieChip,
   TalkieBackDropLoader,
 } from "@/components/UICore";
 import ConversationMessage from "./Message";
@@ -237,6 +204,7 @@ export default {
     TalkieIcon,
     TalkieModal,
     TalkieButton,
+    TalkieChip,
     TalkieStarRating,
     TalkieBackDropLoader,
     ConversationMessage,
