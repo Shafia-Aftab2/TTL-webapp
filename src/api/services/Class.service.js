@@ -43,4 +43,8 @@ export default class ClassRoutes {
   static async Delete(id) {
     return HTTPClient.delete(`/class/${id}/delete`);
   }
+
+  static async GetLeaderboard(id) {
+    return HTTPClient.get(`/class/${id}/leaderboard`);
+  }
 }
