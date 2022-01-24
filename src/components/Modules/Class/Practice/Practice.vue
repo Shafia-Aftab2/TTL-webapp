@@ -34,6 +34,23 @@
             class="class-practice-body-content-wrapper-caption-image"
           />
         </template>
+
+        <!-- Emoji story -->
+        <template
+          v-if="
+            currentTask.type === taskTypes.EMOJI_STORY && currentTask.emojis
+          "
+        >
+          <div class="class-practice-body-content-wrapper-emojis-wrapper">
+            <template v-for="emojiURL in currentTask.emojis" :key="emojiURL">
+              <img
+                :draggable="false"
+                :src="emojiURL"
+                class="class-practice-body-content-wrapper-emojis-image-item"
+              />
+            </template>
+          </div>
+        </template>
       </div>
 
       <!-- Recorder -->
@@ -226,6 +243,37 @@ export default {
         (No) me gusta esta foto porque...  - I don't like
         `,
       },
+      {
+        title: "Emoji Story",
+        canExit: true,
+        canFinish: true,
+        topic: "Topic: ✈️ Travel and tourism",
+        type: taskTypes.EMOJI_STORY,
+        emojis: [
+          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
+          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
+          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
+          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
+          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
+        ],
+        shouldRecord: true,
+        instructions: `
+        What can you say about the photo?
+
+        You have several options here. You can:
+        — Describe what you see on the photo.
+        — Give your opinion on the photo.
+        — Use the photo as prompt to talk about your own experiences or come up with your own short story in Spanish!
+
+        Don't worry if you haven't got enough vocabulary yet. Don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
+
+        Some key phrases to get you started:
+
+        En la foto se puede ver... - In the photo, one/you can see...
+        En esta foto, puedo ver... - In this photo, I can see...
+        (No) me gusta esta foto porque...  - I don't like
+        `,
+      },
     ];
 
     return {
@@ -237,7 +285,7 @@ export default {
         voiceForQnA: null,
       },
       tasks: _tasks,
-      currentTask: _tasks[0],
+      currentTask: _tasks[1],
       taskTypes: taskTypes,
     };
   },
@@ -294,12 +342,24 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 200px;
   max-height: 500px;
 }
 .class-practice-body-content-wrapper-caption-image {
   flex: none;
   width: 100%;
   height: 100%;
+}
+.class-practice-body-content-wrapper-emojis-wrapper {
+  display: flex;
+  gap: var(--t-space-16);
+  user-select: none;
+}
+.class-practice-body-content-wrapper-emojis-image-item {
+  flex: none;
+  width: var(--t-space-70);
+  height: var(--t-space-70);
+  user-select: none;
 }
 .class-practice-body-footer-wrapper {
   position: relative;
