@@ -13,15 +13,36 @@
         </h2>
       </div>
     </div>
+    <div
+      class="class-leader-header-details-top-student-wrapper"
+      v-if="classLeaderboard.length > 0"
+    >
+      <span
+        v-html="classLeaderboard[0]?.image"
+        v-if="classLeaderboard[0]?.image"
+        class="class-leader-header-details-top-student-avatar"
+      >
+      </span>
+      <h4 class="h4" v-if="classLeaderboard[0]?.name">
+        {{ classLeaderboard[0]?.name?.split(" ")[0] }}
+      </h4>
+      <h5 class="h5" v-if="classLeaderboard[0]?.points">
+        {{ classLeaderboard[0]?.points }}
+      </h5>
+      <img
+        :src="require(`@/assets/images/trophy.png`)"
+        class="class-leader-header-details-top-student-trophy-image"
+      />
+    </div>
     <div class="class-leader-content-wrapper">
       <talkie-student-card
-        v-for="_student in classStudents"
+        v-for="_student in classLeaderboard"
         :key="_student"
         :mode="'points'"
         :customClass="'class-leader-content-card'"
         :studentAvatar="_student.image"
         :studentName="_student.name"
-        :studentPoints="8413"
+        :studentPoints="_student.points"
       />
     </div>
   </div>
@@ -35,6 +56,8 @@
 <script>
 import { TalkieLoader } from "@/components/UICore";
 import { TalkieStudentCard } from "@/components/SubModules/Cards";
+import { ClassService } from "@/api/services";
+import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 
 export default {
   name: "ClassLeaderboard",
@@ -43,11 +66,8 @@ export default {
     return {
       classId: null,
       pageLoading: false,
-      classDetails: {
-        name: "Spanish 10A",
-        id: 8654123661,
-        students: [],
-      },
+      classDetails: {},
+      classLeaderboard: [],
     };
   },
   computed: {
@@ -59,9 +79,54 @@ export default {
     },
   },
   async created() {
+    // update page state
+    this.pageLoading = true;
+
     // class id from params
-    const classId = this.$route.params.classId;
+    const classId = this.$route.params.id;
     this.classId = classId;
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
+
+    // get topics list (+ failure case)
+    const classLeaderboard = await this.getClassLeaderboard();
+    if (!classLeaderboard) return this.$router.push("/404");
+
+    // success case
+    this.classDetails = {
+      id: classDetails.id,
+      name: classDetails.name,
+      langugage: classDetails.langugage,
+    };
+    this.classLeaderboard = classLeaderboard
+      ?.map((x) => ({
+        id: x?.id,
+        name: x?.name,
+        image: x?.image
+          ? generateAvatar(x?.image?.split("-")[1], x?.image)
+          : null,
+        points: x?.totalScores.toString(),
+      }))
+      ?.sort(function (a, b) {
+        return b?.points - a?.points;
+      });
+    this.pageLoading = false;
+  },
+  methods: {
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async getClassLeaderboard() {
+      const response = await ClassService.GetLeaderboard(this.classId).catch(
+        () => null
+      );
+
+      return response.data || null;
+    },
   },
 };
 </script>
@@ -77,7 +142,7 @@ export default {
 }
 .class-leader-header-wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 .class-leader-header-details-wrapper {
@@ -90,6 +155,25 @@ export default {
 .class-leader-header-details-class-name-link:visited {
   text-decoration: none;
   color: var(--t-black);
+}
+.class-leader-header-details-top-student-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--t-space-12);
+}
+.class-leader-header-details-top-student-avatar {
+  height: var(--student-avatar);
+  width: var(--student-avatar);
+  border-style: solid;
+  border-color: var(--t-primary);
+  background-color: var(--t-gray-125);
+  border-radius: 50%;
+}
+.class-leader-header-details-top-student-trophy-image {
+  height: var(--student-trophy-image);
+  width: var(--student-trophy-image);
 }
 .class-leader-header-details-update-form-wrapper {
   display: flex;
@@ -149,10 +233,20 @@ export default {
     max-width: 100%;
     padding: var(--t-space-32);
     border-radius: var(--t-br-medium);
-    gap: calc(var(--t-space-24) * 2);
+    gap: calc(var(--t-space-16) * 2);
   }
   .class-leader-header-details-wrapper {
     gap: var(--t-space-8);
+  }
+  .class-leader-header-details-top-student-wrapper {
+    gap: var(--t-space-8);
+  }
+  .class-leader-header-details-top-student-avatar {
+    --student-avatar: calc(var(--t-space-50) * 1.5);
+    border-width: var(--t-space-2);
+  }
+  .class-leader-header-details-top-student-trophy-image {
+    --student-trophy-image: calc(var(--t-space-50) * 1.25);
   }
   .class-leader-header-details-update-form-wrapper {
     gap: var(--t-space-5);
@@ -177,6 +271,16 @@ export default {
   .class-leader-header-details-wrapper {
     gap: var(--t-space-8);
   }
+  .class-leader-header-details-top-student-wrapper {
+    gap: var(--t-space-10);
+  }
+  .class-leader-header-details-top-student-avatar {
+    --student-avatar: calc(var(--t-space-50) * 1.65);
+    border-width: var(--t-space-3);
+  }
+  .class-leader-header-details-top-student-trophy-image {
+    --student-trophy-image: calc(var(--t-space-50) * 1.35);
+  }
   .class-leader-header-details-update-form-wrapper {
     gap: var(--t-space-10);
   }
@@ -195,10 +299,19 @@ export default {
     max-width: 90%;
     padding: var(--t-space-48);
     border-radius: var(--t-br-large);
-    gap: calc(var(--t-space-36) * 2);
+    gap: calc(var(--t-space-12) * 2);
   }
   .class-leader-header-details-wrapper {
     gap: var(--t-space-16);
+  }
+  .class-leader-header-details-top-student-wrapper {
+    gap: var(--t-space-12);
+  }
+  .class-leader-header-details-top-student-avatar {
+    --student-avatar: calc(var(--t-space-50) * 1.75);
+  }
+  .class-leader-header-details-top-student-trophy-image {
+    --student-trophy-image: calc(var(--t-space-50) * 1.5);
   }
   .class-leader-header-details-update-form-wrapper {
     gap: var(--t-space-12);
