@@ -1,27 +1,46 @@
 <template>
   <div class="class-practice-wrapper">
     <div class="class-practice-header-wrapper">
-      <a class="class-practice-header-wrapper-link">&#8592; Exit</a>
-      <h4 class="h4">Caption This</h4>
-      <a class="class-practice-header-wrapper-link">Finish &#8594;</a>
+      <a class="class-practice-header-wrapper-link" v-if="currentTask.canExit">
+        &#8592; Exit
+      </a>
+      <h4 class="h4" v-if="currentTask.title">{{ currentTask.title }}</h4>
+      <a class="class-practice-header-wrapper-link" v-if="currentTask.canFinish"
+        >Finish &#8594;
+      </a>
     </div>
     <div class="class-practice-body-wrapper">
       <div class="class-practice-body-head-wrapper">
-        <p class="p">Topic: ✈️ Travel and tourism</p>
-        <talkie-tool-tip :tooltip="'A very long text'">
+        <p class="p" v-if="currentTask.topic">{{ currentTask.topic }}</p>
+        <talkie-tool-tip
+          :tooltip="currentTask.instructions"
+          v-if="currentTask.instructions"
+        >
           <h5 class="h5 class-practice-body-head-wrapper-instructions">
             <p class="p">Instructions</p>
           </h5>
         </talkie-tool-tip>
       </div>
       <div class="class-practice-body-content-wrapper">
-        <img
-          :src="require(`@/assets/images/caption-this.png`)"
-          class="class-practice-body-content-wrapper-caption-image"
-        />
+        <!-- Caption this -->
+        <template
+          v-if="
+            currentTask.type === taskTypes.CAPTION_THIS &&
+            currentTask.captionImage
+          "
+        >
+          <img
+            :src="currentTask.captionImage"
+            class="class-practice-body-content-wrapper-caption-image"
+          />
+        </template>
       </div>
 
-      <div class="class-practice-body-footer-wrapper">
+      <!-- Recorder -->
+      <div
+        class="class-practice-body-footer-wrapper"
+        v-if="currentTask.shouldRecord"
+      >
         <talkie-audio-player
           v-slot="{
             isPlaying,
@@ -169,6 +188,7 @@ import {
   TalkieAudioPlayer,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
+import { taskTypes } from "@/utils/constants";
 
 export default {
   name: "ClassPractice",
@@ -183,8 +203,28 @@ export default {
     const _tasks = [
       {
         title: "Caption This",
-        hasNext: true,
         canExit: true,
+        canFinish: true,
+        topic: "Topic: ✈️ Travel and tourism",
+        type: taskTypes.CAPTION_THIS,
+        captionImage: require(`@/assets/images/caption-this.png`),
+        shouldRecord: true,
+        instructions: `
+        What can you say about the photo?
+
+        You have several options here. You can:
+        — Describe what you see on the photo.
+        — Give your opinion on the photo.
+        — Use the photo as prompt to talk about your own experiences or come up with your own short story in Spanish!
+
+        Don't worry if you haven't got enough vocabulary yet. Don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
+
+        Some key phrases to get you started:
+
+        En la foto se puede ver... - In the photo, one/you can see...
+        En esta foto, puedo ver... - In this photo, I can see...
+        (No) me gusta esta foto porque...  - I don't like
+        `,
       },
     ];
 
@@ -198,6 +238,7 @@ export default {
       },
       tasks: _tasks,
       currentTask: _tasks[0],
+      taskTypes: taskTypes,
     };
   },
   methods: {
@@ -222,11 +263,10 @@ export default {
 }
 .class-practice-header-wrapper {
   width: 100%;
-  margin: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: baseline;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 100px 1fr 100px;
 }
 .class-practice-header-wrapper-link {
   text-decoration: none;
