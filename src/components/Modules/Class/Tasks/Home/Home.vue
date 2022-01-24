@@ -265,7 +265,7 @@ export default {
       this.$router.push(`/classes/${this.classId}/tasks/${this.taskId}/edit`);
     },
     hanldeClassTrophyClick() {
-      this.handleRedirection(`/classes/${this.classId}/leaderboard`, 1);
+      this.$router.push(`/classes/${this.classId}/leaderboard`);
     },
     handleClassManageClick() {
       this.$router.push(`/classes/${this.classId}/manage`);
