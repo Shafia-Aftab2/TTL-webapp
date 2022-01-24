@@ -4,8 +4,10 @@
     <div class="class-choose-topics-info">
       <h3 class="h3">Choose Topics</h3>
       <p class="class-choose-topics-info-header p">
-        Select as many topics as you want for your class. This way, we get to
-        tailor the quizzes...
+        Select as many topics as you want for your class. Don't worry, you can
+        edit this anytime as you cover more topics throughout the year.
+        <!-- This way, we get to
+        tailor the quizzes... -->
       </p>
     </div>
 

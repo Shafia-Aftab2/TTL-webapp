@@ -6,4 +6,12 @@ const createClassSchema = yup.object({
   schoolId: yup.string().required("School is required."),
 });
 
-export { createClassSchema };
+const updateClassSchema = yup.object({
+  name: yup.string().required("Name is required."),
+});
+
+const changeStudentPasswordSchema = yup.object({
+  password: yup.string().required("Password is required."),
+});
+
+export { createClassSchema, updateClassSchema, changeStudentPasswordSchema };

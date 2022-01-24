@@ -1,7 +1,7 @@
 <template>
   <div class="student-home-wrapper">
     <h3 class="h3 student-home-header">
-      Hello, {{ studentName }}
+      Hello, {{ studentName }}!
       <br />
       What would you like to do today?
     </h3>

@@ -13,6 +13,8 @@ import TalkieModal from "./Modal.vue";
 import TalkieAlert from "./Alert.vue";
 import TalkieIcon from "./Icon.vue";
 import TalkieForm from "./Form.vue";
+import TalkieStarRating from "./StarRating.vue";
+import TalkieToolTip from "./ToolTip.vue";
 
 export {
   TalkieBackDrop,
@@ -30,4 +32,6 @@ export {
   TalkieAlert,
   TalkieIcon,
   TalkieForm,
+  TalkieStarRating,
+  TalkieToolTip,
 };

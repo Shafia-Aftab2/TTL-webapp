@@ -16,15 +16,18 @@ import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassStudentsInvite from "../components/Modules/Class/Students/Invite";
 import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefault";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
+import ClassTaskEdit from "../components/Modules/Class/Tasks/Update";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
+import ClassManage from "../components/Modules/Class/Manage";
 import ProfileSelf from "../components/Modules/Profile/Self";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
 import StudentQA from "../components/Modules/Students/QA";
 import StudentCaption from "../components/Modules/Students/Caption";
 import StudentTranslation from "../components/Modules/Students/Translation";
+import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
 import LeaderboardClasses from "../components/Modules/Class/Leaderboard";
@@ -212,9 +215,31 @@ const routes = [
         },
       },
       {
+        name: "ClassTaskEdit",
+        path: "/classes/:id/tasks/:taskId/edit",
+        component: ClassTaskEdit,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
+      },
+      {
         name: "ClassTaskStatus",
         path: "/classes/:classId/tasks/:taskId/status",
         component: ClassTaskStatus,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
+      },
+      {
+        name: "ClassManage",
+        path: "/classes/:classId/manage",
+        component: ClassManage,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
@@ -266,6 +291,18 @@ const routes = [
             requiresAuth: true,
           },
         },
+      },
+    ],
+  },
+  {
+    path: "/services",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
+      {
+        name: "ServicesUpgrade",
+        path: "/services/upgrade",
+        component: ServicesUpgrade,
       },
     ],
   },
