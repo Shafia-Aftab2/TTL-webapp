@@ -21,6 +21,7 @@ import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
 import ClassManage from "../components/Modules/Class/Manage";
+import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ProfileSelf from "../components/Modules/Profile/Self";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
@@ -30,7 +31,6 @@ import StudentTranslation from "../components/Modules/Students/Translation";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
-import LeaderboardClasses from "../components/Modules/Class/Leaderboard";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -177,9 +177,9 @@ const routes = [
         },
       },
       {
-        name: "LeaderboardClasses",
-        path: "/classes/leaderboard",
-        component: LeaderboardClasses,
+        name: "ClassLeaderboard",
+        path: "/classes/:id/leaderboard",
+        component: ClassLeaderboard,
       },
       {
         name: "ClassJoinLink",

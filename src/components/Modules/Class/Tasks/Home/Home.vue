@@ -6,10 +6,7 @@
         <div class="class-home-header-details-wrapper">
           <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
           <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
-            <talkie-icon
-              :name="'trophy'"
-              :onClick="redirectToCommingSoonPage"
-            />
+            <talkie-icon :name="'trophy'" :onClick="hanldeClassTrophyClick" />
             <talkie-icon :name="'setting'" :onClick="handleClassManageClick" />
           </div>
         </div>
@@ -266,6 +263,9 @@ export default {
     },
     handleTaskEditClick() {
       this.$router.push(`/classes/${this.classId}/tasks/${this.taskId}/edit`);
+    },
+    hanldeClassTrophyClick() {
+      this.handleRedirection(`/classes/${this.classId}/leaderboard`, 1);
     },
     handleClassManageClick() {
       this.$router.push(`/classes/${this.classId}/manage`);
