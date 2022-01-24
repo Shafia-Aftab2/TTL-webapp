@@ -30,6 +30,7 @@ import StudentTranslation from "../components/Modules/Students/Translation";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
+import LeaderboardClasses from "../components/Modules/Class/Leaderboard";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -174,6 +175,11 @@ const routes = [
             blockedRoles: [roles.TEACHER],
           },
         },
+      },
+      {
+        name: "LeaderboardClasses",
+        path: "/classes/leaderboard",
+        component: LeaderboardClasses,
       },
       {
         name: "ClassJoinLink",
