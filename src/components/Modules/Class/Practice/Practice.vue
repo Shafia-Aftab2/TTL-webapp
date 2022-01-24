@@ -22,33 +22,141 @@
       </div>
 
       <div class="class-practice-body-footer-wrapper">
-        <div class="class-practice-body-footer-wrapper-options">
-          <div class="class-practice-body-footer-wrapper-options-item">
-            <talkie-icon
-              :name="'arrow-rounded-left'"
-              :isActive="true"
-              :variant="'secondary'"
-              :size="30"
+        <talkie-audio-player
+          v-slot="{
+            isPlaying,
+            togglePlayer,
+            currentAudioPercentage,
+            updateAudioPercentage,
+            totalAudioPlaybackTime,
+            currentAudioPlaybackTime,
+          }"
+          :recording="currentRecording"
+          v-if="currentRecording"
+        >
+          <span hidden>
+            <!-- TODO: updated these states via a handler -->
+            {{ (this.isAudioPlaying = isPlaying) }}
+            {{ (this.handleAudioPlayerToggle = togglePlayer) }}
+          </span>
+          <div
+            class="class-practice-body-footer-wrapper-options-audio-player-wrapper"
+          >
+            <talkie-audio-timeline
+              :percentage="currentAudioPercentage"
+              :onHeadChange="updateAudioPercentage"
             />
+            <span
+              class="class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps"
+              >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+            </span>
           </div>
-          <div class="class-practice-body-footer-wrapper-options-item">
-            <talkie-icon
-              :name="'mike-unmuted'"
-              :isActive="true"
-              :variant="'secondary'"
-              :size="50"
-            />
+        </talkie-audio-player>
+
+        <talkie-audio-recorder
+          v-slot="{ startRecording, stopRecording, isRecording }"
+          :onRecordingStopped="handleRecordedItem"
+        >
+          <!-- Temp -->
+          <span hidden>
+            {{ (this.errors = /{voiceForQnA: null}/) }}
+          </span>
+          <div class="class-practice-body-footer-wrapper-options">
+            <div class="class-practice-body-footer-wrapper-options-item">
+              <talkie-icon
+                :name="'arrow-rounded-left'"
+                :isActive="true"
+                :variant="'secondary'"
+                :size="30"
+                :onClick="handleRecordedItemReset"
+              />
+              <p
+                :class="[
+                  'class-practice-body-footer-wrapper-options-item-label',
+                  !currentRecording &&
+                    'class-practice-body-footer-wrapper-options-item-label-non-visiable',
+                ]"
+              >
+                Redo
+              </p>
+            </div>
+            <div class="class-practice-body-footer-wrapper-options-item">
+              <talkie-icon
+                :name="'mike-unmuted'"
+                :isActive="true"
+                :variant="'secondary'"
+                :size="50"
+                :onClick="startRecording"
+                :customClass="
+                  errors.voiceForQnA &&
+                  'class-practice-body-footer-wrapper-options-mike-unmuted-button-error'
+                "
+                v-if="!isRecording && !currentRecording"
+              />
+              <talkie-icon
+                :name="'square'"
+                :isActive="true"
+                :variant="'secondary'"
+                :size="50"
+                :iconToSizeRatio="1.5"
+                :customClass="'class-practice-body-footer-wrapper-options-stop-recording-button'"
+                :onClick="stopRecording"
+                v-if="isRecording && !currentRecording"
+              />
+              <talkie-icon
+                :name="'play'"
+                :isActive="true"
+                :variant="'primary'"
+                :size="50"
+                :onClick="handleAudioPlayerToggle"
+                v-if="!isRecording && !isAudioPlaying && currentRecording"
+              />
+              <talkie-icon
+                :name="'pause'"
+                :isActive="true"
+                :variant="'primary'"
+                :size="50"
+                :onClick="handleAudioPlayerToggle"
+                v-if="!isRecording && isAudioPlaying && currentRecording"
+              />
+              <p
+                :class="[
+                  'class-practice-body-footer-wrapper-options-item-label',
+                  errors.voiceForQnA &&
+                    'class-practice-body-footer-wrapper-options-item-label-error',
+                ]"
+              >
+                {{
+                  !!errors.voiceForQnA
+                    ? errors.voiceForQnA
+                    : !currentRecording
+                    ? "Tap To Record"
+                    : !isAudioPlaying
+                    ? "Play"
+                    : "Pause"
+                }}
+              </p>
+            </div>
+            <div class="class-practice-body-footer-wrapper-options-item">
+              <talkie-icon
+                :type="'submit'"
+                :name="'send'"
+                :isActive="true"
+                :variant="'secondary'"
+                :size="30"
+              />
+              <p
+                :class="[
+                  'class-practice-body-footer-wrapper-options-item-label',
+                  !currentRecording &&
+                    'class-practice-body-footer-wrapper-options-item-label-non-visiable',
+                ]"
+              >
+                Preview send
+              </p>
+            </div>
           </div>
-          <div class="class-practice-body-footer-wrapper-options-item">
-            <talkie-icon
-              :type="'submit'"
-              :name="'send'"
-              :isActive="true"
-              :variant="'secondary'"
-              :size="30"
-            />
-          </div>
-        </div>
+        </talkie-audio-recorder>
       </div>
     </div>
   </div>
@@ -56,12 +164,49 @@
 
 <script>
 import { TalkieToolTip, TalkieIcon } from "@/components/UICore";
+import {
+  TalkieAudioRecorder,
+  TalkieAudioPlayer,
+  TalkieAudioTimeline,
+} from "@/components/SubModules/AudioManager";
 
 export default {
   name: "ClassPractice",
   components: {
     TalkieToolTip,
     TalkieIcon,
+    TalkieAudioRecorder,
+    TalkieAudioPlayer,
+    TalkieAudioTimeline,
+  },
+  data() {
+    const _tasks = [
+      {
+        title: "Caption This",
+        hasNext: true,
+        canExit: true,
+      },
+    ];
+
+    return {
+      currentRecording: null,
+      isAudioPlaying: false,
+      handleAudioPlayerToggle: () => {},
+      // temp:
+      errors: {
+        voiceForQnA: null,
+      },
+      tasks: _tasks,
+      currentTask: _tasks[0],
+    };
+  },
+  methods: {
+    handleRecordedItem(recording) {
+      this.currentRecording = recording;
+    },
+    handleRecordedItemReset() {
+      this.currentRecording = null;
+    },
   },
 };
 </script>
