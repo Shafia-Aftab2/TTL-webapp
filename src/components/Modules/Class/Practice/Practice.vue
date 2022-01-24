@@ -62,7 +62,15 @@
           "
         >
           <div class="class-practice-body-content-wrapper-translations-wrapper">
-            <h4 class="h4" v-if="currentTask.translation.question">
+            <h4
+              class="h4 class-practice-body-content-wrapper-translations-question-header"
+              v-if="currentTask.translation.question"
+            >
+              <span
+                class="class-practice-body-content-wrapper-translations-question-wrapper"
+              >
+                Question
+              </span>
               {{ currentTask.translation.question }}
             </h4>
 
@@ -70,6 +78,11 @@
               class="h4 class-practice-body-content-wrapper-translations-answer-header"
               v-if="currentTask.translation.answer"
             >
+              <span
+                class="class-practice-body-content-wrapper-translations-answer-wrapper"
+              >
+                Answer
+              </span>
               {{ currentTask.translation.answer }}
             </h4>
 
@@ -430,27 +443,41 @@ export default {
 .class-practice-body-content-wrapper-translations-wrapper {
   display: flex;
   flex-direction: column;
-  max-width: 70%;
-  gap: var(--t-space-16);
   text-align: center;
+}
+.class-practice-body-content-wrapper-translations-question-wrapper,
+.class-practice-body-content-wrapper-translations-answer-wrapper {
+  border-radius: var(--t-br-small);
+}
+.class-practice-body-content-wrapper-translations-question-wrapper {
+  color: var(--t-black);
+  background: var(--t-primary);
+}
+.class-practice-body-content-wrapper-translations-question-header {
+  line-height: 1.5;
+}
+.class-practice-body-content-wrapper-translations-answer-wrapper {
+  color: var(--t-black-50);
+  background: var(--t-secondary);
 }
 .class-practice-body-content-wrapper-translations-answer-header {
   color: var(--t-secondary);
+  line-height: 1.5;
 }
 .class-practice-body-content-wrapper-translations-self-assessment-wrapper {
   background: var(--t-gray-100);
-  padding: var(--t-space-16);
-  margin-top: var(--t-space-16);
   display: flex;
   flex-direction: column;
   gap: var(--t-space-8);
+  padding: var(--t-space-16);
+  margin-top: var(--t-space-16);
   border-radius: var(--t-br-small);
+  line-height: 1.2;
 }
 .class-practice-body-footer-wrapper {
   position: relative;
 }
 .class-practice-body-footer-wrapper-audio-player {
-  max-width: 50%;
   margin: auto;
   padding-bottom: var(--t-space-36);
 }
@@ -520,6 +547,18 @@ export default {
     width: var(--t-space-58);
     height: var(--t-space-58);
   }
+  .class-practice-body-content-wrapper-translations-wrapper {
+    max-width: 100%;
+    gap: var(--t-space-12);
+  }
+  .class-practice-body-content-wrapper-translations-question-wrapper,
+  .class-practice-body-content-wrapper-translations-answer-wrapper {
+    padding: var(--t-space-3) var(--t-space-5);
+    font-size: 0.9em;
+  }
+  .class-practice-body-footer-wrapper-audio-player {
+    max-width: 100%;
+  }
 }
 @media (min-width: 600px) {
   .class-practice-body-footer-wrapper-options {
@@ -553,6 +592,18 @@ export default {
     width: var(--t-space-64);
     height: var(--t-space-64);
   }
+  .class-practice-body-content-wrapper-translations-wrapper {
+    max-width: 80%;
+    gap: var(--t-space-24);
+  }
+  .class-practice-body-content-wrapper-translations-question-wrapper,
+  .class-practice-body-content-wrapper-translations-answer-wrapper {
+    padding: var(--t-space-5);
+    font-size: 0.9em;
+  }
+  .class-practice-body-footer-wrapper-audio-player {
+    max-width: 80%;
+  }
 }
 @media (min-width: 1200px) {
   .class-practice-body-footer-wrapper-options {
@@ -579,6 +630,13 @@ export default {
   .class-practice-body-content-wrapper-emojis-image-item {
     width: var(--t-space-70);
     height: var(--t-space-70);
+  }
+  .class-practice-body-content-wrapper-translations-wrapper {
+    max-width: 70%;
+    gap: var(--t-space-30);
+  }
+  .class-practice-body-footer-wrapper-audio-player {
+    max-width: 70%;
   }
 }
 </style>
