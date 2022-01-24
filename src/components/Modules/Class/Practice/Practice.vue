@@ -9,6 +9,7 @@
         >Finish &#8594;
       </a>
     </div>
+
     <div class="class-practice-body-wrapper">
       <div class="class-practice-body-head-wrapper">
         <p class="p" v-if="currentTask.topic">{{ currentTask.topic }}</p>
@@ -21,6 +22,7 @@
           </h5>
         </talkie-tool-tip>
       </div>
+
       <div class="class-practice-body-content-wrapper">
         <!-- Caption this -->
         <template
@@ -51,6 +53,37 @@
             </template>
           </div>
         </template>
+
+        <!-- Translation -->
+        <template
+          v-if="
+            currentTask.type === taskTypes.TRANSLATION &&
+            currentTask.translation
+          "
+        >
+          <div class="class-practice-body-content-wrapper-translations-wrapper">
+            <h4 class="h4" v-if="currentTask.translation.question">
+              {{ currentTask.translation.question }}
+            </h4>
+
+            <h4
+              class="h4 class-practice-body-content-wrapper-translations-answer-header"
+              v-if="currentTask.translation.answer"
+            >
+              {{ currentTask.translation.answer }}
+            </h4>
+
+            <div
+              class="class-practice-body-content-wrapper-translations-self-assessment-wrapper"
+            >
+              <h5 class="h5">Self-assessment:</h5>
+              <p class="p">
+                Now, listen back to your recording and compare! How did you get
+                on?
+              </p>
+            </div>
+          </div>
+        </template>
       </div>
 
       <!-- Recorder -->
@@ -58,36 +91,41 @@
         class="class-practice-body-footer-wrapper"
         v-if="currentTask.shouldRecord"
       >
-        <talkie-audio-player
-          v-slot="{
-            isPlaying,
-            togglePlayer,
-            currentAudioPercentage,
-            updateAudioPercentage,
-            totalAudioPlaybackTime,
-            currentAudioPlaybackTime,
-          }"
-          :recording="currentRecording"
+        <!-- Player -->
+        <div
+          class="class-practice-body-footer-wrapper-audio-player"
           v-if="currentRecording"
         >
-          <span hidden>
-            <!-- TODO: updated these states via a handler -->
-            {{ (this.isAudioPlaying = isPlaying) }}
-            {{ (this.handleAudioPlayerToggle = togglePlayer) }}
-          </span>
-          <div
-            class="class-practice-body-footer-wrapper-options-audio-player-wrapper"
+          <talkie-audio-player
+            v-slot="{
+              isPlaying,
+              togglePlayer,
+              currentAudioPercentage,
+              updateAudioPercentage,
+              totalAudioPlaybackTime,
+              currentAudioPlaybackTime,
+            }"
+            :recording="currentRecording"
           >
-            <talkie-audio-timeline
-              :percentage="currentAudioPercentage"
-              :onHeadChange="updateAudioPercentage"
-            />
-            <span
-              class="class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps"
-              >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+            <span hidden>
+              <!-- TODO: updated these states via a handler -->
+              {{ (this.isAudioPlaying = isPlaying) }}
+              {{ (this.handleAudioPlayerToggle = togglePlayer) }}
             </span>
-          </div>
-        </talkie-audio-player>
+            <div
+              class="class-practice-body-footer-wrapper-options-audio-player-wrapper"
+            >
+              <talkie-audio-timeline
+                :percentage="currentAudioPercentage"
+                :onHeadChange="updateAudioPercentage"
+              />
+              <span
+                class="class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps"
+                >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+              </span>
+            </div>
+          </talkie-audio-player>
+        </div>
 
         <talkie-audio-recorder
           v-slot="{ startRecording, stopRecording, isRecording }"
@@ -274,6 +312,34 @@ export default {
         (No) me gusta esta foto porque...  - I don't like
         `,
       },
+      {
+        title: "Translation",
+        canExit: true,
+        canFinish: true,
+        topic: "Topic: ✈️ Travel and tourism",
+        type: taskTypes.TRANSLATION,
+        translation: {
+          question: "I cannot live without my phone and the internet.",
+          answer: "No puedo vivir sin mi telefono e internet.",
+        },
+        shouldRecord: true,
+        instructions: `
+        What can you say about the photo?
+
+        You have several options here. You can:
+        — Describe what you see on the photo.
+        — Give your opinion on the photo.
+        — Use the photo as prompt to talk about your own experiences or come up with your own short story in Spanish!
+
+        Don't worry if you haven't got enough vocabulary yet. Don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
+
+        Some key phrases to get you started:
+
+        En la foto se puede ver... - In the photo, one/you can see...
+        En esta foto, puedo ver... - In this photo, I can see...
+        (No) me gusta esta foto porque...  - I don't like
+        `,
+      },
     ];
 
     return {
@@ -285,7 +351,7 @@ export default {
         voiceForQnA: null,
       },
       tasks: _tasks,
-      currentTask: _tasks[1],
+      currentTask: _tasks[2],
       taskTypes: taskTypes,
     };
   },
@@ -361,8 +427,32 @@ export default {
   flex: none;
   user-select: none;
 }
+.class-practice-body-content-wrapper-translations-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+  gap: var(--t-space-16);
+  text-align: center;
+}
+.class-practice-body-content-wrapper-translations-answer-header {
+  color: var(--t-secondary);
+}
+.class-practice-body-content-wrapper-translations-self-assessment-wrapper {
+  background: var(--t-gray-100);
+  padding: var(--t-space-16);
+  margin-top: var(--t-space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--t-space-8);
+  border-radius: var(--t-br-small);
+}
 .class-practice-body-footer-wrapper {
   position: relative;
+}
+.class-practice-body-footer-wrapper-audio-player {
+  max-width: 50%;
+  margin: auto;
+  padding-bottom: var(--t-space-36);
 }
 .class-practice-body-footer-wrapper-options {
   display: flex;
