@@ -354,6 +354,9 @@
   <div class="class-manage-load-wrapper" v-if="computedPageLoading">
     <talkie-loader :size="'large'" />
   </div>
+
+  <!-- Backdrop Loader -->
+  <talkie-back-drop-loader v-if="backdropLoading" />
 </template>
 
 <script>
@@ -361,6 +364,7 @@ import {
   TalkieToolTip,
   TalkieIcon,
   TalkieLoader,
+  TalkieBackDropLoader,
   TalkieButton,
 } from "@/components/UICore";
 import {
@@ -383,6 +387,7 @@ export default {
     TalkieAudioTimeline,
     TalkieLoader,
     TalkieButton,
+    TalkieBackDropLoader,
   },
   data() {
     const _tasks = [
@@ -482,6 +487,7 @@ export default {
       // currentTask: _tasks[2],
       user: {},
       loading: false,
+      backdropLoading: false,
       classId: null,
       classDetails: {},
       classTasks: [],
@@ -602,6 +608,9 @@ export default {
       this.$router.push("/");
     },
     async handleTaskAnswer() {
+      // update page state
+      this.backdropLoading = true;
+
       // form data
       const taskId = this.currentTask.id;
 
@@ -619,6 +628,7 @@ export default {
 
       // failure case
       if (!response) {
+        this.backdropLoading = false;
         notifications.show("Could not add your answer..!", {
           variant: "error",
           displayIcon: true,
@@ -627,6 +637,7 @@ export default {
       }
 
       // success case
+      this.backdropLoading = false;
       notifications.show("Answered Successfully..!", {
         variant: "success",
         displayIcon: true,
