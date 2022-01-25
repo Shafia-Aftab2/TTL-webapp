@@ -357,7 +357,10 @@
   </div>
 
   <!-- Backdrop Loader -->
-  <talkie-back-drop-loader v-if="backdropLoading" />
+  <talkie-back-drop-loader
+    v-if="backdropLoading"
+    :customClass="'class-practice-backdrop-load-wrapper'"
+  />
 </template>
 
 <script>
@@ -665,8 +668,10 @@ export default {
   display: grid;
   grid-template-columns: 100px 1fr 100px;
 }
-.class-practice-header-wrapper-link {
+.class-practice-header-wrapper-link,
+.class-practice-header-wrapper-link:visited {
   text-decoration: none;
+  color: var(--t-black);
 }
 .class-practice-body-wrapper {
   background: var(--t-white);
@@ -838,6 +843,9 @@ export default {
 .class-practice-body-no-tasks-description {
   line-height: 1.2;
   text-align: center;
+}
+.class-practice-backdrop-load-wrapper {
+  z-index: var(--t-zindex-60);
 }
 
 /* Responsive variants */
