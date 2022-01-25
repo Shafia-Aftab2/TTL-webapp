@@ -595,13 +595,8 @@ export default {
   align-items: center;
   transition: 0.1s ease;
   color: var(--t-black-50);
-  font-family: var(--t-ff-regular);
   font-family: var(--t-ff-bold);
-  font-size: var(--t-space-16);
   background-color: var(--t-orange);
-  padding: var(--t-space-50);
-  height: var(--t-space-50);
-  width: var(--t-space-50);
   border-radius: 50%;
 }
 .class-practice-body-footer-wrapper-options-item-label {
@@ -626,6 +621,12 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
+  .class-practice-body-footer-wrapper-options-item-next-button {
+    font-size: var(--t-space-12);
+    padding: var(--t-space-44);
+    height: var(--t-space-44);
+    width: var(--t-space-44);
+  }
   .class-practice-body-footer-wrapper-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-36);
@@ -672,6 +673,12 @@ export default {
   }
 }
 @media (min-width: 600px) {
+  .class-practice-body-footer-wrapper-options-item-next-button {
+    font-size: var(--t-space-16);
+    padding: var(--t-space-50);
+    height: var(--t-space-50);
+    width: var(--t-space-50);
+  }
   .class-practice-body-footer-wrapper-options {
     transform: translate(-50%, -5%);
     gap: var(--t-space-40);
