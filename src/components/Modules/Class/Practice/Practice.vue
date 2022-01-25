@@ -1,8 +1,24 @@
 <template>
   <div class="class-practice-wrapper" v-if="!computedPageLoading">
     <div class="class-practice-header-wrapper">
+      <!-- If there are no more class tasks for practice -->
+      <template v-if="noMoreTasks">
+        <span> </span>
+        <h4 class="h4">
+          Practice Mode <br />
+          (All Done)
+        </h4>
+        <a
+          class="class-practice-header-wrapper-link"
+          v-if="currentTask.canFinish"
+          @click="handleFinishLinkClick"
+        >
+          Finish &#8594;
+        </a>
+      </template>
+
       <!-- If there are no class tasks for practice -->
-      <template v-if="classTasks.length === 0">
+      <template v-if="classTasks.length === 0 && !noMoreTasks">
         <a class="class-practice-header-wrapper-link" href="/">
           &#8592; Exit
         </a>
@@ -10,7 +26,7 @@
       </template>
 
       <!-- If there are class tasks for practice -->
-      <template v-if="classTasks.length > 0">
+      <template v-if="classTasks.length > 0 && !noMoreTasks">
         <a
           class="class-practice-header-wrapper-link"
           href="/"
@@ -30,7 +46,7 @@
     </div>
 
     <!-- If there are class tasks for practice -->
-    <template v-if="classTasks.length > 0">
+    <template v-if="classTasks.length > 0 && !noMoreTasks">
       <div
         :class="[
           'class-practice-body-wrapper',
@@ -333,7 +349,7 @@
     </template>
 
     <!-- If there are no class tasks for practice -->
-    <template v-if="classTasks.length === 0">
+    <template v-if="classTasks.length === 0 && !noMoreTasks">
       <div
         class="class-practice-body-wrapper class-practice-body-centered-wrapper"
       >
@@ -344,6 +360,25 @@
         <p class="p class-practice-body-no-tasks-description">
           Hmm. It looks like there are no tasks for practice at this moment.
           They will apear here once your teacher adds them in the class.
+        </p>
+        <talkie-button :onClick="handleHomeButtonClick">
+          Back Home
+        </talkie-button>
+      </div>
+    </template>
+
+    <!-- If there are no more class tasks for practice -->
+    <template v-if="noMoreTasks">
+      <div
+        class="class-practice-body-wrapper class-practice-body-centered-wrapper"
+      >
+        <img
+          :src="require(`@/assets/images/party-popper.png`)"
+          class="class-practice-body-no-tasks-image"
+        />
+        <p class="p class-practice-body-no-tasks-description">
+          Congrats, You have finished all quizes. Come back again for more
+          practice.
         </p>
         <talkie-button :onClick="handleHomeButtonClick">
           Back Home
@@ -411,6 +446,7 @@ export default {
       classDetails: {},
       classTasks: [],
       currentTask: { index: null },
+      noMoreTasks: true,
       currentTaskAnswered: {
         responseId: null,
         scores: null,
