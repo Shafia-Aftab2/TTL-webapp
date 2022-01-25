@@ -10,7 +10,14 @@
       </a>
     </div>
 
-    <div class="class-practice-body-wrapper">
+    <div
+      :class="[
+        'class-practice-body-wrapper',
+        currentTaskAnswered.scores &&
+          currentTaskAnswered.appericiationMessage &&
+          'class-practice-body-wrapper-blured',
+      ]"
+    >
       <div class="class-practice-body-head-wrapper">
         <p class="p" v-if="currentTask.topic">{{ currentTask.topic }}</p>
         <talkie-tool-tip
@@ -107,7 +114,13 @@
         <!-- Player -->
         <div
           class="class-practice-body-footer-wrapper-audio-player"
-          v-if="currentRecording"
+          v-if="
+            currentRecording &&
+            !(
+              currentTaskAnswered.scores &&
+              currentTaskAnswered.appericiationMessage
+            )
+          "
         >
           <talkie-audio-player
             v-slot="{
@@ -149,101 +162,146 @@
             {{ (this.errors = /{voiceForQnA: null}/) }}
           </span>
           <div class="class-practice-body-footer-wrapper-options">
-            <div class="class-practice-body-footer-wrapper-options-item">
-              <talkie-icon
-                :name="'arrow-rounded-left'"
-                :isActive="true"
-                :variant="'secondary'"
-                :size="30"
-                :onClick="handleRecordedItemReset"
-              />
-              <p
-                :class="[
-                  'class-practice-body-footer-wrapper-options-item-label',
-                  !currentRecording &&
-                    'class-practice-body-footer-wrapper-options-item-label-non-visiable',
-                ]"
+            <!-- Not answered options -->
+            <template
+              v-if="
+                !(
+                  currentTaskAnswered.scores &&
+                  currentTaskAnswered.appericiationMessage
+                )
+              "
+            >
+              <div
+                class="class-practice-body-footer-wrapper-options-item"
+                v-if="currentRecording"
               >
-                Redo
-              </p>
-            </div>
-            <div class="class-practice-body-footer-wrapper-options-item">
-              <talkie-icon
-                :name="'mike-unmuted'"
-                :isActive="true"
-                :variant="'secondary'"
-                :size="50"
-                :onClick="startRecording"
-                :customClass="
-                  errors.voiceForQnA &&
-                  'class-practice-body-footer-wrapper-options-mike-unmuted-button-error'
-                "
-                v-if="!isRecording && !currentRecording"
-              />
-              <talkie-icon
-                :name="'square'"
-                :isActive="true"
-                :variant="'secondary'"
-                :size="50"
-                :iconToSizeRatio="1.5"
-                :customClass="'class-practice-body-footer-wrapper-options-stop-recording-button'"
-                :onClick="stopRecording"
-                v-if="isRecording && !currentRecording"
-              />
-              <talkie-icon
-                :name="'play'"
-                :isActive="true"
-                :variant="'primary'"
-                :size="50"
-                :onClick="handleAudioPlayerToggle"
-                v-if="!isRecording && !isAudioPlaying && currentRecording"
-              />
-              <talkie-icon
-                :name="'pause'"
-                :isActive="true"
-                :variant="'primary'"
-                :size="50"
-                :onClick="handleAudioPlayerToggle"
-                v-if="!isRecording && isAudioPlaying && currentRecording"
-              />
-              <p
-                :class="[
-                  'class-practice-body-footer-wrapper-options-item-label',
-                  errors.voiceForQnA &&
-                    'class-practice-body-footer-wrapper-options-item-label-error',
-                ]"
+                <talkie-icon
+                  :name="'arrow-rounded-left'"
+                  :isActive="true"
+                  :variant="'secondary'"
+                  :size="30"
+                  :onClick="handleRecordedItemReset"
+                />
+                <p
+                  :class="[
+                    'class-practice-body-footer-wrapper-options-item-label',
+                    !currentRecording &&
+                      'class-practice-body-footer-wrapper-options-item-label-non-visiable',
+                  ]"
+                >
+                  Redo
+                </p>
+              </div>
+              <div class="class-practice-body-footer-wrapper-options-item">
+                <talkie-icon
+                  :name="'mike-unmuted'"
+                  :isActive="true"
+                  :variant="'secondary'"
+                  :size="50"
+                  :onClick="startRecording"
+                  :customClass="
+                    errors.voiceForQnA &&
+                    'class-practice-body-footer-wrapper-options-mike-unmuted-button-error'
+                  "
+                  v-if="!isRecording && !currentRecording"
+                />
+                <talkie-icon
+                  :name="'square'"
+                  :isActive="true"
+                  :variant="'secondary'"
+                  :size="50"
+                  :iconToSizeRatio="1.5"
+                  :customClass="'class-practice-body-footer-wrapper-options-stop-recording-button'"
+                  :onClick="stopRecording"
+                  v-if="isRecording && !currentRecording"
+                />
+                <talkie-icon
+                  :name="'play'"
+                  :isActive="true"
+                  :variant="'primary'"
+                  :size="50"
+                  :onClick="handleAudioPlayerToggle"
+                  v-if="!isRecording && !isAudioPlaying && currentRecording"
+                />
+                <talkie-icon
+                  :name="'pause'"
+                  :isActive="true"
+                  :variant="'primary'"
+                  :size="50"
+                  :onClick="handleAudioPlayerToggle"
+                  v-if="!isRecording && isAudioPlaying && currentRecording"
+                />
+                <p
+                  :class="[
+                    'class-practice-body-footer-wrapper-options-item-label',
+                    errors.voiceForQnA &&
+                      'class-practice-body-footer-wrapper-options-item-label-error',
+                  ]"
+                >
+                  {{
+                    !!errors.voiceForQnA
+                      ? errors.voiceForQnA
+                      : !currentRecording
+                      ? "Tap To Record"
+                      : !isAudioPlaying
+                      ? "Play"
+                      : "Pause"
+                  }}
+                </p>
+              </div>
+              <div
+                class="class-practice-body-footer-wrapper-options-item"
+                v-if="currentRecording"
               >
-                {{
-                  !!errors.voiceForQnA
-                    ? errors.voiceForQnA
-                    : !currentRecording
-                    ? "Tap To Record"
-                    : !isAudioPlaying
-                    ? "Play"
-                    : "Pause"
-                }}
-              </p>
-            </div>
-            <div class="class-practice-body-footer-wrapper-options-item">
-              <talkie-icon
-                :type="'submit'"
-                :name="'send'"
-                :isActive="true"
-                :variant="'secondary'"
-                :size="30"
-              />
-              <p
-                :class="[
-                  'class-practice-body-footer-wrapper-options-item-label',
-                  !currentRecording &&
-                    'class-practice-body-footer-wrapper-options-item-label-non-visiable',
-                ]"
-              >
-                Preview send
-              </p>
-            </div>
+                <talkie-icon
+                  :type="'submit'"
+                  :name="'send'"
+                  :isActive="true"
+                  :variant="'secondary'"
+                  :size="30"
+                />
+                <p
+                  :class="[
+                    'class-practice-body-footer-wrapper-options-item-label',
+                    !currentRecording &&
+                      'class-practice-body-footer-wrapper-options-item-label-non-visiable',
+                  ]"
+                >
+                  Answer
+                </p>
+              </div>
+            </template>
+
+            <!-- Answered options -->
+            <template
+              v-if="
+                currentTaskAnswered.scores &&
+                currentTaskAnswered.appericiationMessage
+              "
+            >
+              <div class="class-practice-body-footer-wrapper-options-item">
+                <button
+                  class="class-practice-body-footer-wrapper-options-item-next-button"
+                >
+                  Next
+                </button>
+              </div>
+            </template>
           </div>
         </talkie-audio-recorder>
+      </div>
+
+      <!-- After task attempted (Answered options) -->
+      <div
+        class="class-practice-body-task-attempted-wrapper"
+        v-if="
+          currentTaskAnswered.scores && currentTaskAnswered.appericiationMessage
+        "
+      >
+        <h2 class="h2">
+          {{ currentTaskAnswered.appericiationMessage }}
+          {{ currentTaskAnswered.scores }} pts
+        </h2>
       </div>
     </div>
   </div>
@@ -365,6 +423,10 @@ export default {
       },
       tasks: _tasks,
       currentTask: _tasks[2],
+      currentTaskAnswered: {
+        scores: 5,
+        appericiationMessage: "¡Bien hecho!",
+      },
       taskTypes: taskTypes,
     };
   },
@@ -405,6 +467,18 @@ export default {
   display: flex;
   flex-direction: column;
   gap: var(--t-space-36);
+  position: relative;
+}
+.class-practice-body-wrapper-blured {
+  border-style: solid;
+  border-top-width: var(--t-space-1);
+  border-left-width: var(--t-space-1);
+  border-right-width: var(--t-space-1);
+  border-bottom-width: var(--t-space-1);
+  border-color: var(--t-gray-75);
+}
+.class-practice-body-wrapper-blured > * {
+  filter: blur(var(--t-space-4));
 }
 .class-practice-body-head-wrapper {
   display: flex;
@@ -448,6 +522,7 @@ export default {
 .class-practice-body-content-wrapper-translations-question-wrapper,
 .class-practice-body-content-wrapper-translations-answer-wrapper {
   border-radius: var(--t-br-small);
+  margin-right: var(--t-space-5);
 }
 .class-practice-body-content-wrapper-translations-question-wrapper {
   color: var(--t-black);
@@ -474,8 +549,25 @@ export default {
   border-radius: var(--t-br-small);
   line-height: 1.2;
 }
+.class-practice-body-task-attempted-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  filter: blur(0);
+  border-radius: var(--t-br-large);
+  background-color: rgba(247, 241, 241, 0.5);
+}
 .class-practice-body-footer-wrapper {
   position: relative;
+  filter: blur(0);
+  z-index: var(--t-zindex-50);
 }
 .class-practice-body-footer-wrapper-audio-player {
   margin: auto;
@@ -492,6 +584,25 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+}
+.class-practice-body-footer-wrapper-options-item-next-button {
+  background: transparent;
+  border: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  width: fit-content;
+  justify-content: center;
+  align-items: center;
+  transition: 0.1s ease;
+  color: var(--t-black-50);
+  font-family: var(--t-ff-regular);
+  font-family: var(--t-ff-bold);
+  font-size: var(--t-space-16);
+  background-color: var(--t-orange);
+  padding: var(--t-space-50);
+  height: var(--t-space-50);
+  width: var(--t-space-50);
+  border-radius: 50%;
 }
 .class-practice-body-footer-wrapper-options-item-label {
   text-align: center;
