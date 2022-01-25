@@ -1,5 +1,5 @@
 <template>
-  <talkie-back-drop>
+  <talkie-back-drop :customClass="customClass">
     <talkie-loader :customClass="'talkie-backdrop-loader'" />
   </talkie-back-drop>
 </template>
