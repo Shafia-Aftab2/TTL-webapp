@@ -305,6 +305,7 @@
                 <div class="class-practice-body-footer-wrapper-options-item">
                   <button
                     class="class-practice-body-footer-wrapper-options-item-next-button"
+                    @click="handleTaskScoring"
                   >
                     Next
                   </button>
@@ -684,6 +685,42 @@ export default {
         scores: this.taskScores[this.currentTask.type],
         appericiationMessage: this.appericiationMessages[this.currentTask.type],
       };
+    },
+    async handleTaskScoring() {
+      // update page state
+      this.backdropLoading = true;
+
+      // form data
+      const responseId = this.currentTaskAnswered.responseId;
+      const score = this.currentTaskAnswered.scores;
+
+      // payload
+      const payload = { score };
+
+      // api call
+      const response = await ResponseService.AddResponseScore(
+        responseId,
+        payload
+      ).catch(() => null);
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Could not add scores to your answer..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.currentRecording = null;
+      this.currentTaskAnswered = {};
+      this.currentTask =
+        this.classTasks.length - 1 > this.currentTask.index
+          ? this.classTasks[this.currentTask.index + 1]
+          : {};
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
