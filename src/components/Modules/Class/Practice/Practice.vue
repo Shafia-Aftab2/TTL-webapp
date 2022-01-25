@@ -396,101 +396,10 @@ export default {
     TalkieBackDropLoader,
   },
   data() {
-    const _tasks = [
-      {
-        title: "Caption This",
-        canExit: true,
-        canFinish: true,
-        topic: "Topic: ✈️ Travel and tourism",
-        type: taskTypes.CAPTION_THIS,
-        captionImage: require(`@/assets/images/caption-this.png`),
-        shouldRecord: true,
-        instructions: `
-        What can you say about the photo?
-
-        You have several options here. You can:
-        — Describe what you see on the photo.
-        — Give your opinion on the photo.
-        — Use the photo as prompt to talk about your own experiences or come up with your own short story in Spanish!
-
-        Don't worry if you haven't got enough vocabulary yet. Don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
-
-        Some key phrases to get you started:
-
-        En la foto se puede ver... - In the photo, one/you can see...
-        En esta foto, puedo ver... - In this photo, I can see...
-        (No) me gusta esta foto porque...  - I don't like
-        `,
-      },
-      {
-        title: "Emoji Story",
-        canExit: true,
-        canFinish: true,
-        topic: "Topic: ✈️ Travel and tourism",
-        type: taskTypes.EMOJI_STORY,
-        emojis: [
-          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
-          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
-          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
-          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
-          `https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png`,
-        ],
-        shouldRecord: true,
-        instructions: `
-        What can you say about the photo?
-
-        You have several options here. You can:
-        — Describe what you see on the photo.
-        — Give your opinion on the photo.
-        — Use the photo as prompt to talk about your own experiences or come up with your own short story in Spanish!
-
-        Don't worry if you haven't got enough vocabulary yet. Don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
-
-        Some key phrases to get you started:
-
-        En la foto se puede ver... - In the photo, one/you can see...
-        En esta foto, puedo ver... - In this photo, I can see...
-        (No) me gusta esta foto porque...  - I don't like
-        `,
-      },
-      {
-        title: "Translation",
-        canExit: true,
-        canFinish: true,
-        topic: "Topic: ✈️ Travel and tourism",
-        type: taskTypes.TRANSLATION,
-        translation: {
-          question: "I cannot live without my phone and the internet.",
-          answer: "No puedo vivir sin mi telefono e internet.",
-        },
-        shouldRecord: true,
-        instructions: `
-        What can you say about the photo?
-
-        You have several options here. You can:
-        — Describe what you see on the photo.
-        — Give your opinion on the photo.
-        — Use the photo as prompt to talk about your own experiences or come up with your own short story in Spanish!
-
-        Don't worry if you haven't got enough vocabulary yet. Don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
-
-        Some key phrases to get you started:
-
-        En la foto se puede ver... - In the photo, one/you can see...
-        En esta foto, puedo ver... - In this photo, I can see...
-        (No) me gusta esta foto porque...  - I don't like
-        `,
-      },
-    ];
-
     return {
       currentRecording: null,
       isAudioPlaying: false,
       handleAudioPlayerToggle: () => {},
-      // temp:
-      errors: { voiceForQnA: null },
-      // tasks: _tasks,
-      // currentTask: _tasks[2],
       user: {},
       loading: false,
       backdropLoading: false,
