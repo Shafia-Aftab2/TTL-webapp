@@ -315,6 +315,7 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import { taskTypes } from "@/utils/constants";
+import { ClassService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 
 export default {
@@ -426,6 +427,7 @@ export default {
       currentTask: _tasks[2],
       user: {},
       classId: null,
+      classDetails: {},
       currentTaskAnswered: {
         scores: 5,
         appericiationMessage: "¡Bien hecho!",
@@ -450,6 +452,28 @@ export default {
     // class id from cookies
     const classId = hasJoinedAClass;
     this.classId = classId;
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
+
+    // success case
+    this.classDetails = {
+      id: classDetails.id,
+      name: classDetails.name,
+      langugage: classDetails.langugage,
+      parentSchool: classDetails.schoolName,
+      teacher: {
+        id: classDetails.teacher.id,
+        name: classDetails.teacher.name,
+        image: classDetails.teacher.image,
+      },
+      topics: classDetails.topics.map((x) => ({
+        name: x.name,
+        type: x.type,
+        id: x.id,
+      })),
+    };
   },
   methods: {
     handleRecordedItem(recording) {
@@ -457,6 +481,11 @@ export default {
     },
     handleRecordedItemReset() {
       this.currentRecording = null;
+    },
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
     },
   },
 };
