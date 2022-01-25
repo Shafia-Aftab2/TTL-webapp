@@ -515,16 +515,18 @@ export default {
         id: x.id,
       })),
     };
-    this.classTasks = classTasks?.results?.map((x) => ({
-      id: x?.id,
-      type: x?.type,
-      title: x?.type?.split("-").join(" "),
-      topic: x?.topic?.name,
-      description: x?.questionText,
-      canExit: true,
-      canFinish: true,
-      shouldRecord: true,
-      instructions: `
+    this.classTasks = classTasks?.results
+      ?.filter((x) => x?.type !== taskTypes.QUESTION_ANSWER)
+      ?.map((x) => ({
+        id: x?.id,
+        type: x?.type,
+        title: x?.type?.split("-").join(" "),
+        topic: x?.topic?.name,
+        description: x?.questionText,
+        canExit: true,
+        canFinish: true,
+        shouldRecord: true,
+        instructions: `
         What can you say about the photo?
 
         You have several options here. You can:
@@ -540,13 +542,16 @@ export default {
         En esta foto, puedo ver... - In this photo, I can see...
         (No) me gusta esta foto porque...  - I don't like
         `,
-      ...(x?.type === taskTypes.CAPTION_THIS && {
-        captionImage: x?.captionThisImage,
-      }),
-      ...(x?.type === taskTypes.TRANSLATION && {
-        translation: { question: x?.textToTranslate },
-      }),
-    }));
+        ...(x?.type === taskTypes.CAPTION_THIS && {
+          captionImage: x?.captionThisImage,
+        }),
+        ...(x?.type === taskTypes.TRANSLATION && {
+          translation: { question: x?.textToTranslate },
+        }),
+        ...(x?.type === taskTypes.EMOJI_STORY && {
+          emojis: x?.emojiStory || [],
+        }),
+      }));
     this.currentTask =
       this.classTasks.length > 0 ? { ...this.classTasks[0], index: 0 } : {};
     this.loading = false;
@@ -676,7 +681,10 @@ export default {
       // check if the tasks are finished (else set next task)
       const hasMoreTasks = this.classTasks.length - 1 > this.currentTask.index;
       if (hasMoreTasks)
-        this.currentTask = this.classTasks[this.currentTask.index + 1];
+        this.currentTask = {
+          ...this.classTasks[this.currentTask.index + 1],
+          index: this.currentTask.index + 1,
+        };
       else {
         this.currentTask = {};
         this.noMoreTasks = true;
