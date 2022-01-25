@@ -320,7 +320,7 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import { taskTypes } from "@/utils/constants";
-import { ClassService } from "@/api/services";
+import { ClassService, TaskService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 
 export default {
@@ -435,6 +435,7 @@ export default {
       loading: false,
       classId: null,
       classDetails: {},
+      classTasks: {},
       currentTaskAnswered: {
         scores: 5,
         appericiationMessage: "¡Bien hecho!",
@@ -472,6 +473,10 @@ export default {
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
 
+    // class tasks
+    const classTasks = await this.getClassTasksForPractice(classId);
+    if (!classTasks) return this.$router.push("/404");
+
     // success case
     this.classDetails = {
       id: classDetails.id,
@@ -489,6 +494,38 @@ export default {
         id: x.id,
       })),
     };
+    this.classTasks = classTasks?.results?.map((x) => ({
+      id: x?.id,
+      type: x?.type,
+      title: x?.type?.split("-").join(" "),
+      topic: x?.topic?.name,
+      description: x?.questionText,
+      canExit: true,
+      canFinish: true,
+      shouldRecord: true,
+      instructions: `
+        What can you say about the photo?
+
+        You have several options here. You can:
+        — Describe what you see on the photo.
+        — Give your opinion on the photo.
+        — Use the photo as prompt to talk about your own experiences or come up with your own short story in Spanish!
+
+        Don't worry if you haven't got enough vocabulary yet. Don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
+
+        Some key phrases to get you started:
+
+        En la foto se puede ver... - In the photo, one/you can see...
+        En esta foto, puedo ver... - In this photo, I can see...
+        (No) me gusta esta foto porque...  - I don't like
+        `,
+      ...(x?.type === taskTypes.CAPTION_THIS && {
+        captionImage: x?.captionThisImage,
+      }),
+      ...(x?.type === taskTypes.TRANSLATION && {
+        translation: { question: x?.textToTranslate },
+      }),
+    }));
     this.loading = false;
   },
   methods: {
@@ -500,6 +537,15 @@ export default {
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
+    },
+    async getClassTasksForPractice(id) {
+      const query = { isPracticeMode: true };
+
+      const response = await TaskService.QueryClassTasks(id, query).catch(
+        () => null
+      );
 
       return response.data || null;
     },
