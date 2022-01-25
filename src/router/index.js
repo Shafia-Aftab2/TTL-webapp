@@ -20,6 +20,7 @@ import ClassTaskEdit from "../components/Modules/Class/Tasks/Update";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
+import ClassPractice from "../components/Modules/Class/Practice";
 import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ProfileSelf from "../components/Modules/Profile/Self";
@@ -180,6 +181,11 @@ const routes = [
         name: "ClassLeaderboard",
         path: "/classes/:id/leaderboard",
         component: ClassLeaderboard,
+      },
+      {
+        name: "ClassPractice",
+        path: "/classes/practice",
+        component: ClassPractice,
       },
       {
         name: "ClassJoinLink",
