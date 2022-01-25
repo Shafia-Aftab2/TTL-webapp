@@ -1,5 +1,5 @@
 <template>
-  <div class="class-practice-wrapper">
+  <div class="class-practice-wrapper" v-if="!computedPageLoading">
     <div class="class-practice-header-wrapper">
       <a class="class-practice-header-wrapper-link" v-if="currentTask.canExit">
         &#8592; Exit
@@ -305,10 +305,15 @@
       </div>
     </div>
   </div>
+
+  <!-- Load Wrapper -->
+  <div class="class-manage-load-wrapper" v-if="computedPageLoading">
+    <talkie-loader :size="'large'" />
+  </div>
 </template>
 
 <script>
-import { TalkieToolTip, TalkieIcon } from "@/components/UICore";
+import { TalkieToolTip, TalkieIcon, TalkieLoader } from "@/components/UICore";
 import {
   TalkieAudioRecorder,
   TalkieAudioPlayer,
@@ -326,6 +331,7 @@ export default {
     TalkieAudioRecorder,
     TalkieAudioPlayer,
     TalkieAudioTimeline,
+    TalkieLoader,
   },
   data() {
     const _tasks = [
@@ -426,6 +432,7 @@ export default {
       tasks: _tasks,
       currentTask: _tasks[2],
       user: {},
+      loading: false,
       classId: null,
       classDetails: {},
       currentTaskAnswered: {
@@ -435,7 +442,15 @@ export default {
       taskTypes: taskTypes,
     };
   },
+  computed: {
+    computedPageLoading() {
+      return this.loading;
+    },
+  },
   async created() {
+    // update page state
+    this.loading = true;
+
     // get auth user
     const user = authUser.getUser();
     this.user = user;
@@ -474,6 +489,7 @@ export default {
         id: x.id,
       })),
     };
+    this.loading = false;
   },
   methods: {
     handleRecordedItem(recording) {
