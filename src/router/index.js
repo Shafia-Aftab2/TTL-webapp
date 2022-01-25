@@ -186,6 +186,12 @@ const routes = [
         name: "ClassPractice",
         path: "/classes/practice",
         component: ClassPractice,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.TEACHER],
+          },
+        },
       },
       {
         name: "ClassJoinLink",
