@@ -1,309 +1,349 @@
 <template>
   <div class="class-practice-wrapper" v-if="!computedPageLoading">
     <div class="class-practice-header-wrapper">
-      <a class="class-practice-header-wrapper-link" v-if="currentTask.canExit">
-        &#8592; Exit
-      </a>
-      <h4 class="h4" v-if="currentTask.title">{{ currentTask.title }}</h4>
-      <a class="class-practice-header-wrapper-link" v-if="currentTask.canFinish"
-        >Finish &#8594;
-      </a>
+      <!-- If there are no class tasks for practice -->
+      <template v-if="classTasks.length === 0">
+        <a class="class-practice-header-wrapper-link"> &#8592; Exit </a>
+        <h4 class="h4">Practice Mode</h4>
+      </template>
+
+      <!-- If there are class tasks for practice -->
+      <template v-if="classTasks.length > 0">
+        <a
+          class="class-practice-header-wrapper-link"
+          v-if="currentTask.canExit"
+        >
+          &#8592; Exit
+        </a>
+        <h4 class="h4" v-if="currentTask.title">{{ currentTask.title }}</h4>
+        <a
+          class="class-practice-header-wrapper-link"
+          v-if="currentTask.canFinish"
+        >
+          Finish &#8594;
+        </a>
+      </template>
     </div>
 
-    <div
-      :class="[
-        'class-practice-body-wrapper',
-        currentTaskAnswered.scores &&
-          currentTaskAnswered.appericiationMessage &&
-          'class-practice-body-wrapper-blured',
-      ]"
-    >
-      <div class="class-practice-body-head-wrapper">
-        <p class="p" v-if="currentTask.topic">{{ currentTask.topic }}</p>
-        <talkie-tool-tip
-          :tooltip="currentTask.instructions"
-          v-if="currentTask.instructions"
-        >
-          <h5 class="h5 class-practice-body-head-wrapper-instructions">
-            <p class="p">Instructions</p>
-          </h5>
-        </talkie-tool-tip>
-      </div>
-
-      <div class="class-practice-body-content-wrapper">
-        <!-- Caption this -->
-        <template
-          v-if="
-            currentTask.type === taskTypes.CAPTION_THIS &&
-            currentTask.captionImage
-          "
-        >
-          <img
-            :src="currentTask.captionImage"
-            class="class-practice-body-content-wrapper-caption-image"
-          />
-        </template>
-
-        <!-- Emoji story -->
-        <template
-          v-if="
-            currentTask.type === taskTypes.EMOJI_STORY && currentTask.emojis
-          "
-        >
-          <div class="class-practice-body-content-wrapper-emojis-wrapper">
-            <template v-for="emojiURL in currentTask.emojis" :key="emojiURL">
-              <img
-                :draggable="false"
-                :src="emojiURL"
-                class="class-practice-body-content-wrapper-emojis-image-item"
-              />
-            </template>
-          </div>
-        </template>
-
-        <!-- Translation -->
-        <template
-          v-if="
-            currentTask.type === taskTypes.TRANSLATION &&
-            currentTask.translation
-          "
-        >
-          <div class="class-practice-body-content-wrapper-translations-wrapper">
-            <h4
-              class="h4 class-practice-body-content-wrapper-translations-question-header"
-              v-if="currentTask.translation.question"
-            >
-              <span
-                class="class-practice-body-content-wrapper-translations-question-wrapper"
-              >
-                Question
-              </span>
-              {{ currentTask.translation.question }}
-            </h4>
-
-            <h4
-              class="h4 class-practice-body-content-wrapper-translations-answer-header"
-              v-if="currentTask.translation.answer"
-            >
-              <span
-                class="class-practice-body-content-wrapper-translations-answer-wrapper"
-              >
-                Answer
-              </span>
-              {{ currentTask.translation.answer }}
-            </h4>
-
-            <div
-              class="class-practice-body-content-wrapper-translations-self-assessment-wrapper"
-            >
-              <h5 class="h5">Self-assessment:</h5>
-              <p class="p">
-                Now, listen back to your recording and compare! How did you get
-                on?
-              </p>
-            </div>
-          </div>
-        </template>
-      </div>
-
-      <!-- Recorder -->
+    <!-- If there are class tasks for practice -->
+    <template v-if="classTasks.length > 0">
       <div
-        class="class-practice-body-footer-wrapper"
-        v-if="currentTask.shouldRecord"
+        :class="[
+          'class-practice-body-wrapper',
+          currentTaskAnswered.scores &&
+            currentTaskAnswered.appericiationMessage &&
+            'class-practice-body-wrapper-blured',
+        ]"
       >
-        <!-- Player -->
-        <div
-          class="class-practice-body-footer-wrapper-audio-player"
-          v-if="
-            currentRecording &&
-            !(
-              currentTaskAnswered.scores &&
-              currentTaskAnswered.appericiationMessage
-            )
-          "
-        >
-          <talkie-audio-player
-            v-slot="{
-              isPlaying,
-              togglePlayer,
-              currentAudioPercentage,
-              updateAudioPercentage,
-              totalAudioPlaybackTime,
-              currentAudioPlaybackTime,
-            }"
-            :recording="currentRecording"
+        <div class="class-practice-body-head-wrapper">
+          <p class="p" v-if="currentTask.topic">{{ currentTask.topic }}</p>
+          <talkie-tool-tip
+            :tooltip="currentTask.instructions"
+            v-if="currentTask.instructions"
           >
-            <span hidden>
-              <!-- TODO: updated these states via a handler -->
-              {{ (this.isAudioPlaying = isPlaying) }}
-              {{ (this.handleAudioPlayerToggle = togglePlayer) }}
-            </span>
-            <div
-              class="class-practice-body-footer-wrapper-options-audio-player-wrapper"
-            >
-              <talkie-audio-timeline
-                :percentage="currentAudioPercentage"
-                :onHeadChange="updateAudioPercentage"
-              />
-              <span
-                class="class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps"
-                >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
-              </span>
-            </div>
-          </talkie-audio-player>
+            <h5 class="h5 class-practice-body-head-wrapper-instructions">
+              <p class="p">Instructions</p>
+            </h5>
+          </talkie-tool-tip>
         </div>
 
-        <talkie-audio-recorder
-          v-slot="{ startRecording, stopRecording, isRecording }"
-          :onRecordingStopped="handleRecordedItem"
-        >
-          <!-- Temp -->
-          <span hidden>
-            {{ (this.errors = /{voiceForQnA: null}/) }}
-          </span>
-          <div class="class-practice-body-footer-wrapper-options">
-            <!-- Not answered options -->
-            <template
-              v-if="
-                !(
-                  currentTaskAnswered.scores &&
-                  currentTaskAnswered.appericiationMessage
-                )
-              "
+        <div class="class-practice-body-content-wrapper">
+          <!-- Caption this -->
+          <template
+            v-if="
+              currentTask.type === taskTypes.CAPTION_THIS &&
+              currentTask.captionImage
+            "
+          >
+            <img
+              :src="currentTask.captionImage"
+              class="class-practice-body-content-wrapper-caption-image"
+            />
+          </template>
+
+          <!-- Emoji story -->
+          <template
+            v-if="
+              currentTask.type === taskTypes.EMOJI_STORY && currentTask.emojis
+            "
+          >
+            <div class="class-practice-body-content-wrapper-emojis-wrapper">
+              <template v-for="emojiURL in currentTask.emojis" :key="emojiURL">
+                <img
+                  :draggable="false"
+                  :src="emojiURL"
+                  class="class-practice-body-content-wrapper-emojis-image-item"
+                />
+              </template>
+            </div>
+          </template>
+
+          <!-- Translation -->
+          <template
+            v-if="
+              currentTask.type === taskTypes.TRANSLATION &&
+              currentTask.translation
+            "
+          >
+            <div
+              class="class-practice-body-content-wrapper-translations-wrapper"
             >
-              <div
-                class="class-practice-body-footer-wrapper-options-item"
-                v-if="currentRecording"
+              <h4
+                class="h4 class-practice-body-content-wrapper-translations-question-header"
+                v-if="currentTask.translation.question"
               >
-                <talkie-icon
-                  :name="'arrow-rounded-left'"
-                  :isActive="true"
-                  :variant="'secondary'"
-                  :size="30"
-                  :onClick="handleRecordedItemReset"
-                />
-                <p
-                  :class="[
-                    'class-practice-body-footer-wrapper-options-item-label',
-                    !currentRecording &&
-                      'class-practice-body-footer-wrapper-options-item-label-non-visiable',
-                  ]"
+                <span
+                  class="class-practice-body-content-wrapper-translations-question-wrapper"
                 >
-                  Redo
-                </p>
-              </div>
-              <div class="class-practice-body-footer-wrapper-options-item">
-                <talkie-icon
-                  :name="'mike-unmuted'"
-                  :isActive="true"
-                  :variant="'secondary'"
-                  :size="50"
-                  :onClick="startRecording"
-                  :customClass="
-                    errors.voiceForQnA &&
-                    'class-practice-body-footer-wrapper-options-mike-unmuted-button-error'
-                  "
-                  v-if="!isRecording && !currentRecording"
-                />
-                <talkie-icon
-                  :name="'square'"
-                  :isActive="true"
-                  :variant="'secondary'"
-                  :size="50"
-                  :iconToSizeRatio="1.5"
-                  :customClass="'class-practice-body-footer-wrapper-options-stop-recording-button'"
-                  :onClick="stopRecording"
-                  v-if="isRecording && !currentRecording"
-                />
-                <talkie-icon
-                  :name="'play'"
-                  :isActive="true"
-                  :variant="'primary'"
-                  :size="50"
-                  :onClick="handleAudioPlayerToggle"
-                  v-if="!isRecording && !isAudioPlaying && currentRecording"
-                />
-                <talkie-icon
-                  :name="'pause'"
-                  :isActive="true"
-                  :variant="'primary'"
-                  :size="50"
-                  :onClick="handleAudioPlayerToggle"
-                  v-if="!isRecording && isAudioPlaying && currentRecording"
-                />
-                <p
-                  :class="[
-                    'class-practice-body-footer-wrapper-options-item-label',
-                    errors.voiceForQnA &&
-                      'class-practice-body-footer-wrapper-options-item-label-error',
-                  ]"
-                >
-                  {{
-                    !!errors.voiceForQnA
-                      ? errors.voiceForQnA
-                      : !currentRecording
-                      ? "Tap To Record"
-                      : !isAudioPlaying
-                      ? "Play"
-                      : "Pause"
-                  }}
-                </p>
-              </div>
-              <div
-                class="class-practice-body-footer-wrapper-options-item"
-                v-if="currentRecording"
+                  Question
+                </span>
+                {{ currentTask.translation.question }}
+              </h4>
+
+              <h4
+                class="h4 class-practice-body-content-wrapper-translations-answer-header"
+                v-if="currentTask.translation.answer"
               >
-                <talkie-icon
-                  :type="'submit'"
-                  :name="'send'"
-                  :isActive="true"
-                  :variant="'secondary'"
-                  :size="30"
-                />
-                <p
-                  :class="[
-                    'class-practice-body-footer-wrapper-options-item-label',
-                    !currentRecording &&
-                      'class-practice-body-footer-wrapper-options-item-label-non-visiable',
-                  ]"
+                <span
+                  class="class-practice-body-content-wrapper-translations-answer-wrapper"
                 >
                   Answer
+                </span>
+                {{ currentTask.translation.answer }}
+              </h4>
+
+              <div
+                class="class-practice-body-content-wrapper-translations-self-assessment-wrapper"
+              >
+                <h5 class="h5">Self-assessment:</h5>
+                <p class="p">
+                  Now, listen back to your recording and compare! How did you
+                  get on?
                 </p>
               </div>
-            </template>
+            </div>
+          </template>
+        </div>
 
-            <!-- Answered options -->
-            <template
-              v-if="
+        <!-- Recorder -->
+        <div
+          class="class-practice-body-footer-wrapper"
+          v-if="currentTask.shouldRecord"
+        >
+          <!-- Player -->
+          <div
+            class="class-practice-body-footer-wrapper-audio-player"
+            v-if="
+              currentRecording &&
+              !(
                 currentTaskAnswered.scores &&
                 currentTaskAnswered.appericiationMessage
-              "
+              )
+            "
+          >
+            <talkie-audio-player
+              v-slot="{
+                isPlaying,
+                togglePlayer,
+                currentAudioPercentage,
+                updateAudioPercentage,
+                totalAudioPlaybackTime,
+                currentAudioPlaybackTime,
+              }"
+              :recording="currentRecording"
             >
-              <div class="class-practice-body-footer-wrapper-options-item">
-                <button
-                  class="class-practice-body-footer-wrapper-options-item-next-button"
-                >
-                  Next
-                </button>
+              <span hidden>
+                <!-- TODO: updated these states via a handler -->
+                {{ (this.isAudioPlaying = isPlaying) }}
+                {{ (this.handleAudioPlayerToggle = togglePlayer) }}
+              </span>
+              <div
+                class="class-practice-body-footer-wrapper-options-audio-player-wrapper"
+              >
+                <talkie-audio-timeline
+                  :percentage="currentAudioPercentage"
+                  :onHeadChange="updateAudioPercentage"
+                />
+                <span
+                  class="class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps"
+                  >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+                </span>
               </div>
-            </template>
+            </talkie-audio-player>
           </div>
-        </talkie-audio-recorder>
-      </div>
 
-      <!-- After task attempted (Answered options) -->
-      <div
-        class="class-practice-body-task-attempted-wrapper"
-        v-if="
-          currentTaskAnswered.scores && currentTaskAnswered.appericiationMessage
-        "
-      >
-        <h2 class="h2">
-          {{ currentTaskAnswered.appericiationMessage }}
-          {{ currentTaskAnswered.scores }} pts
-        </h2>
+          <talkie-audio-recorder
+            v-slot="{ startRecording, stopRecording, isRecording }"
+            :onRecordingStopped="handleRecordedItem"
+          >
+            <!-- Temp -->
+            <span hidden>
+              {{ (this.errors = /{voiceForQnA: null}/) }}
+            </span>
+            <div class="class-practice-body-footer-wrapper-options">
+              <!-- Not answered options -->
+              <template
+                v-if="
+                  !(
+                    currentTaskAnswered.scores &&
+                    currentTaskAnswered.appericiationMessage
+                  )
+                "
+              >
+                <div
+                  class="class-practice-body-footer-wrapper-options-item"
+                  v-if="currentRecording"
+                >
+                  <talkie-icon
+                    :name="'arrow-rounded-left'"
+                    :isActive="true"
+                    :variant="'secondary'"
+                    :size="30"
+                    :onClick="handleRecordedItemReset"
+                  />
+                  <p
+                    :class="[
+                      'class-practice-body-footer-wrapper-options-item-label',
+                      !currentRecording &&
+                        'class-practice-body-footer-wrapper-options-item-label-non-visiable',
+                    ]"
+                  >
+                    Redo
+                  </p>
+                </div>
+                <div class="class-practice-body-footer-wrapper-options-item">
+                  <talkie-icon
+                    :name="'mike-unmuted'"
+                    :isActive="true"
+                    :variant="'secondary'"
+                    :size="50"
+                    :onClick="startRecording"
+                    :customClass="
+                      errors.voiceForQnA &&
+                      'class-practice-body-footer-wrapper-options-mike-unmuted-button-error'
+                    "
+                    v-if="!isRecording && !currentRecording"
+                  />
+                  <talkie-icon
+                    :name="'square'"
+                    :isActive="true"
+                    :variant="'secondary'"
+                    :size="50"
+                    :iconToSizeRatio="1.5"
+                    :customClass="'class-practice-body-footer-wrapper-options-stop-recording-button'"
+                    :onClick="stopRecording"
+                    v-if="isRecording && !currentRecording"
+                  />
+                  <talkie-icon
+                    :name="'play'"
+                    :isActive="true"
+                    :variant="'primary'"
+                    :size="50"
+                    :onClick="handleAudioPlayerToggle"
+                    v-if="!isRecording && !isAudioPlaying && currentRecording"
+                  />
+                  <talkie-icon
+                    :name="'pause'"
+                    :isActive="true"
+                    :variant="'primary'"
+                    :size="50"
+                    :onClick="handleAudioPlayerToggle"
+                    v-if="!isRecording && isAudioPlaying && currentRecording"
+                  />
+                  <p
+                    :class="[
+                      'class-practice-body-footer-wrapper-options-item-label',
+                      errors.voiceForQnA &&
+                        'class-practice-body-footer-wrapper-options-item-label-error',
+                    ]"
+                  >
+                    {{
+                      !!errors.voiceForQnA
+                        ? errors.voiceForQnA
+                        : !currentRecording
+                        ? "Tap To Record"
+                        : !isAudioPlaying
+                        ? "Play"
+                        : "Pause"
+                    }}
+                  </p>
+                </div>
+                <div
+                  class="class-practice-body-footer-wrapper-options-item"
+                  v-if="currentRecording"
+                >
+                  <talkie-icon
+                    :type="'submit'"
+                    :name="'send'"
+                    :isActive="true"
+                    :variant="'secondary'"
+                    :size="30"
+                  />
+                  <p
+                    :class="[
+                      'class-practice-body-footer-wrapper-options-item-label',
+                      !currentRecording &&
+                        'class-practice-body-footer-wrapper-options-item-label-non-visiable',
+                    ]"
+                  >
+                    Answer
+                  </p>
+                </div>
+              </template>
+
+              <!-- Answered options -->
+              <template
+                v-if="
+                  currentTaskAnswered.scores &&
+                  currentTaskAnswered.appericiationMessage
+                "
+              >
+                <div class="class-practice-body-footer-wrapper-options-item">
+                  <button
+                    class="class-practice-body-footer-wrapper-options-item-next-button"
+                  >
+                    Next
+                  </button>
+                </div>
+              </template>
+            </div>
+          </talkie-audio-recorder>
+        </div>
+
+        <!-- After task attempted (Answered options) -->
+        <div
+          class="class-practice-body-task-attempted-wrapper"
+          v-if="
+            currentTaskAnswered.scores &&
+            currentTaskAnswered.appericiationMessage
+          "
+        >
+          <h2 class="h2">
+            {{ currentTaskAnswered.appericiationMessage }}
+            {{ currentTaskAnswered.scores }} pts
+          </h2>
+        </div>
       </div>
-    </div>
+    </template>
+
+    <!-- If there are no class tasks for practice -->
+    <template v-if="classTasks.length === 0">
+      <div
+        class="class-practice-body-wrapper class-practice-body-centered-wrapper"
+      >
+        <img
+          :src="require(`@/assets/images/warning-logo.png`)"
+          class="class-practice-body-no-tasks-image"
+        />
+        <p class="p class-practice-body-no-tasks-description">
+          Hmm. It looks like there are no tasks for practice at this moment.
+          They will apear here once your teacher adds them in the class.
+        </p>
+        <talkie-button :onClick="handleHomeButtonClick">
+          Back Home
+        </talkie-button>
+      </div>
+    </template>
   </div>
 
   <!-- Load Wrapper -->
@@ -313,7 +353,12 @@
 </template>
 
 <script>
-import { TalkieToolTip, TalkieIcon, TalkieLoader } from "@/components/UICore";
+import {
+  TalkieToolTip,
+  TalkieIcon,
+  TalkieLoader,
+  TalkieButton,
+} from "@/components/UICore";
 import {
   TalkieAudioRecorder,
   TalkieAudioPlayer,
@@ -332,6 +377,7 @@ export default {
     TalkieAudioPlayer,
     TalkieAudioTimeline,
     TalkieLoader,
+    TalkieButton,
   },
   data() {
     const _tasks = [
@@ -435,7 +481,7 @@ export default {
       loading: false,
       classId: null,
       classDetails: {},
-      classTasks: {},
+      classTasks: [],
       currentTaskAnswered: {
         scores: 5,
         appericiationMessage: "¡Bien hecho!",
@@ -535,6 +581,9 @@ export default {
     handleRecordedItemReset() {
       this.currentRecording = null;
     },
+    handleHomeButtonClick() {
+      this.$router.push("/");
+    },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
 
@@ -580,6 +629,10 @@ export default {
   flex-direction: column;
   gap: var(--t-space-36);
   position: relative;
+}
+.class-practice-body-centered-wrapper {
+  align-items: center;
+  justify-content: center;
 }
 .class-practice-body-wrapper-blured {
   border-style: solid;
@@ -730,6 +783,15 @@ export default {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
 }
+.class-practice-body-no-tasks-image {
+  height: var(--no-tasks-image);
+  width: var(--no-tasks-image);
+  margin: auto;
+}
+.class-practice-body-no-tasks-description {
+  line-height: 1.2;
+  text-align: center;
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -783,6 +845,9 @@ export default {
   .class-practice-body-footer-wrapper-audio-player {
     max-width: 100%;
   }
+  .class-practice-body-no-tasks-image {
+    --no-tasks-image: calc(var(--t-space-70) * 1.2);
+  }
 }
 @media (min-width: 600px) {
   .class-practice-body-footer-wrapper-options-item-next-button {
@@ -834,6 +899,9 @@ export default {
   .class-practice-body-footer-wrapper-audio-player {
     max-width: 80%;
   }
+  .class-practice-body-no-tasks-image {
+    --no-tasks-image: calc(var(--t-space-70) * 1.2);
+  }
 }
 @media (min-width: 1200px) {
   .class-practice-body-footer-wrapper-options {
@@ -867,6 +935,9 @@ export default {
   }
   .class-practice-body-footer-wrapper-audio-player {
     max-width: 70%;
+  }
+  .class-practice-body-no-tasks-image {
+    --no-tasks-image: calc(var(--t-space-70) * 1.2);
   }
 }
 </style>
