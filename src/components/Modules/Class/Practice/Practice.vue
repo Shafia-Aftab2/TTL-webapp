@@ -10,7 +10,6 @@
         </h4>
         <a
           class="class-practice-header-wrapper-link"
-          v-if="currentTask.canFinish"
           @click="handleFinishLinkClick"
         >
           Finish &#8594;
@@ -446,7 +445,7 @@ export default {
       classDetails: {},
       classTasks: [],
       currentTask: { index: null },
-      noMoreTasks: true,
+      noMoreTasks: false,
       currentTaskAnswered: {
         responseId: null,
         scores: null,
@@ -673,10 +672,15 @@ export default {
       this.backdropLoading = false;
       this.currentRecording = null;
       this.currentTaskAnswered = {};
-      this.currentTask =
-        this.classTasks.length - 1 > this.currentTask.index
-          ? this.classTasks[this.currentTask.index + 1]
-          : {};
+
+      // check if the tasks are finished (else set next task)
+      const hasMoreTasks = this.classTasks.length - 1 > this.currentTask.index;
+      if (hasMoreTasks)
+        this.currentTask = this.classTasks[this.currentTask.index + 1];
+      else {
+        this.currentTask = {};
+        this.noMoreTasks = true;
+      }
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
