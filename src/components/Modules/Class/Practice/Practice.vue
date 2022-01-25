@@ -3,7 +3,9 @@
     <div class="class-practice-header-wrapper">
       <!-- If there are no class tasks for practice -->
       <template v-if="classTasks.length === 0">
-        <a class="class-practice-header-wrapper-link"> &#8592; Exit </a>
+        <a class="class-practice-header-wrapper-link" href="/">
+          &#8592; Exit
+        </a>
         <h4 class="h4">Practice Mode</h4>
       </template>
 
@@ -11,6 +13,7 @@
       <template v-if="classTasks.length > 0">
         <a
           class="class-practice-header-wrapper-link"
+          href="/"
           v-if="currentTask.canExit"
         >
           &#8592; Exit
