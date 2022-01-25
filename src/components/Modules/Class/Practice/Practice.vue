@@ -372,8 +372,13 @@ import {
   TalkieAudioPlayer,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
-import { taskTypes } from "@/utils/constants";
-import { ClassService, TaskService, ResponseService } from "@/api/services";
+import { filePurposes, taskTypes } from "@/utils/constants";
+import {
+  ClassService,
+  TaskService,
+  FileService,
+  ResponseService,
+} from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 import { notifications } from "@/components/UIActions";
 
@@ -607,18 +612,50 @@ export default {
     handleHomeButtonClick() {
       this.$router.push("/");
     },
+    async handleFileUpload(recordingBlob) {
+      // payload
+      const payload = new FormData();
+      payload.append(
+        "files",
+        recordingBlob,
+        `talkie-audio-teacher-response-${Math.random() * 123456789}.mp3`
+      );
+
+      // api call
+      const response = await FileService.Upload(
+        { purpose: filePurposes.TASK_VOICE },
+        payload
+      ).catch(() => null);
+
+      // error case
+      if (!response) return null;
+
+      // success case
+      const uploadedFile = response.data[0].s3Url;
+      return uploadedFile;
+    },
     async handleTaskAnswer() {
       // update page state
       this.backdropLoading = true;
+
+      // file upload (+ failure case)
+      const voiceRecording = await this.handleFileUpload(
+        this.currentRecording.blob
+      );
+      if (!voiceRecording) {
+        notifications.show("Could not add your answer..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        this.backdropLoading = false;
+        return;
+      }
 
       // form data
       const taskId = this.currentTask.id;
 
       // payload
-      const payload = {
-        voiceRecording:
-          "https://com-tc-dev-talkie-task-voices.s3.eu-west-1.amazonaws.com/61b8d95740b8301eca269cc9/fe7a3505-9aa2-4be5-a42a-2df0c3cef22b.mp3",
-      };
+      const payload = { voiceRecording };
 
       // api call
       const response = await ResponseService.CreateResponse(
