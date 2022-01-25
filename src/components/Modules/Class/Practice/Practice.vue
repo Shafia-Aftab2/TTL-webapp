@@ -315,6 +315,7 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import { taskTypes } from "@/utils/constants";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "ClassPractice",
@@ -423,12 +424,32 @@ export default {
       },
       tasks: _tasks,
       currentTask: _tasks[2],
+      user: {},
+      classId: null,
       currentTaskAnswered: {
         scores: 5,
         appericiationMessage: "¡Bien hecho!",
       },
       taskTypes: taskTypes,
     };
+  },
+  async created() {
+    // get auth user
+    const user = authUser.getUser();
+    this.user = user;
+
+    // check if user has joined a class
+    const hasJoinedAClass =
+      user?.schools?.length > 0 && user?.schools[0]?.classes?.length > 0
+        ? user?.schools[0]?.classes[0]
+        : null;
+
+    // redirect to join class if not have already
+    if (!hasJoinedAClass) return this.$router.push(`/classes/join`);
+
+    // class id from cookies
+    const classId = hasJoinedAClass;
+    this.classId = classId;
   },
   methods: {
     handleRecordedItem(recording) {
