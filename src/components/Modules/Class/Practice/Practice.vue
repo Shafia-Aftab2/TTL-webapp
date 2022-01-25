@@ -281,6 +281,7 @@
                     :isActive="true"
                     :variant="'secondary'"
                     :size="30"
+                    :onClick="handleTaskAnswer"
                   />
                   <p
                     :class="[
@@ -368,8 +369,9 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import { taskTypes } from "@/utils/constants";
-import { ClassService, TaskService } from "@/api/services";
+import { ClassService, TaskService, ResponseService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ClassPractice",
@@ -475,21 +477,31 @@ export default {
       isAudioPlaying: false,
       handleAudioPlayerToggle: () => {},
       // temp:
-      errors: {
-        voiceForQnA: null,
-      },
-      tasks: _tasks,
-      currentTask: _tasks[2],
+      errors: { voiceForQnA: null },
+      // tasks: _tasks,
+      // currentTask: _tasks[2],
       user: {},
       loading: false,
       classId: null,
       classDetails: {},
       classTasks: [],
+      currentTask: { index: null },
       currentTaskAnswered: {
-        scores: 5,
-        appericiationMessage: "¡Bien hecho!",
+        responseId: null,
+        scores: null,
+        appericiationMessage: "",
       },
       taskTypes: taskTypes,
+      taskScores: {
+        ["Emoji-Story"]: "10",
+        ["Translation"]: "10",
+        ["Caption-This"]: "5",
+      },
+      appericiationMessages: {
+        ["Emoji-Story"]: "¡Excelente!",
+        ["Translation"]: "¡Bien hecho!",
+        ["Caption-This"]: "¡Muy bien!",
+      },
     };
   },
   computed: {
@@ -575,6 +587,8 @@ export default {
         translation: { question: x?.textToTranslate },
       }),
     }));
+    this.currentTask =
+      this.classTasks.length > 0 ? { ...this.classTasks[0], index: 0 } : {};
     this.loading = false;
   },
   methods: {
@@ -586,6 +600,42 @@ export default {
     },
     handleHomeButtonClick() {
       this.$router.push("/");
+    },
+    async handleTaskAnswer() {
+      // form data
+      const taskId = this.currentTask.id;
+
+      // payload
+      const payload = {
+        voiceRecording:
+          "https://com-tc-dev-talkie-task-voices.s3.eu-west-1.amazonaws.com/61b8d95740b8301eca269cc9/fe7a3505-9aa2-4be5-a42a-2df0c3cef22b.mp3",
+      };
+
+      // api call
+      const response = await ResponseService.CreateResponse(
+        taskId,
+        payload
+      ).catch(() => null);
+
+      // failure case
+      if (!response) {
+        notifications.show("Could not add your answer..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      notifications.show("Answered Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.currentTaskAnswered = {
+        responseId: response.data.id,
+        scores: this.taskScores[this.currentTask.type],
+        appericiationMessage: this.appericiationMessages[this.currentTask.type],
+      };
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
