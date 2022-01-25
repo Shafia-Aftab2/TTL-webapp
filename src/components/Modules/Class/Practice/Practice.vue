@@ -22,6 +22,7 @@
         <a
           class="class-practice-header-wrapper-link"
           v-if="currentTask.canFinish"
+          @click="handleFinishLinkClick"
         >
           Finish &#8594;
         </a>
@@ -524,6 +525,13 @@ export default {
     },
     handleHomeButtonClick() {
       this.$router.push("/");
+    },
+    handleFinishLinkClick() {
+      this.$router.push("/");
+      notifications.show("Thanks for trying out practice mode..!", {
+        variant: "success",
+        displayIcon: true,
+      });
     },
     async handleFileUpload(recordingBlob) {
       // payload
