@@ -4,7 +4,9 @@
     @dragover="onDragOver"
     @dragleave="onDragLeave"
     @drop="onDrop"
-  ></div>
+  >
+    <slot :getDroppedFiles="getDroppedFiles" />
+  </div>
 </template>
 
 <script>
@@ -26,6 +28,11 @@ export default {
     onDrop: {
       type: Function,
       default: () => {},
+    },
+  },
+  methods: {
+    getDroppedFiles(e) {
+      return e?.dataTransfer?.files;
     },
   },
 };
