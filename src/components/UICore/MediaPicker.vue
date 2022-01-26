@@ -72,7 +72,16 @@ export default {
       mediaPicked: null,
     };
   },
+  computed: {
+    computedAllowedMediaTypes() {
+      return this.allowedMediaTypes?.map((x) => `${x}/*`).join(",");
+    },
+  },
   props: {
+    allowedMediaTypes: {
+      type: Array,
+      default: () => ["image", "video"],
+    },
     placeholder: {
       type: [String, Boolean],
       default: "Drag and drop your media here",
@@ -83,6 +92,9 @@ export default {
     },
   },
   methods: {
+    isValidMedia(mediaType) {
+      return this.allowedMediaTypes?.includes(mediaType?.split("/")[0]);
+    },
     handleMediaChange(e) {
       const file = e?.target?.files[0];
       if (!file) return;
@@ -92,7 +104,7 @@ export default {
           src: e.target.result,
           file,
         };
-        if (!mediaPicked?.file?.type?.includes("image")) {
+        if (!this.isValidMedia(mediaPicked?.file?.type)) {
           notifications.show("Invalid Media Type..!", {
             variant: "error",
             displayIcon: true,
