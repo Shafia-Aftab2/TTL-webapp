@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { useField } from "vee-validate";
 import TalkieIcon from "./Icon";
 import { notifications } from "@/components/UIActions";
 
@@ -67,9 +68,22 @@ export default {
   name: "MediaPicker",
   components: { TalkieIcon },
   data() {
+    const {
+      value: t_value,
+      handleChange,
+      handleBlur,
+      setValue,
+    } = useField(this.name);
+
+    if (this.value) setValue(this.value);
+
     return {
       id: `talkie-media-picker`,
       mediaPicked: null,
+      t_value,
+      handleChange,
+      handleBlur,
+      setValue,
     };
   },
   computed: {
@@ -78,6 +92,10 @@ export default {
     },
   },
   props: {
+    name: {
+      type: String,
+      default: `talkie-media-picker-${Math.random() * 101010105}`,
+    },
     allowedMediaTypes: {
       type: Array,
       default: () => ["image", "video"],
@@ -112,11 +130,13 @@ export default {
           return;
         }
         this.mediaPicked = mediaPicked;
+        this.setValue(file);
       };
       reader.readAsDataURL(file);
     },
     handleMediaRemove() {
       this.mediaPicked = null;
+      this.setValue(null);
     },
   },
 };
