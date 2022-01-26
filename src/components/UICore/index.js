@@ -16,6 +16,7 @@ import TalkieForm from "./Form.vue";
 import TalkieStarRating from "./StarRating.vue";
 import TalkieToolTip from "./ToolTip.vue";
 import TalkieDragDrop from "./DragDrop.vue";
+import TalkieMediaPicker from "./MediaPicker.vue";
 
 export {
   TalkieBackDrop,
@@ -36,4 +37,5 @@ export {
   TalkieStarRating,
   TalkieToolTip,
   TalkieDragDrop,
+  TalkieMediaPicker,
 };
