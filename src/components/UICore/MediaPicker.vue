@@ -160,14 +160,12 @@ export default {
     isValidMedia(mediaType) {
       return this.allowedMediaTypes?.includes(mediaType?.split("/")[0]);
     },
-    handleMediaChange(e) {
-      const file = e?.target?.files[0];
-      if (!file) return;
+    handleFileProcessing(file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const mediaPicked = {
           src: e.target.result,
-          file,
+          file: file,
         };
         if (!this.isValidMedia(mediaPicked?.file?.type)) {
           notifications.show("Invalid Media Type..!", {
@@ -184,6 +182,11 @@ export default {
       };
       reader.readAsDataURL(file);
     },
+    handleMediaChange(e) {
+      const file = e?.target?.files[0];
+      if (!file) return;
+      this.handleFileProcessing(file);
+    },
     handleMediaRemove() {
       this.mediaPicked = null;
       this.setValue(null);
@@ -192,27 +195,7 @@ export default {
       e.preventDefault();
       const files = this.getDroppedFiles(e);
       if (!files[0]) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const mediaPicked = {
-          src: e.target.result,
-          file: files[0],
-        };
-        if (!this.isValidMedia(mediaPicked?.file?.type)) {
-          notifications.show("Invalid Media Type..!", {
-            variant: "error",
-            displayIcon: true,
-          });
-          this.setValue(null);
-          this.isMediaOnHover = false;
-          return;
-        }
-        this.mediaPicked = mediaPicked;
-        this.setValue(files[0]);
-        this.isMediaOnHover = false;
-      };
-      reader.readAsDataURL(files[0]);
+      this.handleFileProcessing(files[0]);
     },
     handleMediaDragEnter(e) {
       e.preventDefault();
