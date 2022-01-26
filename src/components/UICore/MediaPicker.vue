@@ -101,8 +101,6 @@ export default {
   min-height: 200px;
   max-height: 500px;
   border: var(--t-space-2) solid transparent;
-  border-radius: var(--t-br-small);
-  gap: var(--t-space-16);
 }
 .talkie-media-picker:focus-within {
   border-color: var(--t-black-100);
@@ -123,11 +121,42 @@ export default {
   max-height: 500px;
   border-top: var(--t-space-2) solid transparent;
   border-bottom: var(--t-space-2) solid transparent;
-  border-radius: var(--t-br-small);
 }
 .talkie-media-picked-remove-icon {
   position: absolute;
-  top: var(--t-space-16);
-  right: var(--t-space-16);
+}
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-media-picker {
+    border-radius: calc(var(--t-br-small) * 0.7);
+    gap: var(--t-space-12);
+  }
+  .talkie-media-picked {
+    border-radius: calc(var(--t-br-small) * 0.7);
+  }
+  .talkie-media-picked-remove-icon {
+    top: var(--t-space-10);
+    right: var(--t-space-10);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-media-picker {
+    border-radius: var(--t-br-small);
+    gap: var(--t-space-16);
+  }
+  .talkie-media-picked {
+    border-radius: var(--t-br-small);
+  }
+  .talkie-media-picked-remove-icon {
+    top: var(--t-space-12);
+    right: var(--t-space-12);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-media-picked-remove-icon {
+    top: var(--t-space-16);
+    right: var(--t-space-16);
+  }
 }
 </style>
