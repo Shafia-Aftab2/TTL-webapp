@@ -317,7 +317,7 @@ const routes = [
         name: "AdminSummary",
         path: "/admin/summary",
         component: AdminSummary,
-      }
+      },
     ],
   },
   // 404 page

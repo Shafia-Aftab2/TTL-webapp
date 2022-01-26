@@ -1,2 +1,2 @@
-import AdminSummary from "./Upgrade.vue";
+import AdminSummary from "./Summary.vue";
 export default AdminSummary;
