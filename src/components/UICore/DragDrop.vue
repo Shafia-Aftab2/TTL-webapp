@@ -1,5 +1,6 @@
 <template>
   <div
+    :class="customClass.toString()"
     @dragenter="onDragEnter"
     @dragover="onDragOver"
     @dragleave="onDragLeave"
@@ -28,6 +29,10 @@ export default {
     onDrop: {
       type: Function,
       default: () => {},
+    },
+    customClass: {
+      type: String,
+      default: "",
     },
   },
   methods: {
