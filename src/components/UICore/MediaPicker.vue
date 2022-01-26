@@ -1,5 +1,12 @@
 <template>
-  <div class="talkie-media-picker">
+  <div
+    :class="[
+      'talkie-media-picker',
+      hint &&
+        hint.type &&
+        `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
+    ]"
+  >
     <!-- if there is no media item -->
     <template v-if="!mediaPicked?.src">
       <p class="p talkie-media-picker-placeholder" v-if="placeholder">
@@ -39,13 +46,23 @@
       <img
         :src="mediaPicked?.src"
         v-if="mediaPicked?.src?.includes('image')"
-        class="talkie-media-picked"
+        :class="[
+          'talkie-media-picked',
+          hint &&
+            hint.type &&
+            `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
+        ]"
       />
       <video
         controls
         :src="mediaPicked?.src"
         v-if="mediaPicked?.src?.includes('video')"
-        class="talkie-media-picked"
+        :class="[
+          'talkie-media-picked',
+          hint &&
+            hint.type &&
+            `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
+        ]"
       ></video>
       <span class="talkie-media-picked-remove-icon">
         <talkie-icon
@@ -57,6 +74,15 @@
       </span>
     </template>
   </div>
+  <p
+    v-if="hint && hint.type && hint.message"
+    :class="[
+      `talkie-media-picker-message`,
+      `talkie-media-picker-${hint.type.toString()}-message`,
+    ]"
+  >
+    {{ hint.message }}
+  </p>
 </template>
 
 <script>
@@ -107,6 +133,13 @@ export default {
     showBrowseFilesLink: {
       type: Boolean,
       default: true,
+    },
+    hint: {
+      type: Object,
+      default: () => ({
+        type: null,
+        message: null,
+      }),
     },
   },
   methods: {
@@ -189,6 +222,32 @@ export default {
   position: absolute;
 }
 
+/* Hint variants */
+.talkie-media-picker-success-wrapper {
+  border-color: var(--t-green) !important;
+}
+.talkie-media-picker-success-message {
+  color: var(--t-green);
+}
+.talkie-media-picker-error-wrapper {
+  border-color: var(--t-red) !important;
+}
+.talkie-media-picker-error-message {
+  color: var(--t-red);
+}
+.talkie-media-picker-warning-wrapper {
+  border-color: var(--t-primary) !important;
+}
+.talkie-media-picker-warning-message {
+  color: var(--t-primary);
+}
+.talkie-media-picker-info-wrapper {
+  border-color: var(--t-black-100) !important;
+}
+.talkie-media-picker-info-message {
+  color: var(--t-black-100);
+}
+
 /* Responsive variants */
 @media (max-width: 599px) {
   .talkie-media-picker {
@@ -202,6 +261,10 @@ export default {
     top: var(--t-space-10);
     right: var(--t-space-10);
   }
+  .talkie-media-picker-message {
+    margin-top: var(--t-space-2);
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
 }
 @media (min-width: 600px) {
   .talkie-media-picker {
@@ -214,6 +277,10 @@ export default {
   .talkie-media-picked-remove-icon {
     top: var(--t-space-12);
     right: var(--t-space-12);
+  }
+  .talkie-media-picker-message {
+    margin-top: var(--t-space-3);
+    font-size: var(--t-fs-small);
   }
 }
 @media (min-width: 1200px) {
