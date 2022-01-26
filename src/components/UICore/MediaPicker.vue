@@ -1,12 +1,20 @@
 <template>
-  <div
-    :class="[
-      'talkie-media-picker',
-      hint &&
-        hint.type &&
-        `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
-    ]"
+  <talkie-drag-drop
+    :customClass="
+      [
+        'talkie-media-picker',
+        hint &&
+          hint.type &&
+          `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
+      ]?.join(' ')
+    "
+    :onDrop="handleMediaDrop"
+    v-slot="{ getDroppedFiles }"
   >
+    <span hidden>
+      <!-- update these files via a handler -->
+      {{ (this.getDroppedFiles = getDroppedFiles) }}
+    </span>
     <!-- if there is no media item -->
     <template v-if="!mediaPicked?.src">
       <p class="p talkie-media-picker-placeholder" v-if="placeholder">
@@ -73,7 +81,7 @@
         />
       </span>
     </template>
-  </div>
+  </talkie-drag-drop>
   <p
     v-if="hint && hint.type && hint.message"
     :class="[
@@ -88,11 +96,12 @@
 <script>
 import { useField } from "vee-validate";
 import TalkieIcon from "./Icon";
+import TalkieDragDrop from "./DragDrop";
 import { notifications } from "@/components/UIActions";
 
 export default {
   name: "MediaPicker",
-  components: { TalkieIcon },
+  components: { TalkieIcon, TalkieDragDrop },
   data() {
     const {
       value: t_value,
@@ -110,6 +119,7 @@ export default {
       handleChange,
       handleBlur,
       setValue,
+      getDroppedFiles: () => {},
     };
   },
   computed: {
@@ -160,6 +170,7 @@ export default {
             variant: "error",
             displayIcon: true,
           });
+          this.setValue(null);
           return;
         }
         this.mediaPicked = mediaPicked;
@@ -170,6 +181,30 @@ export default {
     handleMediaRemove() {
       this.mediaPicked = null;
       this.setValue(null);
+    },
+    handleMediaDrop(e) {
+      e.preventDefault();
+      const files = this.getDroppedFiles(e);
+      if (!files[0]) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const mediaPicked = {
+          src: e.target.result,
+          file: files[0],
+        };
+        if (!this.isValidMedia(mediaPicked?.file?.type)) {
+          notifications.show("Invalid Media Type..!", {
+            variant: "error",
+            displayIcon: true,
+          });
+          this.setValue(null);
+          return;
+        }
+        this.mediaPicked = mediaPicked;
+        this.setValue(file);
+      };
+      reader.readAsDataURL(files[0]);
     },
   },
 };
