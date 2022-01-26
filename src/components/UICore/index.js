@@ -15,6 +15,7 @@ import TalkieIcon from "./Icon.vue";
 import TalkieForm from "./Form.vue";
 import TalkieStarRating from "./StarRating.vue";
 import TalkieToolTip from "./ToolTip.vue";
+import TalkieDragDrop from "./DragDrop.vue";
 
 export {
   TalkieBackDrop,
@@ -34,4 +35,5 @@ export {
   TalkieForm,
   TalkieStarRating,
   TalkieToolTip,
+  TalkieDragDrop,
 };
