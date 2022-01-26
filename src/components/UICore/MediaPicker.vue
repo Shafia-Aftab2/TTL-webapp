@@ -6,8 +6,11 @@
         hint &&
           hint.type &&
           `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
+        isMediaOnHover && `talkie-media-picker-media-hover`,
       ]?.join(' ')
     "
+    :onDragEnter="handleMediaDragEnter"
+    :onDragLeave="handleMediaDragLeave"
     :onDrop="handleMediaDrop"
     v-slot="{ getDroppedFiles }"
   >
@@ -120,6 +123,7 @@ export default {
       handleBlur,
       setValue,
       getDroppedFiles: () => {},
+      isMediaOnHover: false,
     };
   },
   computed: {
@@ -171,10 +175,12 @@ export default {
             displayIcon: true,
           });
           this.setValue(null);
+          this.isMediaOnHover = false;
           return;
         }
         this.mediaPicked = mediaPicked;
         this.setValue(file);
+        this.isMediaOnHover = false;
       };
       reader.readAsDataURL(file);
     },
@@ -199,12 +205,22 @@ export default {
             displayIcon: true,
           });
           this.setValue(null);
+          this.isMediaOnHover = false;
           return;
         }
         this.mediaPicked = mediaPicked;
-        this.setValue(file);
+        this.setValue(files[0]);
+        this.isMediaOnHover = false;
       };
       reader.readAsDataURL(files[0]);
+    },
+    handleMediaDragEnter(e) {
+      e.preventDefault();
+      this.isMediaOnHover = true;
+    },
+    handleMediaDragLeave(e) {
+      e.preventDefault();
+      this.isMediaOnHover = false;
     },
   },
 };
@@ -223,6 +239,14 @@ export default {
   min-height: 200px;
   max-height: 500px;
   border: var(--t-space-2) solid transparent;
+}
+.talkie-media-picker-media-hover {
+  box-shadow: rgba(0, 0, 0, 0.35) 0 var(--t-space-5) var(--t-space-15);
+}
+.talkie-media-picker-media-hover > * {
+  pointer-events: none;
+  animation: shake 0.9s;
+  animation-iteration-count: infinite;
 }
 .talkie-media-picker:focus-within {
   border-color: var(--t-black-100);
@@ -322,6 +346,43 @@ export default {
   .talkie-media-picked-remove-icon {
     top: var(--t-space-16);
     right: var(--t-space-16);
+  }
+}
+
+/* Animation */
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
   }
 }
 </style>
