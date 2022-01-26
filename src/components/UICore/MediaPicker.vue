@@ -2,6 +2,18 @@
   <div class="talkie-media-picker">
     <!-- if there is no media item -->
     <template v-if="!mediaPicked?.src">
+      <p class="p talkie-media-picker-placeholder" v-if="placeholder">
+        {{ placeholder }}
+        {{ placeholder && showBrowseFilesLink ? " or " : "" }}
+        <a
+          class="talkie-media-picker-browse-files-link"
+          v-if="showBrowseFilesLink"
+        >
+          <label class="talkie-media-picker-label" :htmlFor="id">
+            Browse Files
+          </label>
+        </a>
+      </p>
       <label class="talkie-media-picker-label" :htmlFor="id">
         <talkie-icon
           :name="'upload'"
@@ -60,6 +72,16 @@ export default {
       mediaPicked: null,
     };
   },
+  props: {
+    placeholder: {
+      type: [String, Boolean],
+      default: "Drag and drop your media here",
+    },
+    showBrowseFilesLink: {
+      type: Boolean,
+      default: true,
+    },
+  },
   methods: {
     handleMediaChange(e) {
       const file = e?.target?.files[0];
@@ -104,6 +126,15 @@ export default {
 }
 .talkie-media-picker:focus-within {
   border-color: var(--t-black-100);
+}
+.talkie-media-picker-placeholder {
+  max-width: 80%;
+  text-align: center;
+  line-height: 1.3;
+}
+.talkie-media-picker-browse-files-link,
+.talkie-media-picker-browse-files-link:visited {
+  color: var(--t-red);
 }
 .talkie-media-picker-label {
   cursor: pointer;
