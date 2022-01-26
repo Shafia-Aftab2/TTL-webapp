@@ -1,99 +1,101 @@
 <template>
-  <talkie-drag-drop
-    :customClass="
-      [
-        'talkie-media-picker',
-        hint &&
-          hint.type &&
-          `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
-        isMediaOnHover && `talkie-media-picker-media-hover`,
-      ]?.join(' ')
-    "
-    :onDragEnter="handleMediaDragEnter"
-    :onDragLeave="handleMediaDragLeave"
-    :onDrop="handleMediaDrop"
-    v-slot="{ getDroppedFiles }"
-  >
-    <span hidden>
-      <!-- update these files via a handler -->
-      {{ (this.getDroppedFiles = getDroppedFiles) }}
-    </span>
-    <!-- if there is no media item -->
-    <template v-if="!mediaPicked?.src">
-      <p class="p talkie-media-picker-placeholder" v-if="placeholder">
-        {{ placeholder }}
-        {{ placeholder && showBrowseFilesLink ? " or " : "" }}
-        <a
-          class="talkie-media-picker-browse-files-link"
-          v-if="showBrowseFilesLink"
-        >
-          <label class="talkie-media-picker-label" :htmlFor="id">
-            Browse Files
-          </label>
-        </a>
-      </p>
-      <label class="talkie-media-picker-label" :htmlFor="id">
-        <talkie-icon
-          :name="'upload'"
-          :size="50"
-          :iconToSizeRatio="0.5"
-          :noHighlights="true"
-        />
-      </label>
-      <input
-        :id="id"
-        :name="name"
-        :accept="computedAllowedMediaTypes"
-        type="file"
-        @change="handleMediaChange"
-        @input="handleChange"
-        @blur="handleBlur"
-        class="talkie-media-picker-input"
-      />
-    </template>
-
-    <!-- if there is a media item -->
-    <template v-if="mediaPicked?.src">
-      <img
-        :src="mediaPicked?.src"
-        v-if="mediaPicked?.src?.includes('image')"
-        :class="[
-          'talkie-media-picked',
+  <div class="talkie-media-picker-wrapper">
+    <talkie-drag-drop
+      :customClass="
+        [
+          'talkie-media-picker',
           hint &&
             hint.type &&
             `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
-        ]"
-      />
-      <video
-        controls
-        :src="mediaPicked?.src"
-        v-if="mediaPicked?.src?.includes('video')"
-        :class="[
-          'talkie-media-picked',
-          hint &&
-            hint.type &&
-            `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
-        ]"
-      ></video>
-      <span class="talkie-media-picked-remove-icon">
-        <talkie-icon
-          :name="'x-mark'"
-          :variant="'secondary'"
-          :isActive="true"
-          :onClick="handleMediaRemove"
-        />
+          isMediaOnHover && `talkie-media-picker-media-hover`,
+        ]?.join(' ')
+      "
+      :onDragEnter="handleMediaDragEnter"
+      :onDragLeave="handleMediaDragLeave"
+      :onDrop="handleMediaDrop"
+      v-slot="{ getDroppedFiles }"
+    >
+      <span hidden>
+        <!-- update these files via a handler -->
+        {{ (this.getDroppedFiles = getDroppedFiles) }}
       </span>
-    </template>
-  </talkie-drag-drop>
-  <p
-    v-if="hint && hint.type && hint.message"
-    :class="[
-      `talkie-media-picker-message`,
-      `talkie-media-picker-${hint.type.toString()}-message`,
-    ]"
-  >
-    {{ hint.message }}
-  </p>
+      <!-- if there is no media item -->
+      <template v-if="!mediaPicked?.src">
+        <p class="p talkie-media-picker-placeholder" v-if="placeholder">
+          {{ placeholder }}
+          {{ placeholder && showBrowseFilesLink ? " or " : "" }}
+          <a
+            class="talkie-media-picker-browse-files-link"
+            v-if="showBrowseFilesLink"
+          >
+            <label class="talkie-media-picker-label" :htmlFor="id">
+              Browse Files
+            </label>
+          </a>
+        </p>
+        <label class="talkie-media-picker-label" :htmlFor="id">
+          <talkie-icon
+            :name="'upload'"
+            :size="50"
+            :iconToSizeRatio="0.5"
+            :noHighlights="true"
+          />
+        </label>
+        <input
+          :id="id"
+          :name="name"
+          :accept="computedAllowedMediaTypes"
+          type="file"
+          @change="handleMediaChange"
+          @input="handleChange"
+          @blur="handleBlur"
+          class="talkie-media-picker-input"
+        />
+      </template>
+
+      <!-- if there is a media item -->
+      <template v-if="mediaPicked?.src">
+        <img
+          :src="mediaPicked?.src"
+          v-if="mediaPicked?.src?.includes('image')"
+          :class="[
+            'talkie-media-picked',
+            hint &&
+              hint.type &&
+              `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
+          ]"
+        />
+        <video
+          controls
+          :src="mediaPicked?.src"
+          v-if="mediaPicked?.src?.includes('video')"
+          :class="[
+            'talkie-media-picked',
+            hint &&
+              hint.type &&
+              `talkie-media-picker-${hint?.type?.toString()}-wrapper`,
+          ]"
+        ></video>
+        <span class="talkie-media-picked-remove-icon">
+          <talkie-icon
+            :name="'x-mark'"
+            :variant="'secondary'"
+            :isActive="true"
+            :onClick="handleMediaRemove"
+          />
+        </span>
+      </template>
+    </talkie-drag-drop>
+    <p
+      v-if="hint && hint.type && hint.message"
+      :class="[
+        `talkie-media-picker-message`,
+        `talkie-media-picker-${hint.type.toString()}-message`,
+      ]"
+    >
+      {{ hint.message }}
+    </p>
+  </div>
 </template>
 
 <script>
@@ -210,6 +212,9 @@ export default {
 </script>
 
 <style scoped>
+.talkie-media-picker-wrapper {
+  display: block;
+}
 .talkie-media-picker {
   display: flex;
   flex-direction: column;
