@@ -15,9 +15,9 @@ export default class TaskRoutes {
 
   static async QueryClassTasks(classId, query) {
     return HTTPClient.get(
-      `/tasks/${classId}?${Object.entries(query).map(
-        ([key, value]) => `${key}=${encodeURIComponent(value)}&`
-      )}`
+      `/tasks/${classId}?${Object.entries(query)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}&`)
+        .join("")}`
     );
   }
 
