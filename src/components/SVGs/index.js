@@ -14,6 +14,7 @@ import IconSetting from "./IconSetting.vue";
 import IconTrophy from "./IconTrophy.vue";
 import IconPencil from "./IconPencil.vue";
 import IconTickMark from "./IconTickMark.vue";
+import IconUpload from "./IconUpload.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
@@ -36,6 +37,7 @@ export {
   IconTrophy,
   IconPencil,
   IconTickMark,
+  IconUpload,
   // Logos
   LogoTalkie,
   LogoAuthSignup,
