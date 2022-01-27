@@ -92,6 +92,11 @@
                 :image="
                   _question.type === TaskTypes.CAPTION_THIS && _question.image
                 "
+                :expandContent="
+                  _question.type === TaskTypes.TRANSLATION
+                    ? { translation: _question.translation }
+                    : {}
+                "
                 :onCardBodyClick="
                   () =>
                     _question.type === TaskTypes.QUESTION_ANSWER
@@ -334,6 +339,12 @@ export default {
       ...(x.type === TaskTypes.CAPTION_THIS && {
         image: x.captionThisImage,
       }),
+      ...(x.type === TaskTypes.TRANSLATION && {
+        translation: {
+          textToTranslate: x?.textToTranslate,
+          translatedText: x?.answer,
+        },
+      }),
     }));
 
     this.classStudents = classDetails.students.map((x) => ({
@@ -418,6 +429,12 @@ export default {
         }),
         ...(x.type === TaskTypes.CAPTION_THIS && {
           image: x.captionThisImage,
+        }),
+        ...(x.type === TaskTypes.TRANSLATION && {
+          translation: {
+            textToTranslate: x?.textToTranslate,
+            translatedText: x?.answer,
+          },
         }),
       }));
     },
