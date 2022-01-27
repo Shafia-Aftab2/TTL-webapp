@@ -534,13 +534,14 @@ export default {
           }
 
           // success case
-          return { captionThisImage };
+          return { captionThisImage, isPracticeMode: true };
         }
         // translation task
         if (this.selectedTaskType === TaskTypes.TRANSLATION) {
           return {
             textToTranslate: values.textToTranslate,
             answer: values.translatedText,
+            isPracticeMode: true,
           };
         }
         return null;
