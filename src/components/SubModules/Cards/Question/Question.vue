@@ -54,23 +54,25 @@
     <p class="p" v-if="description">{{ description }}</p>
     <div
       class="talkie-question-card-footer-wrapper"
-      v-if="manageMode"
+      v-if="manageModeOptions"
       @click="handleQuestionCardClick"
     >
       <talkie-chip
         :label="'Edit'"
         :variant="'neutral'"
         :onClick="onEditClick"
+        v-if="manageModeOptions.canEdit"
       />
       <talkie-chip
         :label="'Delete'"
         :variant="'danger'"
         :onClick="onDeleteClick"
+        v-if="manageModeOptions.canDelete"
       />
       <talkie-chip
-        v-if="isForPractice"
         :label="'Practice Mode'"
         :variant="'neutral'"
+        v-if="manageModeOptions.isForPractice"
       />
     </div>
   </div>
@@ -122,9 +124,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    manageMode: {
-      type: Boolean,
-      default: false,
+    manageModeOptions: {
+      type: Object,
+      default: () => ({
+        canEdit: false,
+        canDelete: false,
+        isForPractice: false,
+      }),
     },
     onCardBodyClick: {
       type: Function,
@@ -137,9 +143,6 @@ export default {
     onDeleteClick: {
       type: Function,
       default: () => {},
-    },
-    isForPractice: {
-      type: Boolean,
     },
   },
   methods: {
