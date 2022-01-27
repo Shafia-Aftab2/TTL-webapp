@@ -74,7 +74,11 @@
                 :manageMode="isTeacher"
                 :centered="false"
                 :hoverAnimation="true"
-                :audioSource="_question.audioSource"
+                :audioSource="
+                  _question.type === TaskTypes.QUESTION_ANSWER &&
+                  _question.audioSource
+                "
+                :isForPractice="_question.isForPractice"
                 :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
                 :onEditClick="() => handleTopicCardEditClick(_question.id)"
                 :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
@@ -210,6 +214,7 @@ export default {
       activeTab: "questions",
       tabs: ["Questions", "Students"],
       currentTopicFilter: null,
+      TaskTypes: TaskTypes,
     };
   },
   async created() {
@@ -302,7 +307,10 @@ export default {
       title: x.title,
       topic: x.topic.name,
       description: x.questionText,
-      audioSource: x.voiceForQnA,
+      isForPractice: x?.isPracticeMode,
+      ...(x.type === TaskTypes.QUESTION_ANSWER && {
+        audioSource: x.voiceForQnA,
+      }),
     }));
 
     this.classStudents = classDetails.students.map((x) => ({
@@ -416,7 +424,10 @@ export default {
       return response.data || null;
     },
     async getClassTasks(id) {
-      const query = { type: TaskTypes.QUESTION_ANSWER };
+      const query = {
+        // type: TaskTypes.QUESTION_ANSWER
+        isPracticeMode: true,
+      };
 
       const response = await TaskService.QueryClassTasks(id, query).catch(
         () => null
