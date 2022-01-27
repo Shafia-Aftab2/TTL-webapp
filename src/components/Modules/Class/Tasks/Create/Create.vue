@@ -106,6 +106,26 @@
             />
           </template>
 
+          <!-- Field for translation task -->
+          <template v-if="selectedTaskType === taskTypes.TRANSLATION">
+            <talkie-input
+              :name="'textToTranslate'"
+              :placeholder="'Text To Translate (required)'"
+              :hint="{
+                type: errors.textToTranslate ? 'error' : null,
+                message: errors.textToTranslate ? errors.textToTranslate : null,
+              }"
+            />
+            <talkie-input
+              :name="'translatedText'"
+              :placeholder="'Translated Text (required)'"
+              :hint="{
+                type: errors.translatedText ? 'error' : null,
+                message: errors.translatedText ? errors.translatedText : null,
+              }"
+            />
+          </template>
+
           <talkie-alert
             :text="formStatus.message"
             :variant="formStatus.type"
@@ -216,7 +236,12 @@
         </template>
 
         <!-- Field for caption-this task -->
-        <template v-if="selectedTaskType === taskTypes.CAPTION_THIS">
+        <template
+          v-if="
+            selectedTaskType === taskTypes.CAPTION_THIS ||
+            selectedTaskType === taskTypes.TRANSLATION
+          "
+        >
           <div class="class-start-convo-form-submit-button">
             <talkie-button> Create </talkie-button>
           </div>
@@ -258,6 +283,7 @@ import {
 import {
   createQandATopicSchema,
   createCaptionThisTopicSchema,
+  createTranslationTopicSchema,
 } from "@/utils/validations/task.validation";
 import { FileService, TaskService, ClassService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
@@ -287,6 +313,7 @@ export default {
       validationSchemas: {
         ["Q&A"]: createQandATopicSchema,
         ["Caption-This"]: createCaptionThisTopicSchema,
+        ["Translation"]: createTranslationTopicSchema,
       },
       pageLoading: false,
       loading: false,
@@ -326,6 +353,7 @@ export default {
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
         ["Caption-This"]: "Add a caption task for practice.",
+        ["Translation"]: "Add a translation task for practice.",
       },
       selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),
@@ -478,6 +506,13 @@ export default {
           // success case
           return { captionThisImage };
         }
+        // translation task
+        if (this.selectedTaskType === TaskTypes.TRANSLATION) {
+          return {
+            textToTranslate: values.textToTranslate,
+            answer: values.translatedText,
+          };
+        }
         return null;
       })();
       if (!taskSpecificFields) return;
@@ -505,7 +540,8 @@ export default {
               "Question text should not be unethical..!",
             ['"topic" must be a valid mongo id']: "Invalid Topic",
             ["Q&A"]: "Could not create conversation..!",
-            ["Caption-This"]: "Could not caption task..!",
+            ["Caption-This"]: "Could not create caption task..!",
+            ["Translation"]: "Could not create translation task..!",
           };
 
           return {
@@ -536,6 +572,8 @@ export default {
             ? "Conversation Created. Redirecting..!"
             : this.selectedTaskType === TaskTypes.CAPTION_THIS
             ? "Caption Task Created. Redirecting..!"
+            : this.selectedTaskType === TaskTypes.TRANSLATION
+            ? "Translation Task Created. Redirecting..!"
             : "",
         animateEllipse: false,
       };
