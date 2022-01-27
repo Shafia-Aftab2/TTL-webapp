@@ -95,6 +95,17 @@
             </talkie-audio-player>
           </template>
 
+          <!-- Field for caption-this task -->
+          <template v-if="selectedTaskType === taskTypes.CAPTION_THIS">
+            <talkie-media-picker
+              :name="'captionImage'"
+              :hint="{
+                type: errors.captionImage ? 'error' : null,
+                message: errors.captionImage ? errors.captionImage : null,
+              }"
+            />
+          </template>
+
           <talkie-alert
             :text="formStatus.message"
             :variant="formStatus.type"
@@ -203,6 +214,13 @@
             </div>
           </div>
         </template>
+
+        <!-- Field for caption-this task -->
+        <template v-if="selectedTaskType === taskTypes.CAPTION_THIS">
+          <div class="class-start-convo-form-submit-button">
+            <talkie-button> Create </talkie-button>
+          </div>
+        </template>
       </talkie-audio-recorder>
     </talkie-form>
     <div class="class-start-convo-footer">
@@ -228,6 +246,8 @@ import {
   TalkieForm,
   TalkieModal,
   TalkieLoader,
+  TalkieButton,
+  TalkieMediaPicker,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import {
@@ -235,7 +255,10 @@ import {
   TalkieAudioPlayer,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
-import { createQandATopicSchema } from "@/utils/validations/task.validation";
+import {
+  createQandATopicSchema,
+  createCaptionThisTopicSchema,
+} from "@/utils/validations/task.validation";
 import { FileService, TaskService, ClassService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import TaskTypes from "@/utils/constants/taskTypes";
@@ -254,6 +277,8 @@ export default {
     TalkieForm,
     TalkieModal,
     TalkieLoader,
+    TalkieButton,
+    TalkieMediaPicker,
     TalkieQuestionCard,
   },
   data() {
@@ -261,6 +286,7 @@ export default {
       topics: [],
       validationSchemas: {
         ["Q&A"]: createQandATopicSchema,
+        ["Caption-This"]: createCaptionThisTopicSchema,
       },
       pageLoading: false,
       loading: false,
@@ -299,6 +325,7 @@ export default {
       selectedTaskType: "Q&A",
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
+        ["Caption-This"]: "Add a caption task for practice.",
       },
       selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),
@@ -362,14 +389,11 @@ export default {
     handleModalValidationReset() {
       this.shouldSubmit = false;
     },
-    async handleFileUpload(fileBlob, filePurpose) {
+    async handleFileUpload(file, filePurpose, fileName) {
       // payload
       const payload = new FormData();
-      payload.append(
-        "files",
-        fileBlob,
-        `talkie-${filePurpose}-${Math.random() * 123456789}.mp3`
-      );
+      if (fileName) payload.append("files", file, fileName);
+      else payload.append("files", file);
 
       // api call
       const response = await FileService.Upload(
@@ -409,7 +433,8 @@ export default {
           // upload file
           const voiceForQnA = await this.handleFileUpload(
             this.currentRecording.blob,
-            FilePurposes.TASK_VOICE
+            FilePurposes.TASK_VOICE,
+            `talkie-${FilePurposes.TASK_VOICE}-${Math.random() * 123456789}.mp3`
           );
 
           // failure case
@@ -423,8 +448,35 @@ export default {
           }
 
           // success case
-
           return { voiceForQnA };
+        }
+        // caption this task
+        if (this.selectedTaskType === TaskTypes.CAPTION_THIS) {
+          // update page status
+          this.formStatus = {
+            type: "info",
+            message: `Uploading Image`,
+            animateEllipse: true,
+          };
+
+          // upload file
+          const captionThisImage = await this.handleFileUpload(
+            values?.captionImage,
+            FilePurposes.TASK_IMAGE
+          );
+
+          // failure case
+          if (!captionThisImage) {
+            this.loading = false;
+            this.formStatus = {
+              type: "error",
+              message: "Could not upload image file..!",
+            };
+            return;
+          }
+
+          // success case
+          return { captionThisImage };
         }
         return null;
       })();
@@ -439,7 +491,7 @@ export default {
       const payload = {
         title,
         topic: topicId,
-        type: TaskTypes.QUESTION_ANSWER,
+        type: this.selectedTaskType,
         ...taskSpecificFields,
       };
       if (questionText) payload.questionText = questionText;
@@ -453,6 +505,7 @@ export default {
               "Question text should not be unethical..!",
             ['"topic" must be a valid mongo id']: "Invalid Topic",
             ["Q&A"]: "Could not create conversation..!",
+            ["Caption-This"]: "Could not caption task..!",
           };
 
           return {
@@ -481,6 +534,8 @@ export default {
         message:
           this.selectedTaskType === TaskTypes.QUESTION_ANSWER
             ? "Conversation Created. Redirecting..!"
+            : this.selectedTaskType === TaskTypes.CAPTION_THIS
+            ? "Caption Task Created. Redirecting..!"
             : "",
         animateEllipse: false,
       };
@@ -558,6 +613,9 @@ export default {
 .class-start-convo-form-options-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
+}
+.class-start-convo-form-submit-button {
+  margin: auto;
 }
 .class-start-convo-footer {
   display: flex;
