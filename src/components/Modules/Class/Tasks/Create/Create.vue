@@ -3,7 +3,7 @@
   <template v-if="!computedPageLoading">
     <talkie-form
       v-slot="{ errors, setValue, values, triggerFormSubmit }"
-      :validationSchema="createQandATopicSchema"
+      :validationSchema="computedValidationSchema"
       :onSubmit="handleSubmit"
       :customClass="'class-start-convo-wrapper'"
     >
@@ -25,12 +25,15 @@
           :fullWidth="false"
         />
       </talkie-modal>
-      <h2 class="class-start-convo-header h2">Start a conversation now?</h2>
+      <h2 class="class-start-convo-header h2" v-if="computedSelectedTaskHeader">
+        {{ computedSelectedTaskHeader }}
+      </h2>
       <talkie-audio-recorder
         v-slot="{ startRecording, stopRecording, isRecording }"
         :onRecordingStopped="handleRecordedItem"
       >
         <div class="class-start-convo-form">
+          <!-- Common fields -->
           <talkie-select
             :name="'topic'"
             :placeholder="'Choose topic'"
@@ -53,40 +56,45 @@
             :name="'questionText'"
             :placeholder="'Question text (optional)'"
           />
-          <!-- TODO: hide this filed via a class -->
-          <talkie-input
-            :name="'voiceForQnA'"
-            :placeholder="'Audio Recording Url/Blob'"
-            hidden
-          />
-          <talkie-audio-player
-            v-slot="{
-              isPlaying,
-              togglePlayer,
-              currentAudioPercentage,
-              updateAudioPercentage,
-              totalAudioPlaybackTime,
-              currentAudioPlaybackTime,
-            }"
-            :recording="currentRecording"
-            v-if="currentRecording"
-          >
-            <span hidden>
-              <!-- TODO: updated these states via a handler -->
-              {{ (this.isAudioPlaying = isPlaying) }}
-              {{ (this.handleAudioPlayerToggle = togglePlayer) }}
-            </span>
-            <div class="class-start-convo-form-options-audio-player-wrapper">
-              <talkie-audio-timeline
-                :percentage="currentAudioPercentage"
-                :onHeadChange="updateAudioPercentage"
-              />
-              <span
-                class="class-start-convo-form-options-audio-player-timestamps"
-                >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+
+          <!-- Field for qna task -->
+          <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
+            <!-- TODO: hide this filed via a class -->
+            <talkie-input
+              :name="'voiceForQnA'"
+              :placeholder="'Audio Recording Url/Blob'"
+              hidden
+            />
+            <talkie-audio-player
+              v-slot="{
+                isPlaying,
+                togglePlayer,
+                currentAudioPercentage,
+                updateAudioPercentage,
+                totalAudioPlaybackTime,
+                currentAudioPlaybackTime,
+              }"
+              :recording="currentRecording"
+              v-if="currentRecording"
+            >
+              <span hidden>
+                <!-- TODO: updated these states via a handler -->
+                {{ (this.isAudioPlaying = isPlaying) }}
+                {{ (this.handleAudioPlayerToggle = togglePlayer) }}
               </span>
-            </div>
-          </talkie-audio-player>
+              <div class="class-start-convo-form-options-audio-player-wrapper">
+                <talkie-audio-timeline
+                  :percentage="currentAudioPercentage"
+                  :onHeadChange="updateAudioPercentage"
+                />
+                <span
+                  class="class-start-convo-form-options-audio-player-timestamps"
+                  >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+                </span>
+              </div>
+            </talkie-audio-player>
+          </template>
+
           <talkie-alert
             :text="formStatus.message"
             :variant="formStatus.type"
@@ -94,103 +102,107 @@
             v-if="formStatus.type && formStatus.message"
           />
         </div>
-        <div class="class-start-convo-form-options-wrapper">
-          <div class="class-start-convo-form-options">
-            <div class="class-start-convo-form-options-item">
-              <talkie-icon
-                :name="'arrow-rounded-left'"
-                :isActive="true"
-                :variant="'secondary'"
-                :size="30"
-                :onClick="handleRecordedItemReset"
-              />
-              <p
-                :class="[
-                  'class-start-convo-form-options-item-label',
-                  !currentRecording &&
-                    'class-start-convo-form-options-item-label-non-visiable',
-                ]"
-              >
-                Redo
-              </p>
-            </div>
-            <div class="class-start-convo-form-options-item">
-              <talkie-icon
-                :name="'mike-unmuted'"
-                :isActive="true"
-                :variant="'secondary'"
-                :size="50"
-                :onClick="startRecording"
-                :customClass="
-                  errors.voiceForQnA &&
-                  'class-start-convo-form-options-mike-unmuted-button-error'
-                "
-                v-if="!isRecording && !currentRecording"
-              />
-              <talkie-icon
-                :name="'square'"
-                :isActive="true"
-                :variant="'secondary'"
-                :size="50"
-                :iconToSizeRatio="1.5"
-                :customClass="'class-start-convo-form-options-stop-recording-button'"
-                :onClick="stopRecording"
-                v-if="isRecording && !currentRecording"
-              />
-              <talkie-icon
-                :name="'play'"
-                :isActive="true"
-                :variant="'primary'"
-                :size="50"
-                :onClick="handleAudioPlayerToggle"
-                v-if="!isRecording && !isAudioPlaying && currentRecording"
-              />
-              <talkie-icon
-                :name="'pause'"
-                :isActive="true"
-                :variant="'primary'"
-                :size="50"
-                :onClick="handleAudioPlayerToggle"
-                v-if="!isRecording && isAudioPlaying && currentRecording"
-              />
-              <p
-                :class="[
-                  'class-start-convo-form-options-item-label',
-                  errors.voiceForQnA &&
-                    'class-start-convo-form-options-item-label-error',
-                ]"
-              >
-                {{
-                  !!errors.voiceForQnA
-                    ? errors.voiceForQnA
-                    : !currentRecording
-                    ? "Tap To Record"
-                    : !isAudioPlaying
-                    ? "Play"
-                    : "Pause"
-                }}
-              </p>
-            </div>
-            <div class="class-start-convo-form-options-item">
-              <talkie-icon
-                :type="'submit'"
-                :name="'send'"
-                :isActive="true"
-                :variant="'secondary'"
-                :size="30"
-              />
-              <p
-                :class="[
-                  'class-start-convo-form-options-item-label',
-                  !currentRecording &&
-                    'class-start-convo-form-options-item-label-non-visiable',
-                ]"
-              >
-                Preview send
-              </p>
+
+        <!-- Field for qna task -->
+        <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
+          <div class="class-start-convo-form-options-wrapper">
+            <div class="class-start-convo-form-options">
+              <div class="class-start-convo-form-options-item">
+                <talkie-icon
+                  :name="'arrow-rounded-left'"
+                  :isActive="true"
+                  :variant="'secondary'"
+                  :size="30"
+                  :onClick="handleRecordedItemReset"
+                />
+                <p
+                  :class="[
+                    'class-start-convo-form-options-item-label',
+                    !currentRecording &&
+                      'class-start-convo-form-options-item-label-non-visiable',
+                  ]"
+                >
+                  Redo
+                </p>
+              </div>
+              <div class="class-start-convo-form-options-item">
+                <talkie-icon
+                  :name="'mike-unmuted'"
+                  :isActive="true"
+                  :variant="'secondary'"
+                  :size="50"
+                  :onClick="startRecording"
+                  :customClass="
+                    errors.voiceForQnA &&
+                    'class-start-convo-form-options-mike-unmuted-button-error'
+                  "
+                  v-if="!isRecording && !currentRecording"
+                />
+                <talkie-icon
+                  :name="'square'"
+                  :isActive="true"
+                  :variant="'secondary'"
+                  :size="50"
+                  :iconToSizeRatio="1.5"
+                  :customClass="'class-start-convo-form-options-stop-recording-button'"
+                  :onClick="stopRecording"
+                  v-if="isRecording && !currentRecording"
+                />
+                <talkie-icon
+                  :name="'play'"
+                  :isActive="true"
+                  :variant="'primary'"
+                  :size="50"
+                  :onClick="handleAudioPlayerToggle"
+                  v-if="!isRecording && !isAudioPlaying && currentRecording"
+                />
+                <talkie-icon
+                  :name="'pause'"
+                  :isActive="true"
+                  :variant="'primary'"
+                  :size="50"
+                  :onClick="handleAudioPlayerToggle"
+                  v-if="!isRecording && isAudioPlaying && currentRecording"
+                />
+                <p
+                  :class="[
+                    'class-start-convo-form-options-item-label',
+                    errors.voiceForQnA &&
+                      'class-start-convo-form-options-item-label-error',
+                  ]"
+                >
+                  {{
+                    !!errors.voiceForQnA
+                      ? errors.voiceForQnA
+                      : !currentRecording
+                      ? "Tap To Record"
+                      : !isAudioPlaying
+                      ? "Play"
+                      : "Pause"
+                  }}
+                </p>
+              </div>
+              <div class="class-start-convo-form-options-item">
+                <talkie-icon
+                  :type="'submit'"
+                  :name="'send'"
+                  :isActive="true"
+                  :variant="'secondary'"
+                  :size="30"
+                />
+                <p
+                  :class="[
+                    'class-start-convo-form-options-item-label',
+                    !currentRecording &&
+                      'class-start-convo-form-options-item-label-non-visiable',
+                  ]"
+                >
+                  Preview send
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </talkie-audio-recorder>
     </talkie-form>
     <div class="class-start-convo-footer">
@@ -225,6 +237,7 @@ import {
 } from "@/components/SubModules/AudioManager";
 import { createQandATopicSchema } from "@/utils/validations/task.validation";
 import { FileService, TaskService, ClassService } from "@/api/services";
+import URLModifier from "@/utils/helpers/URLModifier";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
 
@@ -246,7 +259,9 @@ export default {
   data() {
     return {
       topics: [],
-      createQandATopicSchema: createQandATopicSchema,
+      validationSchemas: {
+        ["Q&A"]: createQandATopicSchema,
+      },
       pageLoading: false,
       loading: false,
       formStatus: {
@@ -281,16 +296,35 @@ export default {
       setFormValue: () => {},
       triggerFormSubmission: () => {},
       classId: null,
+      selectedTaskType: "Q&A",
+      selectedHeaderMessages: {
+        ["Q&A"]: "Start a conversation now?",
+      },
+      selectedTaskHeader: null,
+      allowedTaskTypes: Object.values(TaskTypes),
+      taskTypes: TaskTypes,
     };
   },
   computed: {
     computedPageLoading() {
       return this.pageLoading;
     },
+    computedValidationSchema() {
+      return this.validationSchemas[this.selectedTaskType];
+    },
+    computedSelectedTaskHeader() {
+      return this.selectedHeaderMessages[this.selectedTaskType];
+    },
   },
   async created() {
     // update page state
     this.pageLoading = true;
+
+    // get current task type from url
+    const taskType = URLModifier.getURLParam("type");
+    if (!taskType) URLModifier.addToURL("type", "Q&A");
+    if (this.allowedTaskTypes?.includes(taskType))
+      this.selectedTaskType = taskType;
 
     // class id from params
     const classId = this.$route.params.id;
@@ -328,25 +362,18 @@ export default {
     handleModalValidationReset() {
       this.shouldSubmit = false;
     },
-    async handleFileUpload() {
-      // update page state
-      this.formStatus = {
-        type: "info",
-        message: "Uploading Audio",
-        animateEllipse: true,
-      };
-
+    async handleFileUpload(fileBlob, filePurpose) {
       // payload
       const payload = new FormData();
       payload.append(
         "files",
-        this.currentRecording.blob,
-        `talkie-audio-${Math.random() * 123456789}.mp3`
+        fileBlob,
+        `talkie-${filePurpose}-${Math.random() * 123456789}.mp3`
       );
 
       // api call
       const response = await FileService.Upload(
-        { purpose: FilePurposes.TASK_VOICE },
+        { purpose: filePurpose },
         payload
       ).catch(() => null);
 
@@ -355,7 +382,6 @@ export default {
 
       // success case
       const uploadedFile = response.data[0].s3Url;
-      this.formStatus = { type: null, message: null, animateEllipse: false };
       return uploadedFile;
     },
     async handleSubmit(values) {
@@ -369,18 +395,40 @@ export default {
       this.loading = true;
       this.formStatus = { type: null, message: null, animateEllipse: false };
 
-      // upload file
-      const voiceForQnA = await this.handleFileUpload();
+      // process task specific fields
+      const taskSpecificFields = await (async () => {
+        // qna task
+        if (this.selectedTaskType === TaskTypes.QUESTION_ANSWER) {
+          // update page status
+          this.formStatus = {
+            type: "info",
+            message: `Uploading Audio`,
+            animateEllipse: true,
+          };
 
-      // failure case
-      if (!voiceForQnA) {
-        this.loading = false;
-        this.formStatus = {
-          type: "error",
-          message: "Could not upload audio file..!",
-        };
-        return;
-      }
+          // upload file
+          const voiceForQnA = await this.handleFileUpload(
+            this.currentRecording.blob,
+            FilePurposes.TASK_VOICE
+          );
+
+          // failure case
+          if (!voiceForQnA) {
+            this.loading = false;
+            this.formStatus = {
+              type: "error",
+              message: "Could not upload audio file..!",
+            };
+            return;
+          }
+
+          // success case
+
+          return { voiceForQnA };
+        }
+        return null;
+      })();
+      if (!taskSpecificFields) return;
 
       // form data
       const { title, topic: topicName, questionText } = values;
@@ -392,7 +440,7 @@ export default {
         title,
         topic: topicId,
         type: TaskTypes.QUESTION_ANSWER,
-        voiceForQnA,
+        ...taskSpecificFields,
       };
       if (questionText) payload.questionText = questionText;
 
@@ -404,12 +452,13 @@ export default {
             ['"questiontext" contains bad word']:
               "Question text should not be unethical..!",
             ['"topic" must be a valid mongo id']: "Invalid Topic",
+            ["Q&A"]: "Could not create conversation..!",
           };
 
           return {
             error:
               errorMap[e.response.data.message.toLowerCase()] ||
-              "Could not create conversation..!",
+              errorMap[this.selectedTaskType],
           };
         }
       );
@@ -429,7 +478,10 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Conversation Created. Redirecting..!",
+        message:
+          this.selectedTaskType === TaskTypes.QUESTION_ANSWER
+            ? "Conversation Created. Redirecting..!"
+            : "",
         animateEllipse: false,
       };
       const taskId = response?.data?.id;
