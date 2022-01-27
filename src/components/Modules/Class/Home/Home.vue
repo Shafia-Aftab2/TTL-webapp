@@ -71,7 +71,12 @@
                 :title="_question.title"
                 :topic="_question.topic"
                 :description="_question.description"
-                :manageMode="isTeacher"
+                :manageModeOptions="{
+                  canEdit:
+                    isTeacher && _question.type === TaskTypes.QUESTION_ANSWER,
+                  canDelete: isTeacher,
+                  isForPractice: _question.isForPractice,
+                }"
                 :centered="false"
                 :hoverAnimation="true"
                 :audioSource="
@@ -81,7 +86,6 @@
                 :image="
                   _question.type === TaskTypes.CAPTION_THIS && _question.image
                 "
-                :isForPractice="_question.isForPractice"
                 :onCardBodyClick="
                   () =>
                     _question.type === TaskTypes.QUESTION_ANSWER
