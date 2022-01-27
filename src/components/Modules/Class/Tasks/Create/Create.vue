@@ -12,6 +12,7 @@
         {{ (this.setFormValue = setValue) }}
         {{ (this.triggerFormSubmission = triggerFormSubmit) }}
       </span>
+      <!-- Fields for qna task -->
       <talkie-modal
         v-if="modalPreview"
         :contentPadded="true"
@@ -51,13 +52,8 @@
               message: errors.title ? errors.title : null,
             }"
           />
-          <talkie-input
-            :multiline="true"
-            :name="'questionText'"
-            :placeholder="'Question text (optional)'"
-          />
 
-          <!-- Field for qna task -->
+          <!-- Fields for qna task -->
           <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
             <!-- TODO: hide this filed via a class -->
             <talkie-input
@@ -95,7 +91,7 @@
             </talkie-audio-player>
           </template>
 
-          <!-- Field for caption-this task -->
+          <!-- Fields for caption-this task -->
           <template v-if="selectedTaskType === taskTypes.CAPTION_THIS">
             <talkie-media-picker
               :name="'captionImage'"
@@ -106,7 +102,7 @@
             />
           </template>
 
-          <!-- Field for translation task -->
+          <!-- Fields for translation task -->
           <template v-if="selectedTaskType === taskTypes.TRANSLATION">
             <talkie-input
               :name="'textToTranslate'"
@@ -126,6 +122,13 @@
             />
           </template>
 
+          <!-- Common Fields -->
+          <talkie-input
+            :multiline="true"
+            :name="'questionText'"
+            :placeholder="'Question text (optional)'"
+          />
+
           <talkie-alert
             :text="formStatus.message"
             :variant="formStatus.type"
@@ -134,7 +137,7 @@
           />
         </div>
 
-        <!-- Field for qna task -->
+        <!-- Fields for qna task -->
         <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
           <div class="class-start-convo-form-options-wrapper">
             <div class="class-start-convo-form-options">
@@ -235,7 +238,7 @@
           </div>
         </template>
 
-        <!-- Field for caption-this task -->
+        <!-- Fields for caption-this task -->
         <template
           v-if="
             selectedTaskType === taskTypes.CAPTION_THIS ||
@@ -437,7 +440,10 @@ export default {
       return uploadedFile;
     },
     async handleSubmit(values) {
-      if (!this.shouldSubmit) {
+      if (
+        !this.shouldSubmit &&
+        this.selectedTaskType === TaskTypes.QUESTION_ANSWER
+      ) {
         this.handleModalToggle();
         this.handleModalValidationReset();
         return;
