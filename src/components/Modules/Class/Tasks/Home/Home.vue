@@ -24,7 +24,7 @@
             :title="taskDetails.title"
             :topic="taskDetails.topic"
             :description="taskDetails.description"
-            :manageMode="{
+            :manageModeOptions="{
               canEdit: isTeacher,
               canDelete: isTeacher,
             }"
