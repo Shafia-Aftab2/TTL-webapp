@@ -43,6 +43,13 @@
             + New Task
           </talkie-button-drop-down>
         </div>
+
+        <talkie-switch
+          :checkLabel="'Showing Practice Mode Tasks'"
+          :uncheckLabel="'Show Practice Mode Tasks'"
+          :onToggle="handlePracticeModeToggleChange"
+        />
+
         <div
           :class="[
             'class-home-content-wrapper',
@@ -151,6 +158,7 @@ import {
   TalkieSelect,
   TalkieModal,
   TalkieLoader,
+  TalkieSwitch,
   TalkieButtonDropDown,
   TalkieBackDropLoader,
 } from "@/components/UICore";
@@ -175,6 +183,7 @@ export default {
     TalkieModal,
     TalkieButtonDropDown,
     TalkieLoader,
+    TalkieSwitch,
     TalkieBackDropLoader,
     TalkieQuestionCard,
     TalkieStudentCard,
@@ -371,6 +380,48 @@ export default {
     handleTopicDeleteDialogClose() {
       this.taskToDelete = null;
     },
+    async handlePracticeModeToggleChange(showPracticeModeTasks) {
+      // update page state
+      this.backdropLoading = true;
+
+      // api call
+      const classTasks = await this.getClassTasks(
+        this.classId,
+        showPracticeModeTasks
+      );
+
+      // failure case
+      if (!classTasks) {
+        this.backdropLoading = false;
+        notifications.show(
+          `Failed To Get ${
+            showPracticeModeTasks ? "Practice" : "Class"
+          } Mode Task..!`,
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.classTasks = classTasks.results.map((x) => ({
+        id: x.id,
+        type: x.type,
+        title: x.title,
+        topic: x.topic.name,
+        description: x.questionText,
+        isForPractice: x?.isPracticeMode,
+        ...(x.type === TaskTypes.QUESTION_ANSWER && {
+          audioSource: x.voiceForQnA,
+        }),
+        ...(x.type === TaskTypes.CAPTION_THIS && {
+          image: x.captionThisImage,
+        }),
+      }));
+    },
     async handleTaskDeletion() {
       const taskId = this.taskToDelete;
       this.taskToDelete = null;
@@ -438,8 +489,10 @@ export default {
 
       return response.data || null;
     },
-    async getClassTasks(id) {
-      const query = {};
+    async getClassTasks(id, isPracticeMode = false) {
+      const query = {
+        ...(isPracticeMode && { isPracticeMode }),
+      };
 
       const response = await TaskService.QueryClassTasks(id, query).catch(
         () => null
