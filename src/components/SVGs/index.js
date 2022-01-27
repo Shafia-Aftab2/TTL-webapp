@@ -16,6 +16,7 @@ import IconPencil from "./IconPencil.vue";
 import IconTickMark from "./IconTickMark.vue";
 import IconUpload from "./IconUpload.vue";
 import IconArrowHeadBottom from "./IconArrowHeadBottom.vue";
+import IconArrowHeadTop from "./IconArrowHeadTop.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
@@ -40,6 +41,7 @@ export {
   IconTickMark,
   IconUpload,
   IconArrowHeadBottom,
+  IconArrowHeadTop,
   // Logos
   LogoTalkie,
   LogoAuthSignup,
