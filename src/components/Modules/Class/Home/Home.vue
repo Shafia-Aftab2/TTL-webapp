@@ -171,13 +171,19 @@ export default {
           name: "Question",
           onClick: () =>
             this.handleRedirection(
-              `/classes/${this.classId}/tasks/create`,
+              `/classes/${this.classId}/tasks/create?type=${encodeURIComponent(
+                TaskTypes.QUESTION_ANSWER
+              )}`,
               100
             ),
         },
         {
           name: "Photo",
-          onClick: () => this.redirectToCommingSoonPage(),
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.CAPTION_THIS}`,
+              100
+            ),
         },
         {
           name: "Emoji Story",
@@ -185,7 +191,11 @@ export default {
         },
         {
           name: "Translation",
-          onClick: () => this.redirectToCommingSoonPage(),
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.TRANSLATION}`,
+              100
+            ),
         },
       ],
       classId: null,
