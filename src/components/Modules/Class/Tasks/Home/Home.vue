@@ -24,7 +24,10 @@
             :title="taskDetails.title"
             :topic="taskDetails.topic"
             :description="taskDetails.description"
-            :manageMode="isTeacher"
+            :manageModeOptions="{
+              canEdit: isTeacher,
+              canDelete: isTeacher,
+            }"
             :centered="false"
             :fullWidth="true"
             :audioSource="taskDetails.audioSource"
@@ -173,7 +176,8 @@ export default {
 
     // get task details
     const taskDetails = await this.getTaskDetails(taskId);
-    if (!taskDetails) return this.$router.push("/404");
+    if (!taskDetails || taskDetails.type !== TaskTypes.QUESTION_ANSWER)
+      return this.$router.push("/404");
 
     // get task responses
     const taskResponses = await this.getTaskResponses(taskId);

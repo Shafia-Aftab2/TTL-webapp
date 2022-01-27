@@ -43,6 +43,13 @@
             + New Task
           </talkie-button-drop-down>
         </div>
+
+        <talkie-switch
+          :checkLabel="'Showing Practice Mode Tasks'"
+          :uncheckLabel="'Show Practice Mode Tasks'"
+          :onToggle="handlePracticeModeToggleChange"
+        />
+
         <div
           :class="[
             'class-home-content-wrapper',
@@ -71,11 +78,31 @@
                 :title="_question.title"
                 :topic="_question.topic"
                 :description="_question.description"
-                :manageMode="isTeacher"
+                :manageModeOptions="{
+                  canEdit:
+                    isTeacher && _question.type === TaskTypes.QUESTION_ANSWER,
+                  canDelete: isTeacher,
+                }"
                 :centered="false"
                 :hoverAnimation="true"
-                :audioSource="_question.audioSource"
-                :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
+                :audioSource="
+                  _question.type === TaskTypes.QUESTION_ANSWER &&
+                  _question.audioSource
+                "
+                :image="
+                  _question.type === TaskTypes.CAPTION_THIS && _question.image
+                "
+                :expandContent="
+                  _question.type === TaskTypes.TRANSLATION
+                    ? { translation: _question.translation }
+                    : {}
+                "
+                :onCardBodyClick="
+                  () =>
+                    _question.type === TaskTypes.QUESTION_ANSWER
+                      ? handleTopicCardBodyClick(_question.id)
+                      : {}
+                "
                 :onEditClick="() => handleTopicCardEditClick(_question.id)"
                 :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
               />
@@ -135,6 +162,7 @@ import {
   TalkieSelect,
   TalkieModal,
   TalkieLoader,
+  TalkieSwitch,
   TalkieButtonDropDown,
   TalkieBackDropLoader,
 } from "@/components/UICore";
@@ -159,6 +187,7 @@ export default {
     TalkieModal,
     TalkieButtonDropDown,
     TalkieLoader,
+    TalkieSwitch,
     TalkieBackDropLoader,
     TalkieQuestionCard,
     TalkieStudentCard,
@@ -171,13 +200,19 @@ export default {
           name: "Question",
           onClick: () =>
             this.handleRedirection(
-              `/classes/${this.classId}/tasks/create`,
+              `/classes/${this.classId}/tasks/create?type=${encodeURIComponent(
+                TaskTypes.QUESTION_ANSWER
+              )}`,
               100
             ),
         },
         {
           name: "Photo",
-          onClick: () => this.redirectToCommingSoonPage(),
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.CAPTION_THIS}`,
+              100
+            ),
         },
         {
           name: "Emoji Story",
@@ -185,7 +220,11 @@ export default {
         },
         {
           name: "Translation",
-          onClick: () => this.redirectToCommingSoonPage(),
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.TRANSLATION}`,
+              100
+            ),
         },
       ],
       classId: null,
@@ -200,6 +239,7 @@ export default {
       activeTab: "questions",
       tabs: ["Questions", "Students"],
       currentTopicFilter: null,
+      TaskTypes: TaskTypes,
     };
   },
   async created() {
@@ -292,7 +332,19 @@ export default {
       title: x.title,
       topic: x.topic.name,
       description: x.questionText,
-      audioSource: x.voiceForQnA,
+      isForPractice: x?.isPracticeMode,
+      ...(x.type === TaskTypes.QUESTION_ANSWER && {
+        audioSource: x.voiceForQnA,
+      }),
+      ...(x.type === TaskTypes.CAPTION_THIS && {
+        image: x.captionThisImage,
+      }),
+      ...(x.type === TaskTypes.TRANSLATION && {
+        translation: {
+          textToTranslate: x?.textToTranslate,
+          translatedText: x?.answer,
+        },
+      }),
     }));
 
     this.classStudents = classDetails.students.map((x) => ({
@@ -337,6 +389,54 @@ export default {
     },
     handleTopicDeleteDialogClose() {
       this.taskToDelete = null;
+    },
+    async handlePracticeModeToggleChange(showPracticeModeTasks) {
+      // update page state
+      this.backdropLoading = true;
+
+      // api call
+      const classTasks = await this.getClassTasks(
+        this.classId,
+        showPracticeModeTasks
+      );
+
+      // failure case
+      if (!classTasks) {
+        this.backdropLoading = false;
+        notifications.show(
+          `Failed To Get ${
+            showPracticeModeTasks ? "Practice" : "Class"
+          } Mode Task..!`,
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.classTasks = classTasks.results.map((x) => ({
+        id: x.id,
+        type: x.type,
+        title: x.title,
+        topic: x.topic.name,
+        description: x.questionText,
+        isForPractice: x?.isPracticeMode,
+        ...(x.type === TaskTypes.QUESTION_ANSWER && {
+          audioSource: x.voiceForQnA,
+        }),
+        ...(x.type === TaskTypes.CAPTION_THIS && {
+          image: x.captionThisImage,
+        }),
+        ...(x.type === TaskTypes.TRANSLATION && {
+          translation: {
+            textToTranslate: x?.textToTranslate,
+            translatedText: x?.answer,
+          },
+        }),
+      }));
     },
     async handleTaskDeletion() {
       const taskId = this.taskToDelete;
@@ -405,8 +505,10 @@ export default {
 
       return response.data || null;
     },
-    async getClassTasks(id) {
-      const query = { type: TaskTypes.QUESTION_ANSWER };
+    async getClassTasks(id, isPracticeMode = false) {
+      const query = {
+        ...(isPracticeMode && { isPracticeMode }),
+      };
 
       const response = await TaskService.QueryClassTasks(id, query).catch(
         () => null

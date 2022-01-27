@@ -52,28 +52,46 @@
       </div>
     </div>
     <p class="p" v-if="description">{{ description }}</p>
+    <question-card-expand-content
+      :translation="expandContent.translation"
+      :onCardExpandStateChange="onCardExpandStateChange"
+      v-if="!fullWidth"
+    />
     <div
       class="talkie-question-card-footer-wrapper"
-      v-if="manageMode"
+      v-if="manageModeOptions"
       @click="handleQuestionCardClick"
     >
       <talkie-chip
         :label="'Edit'"
         :variant="'neutral'"
         :onClick="onEditClick"
+        v-if="manageModeOptions.canEdit"
       />
       <talkie-chip
         :label="'Delete'"
         :variant="'danger'"
         :onClick="onDeleteClick"
+        v-if="manageModeOptions.canDelete"
+      />
+      <talkie-chip
+        :label="'Practice Mode'"
+        :variant="'neutral'"
+        v-if="manageModeOptions.isForPractice"
       />
     </div>
+    <question-card-expand-content
+      :translation="expandContent.translation"
+      :onCardExpandStateChange="onCardExpandStateChange"
+      v-if="fullWidth"
+    />
   </div>
 </template>
 
 <script>
 import { TalkieIcon, TalkieChip } from "@/components/UICore";
 import { TalkieAudioPlayer } from "@/components/SubModules/AudioManager";
+import QuestionCardExpandContent from "./ExpandContent";
 
 export default {
   name: "QuestionCard",
@@ -81,6 +99,7 @@ export default {
     TalkieIcon,
     TalkieChip,
     TalkieAudioPlayer,
+    QuestionCardExpandContent,
   },
   props: {
     title: {
@@ -117,9 +136,22 @@ export default {
       type: Boolean,
       default: false,
     },
-    manageMode: {
-      type: Boolean,
-      default: false,
+    expandContent: {
+      type: Object,
+      default: () => ({
+        translation: {
+          textToTranslate: null,
+          translatedText: null,
+        },
+      }),
+    },
+    manageModeOptions: {
+      type: Object,
+      default: () => ({
+        canEdit: false,
+        canDelete: false,
+        isForPractice: false,
+      }),
     },
     onCardBodyClick: {
       type: Function,
@@ -130,6 +162,10 @@ export default {
       default: () => {},
     },
     onDeleteClick: {
+      type: Function,
+      default: () => {},
+    },
+    onCardExpandStateChange: {
       type: Function,
       default: () => {},
     },
@@ -147,6 +183,7 @@ export default {
 <style scoped>
 .talkie-question-card-wrapper {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   background-color: var(--t-white);
   width: 100%;

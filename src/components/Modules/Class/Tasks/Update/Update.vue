@@ -75,6 +75,7 @@ import {
 } from "@/components/UICore";
 import { updateQandATopicSchema } from "@/utils/validations/task.validation";
 import { TaskService, ClassService } from "@/api/services";
+import TaskTypes from "@/utils/constants/taskTypes";
 
 export default {
   name: "ClassTaskUpdate",
@@ -126,7 +127,8 @@ export default {
 
     // task details (+ failure case)
     const taskDetails = await this.getTaskDetails(taskId);
-    if (!taskDetails) return this.$router.push("/404");
+    if (!taskDetails || taskDetails.type !== TaskTypes.QUESTION_ANSWER)
+      return this.$router.push("/404");
 
     // success case
     this.topics = classDetails.topics;

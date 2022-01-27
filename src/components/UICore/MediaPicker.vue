@@ -243,6 +243,7 @@ export default {
   max-width: 80%;
   text-align: center;
   line-height: 1.3;
+  color: var(--t-gray-50);
 }
 .talkie-media-picker-browse-files-link,
 .talkie-media-picker-browse-files-link:visited {
