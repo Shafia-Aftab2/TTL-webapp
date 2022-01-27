@@ -5,7 +5,7 @@
       v-slot="{ errors, setValue, values, triggerFormSubmit }"
       :validationSchema="computedValidationSchema"
       :onSubmit="handleSubmit"
-      :customClass="'class-start-convo-wrapper'"
+      :customClass="'class-create-task-wrapper'"
     >
       <span hidden>
         <!-- TODO: updated these states via a handler -->
@@ -26,14 +26,14 @@
           :fullWidth="false"
         />
       </talkie-modal>
-      <h2 class="class-start-convo-header h2" v-if="computedSelectedTaskHeader">
+      <h2 class="class-create-task-header h2" v-if="computedSelectedTaskHeader">
         {{ computedSelectedTaskHeader }}
       </h2>
       <talkie-audio-recorder
         v-slot="{ startRecording, stopRecording, isRecording }"
         :onRecordingStopped="handleRecordedItem"
       >
-        <div class="class-start-convo-form">
+        <div class="class-create-task-form">
           <!-- Common fields -->
           <talkie-select
             :name="'topic'"
@@ -78,13 +78,13 @@
                 {{ (this.isAudioPlaying = isPlaying) }}
                 {{ (this.handleAudioPlayerToggle = togglePlayer) }}
               </span>
-              <div class="class-start-convo-form-options-audio-player-wrapper">
+              <div class="class-create-task-form-options-audio-player-wrapper">
                 <talkie-audio-timeline
                   :percentage="currentAudioPercentage"
                   :onHeadChange="updateAudioPercentage"
                 />
                 <span
-                  class="class-start-convo-form-options-audio-player-timestamps"
+                  class="class-create-task-form-options-audio-player-timestamps"
                   >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
                 </span>
               </div>
@@ -139,9 +139,9 @@
 
         <!-- Fields for qna task -->
         <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
-          <div class="class-start-convo-form-options-wrapper">
-            <div class="class-start-convo-form-options">
-              <div class="class-start-convo-form-options-item">
+          <div class="class-create-task-form-options-wrapper">
+            <div class="class-create-task-form-options">
+              <div class="class-create-task-form-options-item">
                 <talkie-icon
                   :name="'arrow-rounded-left'"
                   :isActive="true"
@@ -151,15 +151,15 @@
                 />
                 <p
                   :class="[
-                    'class-start-convo-form-options-item-label',
+                    'class-create-task-form-options-item-label',
                     !currentRecording &&
-                      'class-start-convo-form-options-item-label-non-visiable',
+                      'class-create-task-form-options-item-label-non-visiable',
                   ]"
                 >
                   Redo
                 </p>
               </div>
-              <div class="class-start-convo-form-options-item">
+              <div class="class-create-task-form-options-item">
                 <talkie-icon
                   :name="'mike-unmuted'"
                   :isActive="true"
@@ -168,7 +168,7 @@
                   :onClick="startRecording"
                   :customClass="
                     errors.voiceForQnA &&
-                    'class-start-convo-form-options-mike-unmuted-button-error'
+                    'class-create-task-form-options-mike-unmuted-button-error'
                   "
                   v-if="!isRecording && !currentRecording"
                 />
@@ -178,7 +178,7 @@
                   :variant="'secondary'"
                   :size="50"
                   :iconToSizeRatio="1.5"
-                  :customClass="'class-start-convo-form-options-stop-recording-button'"
+                  :customClass="'class-create-task-form-options-stop-recording-button'"
                   :onClick="stopRecording"
                   v-if="isRecording && !currentRecording"
                 />
@@ -200,9 +200,9 @@
                 />
                 <p
                   :class="[
-                    'class-start-convo-form-options-item-label',
+                    'class-create-task-form-options-item-label',
                     errors.voiceForQnA &&
-                      'class-start-convo-form-options-item-label-error',
+                      'class-create-task-form-options-item-label-error',
                   ]"
                 >
                   {{
@@ -216,7 +216,7 @@
                   }}
                 </p>
               </div>
-              <div class="class-start-convo-form-options-item">
+              <div class="class-create-task-form-options-item">
                 <talkie-icon
                   :type="'submit'"
                   :name="'send'"
@@ -226,9 +226,9 @@
                 />
                 <p
                   :class="[
-                    'class-start-convo-form-options-item-label',
+                    'class-create-task-form-options-item-label',
                     !currentRecording &&
-                      'class-start-convo-form-options-item-label-non-visiable',
+                      'class-create-task-form-options-item-label-non-visiable',
                   ]"
                 >
                   Preview send
@@ -245,7 +245,7 @@
             selectedTaskType === taskTypes.TRANSLATION
           "
         >
-          <div class="class-start-convo-form-submit-button">
+          <div class="class-create-task-form-submit-button">
             <talkie-button :loading="formStatus?.loading">
               Create
             </talkie-button>
@@ -253,15 +253,15 @@
         </template>
       </talkie-audio-recorder>
     </talkie-form>
-    <div class="class-start-convo-footer">
-      <a :href="`/classes/${classId}`" class="class-start-convo-footer-link">
+    <div class="class-create-task-footer">
+      <a :href="`/classes/${classId}`" class="class-create-task-footer-link">
         Not now
       </a>
     </div>
   </template>
   <!-- loading -->
   <template v-if="computedPageLoading">
-    <div class="class-start-convo-loading-wrapper">
+    <div class="class-create-task-loading-wrapper">
       <talkie-loader :size="'large'" />
     </div>
   </template>
@@ -612,84 +612,84 @@ export default {
 </script>
 
 <style scoped>
-.class-start-convo-wrapper {
+.class-create-task-wrapper {
   display: flex;
   flex-direction: column;
   margin: auto;
   background: var(--t-white);
   gap: var(--t-space-36);
 }
-.class-start-convo-header {
+.class-create-task-header {
   text-align: center;
   --font-size: var(--t-fs-h2);
 }
-.class-start-convo-form {
+.class-create-task-form {
   display: flex;
   flex-direction: column;
   margin: auto;
 }
-.class-start-convo-form-options-audio-player-wrapper {
+.class-create-task-form-options-audio-player-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-.class-start-convo-form-options-audio-player-timestamps {
+.class-create-task-form-options-audio-player-timestamps {
   margin-left: auto;
   color: var(--t-black-100);
 }
-.class-start-convo-form-options-wrapper {
+.class-create-task-form-options-wrapper {
   position: relative;
 }
-.class-start-convo-form-options {
+.class-create-task-form-options {
   display: flex;
   align-items: center;
   position: absolute;
   left: 50%;
 }
-.class-start-convo-form-options-item {
+.class-create-task-form-options-item {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
-.class-start-convo-form-options-item-label {
+.class-create-task-form-options-item-label {
   text-align: center;
   line-height: 1.1;
 }
-.class-start-convo-form-options-item-label-non-visiable {
+.class-create-task-form-options-item-label-non-visiable {
   color: transparent;
   user-select: none;
 }
-.class-start-convo-form-options-item-label-error {
+.class-create-task-form-options-item-label-error {
   color: var(--t-red);
 }
-.class-start-convo-form-options-mike-unmuted-button-error {
+.class-create-task-form-options-mike-unmuted-button-error {
   border-color: var(--t-red) !important;
   border-style: solid !important;
 }
-.class-start-convo-form-options-stop-recording-button {
+.class-create-task-form-options-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
 }
-.class-start-convo-form-submit-button {
+.class-create-task-form-submit-button {
   margin: auto;
 }
-.class-start-convo-footer {
+.class-create-task-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: auto;
 }
-.class-start-convo-footer-link {
+.class-create-task-footer-link {
   text-decoration: underline;
 }
-.class-start-convo-footer-link,
-.class-start-convo-footer-link:hover,
-.class-start-convo-footer-link:visited {
+.class-create-task-footer-link,
+.class-create-task-footer-link:hover,
+.class-create-task-footer-link:visited {
   text-decoration: underline;
   color: var(--t-black);
 }
-.class-start-convo-loading-wrapper {
+.class-create-task-loading-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -698,151 +698,151 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .class-start-convo-wrapper {
+  .class-create-task-wrapper {
     padding: var(--t-space-32);
     padding-bottom: var(--t-space-40);
     margin-top: var(--t-space-24);
     border-radius: var(--t-br-small);
     min-width: 80%;
   }
-  .class-start-convo-header {
+  .class-create-task-header {
     font-size: calc(var(--font-size) * 0.7);
   }
-  .class-start-convo-form {
+  .class-create-task-form {
     gap: var(--t-space-12);
     width: 100%;
   }
-  .class-start-convo-form-options {
+  .class-create-task-form-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-36);
   }
-  .class-start-convo-form-options-item {
+  .class-create-task-form-options-item {
     gap: var(--t-space-8);
     min-width: var(--t-space-64);
   }
-  .class-start-convo-form-options-item-label {
+  .class-create-task-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-start-convo-form-options-audio-player-wrapper {
+  .class-create-task-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-12);
   }
-  .class-start-convo-form-options-audio-player-timestamps {
+  .class-create-task-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-start-convo-form-options-mike-unmuted-button-error {
+  .class-create-task-form-options-mike-unmuted-button-error {
     border-width: var(--t-space-2) !important;
   }
-  .class-start-convo-form-options-stop-recording-button {
+  .class-create-task-form-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
   }
-  .class-start-convo-footer {
+  .class-create-task-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-64);
   }
-  .class-start-convo-footer-link {
+  .class-create-task-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-start-convo-loading-wrapper {
+  .class-create-task-loading-wrapper {
     padding: var(--t-space-32);
     margin-top: var(--t-space-24);
   }
 }
 @media (min-width: 600px) {
-  .class-start-convo-wrapper {
+  .class-create-task-wrapper {
     padding: var(--t-space-32);
     padding-bottom: var(--t-space-36);
     margin-top: var(--t-space-24);
     border-radius: var(--t-br-large);
     max-width: 80%;
   }
-  .class-start-convo-header {
+  .class-create-task-header {
     font-size: calc(var(--font-size) * 0.75);
   }
-  .class-start-convo-form {
+  .class-create-task-form {
     gap: var(--t-space-16);
     width: 65%;
   }
-  .class-start-convo-form-options {
+  .class-create-task-form-options {
     transform: translate(-50%, -5%);
     gap: var(--t-space-40);
   }
-  .class-start-convo-form-options-item {
+  .class-create-task-form-options-item {
     gap: var(--t-space-10);
     min-width: calc(var(--t-space-64) * 1.5);
   }
-  .class-start-convo-form-options-item-label {
+  .class-create-task-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-start-convo-form-options-audio-player-wrapper {
+  .class-create-task-form-options-audio-player-wrapper {
     gap: var(--t-space-8);
     margin-top: var(--t-space-10);
   }
-  .class-start-convo-form-options-audio-player-timestamps {
+  .class-create-task-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-start-convo-form-options-mike-unmuted-button-error {
+  .class-create-task-form-options-mike-unmuted-button-error {
     border-width: var(--t-space-3) !important;
   }
-  .class-start-convo-form-options-stop-recording-button {
+  .class-create-task-form-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
   }
-  .class-start-convo-footer {
+  .class-create-task-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-64);
   }
-  .class-start-convo-footer-link {
+  .class-create-task-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-start-convo-loading-wrapper {
+  .class-create-task-loading-wrapper {
     padding: var(--t-space-32);
     margin-top: var(--t-space-24);
   }
 }
 @media (min-width: 900px) {
-  .class-start-convo-header {
+  .class-create-task-header {
     font-size: calc(var(--font-size) * 0.85);
   }
 }
 @media (min-width: 1200px) {
-  .class-start-convo-wrapper {
+  .class-create-task-wrapper {
     padding: var(--t-space-48);
     padding-bottom: var(--t-space-58);
     margin-top: var(--t-space-48);
   }
-  .class-start-convo-header {
+  .class-create-task-header {
     font-size: var(--font-size);
   }
-  .class-start-convo-form {
+  .class-create-task-form {
     gap: var(--t-space-24);
     width: 70%;
   }
-  .class-start-convo-form-options {
+  .class-create-task-form-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-48);
   }
-  .class-start-convo-form-options-item {
+  .class-create-task-form-options-item {
     gap: var(--t-space-12);
     min-width: calc(var(--t-space-48) * 2);
   }
-  .class-start-convo-form-options-item-label {
+  .class-create-task-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-start-convo-form-options-audio-player-wrapper {
+  .class-create-task-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-16);
   }
-  .class-start-convo-form-options-audio-player-timestamps {
+  .class-create-task-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-start-convo-footer {
+  .class-create-task-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-50);
   }
-  .class-start-convo-footer-link {
+  .class-create-task-footer-link {
     font-size: var(--t-fs-small);
   }
-  .class-start-convo-loading-wrapper {
+  .class-create-task-loading-wrapper {
     padding: var(--t-space-48);
     margin-top: var(--t-space-48);
   }
