@@ -82,7 +82,6 @@
                   canEdit:
                     isTeacher && _question.type === TaskTypes.QUESTION_ANSWER,
                   canDelete: isTeacher,
-                  isForPractice: _question.isForPractice,
                 }"
                 :centered="false"
                 :hoverAnimation="true"
