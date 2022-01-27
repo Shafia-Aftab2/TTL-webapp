@@ -35,6 +35,13 @@
             message: errors.title ? errors.title : null,
           }"
         />
+        <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
+          <talkie-input
+            :multiline="true"
+            :name="'questionText'"
+            :placeholder="'Question text (optional)'"
+          />
+        </template>
 
         <!-- Fields for qna task -->
         <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
@@ -121,11 +128,13 @@
         </template>
 
         <!-- Common Fields -->
-        <talkie-input
-          :multiline="true"
-          :name="'questionText'"
-          :placeholder="'Question text (optional)'"
-        />
+        <template v-if="selectedTaskType !== taskTypes.QUESTION_ANSWER">
+          <talkie-input
+            :multiline="true"
+            :name="'questionText'"
+            :placeholder="'Question text (optional)'"
+          />
+        </template>
 
         <!-- Form status updates -->
         <talkie-alert
