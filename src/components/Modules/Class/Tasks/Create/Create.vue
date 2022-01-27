@@ -246,7 +246,9 @@
           "
         >
           <div class="class-start-convo-form-submit-button">
-            <talkie-button> Create </talkie-button>
+            <talkie-button :loading="formStatus?.loading">
+              Create
+            </talkie-button>
           </div>
         </template>
       </talkie-audio-recorder>
@@ -451,7 +453,12 @@ export default {
 
       // update page state
       this.loading = true;
-      this.formStatus = { type: null, message: null, animateEllipse: false };
+      this.formStatus = {
+        type: null,
+        message: null,
+        animateEllipse: false,
+        loading: false,
+      };
 
       // process task specific fields
       const taskSpecificFields = await (async () => {
@@ -462,6 +469,7 @@ export default {
             type: "info",
             message: `Uploading Audio`,
             animateEllipse: true,
+            loading: true,
           };
 
           // upload file
@@ -477,6 +485,7 @@ export default {
             this.formStatus = {
               type: "error",
               message: "Could not upload audio file..!",
+              loading: false,
             };
             return;
           }
@@ -491,6 +500,7 @@ export default {
             type: "info",
             message: `Uploading Image`,
             animateEllipse: true,
+            loading: true,
           };
 
           // upload file
@@ -505,6 +515,7 @@ export default {
             this.formStatus = {
               type: "error",
               message: "Could not upload image file..!",
+              loading: false,
             };
             return;
           }
@@ -565,6 +576,7 @@ export default {
           type: "error",
           message: response.error,
           animateEllipse: false,
+          loading: false,
         };
         return;
       }
@@ -582,6 +594,7 @@ export default {
             ? "Translation Task Created. Redirecting..!"
             : "",
         animateEllipse: false,
+        loading: false,
       };
       const taskId = response?.data?.id;
       this.handleRedirection(
