@@ -24,7 +24,10 @@
             :title="taskDetails.title"
             :topic="taskDetails.topic"
             :description="taskDetails.description"
-            :manageMode="isTeacher"
+            :manageMode="{
+              canEdit: isTeacher,
+              canDelete: isTeacher,
+            }"
             :centered="false"
             :fullWidth="true"
             :audioSource="taskDetails.audioSource"
