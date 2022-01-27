@@ -173,7 +173,8 @@ export default {
 
     // get task details
     const taskDetails = await this.getTaskDetails(taskId);
-    if (!taskDetails) return this.$router.push("/404");
+    if (!taskDetails || taskDetails.type !== TaskTypes.QUESTION_ANSWER)
+      return this.$router.push("/404");
 
     // get task responses
     const taskResponses = await this.getTaskResponses(taskId);
