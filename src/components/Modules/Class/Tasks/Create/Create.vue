@@ -12,133 +12,136 @@
         {{ (this.setFormValue = setValue) }}
         {{ (this.triggerFormSubmission = triggerFormSubmit) }}
       </span>
-      <!-- Fields for qna task -->
-      <talkie-modal
-        v-if="modalPreview"
-        :contentPadded="true"
-        :buttonsOutSideModal="modalPreviewButtons"
-      >
-        <talkie-question-card
-          :title="values.title"
-          :topic="values.topic"
-          :description="values.questionText"
-          :audioRecording="currentRecording"
-          :fullWidth="false"
-        />
-      </talkie-modal>
       <h2 class="class-create-task-header h2" v-if="computedSelectedTaskHeader">
         {{ computedSelectedTaskHeader }}
       </h2>
-      <talkie-audio-recorder
-        v-slot="{ startRecording, stopRecording, isRecording }"
-        :onRecordingStopped="handleRecordedItem"
-      >
-        <div class="class-create-task-form">
-          <!-- Common fields -->
-          <talkie-select
-            :name="'topic'"
-            :placeholder="'Choose topic'"
-            :options="topics.map((x) => x.name)"
-            :hint="{
-              type: errors.topic ? 'error' : null,
-              message: errors.topic ? errors.topic : null,
-            }"
-          />
-          <talkie-input
-            :name="'title'"
-            :placeholder="'Title (required)'"
-            :hint="{
-              type: errors.title ? 'error' : null,
-              message: errors.title ? errors.title : null,
-            }"
-          />
 
-          <!-- Fields for qna task -->
-          <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
-            <!-- TODO: hide this filed via a class -->
-            <talkie-input
-              :name="'voiceForQnA'"
-              :placeholder="'Audio Recording Url/Blob'"
-              hidden
-            />
-            <talkie-audio-player
-              v-slot="{
-                isPlaying,
-                togglePlayer,
-                currentAudioPercentage,
-                updateAudioPercentage,
-                totalAudioPlaybackTime,
-                currentAudioPlaybackTime,
-              }"
-              :recording="currentRecording"
-              v-if="currentRecording"
-            >
-              <span hidden>
-                <!-- TODO: updated these states via a handler -->
-                {{ (this.isAudioPlaying = isPlaying) }}
-                {{ (this.handleAudioPlayerToggle = togglePlayer) }}
-              </span>
-              <div class="class-create-task-form-options-audio-player-wrapper">
-                <talkie-audio-timeline
-                  :percentage="currentAudioPercentage"
-                  :onHeadChange="updateAudioPercentage"
-                />
-                <span
-                  class="class-create-task-form-options-audio-player-timestamps"
-                  >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
-                </span>
-              </div>
-            </talkie-audio-player>
-          </template>
-
-          <!-- Fields for caption-this task -->
-          <template v-if="selectedTaskType === taskTypes.CAPTION_THIS">
-            <talkie-media-picker
-              :name="'captionImage'"
-              :hint="{
-                type: errors.captionImage ? 'error' : null,
-                message: errors.captionImage ? errors.captionImage : null,
-              }"
-            />
-          </template>
-
-          <!-- Fields for translation task -->
-          <template v-if="selectedTaskType === taskTypes.TRANSLATION">
-            <talkie-input
-              :name="'textToTranslate'"
-              :placeholder="'Text To Translate (required)'"
-              :hint="{
-                type: errors.textToTranslate ? 'error' : null,
-                message: errors.textToTranslate ? errors.textToTranslate : null,
-              }"
-            />
-            <talkie-input
-              :name="'translatedText'"
-              :placeholder="'Translated Text (required)'"
-              :hint="{
-                type: errors.translatedText ? 'error' : null,
-                message: errors.translatedText ? errors.translatedText : null,
-              }"
-            />
-          </template>
-
-          <!-- Common Fields -->
-          <talkie-input
-            :multiline="true"
-            :name="'questionText'"
-            :placeholder="'Question text (optional)'"
-          />
-
-          <talkie-alert
-            :text="formStatus.message"
-            :variant="formStatus.type"
-            :animateEllipse="formStatus.animateEllipse"
-            v-if="formStatus.type && formStatus.message"
-          />
-        </div>
+      <div class="class-create-task-form">
+        <!-- Common fields -->
+        <talkie-select
+          :name="'topic'"
+          :placeholder="'Choose topic'"
+          :options="topics.map((x) => x.name)"
+          :hint="{
+            type: errors.topic ? 'error' : null,
+            message: errors.topic ? errors.topic : null,
+          }"
+        />
+        <talkie-input
+          :name="'title'"
+          :placeholder="'Title (required)'"
+          :hint="{
+            type: errors.title ? 'error' : null,
+            message: errors.title ? errors.title : null,
+          }"
+        />
 
         <!-- Fields for qna task -->
         <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
+          <!-- TODO: hide this filed via a class -->
+          <talkie-input
+            :name="'voiceForQnA'"
+            :placeholder="'Audio Recording Url/Blob'"
+            hidden
+          />
+          <!-- Audio player -->
+          <talkie-audio-player
+            v-slot="{
+              isPlaying,
+              togglePlayer,
+              currentAudioPercentage,
+              updateAudioPercentage,
+              totalAudioPlaybackTime,
+              currentAudioPlaybackTime,
+            }"
+            :recording="currentRecording"
+            v-if="currentRecording"
+          >
+            <span hidden>
+              <!-- TODO: updated these states via a handler -->
+              {{ (this.isAudioPlaying = isPlaying) }}
+              {{ (this.handleAudioPlayerToggle = togglePlayer) }}
+            </span>
+            <div class="class-create-task-form-options-audio-player-wrapper">
+              <talkie-audio-timeline
+                :percentage="currentAudioPercentage"
+                :onHeadChange="updateAudioPercentage"
+              />
+              <span
+                class="class-create-task-form-options-audio-player-timestamps"
+                >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+              </span>
+            </div>
+          </talkie-audio-player>
+          <!-- Preview modal -->
+          <talkie-modal
+            v-if="modalPreview"
+            :contentPadded="true"
+            :buttonsOutSideModal="modalPreviewButtons"
+          >
+            <talkie-question-card
+              :title="values.title"
+              :topic="values.topic"
+              :description="values.questionText"
+              :audioRecording="currentRecording"
+              :fullWidth="false"
+            />
+          </talkie-modal>
+        </template>
+
+        <!-- Fields for caption-this task -->
+        <template v-if="selectedTaskType === taskTypes.CAPTION_THIS">
+          <talkie-media-picker
+            :name="'captionImage'"
+            :hint="{
+              type: errors.captionImage ? 'error' : null,
+              message: errors.captionImage ? errors.captionImage : null,
+            }"
+          />
+        </template>
+
+        <!-- Fields for translation task -->
+        <template v-if="selectedTaskType === taskTypes.TRANSLATION">
+          <talkie-input
+            :name="'textToTranslate'"
+            :placeholder="'Text To Translate (required)'"
+            :hint="{
+              type: errors.textToTranslate ? 'error' : null,
+              message: errors.textToTranslate ? errors.textToTranslate : null,
+            }"
+          />
+          <talkie-input
+            :name="'translatedText'"
+            :placeholder="'Translated Text (required)'"
+            :hint="{
+              type: errors.translatedText ? 'error' : null,
+              message: errors.translatedText ? errors.translatedText : null,
+            }"
+          />
+        </template>
+
+        <!-- Common Fields -->
+        <talkie-input
+          :multiline="true"
+          :name="'questionText'"
+          :placeholder="'Question text (optional)'"
+        />
+
+        <!-- Form status updates -->
+        <talkie-alert
+          :text="formStatus.message"
+          :variant="formStatus.type"
+          :animateEllipse="formStatus.animateEllipse"
+          v-if="formStatus.type && formStatus.message"
+        />
+      </div>
+
+      <!-- Fields for qna task -->
+      <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
+        <talkie-audio-recorder
+          v-slot="{ startRecording, stopRecording, isRecording }"
+          :onRecordingStopped="handleRecordedItem"
+        >
           <div class="class-create-task-form-options-wrapper">
             <div class="class-create-task-form-options">
               <div class="class-create-task-form-options-item">
@@ -236,22 +239,20 @@
               </div>
             </div>
           </div>
-        </template>
+        </talkie-audio-recorder>
+      </template>
 
-        <!-- Fields for caption-this task -->
-        <template
-          v-if="
-            selectedTaskType === taskTypes.CAPTION_THIS ||
-            selectedTaskType === taskTypes.TRANSLATION
-          "
-        >
-          <div class="class-create-task-form-submit-button">
-            <talkie-button :loading="formStatus?.loading">
-              Create
-            </talkie-button>
-          </div>
-        </template>
-      </talkie-audio-recorder>
+      <!-- Fields for caption-this/translation task -->
+      <template
+        v-if="
+          selectedTaskType === taskTypes.CAPTION_THIS ||
+          selectedTaskType === taskTypes.TRANSLATION
+        "
+      >
+        <div class="class-create-task-form-submit-button">
+          <talkie-button :loading="formStatus?.loading"> Create </talkie-button>
+        </div>
+      </template>
     </talkie-form>
     <div class="class-create-task-footer">
       <a :href="`/classes/${classId}`" class="class-create-task-footer-link">
