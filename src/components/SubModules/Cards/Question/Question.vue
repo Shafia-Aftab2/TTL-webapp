@@ -67,6 +67,11 @@
         :variant="'danger'"
         :onClick="onDeleteClick"
       />
+      <talkie-chip
+        v-if="isForPractice"
+        :label="'Practice Mode'"
+        :variant="'neutral'"
+      />
     </div>
   </div>
 </template>
@@ -132,6 +137,9 @@ export default {
     onDeleteClick: {
       type: Function,
       default: () => {},
+    },
+    isForPractice: {
+      type: Boolean,
     },
   },
   methods: {
