@@ -78,6 +78,9 @@
                   _question.type === TaskTypes.QUESTION_ANSWER &&
                   _question.audioSource
                 "
+                :image="
+                  _question.type === TaskTypes.CAPTION_THIS && _question.image
+                "
                 :isForPractice="_question.isForPractice"
                 :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
                 :onEditClick="() => handleTopicCardEditClick(_question.id)"
@@ -311,6 +314,9 @@ export default {
       ...(x.type === TaskTypes.QUESTION_ANSWER && {
         audioSource: x.voiceForQnA,
       }),
+      ...(x.type === TaskTypes.CAPTION_THIS && {
+        image: x.captionThisImage,
+      }),
     }));
 
     this.classStudents = classDetails.students.map((x) => ({
@@ -424,10 +430,7 @@ export default {
       return response.data || null;
     },
     async getClassTasks(id) {
-      const query = {
-        // type: TaskTypes.QUESTION_ANSWER
-        isPracticeMode: true,
-      };
+      const query = {};
 
       const response = await TaskService.QueryClassTasks(id, query).catch(
         () => null
