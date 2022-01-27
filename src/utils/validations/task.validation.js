@@ -24,8 +24,18 @@ const createCaptionThisTopicSchema = yup.object({
   captionImage: yup.mixed().required("Caption image is required."),
 });
 
+const createTranslationTopicSchema = yup.object({
+  topic: yup.string().required("Topic is required."),
+  title: yup.string().required("Title is required."),
+  type: yup.string().default(taskTypes.TRANSLATION).required(),
+  questionText: yup.string().optional(),
+  textToTranslate: yup.string().required("Text to translate is required."),
+  translatedText: yup.string().required("Translated Text is required."),
+});
+
 export {
   createQandATopicSchema,
   updateQandATopicSchema,
   createCaptionThisTopicSchema,
+  createTranslationTopicSchema,
 };
