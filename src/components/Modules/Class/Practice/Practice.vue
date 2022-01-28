@@ -775,6 +775,7 @@ export default {
   flex: none;
   width: 100%;
   height: 100%;
+  max-height: 500px;
 }
 .class-practice-body-content-wrapper-emojis-wrapper {
   display: flex;
