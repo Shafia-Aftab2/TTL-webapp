@@ -22,12 +22,13 @@
       </div>
       <div class="student-home-content-item">
         <talkie-button
+          type="button"
           class="student-home-content-item-button-secondary"
           :variant="'secondary'"
           :outlined="true"
-          :disabled="true"
+          :onClick="handlePracticeModeButtonClick"
         >
-          Coming Soon
+          Enter
         </talkie-button>
         <p class="student-home-content-item-header">Practice Mode</p>
         <p class="student-home-content-item-description">
@@ -83,6 +84,9 @@ export default {
     },
     handleClassModeButtonClick() {
       this.$router.push(`/classes/tasks/inbox`);
+    },
+    handlePracticeModeButtonClick() {
+      this.$router.push(`/classes/practice`);
     },
   },
 };

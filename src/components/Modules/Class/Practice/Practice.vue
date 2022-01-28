@@ -121,7 +121,10 @@
 
               <h4
                 class="h4 class-practice-body-content-wrapper-translations-answer-header"
-                v-if="currentTask.translation.answer"
+                v-if="
+                  currentTask.translation.answer &&
+                  currentTaskAnswered.showTranslationSelfAssessment
+                "
               >
                 <span
                   class="class-practice-body-content-wrapper-translations-answer-wrapper"
@@ -133,6 +136,7 @@
 
               <div
                 class="class-practice-body-content-wrapper-translations-self-assessment-wrapper"
+                v-if="currentTaskAnswered.showTranslationSelfAssessment"
               >
                 <h5 class="h5">Self-assessment:</h5>
                 <p class="p">
@@ -209,9 +213,32 @@
                   )
                 "
               >
+                <!-- if there is self assessment for current(translation for now) task -->
                 <div
                   class="class-practice-body-footer-wrapper-options-item"
-                  v-if="currentRecording"
+                  v-if="
+                    currentRecording &&
+                    currentTaskAnswered.showTranslationSelfAssessment
+                  "
+                >
+                  <talkie-icon
+                    :type="'submit'"
+                    :name="'x-mark'"
+                    :isActive="true"
+                    :variant="'danger'"
+                    :size="30"
+                    :onClick="
+                      async () => await handleTranslationTaskAnswer(false)
+                    "
+                  />
+                </div>
+                <!-- if there is no self assessment for current(translation for now) task -->
+                <div
+                  class="class-practice-body-footer-wrapper-options-item"
+                  v-if="
+                    currentRecording &&
+                    !currentTaskAnswered.showTranslationSelfAssessment
+                  "
                 >
                   <talkie-icon
                     :name="'arrow-rounded-left'"
@@ -230,6 +257,7 @@
                     Redo
                   </p>
                 </div>
+                <!-- pause/play/record/stop toggle -->
                 <div class="class-practice-body-footer-wrapper-options-item">
                   <talkie-icon
                     :name="'mike-unmuted'"
@@ -287,9 +315,32 @@
                     }}
                   </p>
                 </div>
+                <!-- if there is self assessment for current(translation for now) task -->
                 <div
                   class="class-practice-body-footer-wrapper-options-item"
-                  v-if="currentRecording"
+                  v-if="
+                    currentRecording &&
+                    currentTaskAnswered.showTranslationSelfAssessment
+                  "
+                >
+                  <talkie-icon
+                    :type="'submit'"
+                    :name="'tick-mark'"
+                    :isActive="true"
+                    :variant="'success'"
+                    :size="30"
+                    :onClick="
+                      async () => await handleTranslationTaskAnswer(true)
+                    "
+                  />
+                </div>
+                <!-- if there is no self assessment for current(translation for now) task -->
+                <div
+                  class="class-practice-body-footer-wrapper-options-item"
+                  v-if="
+                    currentRecording &&
+                    !currentTaskAnswered.showTranslationSelfAssessment
+                  "
                 >
                   <talkie-icon
                     :type="'submit'"
@@ -297,7 +348,12 @@
                     :isActive="true"
                     :variant="'secondary'"
                     :size="30"
-                    :onClick="handleTaskAnswer"
+                    :onClick="
+                      async () =>
+                        currentTask.type !== taskTypes.TRANSLATION
+                          ? await handleTaskAnswer()
+                          : await handleTranslationTaskAnswer()
+                    "
                   />
                   <p
                     :class="[
@@ -341,7 +397,11 @@
         >
           <h2 class="h2">
             {{ currentTaskAnswered.appericiationMessage }}
-            {{ currentTaskAnswered.scores }} pts
+            {{
+              currentTaskAnswered.scores == 0
+                ? ""
+                : `${currentTaskAnswered.scores} pts`
+            }}
           </h2>
         </div>
       </div>
@@ -450,16 +510,26 @@ export default {
         responseId: null,
         scores: null,
         appericiationMessage: "",
+        // specific for translation
+        translationScores: 0,
+        isCorrectAnswer: false,
+        showTranslationSelfAssessment: false,
       },
       taskTypes: taskTypes,
       taskScores: {
         ["Emoji-Story"]: "10",
-        ["Translation"]: "10",
+        ["Translation"]: {
+          correctAnswer: "5",
+          wrongAnswer: "0",
+        },
         ["Caption-This"]: "5",
       },
       appericiationMessages: {
         ["Emoji-Story"]: "¡Excelente!",
-        ["Translation"]: "¡Bien hecho!",
+        ["Translation"]: {
+          correctAnswer: "¡Bien hecho!",
+          wrongAnswer: "¡Ayy, qué pena! :(",
+        },
         ["Caption-This"]: "¡Muy bien!",
       },
     };
@@ -546,7 +616,7 @@ export default {
           captionImage: x?.captionThisImage,
         }),
         ...(x?.type === taskTypes.TRANSLATION && {
-          translation: { question: x?.textToTranslate },
+          translation: { question: x?.textToTranslate, answer: x?.answer },
         }),
         ...(x?.type === taskTypes.EMOJI_STORY && {
           emojis: x?.emojiStory || [],
@@ -595,6 +665,27 @@ export default {
       const uploadedFile = response.data[0].s3Url;
       return uploadedFile;
     },
+    async handleTranslationTaskAnswer(isCorrectAnswer = false) {
+      // show self assessment options for translation task
+      if (
+        this.currentTask?.type === taskTypes.TRANSLATION &&
+        !this.currentTaskAnswered.showTranslationSelfAssessment
+      ) {
+        this.currentTaskAnswered = {
+          ...this.currentTaskAnswered,
+          showTranslationSelfAssessment: true,
+        };
+        return;
+      }
+
+      // set translation scores based on self assessment
+      this.currentTaskAnswered = {
+        ...this.currentTask,
+        isCorrectAnswer: isCorrectAnswer,
+      };
+
+      await this.handleTaskAnswer();
+    },
     async handleTaskAnswer() {
       // update page state
       this.backdropLoading = true;
@@ -642,8 +733,18 @@ export default {
       });
       this.currentTaskAnswered = {
         responseId: response.data.id,
-        scores: this.taskScores[this.currentTask.type],
-        appericiationMessage: this.appericiationMessages[this.currentTask.type],
+        scores:
+          this.currentTask.type === taskTypes.TRANSLATION
+            ? this.currentTaskAnswered.isCorrectAnswer
+              ? this.taskScores[this.currentTask.type].correctAnswer
+              : this.taskScores[this.currentTask.type].wrongAnswer
+            : this.taskScores[this.currentTask.type],
+        appericiationMessage:
+          this.currentTask.type === taskTypes.TRANSLATION
+            ? this.currentTaskAnswered.isCorrectAnswer
+              ? this.appericiationMessages[this.currentTask.type].correctAnswer
+              : this.appericiationMessages[this.currentTask.type].wrongAnswer
+            : this.appericiationMessages[this.currentTask.type],
       };
     },
     async handleTaskScoring() {
@@ -775,6 +876,7 @@ export default {
   flex: none;
   width: 100%;
   height: 100%;
+  max-height: 500px;
 }
 .class-practice-body-content-wrapper-emojis-wrapper {
   display: flex;
