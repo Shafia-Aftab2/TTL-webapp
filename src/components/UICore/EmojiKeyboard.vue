@@ -97,25 +97,32 @@ export default {
   align-items: center;
   justify-content: center;
   gap: var(--t-space-1);
+  border: var(--t-space-2) solid transparent;
+  background: var(--t-white-100);
 }
+.talkie-emoji-keyboard-wrapper:focus-within {
+  border-color: var(--t-black-100);
+}
+
+/* Content */
 .talkie-emoji-keyboard-content-wrapper {
-  border: var(--t-space-1) solid var(--t-gray-50);
   width: 100%;
   display: grid;
   overflow-x: scroll;
 }
 .talkie-emoji-keyboard-content-item {
-  border: var(--t-space-1) solid var(--t-gray-75);
+  border: var(--t-space-1) solid var(--t-gray-125);
   transition: 0.1s ease;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
+  background: var(--t-white);
 }
 .talkie-emoji-keyboard-content-item:hover {
   background-color: var(--t-gray-75);
   cursor: pointer;
 }
+/* Footer */
 .talkie-emoji-keyboard-categories-overflow-wrapper {
   overflow: scroll;
   width: 100%;
@@ -145,6 +152,10 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
+  .talkie-emoji-keyboard-wrapper {
+    border-radius: calc(var(--t-br-small) * 0.7);
+  }
+  /* Content */
   .talkie-emoji-keyboard-content-wrapper {
     grid-template-columns: repeat(
       6,
@@ -164,6 +175,7 @@ export default {
     height: calc(calc(var(--emoji-keyboard-size) / 6) - var(--t-space-16));
     width: calc(calc(var(--emoji-keyboard-size) / 6) - var(--t-space-16));
   }
+  /* Footer */
   .talkie-emoji-keyboard-categories-overflow-wrapper::-webkit-scrollbar {
     height: var(--t-space-5) !important;
     width: var(--t-space-5) !important;
@@ -171,12 +183,12 @@ export default {
   .talkie-emoji-keyboard-categories-wrapper {
     grid-template-columns: repeat(
       var(--emoji-categories),
-      calc(calc(var(--emoji-keyboard-size) / 9) - 1.5px)
+      calc(calc(var(--emoji-keyboard-size) / 8) - 1.5px)
     );
   }
   .talkie-emoji-keyboard-categories-emoji-item {
-    height: calc(var(--emoji-keyboard-size) / 9);
-    width: calc(var(--emoji-keyboard-size) / 9);
+    height: calc(var(--emoji-keyboard-size) / 8);
+    width: calc(var(--emoji-keyboard-size) / 8);
   }
   .talkie-emoji-keyboard-categories-emoji-item-image {
     height: calc(var(--emoji-keyboard-size) / 15);
@@ -184,6 +196,10 @@ export default {
   }
 }
 @media (min-width: 600px) {
+  .talkie-emoji-keyboard-wrapper {
+    border-radius: var(--t-br-small);
+  }
+  /* Content */
   .talkie-emoji-keyboard-content-wrapper {
     grid-template-columns: repeat(
       10,
@@ -210,7 +226,7 @@ export default {
   }
   .talkie-emoji-keyboard-categories-wrapper {
     grid-template-columns: repeat(
-      calc(var(--emoji-categories) + 5),
+      var(--emoji-categories),
       calc(calc(var(--emoji-keyboard-size) / 12) - 1.5px)
     );
   }
@@ -224,6 +240,7 @@ export default {
   }
 }
 @media (min-width: 1200px) {
+  /* Content */
   .talkie-emoji-keyboard-content-wrapper {
     grid-template-columns: repeat(
       9,
