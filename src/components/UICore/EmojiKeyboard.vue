@@ -2,7 +2,7 @@
   <div
     class="talkie-emoji-keyboard-wrapper"
     id="talkie-emoji-keyboard-wrapper"
-    :style="`--emoji-keyboard-size: 900px`"
+    :style="`--emoji-keyboard-size: ${keyboard.width}`"
   >
     <div class="talkie-emoji-keyboard-header-wrapper"></div>
     <div
@@ -55,7 +55,30 @@ export default {
     return {
       emojis: emojis,
       activeEmojiCategory: Object.keys(emojis)[0],
+      keyboard: {
+        width: "0px",
+        height: "0px",
+        hasVerticalScrollbar: false,
+      },
     };
+  },
+  created() {
+    window.addEventListener("resize", this.handleDetectKeyboardSize);
+  },
+  unmounted() {
+    window.removeEventListener("resize", this.handleDetectKeyboardSize);
+  },
+  mounted() {
+    this.handleDetectKeyboardSize();
+  },
+  methods: {
+    handleDetectKeyboardSize() {
+      // detect keyboard width change
+      const keyboard = document.getElementById("talkie-emoji-keyboard-wrapper");
+      if (this.keyboard.width !== keyboard.clientWidth) {
+        this.keyboard.width = keyboard.clientWidth + "px";
+      }
+    },
   },
 };
 </script>
