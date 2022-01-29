@@ -4,23 +4,33 @@
     id="talkie-emoji-keyboard-wrapper"
     :style="`--emoji-keyboard-size: ${keyboard.width}`"
   >
-    <div class="talkie-emoji-keyboard-header-wrapper"></div>
+    <!-- Header -->
+    <div class="talkie-emoji-keyboard-header-wrapper">
+      <!-- TODO: add search emojis option here -->
+    </div>
+    <!-- Content -->
     <div
       class="talkie-emoji-keyboard-content-wrapper"
       id="talkie-emoji-keyboard-content-wrapper"
     >
       <template
-        v-for="(emojiItemValue, emojiItemKey) in emojis[activeEmojiCategory]"
-        :key="emojiItemKey"
+        v-for="(emojiItemURL, emojiItemName) in emojis[activeCategory]"
+        :key="emojiItemName"
       >
-        <button :class="['talkie-emoji-keyboard-content-item']">
+        <button
+          :class="['talkie-emoji-keyboard-content-item']"
+          @click="
+            async () => await handleEmojiPick(emojiItemName, emojiItemURL)
+          "
+        >
           <img
-            :src="emojiItemValue"
+            :src="emojiItemURL"
             class="talkie-emoji-keyboard-content-item-image"
           />
         </button>
       </template>
     </div>
+    <!-- Footer -->
     <div class="talkie-emoji-keyboard-categories-overflow-wrapper">
       <div
         class="talkie-emoji-keyboard-categories-wrapper"
@@ -33,10 +43,10 @@
           <button
             :class="[
               'talkie-emoji-keyboard-categories-emoji-item',
-              activeEmojiCategory === emojiCategory &&
+              activeCategory === emojiCategory &&
                 'talkie-emoji-keyboard-categories-emoji-item-active',
             ]"
-            @click="() => handleEmojiCategoryClick(emojiCategory)"
+            @click="async () => await handleEmojiCategoryClick(emojiCategory)"
           >
             <img
               :src="Object.values(emojiCategoryItems)[0]"
@@ -50,14 +60,14 @@
 </template>
 
 <script>
-import emojis from "./EmojiKeyboard";
+import _emojis from "./EmojiKeyboard";
 
 export default {
   name: "TalkieEmojiKeyboard",
   data() {
     return {
-      emojis: emojis,
-      activeEmojiCategory: Object.keys(emojis)[0],
+      emojis: _emojis,
+      activeCategory: Object.keys(_emojis)[0],
       keyboard: {
         width: "0px",
         height: "0px",
@@ -74,16 +84,36 @@ export default {
   mounted() {
     this.handleDetectKeyboardSize();
   },
-  methods: {
-    handleEmojiCategoryClick(category) {
-      this.activeEmojiCategory = category;
+  props: {
+    onEmojiPicked: {
+      type: Function,
+      default: () => {},
     },
+    onEmojiCategoryChange: {
+      type: Function,
+      default: () => {},
+    },
+  },
+  methods: {
     handleDetectKeyboardSize() {
       // detect keyboard width change
       const keyboard = document.getElementById("talkie-emoji-keyboard-wrapper");
       if (this.keyboard.width !== keyboard.clientWidth) {
         this.keyboard.width = keyboard.clientWidth + "px";
       }
+    },
+    async handleEmojiPick(emojiName, emojiURL) {
+      const emojiPicked = {
+        name: emojiName,
+        url: emojiURL,
+      };
+      this.onEmojiPicked && (await this.onEmojiPicked(emojiPicked));
+    },
+    async handleEmojiCategoryClick(category) {
+      this.activeCategory = category;
+
+      this.onEmojiCategoryChange &&
+        (await this.onEmojiCategoryChange(category));
     },
   },
 };
