@@ -35,6 +35,7 @@
             activeEmojiCategory === emojiCategory &&
               'talkie-emoji-keyboard-categories-emoji-item-active',
           ]"
+          @click="() => handleEmojiCategoryClick(emojiCategory)"
         >
           <img
             :src="Object.values(emojiCategoryItems)[0]"
@@ -72,6 +73,9 @@ export default {
     this.handleDetectKeyboardSize();
   },
   methods: {
+    handleEmojiCategoryClick(category) {
+      this.activeEmojiCategory = category;
+    },
     handleDetectKeyboardSize() {
       // detect keyboard width change
       const keyboard = document.getElementById("talkie-emoji-keyboard-wrapper");
