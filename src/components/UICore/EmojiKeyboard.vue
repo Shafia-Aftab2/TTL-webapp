@@ -4,7 +4,7 @@
     id="talkie-emoji-keyboard-wrapper"
     :style="`--emoji-keyboard-size: ${keyboard.width}`"
   >
-    <template v-if="!computedPageLoading">
+    <template v-if="!computedPageLoading && !error">
       <!-- Header -->
       <div class="talkie-emoji-keyboard-header-wrapper">
         <!-- TODO: add search emojis option here -->
@@ -26,6 +26,7 @@
           >
             <img
               :src="emojiItemURL"
+              :alt="emojiItemName"
               class="talkie-emoji-keyboard-content-item-image"
             />
           </button>
@@ -51,6 +52,7 @@
             >
               <img
                 :src="Object.values(emojiCategoryItems)[0]"
+                :alt="Object.values(emojiCategoryItems)[0]"
                 class="talkie-emoji-keyboard-categories-emoji-item-image"
               />
             </button>
@@ -60,7 +62,16 @@
     </template>
 
     <!-- Loading Wrapper -->
-    <talkie-loader :size="'large'" v-if="computedPageLoading" />
+    <div class="talkie-emoji-keyboard-load-wrapper" v-if="computedPageLoading">
+      <talkie-loader :size="'large'" />
+    </div>
+
+    <!-- Error Wrapper -->
+    <div class="talkie-emoji-keyboard-error-wrapper" v-if="error">
+      <p class="p">
+        {{ error }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -84,6 +95,7 @@ export default {
         hasVerticalScrollbar: false,
       },
       loading: false,
+      error: null,
     };
   },
   computed: {
@@ -123,7 +135,8 @@ export default {
       const emojis = await AssetService.GetEmojis().catch(() => null);
 
       // failure case
-      if (!emojis) {
+      if (!emojis || Object.keys(emojis || {}).length === 0) {
+        this.error = "Failed to load emojis";
         this.loading = false;
         this.handleDetectKeyboardSize();
         return;
@@ -131,6 +144,7 @@ export default {
 
       // success case
       this.loading = false;
+      this.error = null;
       this.handleDetectKeyboardSize();
     },
     handleDetectKeyboardSize() {
@@ -217,6 +231,14 @@ export default {
 .talkie-emoji-keyboard-categories-emoji-item-active {
   background-color: var(--t-black-100);
 }
+/* Load, Error Wrappers */
+.talkie-emoji-keyboard-load-wrapper,
+.talkie-emoji-keyboard-error-wrapper {
+  margin: auto;
+}
+.talkie-emoji-keyboard-load-wrapper {
+  padding: var(--t-space-12);
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -262,6 +284,11 @@ export default {
     height: calc(var(--emoji-keyboard-size) / 15);
     width: calc(var(--emoji-keyboard-size) / 15);
   }
+  /* Load, Error Wrappers */
+  .talkie-emoji-keyboard-load-wrapper,
+  .talkie-emoji-keyboard-error-wrapper {
+    min-height: 70px;
+  }
 }
 @media (min-width: 600px) {
   .talkie-emoji-keyboard-wrapper {
@@ -305,6 +332,11 @@ export default {
   .talkie-emoji-keyboard-categories-emoji-item-image {
     height: calc(var(--emoji-keyboard-size) / 20);
     width: calc(var(--emoji-keyboard-size) / 20);
+  }
+  /* Load, Error Wrappers */
+  .talkie-emoji-keyboard-load-wrapper,
+  .talkie-emoji-keyboard-error-wrapper {
+    min-height: 100px;
   }
 }
 @media (min-width: 1200px) {
