@@ -17,6 +17,7 @@ import TalkieStarRating from "./StarRating.vue";
 import TalkieToolTip from "./ToolTip.vue";
 import TalkieDragDrop from "./DragDrop.vue";
 import TalkieMediaPicker from "./MediaPicker.vue";
+import TalkieEmojiKeyboard from "./EmojiKeyboard.vue";
 
 export {
   TalkieBackDrop,
@@ -38,4 +39,5 @@ export {
   TalkieToolTip,
   TalkieDragDrop,
   TalkieMediaPicker,
+  TalkieEmojiKeyboard,
 };

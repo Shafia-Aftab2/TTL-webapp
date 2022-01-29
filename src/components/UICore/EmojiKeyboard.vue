@@ -235,8 +235,6 @@ export default {
 .talkie-emoji-keyboard-load-wrapper,
 .talkie-emoji-keyboard-error-wrapper {
   margin: auto;
-}
-.talkie-emoji-keyboard-load-wrapper {
   padding: var(--t-space-12);
 }
 
