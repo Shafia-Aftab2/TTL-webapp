@@ -4,66 +4,75 @@
     id="talkie-emoji-keyboard-wrapper"
     :style="`--emoji-keyboard-size: ${keyboard.width}`"
   >
-    <!-- Header -->
-    <div class="talkie-emoji-keyboard-header-wrapper">
-      <!-- TODO: add search emojis option here -->
-    </div>
-    <!-- Content -->
-    <div
-      class="talkie-emoji-keyboard-content-wrapper"
-      id="talkie-emoji-keyboard-content-wrapper"
-    >
-      <template
-        v-for="(emojiItemURL, emojiItemName) in emojis[activeCategory]"
-        :key="emojiItemName"
-      >
-        <button
-          :class="['talkie-emoji-keyboard-content-item']"
-          @click="
-            async () => await handleEmojiPick(emojiItemName, emojiItemURL)
-          "
-        >
-          <img
-            :src="emojiItemURL"
-            class="talkie-emoji-keyboard-content-item-image"
-          />
-        </button>
-      </template>
-    </div>
-    <!-- Footer -->
-    <div class="talkie-emoji-keyboard-categories-overflow-wrapper">
+    <template v-if="!computedPageLoading">
+      <!-- Header -->
+      <div class="talkie-emoji-keyboard-header-wrapper">
+        <!-- TODO: add search emojis option here -->
+      </div>
+      <!-- Content -->
       <div
-        class="talkie-emoji-keyboard-categories-wrapper"
-        :style="`--emoji-categories: ${Object.keys(emojis).length}`"
+        class="talkie-emoji-keyboard-content-wrapper"
+        id="talkie-emoji-keyboard-content-wrapper"
       >
         <template
-          v-for="(emojiCategoryItems, emojiCategory) in emojis"
-          :key="emojiCategoryItems"
+          v-for="(emojiItemURL, emojiItemName) in emojis[activeCategory]"
+          :key="emojiItemName"
         >
           <button
-            :class="[
-              'talkie-emoji-keyboard-categories-emoji-item',
-              activeCategory === emojiCategory &&
-                'talkie-emoji-keyboard-categories-emoji-item-active',
-            ]"
-            @click="async () => await handleEmojiCategoryClick(emojiCategory)"
+            :class="['talkie-emoji-keyboard-content-item']"
+            @click="
+              async () => await handleEmojiPick(emojiItemName, emojiItemURL)
+            "
           >
             <img
-              :src="Object.values(emojiCategoryItems)[0]"
-              class="talkie-emoji-keyboard-categories-emoji-item-image"
+              :src="emojiItemURL"
+              class="talkie-emoji-keyboard-content-item-image"
             />
           </button>
         </template>
       </div>
-    </div>
+      <!-- Footer -->
+      <div class="talkie-emoji-keyboard-categories-overflow-wrapper">
+        <div
+          class="talkie-emoji-keyboard-categories-wrapper"
+          :style="`--emoji-categories: ${Object.keys(emojis).length}`"
+        >
+          <template
+            v-for="(emojiCategoryItems, emojiCategory) in emojis"
+            :key="emojiCategoryItems"
+          >
+            <button
+              :class="[
+                'talkie-emoji-keyboard-categories-emoji-item',
+                activeCategory === emojiCategory &&
+                  'talkie-emoji-keyboard-categories-emoji-item-active',
+              ]"
+              @click="async () => await handleEmojiCategoryClick(emojiCategory)"
+            >
+              <img
+                :src="Object.values(emojiCategoryItems)[0]"
+                class="talkie-emoji-keyboard-categories-emoji-item-image"
+              />
+            </button>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    <!-- Loading Wrapper -->
+    <talkie-loader :size="'large'" v-if="computedPageLoading" />
   </div>
 </template>
 
 <script>
 import _emojis from "./EmojiKeyboard";
+import TalkieLoader from "./Loader";
 
 export default {
   name: "TalkieEmojiKeyboard",
+  components: {
+    TalkieLoader,
+  },
   data() {
     return {
       emojis: _emojis,
@@ -73,7 +82,13 @@ export default {
         height: "0px",
         hasVerticalScrollbar: false,
       },
+      loading: false,
     };
+  },
+  computed: {
+    computedPageLoading() {
+      return this.loading;
+    },
   },
   created() {
     window.addEventListener("resize", this.handleDetectKeyboardSize);
@@ -98,7 +113,7 @@ export default {
     handleDetectKeyboardSize() {
       // detect keyboard width change
       const keyboard = document.getElementById("talkie-emoji-keyboard-wrapper");
-      if (this.keyboard.width !== keyboard.clientWidth) {
+      if (keyboard && this.keyboard.width !== keyboard.clientWidth) {
         this.keyboard.width = keyboard.clientWidth + "px";
       }
     },
