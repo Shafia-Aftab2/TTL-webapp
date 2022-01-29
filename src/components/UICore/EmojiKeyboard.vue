@@ -66,6 +66,7 @@
 
 <script>
 import _emojis from "./EmojiKeyboard";
+import { AssetService } from "@/api/services";
 import TalkieLoader from "./Loader";
 
 export default {
@@ -90,7 +91,11 @@ export default {
       return this.loading;
     },
   },
-  created() {
+  async created() {
+    // get emojis
+    await this.getEmojis();
+
+    // add event listeners
     window.addEventListener("resize", this.handleDetectKeyboardSize);
   },
   unmounted() {
@@ -110,6 +115,24 @@ export default {
     },
   },
   methods: {
+    async getEmojis() {
+      // update component state
+      this.loading = true;
+
+      // api call
+      const emojis = await AssetService.GetEmojis().catch(() => null);
+
+      // failure case
+      if (!emojis) {
+        this.loading = false;
+        this.handleDetectKeyboardSize();
+        return;
+      }
+
+      // success case
+      this.loading = false;
+      this.handleDetectKeyboardSize();
+    },
     handleDetectKeyboardSize() {
       // detect keyboard width change
       const keyboard = document.getElementById("talkie-emoji-keyboard-wrapper");
