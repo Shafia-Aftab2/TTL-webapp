@@ -100,17 +100,10 @@ export default {
   border: var(--t-space-1) solid var(--t-gray-50);
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(
-    8,
-    calc(calc(var(--emoji-keyboard-size) / 8) - 1.5px)
-  );
-  max-height: 300px;
   overflow-x: scroll;
 }
 .talkie-emoji-keyboard-content-item {
   border: var(--t-space-1) solid var(--t-gray-75);
-  height: calc(var(--emoji-keyboard-size) / 8);
-  width: calc(var(--emoji-keyboard-size) / 8);
   transition: 0.1s ease;
   display: flex;
   justify-content: center;
@@ -118,41 +111,145 @@ export default {
   background: transparent;
 }
 .talkie-emoji-keyboard-content-item:hover {
-  background-color: var(--t-gray-100);
+  background-color: var(--t-gray-75);
   cursor: pointer;
 }
-.talkie-emoji-keyboard-content-item-image {
-  height: calc(calc(var(--emoji-keyboard-size) / 8) - var(--t-space-20));
-  width: calc(calc(var(--emoji-keyboard-size) / 8) - var(--t-space-20));
+.talkie-emoji-keyboard-categories-overflow-wrapper {
+  overflow: scroll;
+  width: 100%;
+  margin: auto;
 }
 .talkie-emoji-keyboard-categories-wrapper {
   border: var(--t-space-1) solid var(--t-gray-50);
   display: grid;
-  grid-template-columns: repeat(
-    var(--emoji-categories),
-    calc(calc(var(--emoji-keyboard-size) / 12) - 1.5px)
-  );
+  background-color: var(--t-black-50);
 }
 .talkie-emoji-keyboard-categories-emoji-item {
   background: transparent;
-  background-color: var(--t-gray-75);
-  border: var(--t-space-1) solid var(--t-gray-50);
-  height: calc(var(--emoji-keyboard-size) / 12);
-  width: calc(var(--emoji-keyboard-size) / 12);
+  background-color: var(--t-black-50);
+  border: var(--t-space-1) solid var(--t-black);
   transition: 0.1s ease;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .talkie-emoji-keyboard-categories-emoji-item:hover {
-  background-color: var(--t-black-100);
+  background-color: var(--t-black);
   cursor: pointer;
 }
 .talkie-emoji-keyboard-categories-emoji-item-active {
   background-color: var(--t-black-100);
 }
-.talkie-emoji-keyboard-categories-emoji-item-image {
-  height: calc(var(--emoji-keyboard-size) / 20);
-  width: calc(var(--emoji-keyboard-size) / 20);
+
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-emoji-keyboard-content-wrapper {
+    grid-template-columns: repeat(
+      6,
+      calc(calc(var(--emoji-keyboard-size) / 6) - 2px)
+    );
+    max-height: 250px;
+  }
+  .talkie-emoji-keyboard-content-wrapper::-webkit-scrollbar {
+    height: var(--t-space-5) !important;
+    width: var(--t-space-5) !important;
+  }
+  .talkie-emoji-keyboard-content-item {
+    height: calc(var(--emoji-keyboard-size) / 6);
+    width: calc(var(--emoji-keyboard-size) / 6);
+  }
+  .talkie-emoji-keyboard-content-item-image {
+    height: calc(calc(var(--emoji-keyboard-size) / 6) - var(--t-space-16));
+    width: calc(calc(var(--emoji-keyboard-size) / 6) - var(--t-space-16));
+  }
+  .talkie-emoji-keyboard-categories-overflow-wrapper::-webkit-scrollbar {
+    height: var(--t-space-5) !important;
+    width: var(--t-space-5) !important;
+  }
+  .talkie-emoji-keyboard-categories-wrapper {
+    grid-template-columns: repeat(
+      var(--emoji-categories),
+      calc(calc(var(--emoji-keyboard-size) / 9) - 1.5px)
+    );
+  }
+  .talkie-emoji-keyboard-categories-emoji-item {
+    height: calc(var(--emoji-keyboard-size) / 9);
+    width: calc(var(--emoji-keyboard-size) / 9);
+  }
+  .talkie-emoji-keyboard-categories-emoji-item-image {
+    height: calc(var(--emoji-keyboard-size) / 15);
+    width: calc(var(--emoji-keyboard-size) / 15);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-emoji-keyboard-content-wrapper {
+    grid-template-columns: repeat(
+      10,
+      calc(calc(var(--emoji-keyboard-size) / 10) - 1.25px)
+    );
+    max-height: 300px;
+  }
+  .talkie-emoji-keyboard-content-wrapper::-webkit-scrollbar {
+    height: var(--t-space-8) !important;
+    width: var(--t-space-8) !important;
+  }
+  .talkie-emoji-keyboard-content-item {
+    height: calc(var(--emoji-keyboard-size) / 10);
+    width: calc(var(--emoji-keyboard-size) / 10);
+  }
+  .talkie-emoji-keyboard-content-item-image {
+    height: calc(calc(var(--emoji-keyboard-size) / 10) - var(--t-space-20));
+    width: calc(calc(var(--emoji-keyboard-size) / 10) - var(--t-space-20));
+  }
+  /* Footer */
+  .talkie-emoji-keyboard-categories-overflow-wrapper::-webkit-scrollbar {
+    height: var(--t-space-8) !important;
+    width: var(--t-space-8) !important;
+  }
+  .talkie-emoji-keyboard-categories-wrapper {
+    grid-template-columns: repeat(
+      calc(var(--emoji-categories) + 5),
+      calc(calc(var(--emoji-keyboard-size) / 12) - 1.5px)
+    );
+  }
+  .talkie-emoji-keyboard-categories-emoji-item {
+    height: calc(var(--emoji-keyboard-size) / 12);
+    width: calc(var(--emoji-keyboard-size) / 12);
+  }
+  .talkie-emoji-keyboard-categories-emoji-item-image {
+    height: calc(var(--emoji-keyboard-size) / 20);
+    width: calc(var(--emoji-keyboard-size) / 20);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-emoji-keyboard-content-wrapper {
+    grid-template-columns: repeat(
+      9,
+      calc(calc(var(--emoji-keyboard-size) / 9) - 1.5px)
+    );
+  }
+  .talkie-emoji-keyboard-content-item {
+    height: calc(var(--emoji-keyboard-size) / 9);
+    width: calc(var(--emoji-keyboard-size) / 9);
+  }
+  .talkie-emoji-keyboard-content-item-image {
+    height: calc(calc(var(--emoji-keyboard-size) / 9) - var(--t-space-20));
+    width: calc(calc(var(--emoji-keyboard-size) / 9) - var(--t-space-20));
+  }
+  /* Footer */
+  .talkie-emoji-keyboard-categories-wrapper {
+    grid-template-columns: repeat(
+      var(--emoji-categories),
+      calc(calc(var(--emoji-keyboard-size) / 15) - 1.5px)
+    );
+  }
+  .talkie-emoji-keyboard-categories-emoji-item {
+    height: calc(var(--emoji-keyboard-size) / 15);
+    width: calc(var(--emoji-keyboard-size) / 15);
+  }
+  .talkie-emoji-keyboard-categories-emoji-item-image {
+    height: calc(var(--emoji-keyboard-size) / 25);
+    width: calc(var(--emoji-keyboard-size) / 25);
+  }
 }
 </style>
