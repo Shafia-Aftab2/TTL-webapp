@@ -21,28 +21,30 @@
         </button>
       </template>
     </div>
-    <div
-      class="talkie-emoji-keyboard-categories-wrapper"
-      :style="`--emoji-categories: ${Object.keys(emojis).length}`"
-    >
-      <template
-        v-for="(emojiCategoryItems, emojiCategory) in emojis"
-        :key="emojiCategoryItems"
+    <div class="talkie-emoji-keyboard-categories-overflow-wrapper">
+      <div
+        class="talkie-emoji-keyboard-categories-wrapper"
+        :style="`--emoji-categories: ${Object.keys(emojis).length}`"
       >
-        <button
-          :class="[
-            'talkie-emoji-keyboard-categories-emoji-item',
-            activeEmojiCategory === emojiCategory &&
-              'talkie-emoji-keyboard-categories-emoji-item-active',
-          ]"
-          @click="() => handleEmojiCategoryClick(emojiCategory)"
+        <template
+          v-for="(emojiCategoryItems, emojiCategory) in emojis"
+          :key="emojiCategoryItems"
         >
-          <img
-            :src="Object.values(emojiCategoryItems)[0]"
-            class="talkie-emoji-keyboard-categories-emoji-item-image"
-          />
-        </button>
-      </template>
+          <button
+            :class="[
+              'talkie-emoji-keyboard-categories-emoji-item',
+              activeEmojiCategory === emojiCategory &&
+                'talkie-emoji-keyboard-categories-emoji-item-active',
+            ]"
+            @click="() => handleEmojiCategoryClick(emojiCategory)"
+          >
+            <img
+              :src="Object.values(emojiCategoryItems)[0]"
+              class="talkie-emoji-keyboard-categories-emoji-item-image"
+            />
+          </button>
+        </template>
+      </div>
     </div>
   </div>
 </template>
