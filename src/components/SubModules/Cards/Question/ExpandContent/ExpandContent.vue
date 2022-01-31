@@ -1,5 +1,11 @@
 <template>
-  <div class="talkie-question-card-expand-content-toggle-wrapper">
+  <div
+    class="talkie-question-card-expand-content-toggle-wrapper"
+    v-if="
+      emojis.length > 0 ||
+      (translation && translation.textToTranslate && translation.translatedText)
+    "
+  >
     <span class="talkie-question-card-expand-content-toggle-button">
       <talkie-icon
         :name="'arrow-head-top'"
