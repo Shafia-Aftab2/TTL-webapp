@@ -1,5 +1,10 @@
 <template>
-  <div :class="['talkie-input-emojis-wrapper']">
+  <div
+    :class="[
+      'talkie-input-emojis-wrapper',
+      `talkie-input-emojis-${size.toString()}-wrapper`,
+    ]"
+  >
     <div
       :class="[
         'talkie-input-emojis-content-wrapper',
@@ -48,6 +53,11 @@ export default {
     onChange: {
       type: Function,
       default: () => {},
+    },
+    size: {
+      type: String,
+      default: "medium",
+      validator: (val) => ["small", "medium", "large"].includes(val),
     },
   },
   methods: {
@@ -116,8 +126,6 @@ export default {
   background-color: var(--t-white-100);
   display: flex;
   align-items: center;
-  --size: 16px;
-  --font-size: var(--t-fs-small);
   padding: calc(var(--size) / 1.75);
   font-size: calc(var(--font-size) / 1.35);
   min-height: calc(var(--t-space-70) + calc(var(--t-space-15) * 1));
@@ -142,6 +150,22 @@ export default {
   width: 100%;
   position: absolute;
   box-shadow: rgba(0, 0, 0, 0.35) 0 var(--t-space-5) var(--t-space-15);
+}
+
+/* Size variants */
+.talkie-input-emojis-small-wrapper {
+  --size: var(--t-space-12);
+  --font-size: var(--t-fs-base);
+}
+.talkie-input-emojis-medium-wrapper {
+  --size: var(--t-space-16);
+  --font-size: var(--t-fs-body);
+}
+.talkie-input-emojis-large-wrapper {
+  --size: var(--t-space-20);
+  --font-size: var(--t-fs-sub);
+}
+
   margin-top: var(--t-space-10);
   max-height: 400px;
 }
