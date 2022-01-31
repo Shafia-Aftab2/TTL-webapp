@@ -8,6 +8,9 @@
     <div
       :class="[
         'talkie-input-emojis-content-wrapper',
+        hint &&
+          hint.type &&
+          `talkie-input-emojis-content-${hint.type.toString()}-wrapper`,
         'talkie-input-emojis-content-placeholder',
       ]"
       id="talkie-input-emojis-content-wrapper"
@@ -32,6 +35,16 @@
       <talkie-emoji-keyboard :onEmojiPicked="handleEmojiPicked" />
     </div>
   </div>
+  <!-- input emojis hint -->
+  <p
+    v-if="hint && hint.type && hint.message"
+    :class="[
+      `talkie-input-emojis-message`,
+      `talkie-input-emojis-content-${hint.type.toString()}-message`,
+    ]"
+  >
+    {{ hint.message }}
+  </p>
 </template>
 
 <script>
@@ -53,6 +66,13 @@ export default {
     onChange: {
       type: Function,
       default: () => {},
+    },
+    hint: {
+      type: Object,
+      default: () => ({
+        type: null,
+        message: null,
+      }),
     },
     size: {
       type: String,
@@ -156,6 +176,32 @@ export default {
 .talkie-input-emojis-large-wrapper {
   --size: var(--t-space-20);
   --font-size: var(--t-fs-sub);
+}
+
+/* Hint variants */
+.talkie-input-emojis-content-success-wrapper {
+  border-color: var(--t-green) !important;
+}
+.talkie-input-emojis-content-success-message {
+  color: var(--t-green);
+}
+.talkie-input-emojis-content-error-wrapper {
+  border-color: var(--t-red) !important;
+}
+.talkie-input-emojis-content-error-message {
+  color: var(--t-red);
+}
+.talkie-input-emojis-content-warning-wrapper {
+  border-color: var(--t-primary) !important;
+}
+.talkie-input-emojis-content-warning-message {
+  color: var(--t-primary);
+}
+.talkie-input-emojis-content-info-wrapper {
+  border-color: var(--t-black-100) !important;
+}
+.talkie-input-emojis-content-info-message {
+  color: var(--t-black-100);
 }
 
 /* Responsive variants */
