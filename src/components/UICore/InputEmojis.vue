@@ -1,9 +1,13 @@
 <template>
   <div :class="['talkie-input-emojis-wrapper']">
     <div
-      :class="['talkie-input-emojis-content-wrapper']"
+      :class="[
+        'talkie-input-emojis-content-wrapper',
+        'talkie-input-emojis-content-placeholder',
+      ]"
       id="talkie-input-emojis-content-wrapper"
       :contenteditable="true"
+      :emojis-content-placeholder="placeholder"
     ></div>
     <div class="talkie-input-emojis-keyboard-wrapper">
       <talkie-emoji-keyboard />
@@ -17,6 +21,12 @@ import TalkieEmojiKeyboard from "./EmojiKeyboard.vue";
 export default {
   name: "TalkieInputEmojis",
   components: { TalkieEmojiKeyboard },
+  props: {
+    placeholder: {
+      type: String,
+      default: "Pick Emojis",
+    },
+  },
 };
 </script>
 
@@ -49,6 +59,10 @@ export default {
 .talkie-input-emojis-content-item {
   height: 80px;
   width: 80px;
+}
+.talkie-input-emojis-content-placeholder:empty:not(:focus):before {
+  content: attr(emojis-content-placeholder);
+  color: var(--t-gray-50);
 }
 .talkie-input-emojis-keyboard-wrapper {
   z-index: var(--t-zindex-nv-50);
