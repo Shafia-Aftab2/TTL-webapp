@@ -4,6 +4,7 @@ import TalkieBackDropLoader from "./BackDropLoader.vue";
 import TalkieButton from "./Button.vue";
 import TalkieButtonDropDown from "./ButtonDropDown.vue";
 import TalkieInput from "./Input.vue";
+import TalkieInputEmojis from "./InputEmojis.vue";
 import TalkieSelect from "./Select.vue";
 import TalkieChip from "./Chip.vue";
 import TalkieSwitch from "./Switch.vue";
@@ -26,6 +27,7 @@ export {
   TalkieButton,
   TalkieButtonDropDown,
   TalkieInput,
+  TalkieInputEmojis,
   TalkieSelect,
   TalkieChip,
   TalkieSwitch,
