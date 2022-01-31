@@ -7,10 +7,24 @@
       ]"
       id="talkie-input-emojis-content-wrapper"
       :contenteditable="true"
+      @keydown="handleEmojiContentKeyEvent"
+      @keypress="handleEmojiContentKeyEvent"
+      @keyup="handleEmojiContentKeyEvent"
+      @drag="handleEmojiContentEventBlock"
+      @dragenter="handleEmojiContentEventBlock"
+      @dragend="handleEmojiContentEventBlock"
+      @dragleave="handleEmojiContentEventBlock"
+      @dragover="handleEmojiContentEventBlock"
+      @dragstart="handleEmojiContentEventBlock"
+      @change="handleEmojiContentEventBlock"
+      @forminput="handleEmojiContentEventBlock"
+      @drop="handleEmojiContentEventBlock"
+      @input="handleEmojiContentEventBlock"
+      @paste="handleEmojiContentEventBlock"
       :emojis-content-placeholder="placeholder"
     ></div>
     <div class="talkie-input-emojis-keyboard-wrapper">
-      <talkie-emoji-keyboard />
+      <talkie-emoji-keyboard :onEmojiPicked="handleEmojiPicked" />
     </div>
   </div>
 </template>
@@ -21,10 +35,67 @@ import TalkieEmojiKeyboard from "./EmojiKeyboard.vue";
 export default {
   name: "TalkieInputEmojis",
   components: { TalkieEmojiKeyboard },
+  data() {
+    return {
+      emojis: [],
+    };
+  },
   props: {
     placeholder: {
       type: String,
       default: "Pick Emojis",
+    },
+    onChange: {
+      type: Function,
+      default: () => {},
+    },
+  },
+  methods: {
+    handleEmojiContentKeyEvent(e) {
+      // allow arrow and backspace keys
+      const allowedKeys = [8, 37, 38, 39, 40]; // [Backspace, ArrowLeft, ArrowUp, ArrowRight, ArrowDown]
+      if (!allowedKeys.includes(e.keyCode)) e.preventDefault();
+
+      // remove last emoji from form state if backspace was pressed.
+      if (e.keyCode === 8) {
+        this.getActiveEmojis();
+      }
+    },
+    handleEmojiContentEventBlock(e) {
+      e.preventDefault();
+    },
+    addEmojiToInput(emojiName, emojiURL) {
+      const input = document.getElementById(
+        "talkie-input-emojis-content-wrapper"
+      );
+
+      const emojiElement = document.createElement("img");
+      emojiElement.classList.add("talkie-input-emojis-content-item");
+      emojiElement.src = emojiURL;
+      emojiElement.alt = emojiName;
+      emojiElement.contentEditable = false;
+      emojiElement.height = 80;
+      emojiElement.width = 80;
+      input.appendChild(emojiElement);
+    },
+    getActiveEmojis() {
+      const input = document
+        .getElementById("talkie-input-emojis-content-wrapper")
+        .querySelectorAll(".talkie-input-emojis-content-item");
+
+      const _input = [...input];
+
+      const emojis = _input
+        ?.filter((x) => x.nodeName === "IMG")
+        ?.map((x) => x.src);
+
+      this.emojis = emojis;
+    },
+    async handleEmojiPicked(emoji) {
+      this.emojis = [...this.emojis, emoji.url];
+      this.onChange && (await this.onChange(this.emojis));
+      this.addEmojiToInput(emoji.name, emoji.url);
+      this.getActiveEmojis();
     },
   },
 };
