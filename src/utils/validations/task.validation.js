@@ -33,9 +33,23 @@ const createTranslationTopicSchema = yup.object({
   translatedText: yup.string().required("Translated Text is required."),
 });
 
+const createEmojiStoryTopicSchema = yup.object({
+  topic: yup.string().required("Topic is required."),
+  title: yup.string().required("Title is required."),
+  type: yup.string().default(taskTypes.EMOJI_STORY).required(),
+  questionText: yup.string().optional(),
+  emojiStory: yup
+    .array()
+    .of(yup.string())
+    .min(1, "At least one emoji is required.")
+    .max(10, "More than ten emojis are not allowed.")
+    .required("Emojis are required."),
+});
+
 export {
   createQandATopicSchema,
   updateQandATopicSchema,
   createCaptionThisTopicSchema,
   createTranslationTopicSchema,
+  createEmojiStoryTopicSchema,
 };
