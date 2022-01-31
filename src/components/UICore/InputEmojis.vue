@@ -48,17 +48,27 @@
 </template>
 
 <script>
+import { useField } from "vee-validate";
 import TalkieEmojiKeyboard from "./EmojiKeyboard.vue";
 
 export default {
   name: "TalkieInputEmojis",
   components: { TalkieEmojiKeyboard },
   data() {
+    const { value: t_value, handleBlur, setValue } = useField(this.name);
+
     return {
+      t_value,
+      handleBlur,
+      setValue,
       emojis: [],
     };
   },
   props: {
+    name: {
+      type: String,
+      default: `talkie-input-emojis-${Math.random() * 101010105}`,
+    },
     placeholder: {
       type: String,
       default: "Pick Emojis",
@@ -120,6 +130,7 @@ export default {
         ?.map((x) => x.src);
 
       this.emojis = emojis;
+      this.setValue([...emojis]);
     },
     async handleEmojiPicked(emoji) {
       this.emojis = [...this.emojis, emoji.url];
