@@ -158,7 +158,8 @@ export default {
   border: var(--t-space-2) solid transparent;
   background-color: var(--t-white-100);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 .talkie-input-emojis-content-wrapper:focus {
   border: var(--t-space-2) solid var(--t-black-50);
