@@ -30,6 +30,10 @@ import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
 import AdminSummary from "../components/Modules/Admin/Summary";
+import TeachersFree from "../components/Modules/Admin/Free";
+import TeachersPaid from "../components/Modules/Admin/Paid";
+import QuizStats from "../components/Modules/Admin/Stats";
+import StudentsStats from "../components/Modules/Admin/Students";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -317,6 +321,26 @@ const routes = [
         name: "AdminSummary",
         path: "/admin/summary",
         component: AdminSummary,
+      },
+      {
+        name: "TeachersFree",
+        path: "/admin/teachers/free",
+        component: TeachersFree,
+      },
+      {
+        name: "TeachersPaid",
+        path: "/admin/teachers/paid",
+        component: TeachersPaid,
+      },
+      {
+        name: "QuizStats",
+        path: "/admin/quiz",
+        component: QuizStats,
+      },
+      {
+        name: "StudentsStats",
+        path: "/admin/students/stats",
+        component: StudentsStats,
       },
     ],
   },
