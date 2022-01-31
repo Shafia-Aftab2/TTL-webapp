@@ -216,7 +216,11 @@ export default {
         },
         {
           name: "Emoji Story",
-          onClick: () => this.redirectToCommingSoonPage(),
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.EMOJI_STORY}`,
+              100
+            ),
         },
         {
           name: "Translation",
