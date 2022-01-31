@@ -1,50 +1,52 @@
 <template>
-  <div
-    :class="[
-      'talkie-input-emojis-wrapper',
-      `talkie-input-emojis-${size.toString()}-wrapper`,
-    ]"
-  >
+  <div>
     <div
       :class="[
-        'talkie-input-emojis-content-wrapper',
-        hint &&
-          hint.type &&
-          `talkie-input-emojis-content-${hint.type.toString()}-wrapper`,
-        'talkie-input-emojis-content-placeholder',
+        'talkie-input-emojis-wrapper',
+        `talkie-input-emojis-${size.toString()}-wrapper`,
       ]"
-      id="talkie-input-emojis-content-wrapper"
-      :contenteditable="true"
-      @keydown="handleEmojiContentKeyEvent"
-      @keypress="handleEmojiContentKeyEvent"
-      @keyup="handleEmojiContentKeyEvent"
-      @drag="handleEmojiContentEventBlock"
-      @dragenter="handleEmojiContentEventBlock"
-      @dragend="handleEmojiContentEventBlock"
-      @dragleave="handleEmojiContentEventBlock"
-      @dragover="handleEmojiContentEventBlock"
-      @dragstart="handleEmojiContentEventBlock"
-      @change="handleEmojiContentEventBlock"
-      @forminput="handleEmojiContentEventBlock"
-      @drop="handleEmojiContentEventBlock"
-      @input="handleEmojiContentEventBlock"
-      @paste="handleEmojiContentEventBlock"
-      :emojis-content-placeholder="placeholder"
-    ></div>
-    <div class="talkie-input-emojis-keyboard-wrapper">
-      <talkie-emoji-keyboard :onEmojiPicked="handleEmojiPicked" />
+    >
+      <div
+        :class="[
+          'talkie-input-emojis-content-wrapper',
+          hint &&
+            hint.type &&
+            `talkie-input-emojis-content-${hint.type.toString()}-wrapper`,
+          'talkie-input-emojis-content-placeholder',
+        ]"
+        id="talkie-input-emojis-content-wrapper"
+        :contenteditable="true"
+        @keydown="handleEmojiContentKeyEvent"
+        @keypress="handleEmojiContentKeyEvent"
+        @keyup="handleEmojiContentKeyEvent"
+        @drag="handleEmojiContentEventBlock"
+        @dragenter="handleEmojiContentEventBlock"
+        @dragend="handleEmojiContentEventBlock"
+        @dragleave="handleEmojiContentEventBlock"
+        @dragover="handleEmojiContentEventBlock"
+        @dragstart="handleEmojiContentEventBlock"
+        @change="handleEmojiContentEventBlock"
+        @forminput="handleEmojiContentEventBlock"
+        @drop="handleEmojiContentEventBlock"
+        @input="handleEmojiContentEventBlock"
+        @paste="handleEmojiContentEventBlock"
+        :emojis-content-placeholder="placeholder"
+      ></div>
+      <div class="talkie-input-emojis-keyboard-wrapper">
+        <talkie-emoji-keyboard :onEmojiPicked="handleEmojiPicked" />
+      </div>
     </div>
+    <!-- input emojis hint -->
+    <p
+      v-if="hint && hint.type && hint.message"
+      :class="[
+        `talkie-input-emojis-message`,
+        `talkie-input-emojis-content-${hint.type.toString()}-message`,
+      ]"
+    >
+      {{ hint.message }}
+    </p>
   </div>
-  <!-- input emojis hint -->
-  <p
-    v-if="hint && hint.type && hint.message"
-    :class="[
-      `talkie-input-emojis-message`,
-      `talkie-input-emojis-content-${hint.type.toString()}-message`,
-    ]"
-  >
-    {{ hint.message }}
-  </p>
 </template>
 
 <script>
