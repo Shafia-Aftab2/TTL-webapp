@@ -19,6 +19,7 @@
           :key="emojiItemName"
         >
           <button
+            type="button"
             :class="['talkie-emoji-keyboard-content-item']"
             @click="
               async () => await handleEmojiPick(emojiItemName, emojiItemURL)
@@ -43,6 +44,7 @@
             :key="emojiCategoryItems"
           >
             <button
+              type="button"
               :class="[
                 'talkie-emoji-keyboard-categories-emoji-item',
                 activeCategory === emojiCategory &&
