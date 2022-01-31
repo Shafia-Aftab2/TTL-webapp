@@ -642,10 +642,10 @@ export default {
         loading: false,
       };
       const taskId = response?.data?.id;
-      // this.handleRedirection(
-      //   `/classes/${this.classId}/tasks/${taskId}/status?status=created`,
-      //   20000
-      // );
+      this.handleRedirection(
+        `/classes/${this.classId}/tasks/${taskId}/status?status=created`,
+        200
+      );
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
