@@ -126,18 +126,10 @@ export default {
   background-color: var(--t-white-100);
   display: flex;
   align-items: center;
-  padding: calc(var(--size) / 1.75);
-  font-size: calc(var(--font-size) / 1.35);
-  min-height: calc(var(--t-space-70) + calc(var(--t-space-15) * 1));
-  border-radius: calc(var(--t-br-small) * 0.7);
 }
 .talkie-input-emojis-content-wrapper:focus {
   border: var(--t-space-2) solid var(--t-black-50);
   box-shadow: rgba(0, 0, 0, 0.35) 0 var(--t-space-5) var(--t-space-15);
-}
-.talkie-input-emojis-content-item {
-  height: 80px;
-  width: 80px;
 }
 .talkie-input-emojis-content-placeholder:empty:not(:focus):before {
   content: attr(emojis-content-placeholder);
@@ -166,7 +158,60 @@ export default {
   --font-size: var(--t-fs-sub);
 }
 
-  margin-top: var(--t-space-10);
-  max-height: 400px;
+/* Responsive variants */
+@media (max-width: 599px) {
+  .talkie-input-emojis-content-wrapper {
+    padding: calc(var(--size) / 1.75);
+    font-size: calc(var(--font-size) / 1.35);
+    min-height: calc(var(--t-space-70) + calc(var(--t-space-15) * 1));
+    border-radius: calc(var(--t-br-small) * 0.7);
+  }
+  .talkie-input-emojis-content-item {
+    height: 80px;
+    width: 80px;
+  }
+  .talkie-input-emojis-keyboard-wrapper {
+    margin-top: var(--t-space-8);
+    max-height: 300px;
+  }
+  .talkie-input-emojis-message {
+    margin-top: var(--t-space-2);
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-input-emojis-content-wrapper {
+    padding: calc(var(--size) / 1.5);
+    font-size: calc(var(--font-size) / 1.2);
+    min-height: calc(var(--t-space-70) + calc(var(--t-space-15) * 2));
+    border-radius: var(--t-br-small);
+  }
+  .talkie-input-emojis-content-item {
+    height: 80px;
+    width: 80px;
+  }
+  .talkie-input-emojis-keyboard-wrapper {
+    margin-top: var(--t-space-8);
+    max-height: 350px;
+  }
+  .talkie-input-emojis-message {
+    margin-top: var(--t-space-3);
+    font-size: var(--t-fs-small);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-input-emojis-content-wrapper {
+    padding: var(--size);
+    font-size: var(--font-size);
+    min-height: calc(var(--t-space-70) + calc(var(--t-space-15) * 3));
+  }
+  .talkie-input-emojis-content-item {
+    height: 80px;
+    width: 80px;
+  }
+  .talkie-input-emojis-keyboard-wrapper {
+    margin-top: var(--t-space-10);
+    max-height: 400px;
+  }
 }
 </style>
