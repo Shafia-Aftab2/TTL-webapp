@@ -151,7 +151,7 @@ export default {
 }
 .talkie-input-emojis-wrapper:focus-within
   .talkie-input-emojis-keyboard-wrapper {
-  z-index: inherit;
+  z-index: var(--t-zindex-10);
   visibility: inherit;
 }
 .talkie-input-emojis-content-wrapper {
