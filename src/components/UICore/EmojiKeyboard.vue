@@ -107,7 +107,8 @@ export default {
   },
   async created() {
     // get emojis
-    await this.getEmojis();
+    // await this.getEmojis();
+    // UPDATE: use hardcoded response from ./EmojiKeyboard.js
 
     // add event listeners
     window.addEventListener("resize", this.handleDetectKeyboardSize);
