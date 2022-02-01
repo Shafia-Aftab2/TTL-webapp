@@ -127,6 +127,18 @@
           />
         </template>
 
+        <!-- Fields for emoji-story task -->
+        <template v-if="selectedTaskType === taskTypes.EMOJI_STORY">
+          <talkie-input-emojis
+            :name="'emojiStory'"
+            :placeholder="'Pick emojis'"
+            :hint="{
+              type: errors.emojiStory ? 'error' : null,
+              message: errors.emojiStory ? errors.emojiStory : null,
+            }"
+          />
+        </template>
+
         <!-- Common Fields -->
         <template v-if="selectedTaskType !== taskTypes.QUESTION_ANSWER">
           <talkie-input
@@ -251,11 +263,12 @@
         </talkie-audio-recorder>
       </template>
 
-      <!-- Fields for caption-this/translation task -->
+      <!-- Fields for caption-this/translation/emoji-story task -->
       <template
         v-if="
           selectedTaskType === taskTypes.CAPTION_THIS ||
-          selectedTaskType === taskTypes.TRANSLATION
+          selectedTaskType === taskTypes.TRANSLATION ||
+          selectedTaskType === taskTypes.EMOJI_STORY
         "
       >
         <div class="class-create-task-form-submit-button">
@@ -288,6 +301,7 @@ import {
   TalkieLoader,
   TalkieButton,
   TalkieMediaPicker,
+  TalkieInputEmojis,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import {
@@ -299,6 +313,7 @@ import {
   createQandATopicSchema,
   createCaptionThisTopicSchema,
   createTranslationTopicSchema,
+  createEmojiStoryTopicSchema,
 } from "@/utils/validations/task.validation";
 import { FileService, TaskService, ClassService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
@@ -320,6 +335,7 @@ export default {
     TalkieLoader,
     TalkieButton,
     TalkieMediaPicker,
+    TalkieInputEmojis,
     TalkieQuestionCard,
   },
   data() {
@@ -329,6 +345,7 @@ export default {
         ["Q&A"]: createQandATopicSchema,
         ["Caption-This"]: createCaptionThisTopicSchema,
         ["Translation"]: createTranslationTopicSchema,
+        ["Emoji-Story"]: createEmojiStoryTopicSchema,
       },
       pageLoading: false,
       loading: false,
@@ -369,6 +386,7 @@ export default {
         ["Q&A"]: "Start a conversation now?",
         ["Caption-This"]: "Add a caption task for practice.",
         ["Translation"]: "Add a translation task for practice.",
+        ["Emoji-Story"]: "Add a emoji story task for practice.",
       },
       selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),
@@ -506,7 +524,7 @@ export default {
           // success case
           return { voiceForQnA };
         }
-        // caption this task
+        // caption-this task
         if (this.selectedTaskType === TaskTypes.CAPTION_THIS) {
           // update page status
           this.formStatus = {
@@ -544,6 +562,16 @@ export default {
             isPracticeMode: true,
           };
         }
+        // emoji-story task
+        if (this.selectedTaskType === TaskTypes.EMOJI_STORY) {
+          this.formStatus = {
+            loading: true,
+          };
+          return {
+            emojiStory: values.emojiStory,
+            isPracticeMode: true,
+          };
+        }
         return null;
       })();
       if (!taskSpecificFields) return;
@@ -573,6 +601,7 @@ export default {
             ["Q&A"]: "Could not create conversation..!",
             ["Caption-This"]: "Could not create caption task..!",
             ["Translation"]: "Could not create translation task..!",
+            ["Emoji-Story"]: "Could not create emoji story task..!",
           };
 
           return {
@@ -606,6 +635,8 @@ export default {
             ? "Caption Task Created. Redirecting..!"
             : this.selectedTaskType === TaskTypes.TRANSLATION
             ? "Translation Task Created. Redirecting..!"
+            : this.selectedTaskType === TaskTypes.EMOJI_STORY
+            ? "Emoji Story Task Created. Redirecting..!"
             : "",
         animateEllipse: false,
         loading: false,

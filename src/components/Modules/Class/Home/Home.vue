@@ -95,6 +95,8 @@
                 :expandContent="
                   _question.type === TaskTypes.TRANSLATION
                     ? { translation: _question.translation }
+                    : _question.type === TaskTypes.EMOJI_STORY
+                    ? { emojis: _question.emojiStory }
                     : {}
                 "
                 :onCardBodyClick="
@@ -216,7 +218,11 @@ export default {
         },
         {
           name: "Emoji Story",
-          onClick: () => this.redirectToCommingSoonPage(),
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.EMOJI_STORY}`,
+              100
+            ),
         },
         {
           name: "Translation",
@@ -345,6 +351,9 @@ export default {
           translatedText: x?.answer,
         },
       }),
+      ...(x.type === TaskTypes.EMOJI_STORY && {
+        emojiStory: x?.emojiStory,
+      }),
     }));
 
     this.classStudents = classDetails.students.map((x) => ({
@@ -435,6 +444,9 @@ export default {
             textToTranslate: x?.textToTranslate,
             translatedText: x?.answer,
           },
+        }),
+        ...(x.type === TaskTypes.EMOJI_STORY && {
+          emojiStory: x?.emojiStory,
         }),
       }));
     },

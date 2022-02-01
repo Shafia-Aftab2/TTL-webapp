@@ -54,6 +54,7 @@
     <p class="p" v-if="description">{{ description }}</p>
     <question-card-expand-content
       :translation="expandContent.translation"
+      :emojis="expandContent.emojis"
       :onCardExpandStateChange="onCardExpandStateChange"
       v-if="!fullWidth"
     />
@@ -143,6 +144,7 @@ export default {
           textToTranslate: null,
           translatedText: null,
         },
+        emojis: [],
       }),
     },
     manageModeOptions: {

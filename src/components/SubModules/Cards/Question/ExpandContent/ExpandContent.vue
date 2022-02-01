@@ -2,7 +2,8 @@
   <div
     class="talkie-question-card-expand-content-toggle-wrapper"
     v-if="
-      translation && translation.textToTranslate && translation.translatedText
+      emojis.length > 0 ||
+      (translation && translation.textToTranslate && translation.translatedText)
     "
   >
     <span class="talkie-question-card-expand-content-toggle-button">
@@ -28,7 +29,14 @@
   </div>
   <div
     class="talkie-question-card-expand-content-wrapper"
-    v-if="cardExpanded"
+    v-if="
+      cardExpanded &&
+      translation &&
+      translation.textToTranslate &&
+      translation.translatedText &&
+      emojis &&
+      emojis.length === 0
+    "
     @click="handleQuestionCardClick"
   >
     <talkie-chip
@@ -39,6 +47,22 @@
       :label="`Answer: ${translation.translatedText}`"
       :variant="'neutral'"
     />
+  </div>
+  <div
+    :class="[
+      'talkie-question-card-expand-content-wrapper',
+      'talkie-question-card-expand-content-inline-wrapper',
+    ]"
+    v-if="cardExpanded && emojis && emojis.length > 0"
+    @click="handleQuestionCardClick"
+  >
+    <template v-for="emoji in emojis" :key="emoji">
+      <img
+        :src="emoji"
+        :alt="'Talkie Emoji'"
+        class="talkie-question-card-expand-content-image-wrapper"
+      />
+    </template>
   </div>
 </template>
 
@@ -63,6 +87,10 @@ export default {
         textToTranslate: null,
         translatedText: null,
       }),
+    },
+    emojis: {
+      type: Array,
+      default: () => [],
     },
     onCardExpandStateChange: {
       type: Function,
@@ -95,6 +123,10 @@ export default {
   flex-direction: column;
   border-bottom: var(--t-space-1) solid var(--t-gray-75);
 }
+.talkie-question-card-expand-content-inline-wrapper {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 
 /* Responsive variants */
 @media (max-width: 599px) {
@@ -105,6 +137,10 @@ export default {
     gap: var(--t-space-12);
     padding-bottom: var(--t-space-12);
   }
+  .talkie-question-card-expand-content-image-wrapper {
+    height: var(--t-space-36);
+    width: var(--t-space-36);
+  }
 }
 @media (min-width: 600px) {
   .talkie-question-card-expand-content-toggle-button {
@@ -113,6 +149,16 @@ export default {
   .talkie-question-card-expand-content-wrapper {
     gap: var(--t-space-10);
     padding-bottom: var(--t-space-16);
+  }
+  .talkie-question-card-expand-content-image-wrapper {
+    height: var(--t-space-50);
+    width: var(--t-space-50);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-question-card-expand-content-image-wrapper {
+    height: var(--t-space-58);
+    width: var(--t-space-58);
   }
 }
 </style>
