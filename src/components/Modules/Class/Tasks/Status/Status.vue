@@ -6,8 +6,23 @@
         <talkie-question-card
           :title="taskDetails?.title"
           :topic="taskDetails?.topic"
-          :audioSource="taskDetails?.audioSource"
+          :description="taskDetails.description"
           :fullWidth="false"
+          :hoverAnimation="false"
+          :audioSource="
+            taskDetails.type === taskTypes.QUESTION_ANSWER &&
+            taskDetails.audioSource
+          "
+          :image="
+            taskDetails.type === taskTypes.CAPTION_THIS && taskDetails.image
+          "
+          :expandContent="
+            taskDetails.type === taskTypes.TRANSLATION
+              ? { translation: taskDetails.translation }
+              : taskDetails.type === taskTypes.EMOJI_STORY
+              ? { emojis: taskDetails.emojiStory }
+              : {}
+          "
         />
       </div>
       <div class="class-convo-status-options-wrapper">
@@ -33,6 +48,7 @@ import { TalkieButton, TalkieLoader } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { TaskService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
+import TaskTypes from "@/utils/constants/taskTypes";
 
 export default {
   name: "ClassTaskStatus",
@@ -50,6 +66,7 @@ export default {
       },
       taskStatusQueryParam: null,
       taskDetails: {},
+      taskTypes: TaskTypes,
       pageLoading: false,
       taskId: null,
       classId: null,
@@ -93,7 +110,22 @@ export default {
       title: taskDetails.title,
       topic: taskDetails.topic.name,
       description: taskDetails.questionText,
-      audioSource: taskDetails.voiceForQnA,
+      isForPractice: taskDetails?.isPracticeMode,
+      ...(taskDetails.type === TaskTypes.QUESTION_ANSWER && {
+        audioSource: taskDetails.voiceForQnA,
+      }),
+      ...(taskDetails.type === TaskTypes.CAPTION_THIS && {
+        image: taskDetails.captionThisImage,
+      }),
+      ...(taskDetails.type === TaskTypes.TRANSLATION && {
+        translation: {
+          textToTranslate: taskDetails?.textToTranslate,
+          translatedText: taskDetails?.answer,
+        },
+      }),
+      ...(taskDetails.type === TaskTypes.EMOJI_STORY && {
+        emojiStory: taskDetails?.emojiStory,
+      }),
     };
     this.pageLoading = false;
   },
