@@ -29,7 +29,9 @@
         <h5 class="h5">Total Number of quiz attempts</h5>
         <h3 class="h3 class-stats-points">{{ userStats?.attemptedQuizes }}</h3>
       </div>
-      <talkie-button> View Leaderboard </talkie-button>
+      <talkie-button :onClick="handleLeaderboardRedirect">
+        View Leaderboard
+      </talkie-button>
       <talkie-button :onClick="handleHomeRedirect">Go Back </talkie-button>
     </div>
   </div>
@@ -125,6 +127,9 @@ export default {
     },
     handleHomeRedirect() {
       this.$router.push("/");
+    },
+    handleLeaderboardRedirect() {
+      this.$router.push(`/classes/${this.classId}/leaderboard`);
     },
   },
 };
