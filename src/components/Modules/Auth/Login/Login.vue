@@ -59,7 +59,12 @@
         </div>
         <p class="auth-split-form-options-info">
           Don't have an account?
-          <a class="auth-split-form-options-info-link" href="/auth/signup">
+          <a
+            class="auth-split-form-options-info-link"
+            :href="`/auth/signup${
+              redirectURL ? `?redirect_url=${redirectURL}` : ''
+            }`"
+          >
             Create Account
           </a>
         </p>

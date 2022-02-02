@@ -126,7 +126,12 @@
         </p>
         <p class="auth-split-form-options-info">
           Already have an account?
-          <a class="auth-split-form-options-info-link" href="/auth/login">
+          <a
+            class="auth-split-form-options-info-link"
+            :href="`/auth/login${
+              redirectURL ? `?redirect_url=${redirectURL}` : ''
+            }`"
+          >
             Log in
           </a>
         </p>
