@@ -201,6 +201,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            redirectToOriginal: true,
             blockedRoles: [roles.TEACHER],
           },
         },
@@ -422,7 +423,15 @@ router.beforeEach(async (to, from, next) => {
     middlewareConfig?.blockedRoles?.length > 0
   ) {
     await authMiddlware({
-      failureCallback: () => next({ name: "AuthLogin" }),
+      failureCallback: () =>
+        next({
+          name: "AuthLogin",
+          query: {
+            ...(middlewareConfig.redirectToOriginal && {
+              redirect_url: `${window.location.origin}${to.fullPath}`,
+            }),
+          },
+        }),
       successCallback: () =>
         accessControlMiddleware({
           failureCallback: () => next({ name: "NotFound" }),
@@ -436,7 +445,15 @@ router.beforeEach(async (to, from, next) => {
   // check auth
   if (middlewareConfig?.requiresAuth) {
     await authMiddlware({
-      failureCallback: () => next({ name: "AuthLogin" }),
+      failureCallback: () =>
+        next({
+          name: "AuthLogin",
+          query: {
+            ...(middlewareConfig.redirectToOriginal && {
+              redirect_url: `${window.location.origin}${to.fullPath}`,
+            }),
+          },
+        }),
       successCallback: () => next(),
     });
     return;
