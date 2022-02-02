@@ -1,6 +1,6 @@
 <template>
   <!-- Content Wrapper -->
-  <div class="class-stats-wrapper">
+  <div class="class-stats-wrapper" v-if="!computedPageLoading">
     <div class="class-stats-header-wrapper">
       <h2 class="h2">My Stats</h2>
     </div>
@@ -30,19 +30,25 @@
         <h3 class="h3 class-stats-points">{{ userStats?.attemptedQuizes }}</h3>
       </div>
       <talkie-button> View Leaderboard </talkie-button>
+      <talkie-button :onClick="handleHomeRedirect">Go Back </talkie-button>
     </div>
+  </div>
+
+  <!-- Load Wrapper -->
+  <div class="class-manage-load-wrapper" v-if="computedPageLoading">
+    <talkie-loader :size="'large'" />
   </div>
 </template>
 
 <script>
-import { TalkieButton } from "@/components/UICore";
+import { TalkieButton, TalkieLoader } from "@/components/UICore";
 import authUser from "@/utils/helpers/auth";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import { ClassService, ResponseService } from "@/api/services";
 
 export default {
   name: "ClassStats",
-  components: { TalkieButton },
+  components: { TalkieButton, TalkieLoader },
   data() {
     return {
       userStats: {
@@ -54,9 +60,18 @@ export default {
       },
       classDetails: {},
       classId: null,
+      pageLoading: false,
     };
   },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
+  },
   async created() {
+    // update page state
+    this.pageLoading = true;
+
     // get auth user
     const user = authUser.getUser();
 
@@ -90,6 +105,7 @@ export default {
         : null,
       className: classDetails.name,
     };
+    this.pageLoading = false;
   },
   methods: {
     async getClassDetails(id) {
