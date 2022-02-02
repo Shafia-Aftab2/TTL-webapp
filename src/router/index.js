@@ -25,11 +25,6 @@ import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
-import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
-import StudentStatistics from "../components/Modules/Students/Stats";
-import StudentQA from "../components/Modules/Students/QA";
-import StudentCaption from "../components/Modules/Students/Caption";
-import StudentTranslation from "../components/Modules/Students/Translation";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
@@ -321,38 +316,6 @@ const routes = [
         name: "ServicesUpgrade",
         path: "/services/upgrade",
         component: ServicesUpgrade,
-      },
-    ],
-  },
-  {
-    path: "/students",
-    component: Layout,
-    props: { variant: "dark", type: "sidebar" },
-    children: [
-      {
-        name: "StudentLeaderboard",
-        path: "/students/leaderboard",
-        component: StudentLeaderboard,
-      },
-      {
-        name: "StudentStatistics",
-        path: "/students/statistics",
-        component: StudentStatistics,
-      },
-      {
-        name: "StudentQA",
-        path: "/students/qa",
-        component: StudentQA,
-      },
-      {
-        name: "StudentCaption",
-        path: "/students/caption",
-        component: StudentCaption,
-      },
-      {
-        name: "StudentTranslation",
-        path: "/students/translation",
-        component: StudentTranslation,
       },
     ],
   },
