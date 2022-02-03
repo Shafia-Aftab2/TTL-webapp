@@ -126,7 +126,12 @@
         </p>
         <p class="auth-split-form-options-info">
           Already have an account?
-          <a class="auth-split-form-options-info-link" href="/auth/login">
+          <a
+            class="auth-split-form-options-info-link"
+            :href="`/auth/login${
+              redirectURL ? `?redirect_url=${redirectURL}` : ''
+            }`"
+          >
             Log in
           </a>
         </p>
@@ -151,6 +156,7 @@ import { roles } from "@/utils/constants";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
+import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthSignup",
@@ -162,6 +168,7 @@ export default {
         type: null,
         message: null,
       },
+      redirectURL: null,
     };
   },
   computed: {
@@ -183,6 +190,11 @@ export default {
       type: String,
       validator: (val) => ["student", "teacher"].includes(val),
     },
+  },
+  created() {
+    // get redirect url from params
+    const redirectURL = URLModifier.getURLParam("redirect_url");
+    this.redirectURL = redirectURL;
   },
   methods: {
     async handleSubmit(values) {
@@ -276,7 +288,7 @@ export default {
         type: "success",
         message: "Account Created. Redirecting..!",
       };
-      this.$router.push("/");
+      window.location = this.redirectURL ? this.redirectURL : "/";
     },
   },
 };

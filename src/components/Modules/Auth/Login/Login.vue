@@ -59,7 +59,12 @@
         </div>
         <p class="auth-split-form-options-info">
           Don't have an account?
-          <a class="auth-split-form-options-info-link" href="/auth/signup">
+          <a
+            class="auth-split-form-options-info-link"
+            :href="`/auth/signup${
+              redirectURL ? `?redirect_url=${redirectURL}` : ''
+            }`"
+          >
             Create Account
           </a>
         </p>
@@ -80,6 +85,7 @@ import { loginSchema } from "@/utils/validations/auth.validation";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
+import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthLogin",
@@ -92,6 +98,7 @@ export default {
         type: null,
         message: null,
       },
+      redirectURL: null,
     };
   },
   components: {
@@ -100,6 +107,11 @@ export default {
     TalkieButton,
     TalkieAlert,
     TalkieAuthSplitWrapper,
+  },
+  created() {
+    // get redirect url from params
+    const redirectURL = URLModifier.getURLParam("redirect_url");
+    this.redirectURL = redirectURL;
   },
   methods: {
     isValidEmail(email) {
@@ -165,7 +177,7 @@ export default {
         type: "success",
         message: "Login Successfull. Redirecting..!",
       };
-      this.$router.push("/");
+      window.location = this.redirectURL ? this.redirectURL : "/";
     },
     handleStoreMutation(key, value) {
       this.$store.state[key] = value;
