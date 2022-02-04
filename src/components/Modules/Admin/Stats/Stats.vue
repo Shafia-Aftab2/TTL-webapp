@@ -42,6 +42,77 @@
 <script>
 export default {
   name: "QuizStats",
+  created() {
+    // NOTE: myClasses variable here contains hardcoded/static data.
+    // Ideally this data should come from an api.
+    // But we can skip that for now and use hardcoded data instead.
+    const myClasses = [
+      {
+        name: "Home",
+        id: "class id 1 from api",
+      },
+      {
+        name: "Users",
+        id: "class id 2 from api",
+      },
+      {
+        name: "Topics",
+        id: "class id 3 from api",
+      },
+      {
+        name: "Quizzes",
+        id: "class id 4 from api",
+      },
+    ];
+
+    // sidebar data
+    const sidebarItems = myClasses.map((x) => ({
+      name: x.name,
+      hasRightIcon: true,
+      link: `/classes/${x.id}`,
+      onClick: () => this.$router.push(`/classes/${x.id}`),
+    }));
+    const sidebarButtons = [
+      {
+        text: "+ New Class",
+        type: "button",
+        variant: "primary",
+        size: "small",
+        outlined: true,
+        loading: false,
+        disabled: false,
+        onClick: () => this.$router.push("/classes/create"),
+      },
+    ];
+    this.handleSidebarMutation({
+      items: sidebarItems,
+    });
+  },
+  methods: {
+    handleSidebarMutation(data) {
+      const sidebar = this.$store.state.sidebar;
+      const updatedData = {
+        hasBackLink: data.hasOwnProperty("hasBackLink")
+          ? data.hasBackLink
+          : sidebar.hasBackLink,
+        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
+        checkboxes: data.hasOwnProperty("checkboxes")
+          ? data.checkboxes
+          : sidebar.checkboxes,
+        buttons: data.hasOwnProperty("buttons")
+          ? data.buttons
+          : sidebar.buttons,
+      };
+
+      this.handleStoreMutation(
+        "sidebar",
+        Object.assign({}, { ...updatedData })
+      );
+    },
+    handleStoreMutation(key, value) {
+      this.$store.state[key] = value;
+    },
+  },
 };
 </script>
 <style scoped>
