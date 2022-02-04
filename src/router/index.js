@@ -28,6 +28,7 @@ import ProfileSelf from "../components/Modules/Profile/Self";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
+import AdminUsersHome from "../components/Modules/Admin/Users/Home";
 import AdminSummary from "../components/Modules/Admin/Summary";
 import TeachersFree from "../components/Modules/Admin/Free";
 import TeachersPaid from "../components/Modules/Admin/Paid";
@@ -322,6 +323,25 @@ const routes = [
         name: "ServicesUpgrade",
         path: "/services/upgrade",
         component: ServicesUpgrade,
+      },
+    ],
+  },
+  // admin pages
+  {
+    path: "/admin",
+    component: Layout,
+    props: { type: "sidebar", variant: "dark" },
+    children: [
+      {
+        name: "AdminUsersHome",
+        path: "/admin/users",
+        component: AdminUsersHome,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT, roles.TEACHER],
+          },
+        },
       },
     ],
   },
