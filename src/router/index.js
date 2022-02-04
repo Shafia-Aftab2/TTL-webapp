@@ -25,6 +25,7 @@ import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
+import Stats from "../components/Modules/Class/Stats";
 import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
 import StudentStatistics from "../components/Modules/Students/Stats";
 import StudentQA from "../components/Modules/Students/QA";
@@ -33,6 +34,11 @@ import StudentTranslation from "../components/Modules/Students/Translation";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
+import AdminSummary from "../components/Modules/Admin/Summary";
+import TeachersFree from "../components/Modules/Admin/Free";
+import TeachersPaid from "../components/Modules/Admin/Paid";
+import QuizStats from "../components/Modules/Admin/Stats";
+import StudentsStats from "../components/Modules/Admin/Students";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -353,6 +359,31 @@ const routes = [
         name: "StudentTranslation",
         path: "/students/translation",
         component: StudentTranslation,
+      },
+      {
+        name: "AdminSummary",
+        path: "/admin/summary",
+        component: AdminSummary,
+      },
+      {
+        name: "TeachersFree",
+        path: "/admin/teachers/free",
+        component: TeachersFree,
+      },
+      {
+        name: "TeachersPaid",
+        path: "/admin/teachers/paid",
+        component: TeachersPaid,
+      },
+      {
+        name: "QuizStats",
+        path: "/admin/quiz",
+        component: QuizStats,
+      },
+      {
+        name: "StudentsStats",
+        path: "/admin/students/stats",
+        component: StudentsStats,
       },
     ],
   },
