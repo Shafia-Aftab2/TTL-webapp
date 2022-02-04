@@ -28,13 +28,17 @@
         ]"
       >
         <template v-if="usersList && usersList.length > 0">
-          <talkie-student-card
-            v-for="_user in usersList"
-            :key="_user"
-            :mode="'info'"
-            :studentName="_user.name"
-            :studentAvatar="_user.image"
-          />
+          <template v-for="_user in usersList" :key="_user">
+            <talkie-student-card
+              v-if="
+                (activeTab === 'free' && !_user.isSubscriber) ||
+                (activeTab === 'paid' && _user.isSubscriber)
+              "
+              :mode="'info'"
+              :studentName="_user.name"
+              :studentAvatar="_user.image"
+            />
+          </template>
         </template>
       </div>
     </template>
