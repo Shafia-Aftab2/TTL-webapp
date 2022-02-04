@@ -25,12 +25,6 @@ import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
-import Stats from "../components/Modules/Class/Stats";
-import StudentLeaderboard from "../components/Modules/Students/Leaderboard";
-import StudentStatistics from "../components/Modules/Students/Stats";
-import StudentQA from "../components/Modules/Students/QA";
-import StudentCaption from "../components/Modules/Students/Caption";
-import StudentTranslation from "../components/Modules/Students/Translation";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
@@ -207,6 +201,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
+            redirectToOriginal: true,
             blockedRoles: [roles.TEACHER],
           },
         },
@@ -330,63 +325,6 @@ const routes = [
       },
     ],
   },
-  {
-    path: "/students",
-    component: Layout,
-    props: { variant: "dark", type: "sidebar" },
-    children: [
-      {
-        name: "StudentLeaderboard",
-        path: "/students/leaderboard",
-        component: StudentLeaderboard,
-      },
-      {
-        name: "StudentStatistics",
-        path: "/students/statistics",
-        component: StudentStatistics,
-      },
-      {
-        name: "StudentQA",
-        path: "/students/qa",
-        component: StudentQA,
-      },
-      {
-        name: "StudentCaption",
-        path: "/students/caption",
-        component: StudentCaption,
-      },
-      {
-        name: "StudentTranslation",
-        path: "/students/translation",
-        component: StudentTranslation,
-      },
-      {
-        name: "AdminSummary",
-        path: "/admin/summary",
-        component: AdminSummary,
-      },
-      {
-        name: "TeachersFree",
-        path: "/admin/teachers/free",
-        component: TeachersFree,
-      },
-      {
-        name: "TeachersPaid",
-        path: "/admin/teachers/paid",
-        component: TeachersPaid,
-      },
-      {
-        name: "QuizStats",
-        path: "/admin/quiz",
-        component: QuizStats,
-      },
-      {
-        name: "StudentsStats",
-        path: "/admin/students/stats",
-        component: StudentsStats,
-      },
-    ],
-  },
   // 404 page
   {
     path: "/:catchAll(.*)",
@@ -453,7 +391,15 @@ router.beforeEach(async (to, from, next) => {
     middlewareConfig?.blockedRoles?.length > 0
   ) {
     await authMiddlware({
-      failureCallback: () => next({ name: "AuthLogin" }),
+      failureCallback: () =>
+        next({
+          name: "AuthLogin",
+          query: {
+            ...(middlewareConfig.redirectToOriginal && {
+              redirect_url: `${window.location.origin}${to.fullPath}`,
+            }),
+          },
+        }),
       successCallback: () =>
         accessControlMiddleware({
           failureCallback: () => next({ name: "NotFound" }),
@@ -467,7 +413,15 @@ router.beforeEach(async (to, from, next) => {
   // check auth
   if (middlewareConfig?.requiresAuth) {
     await authMiddlware({
-      failureCallback: () => next({ name: "AuthLogin" }),
+      failureCallback: () =>
+        next({
+          name: "AuthLogin",
+          query: {
+            ...(middlewareConfig.redirectToOriginal && {
+              redirect_url: `${window.location.origin}${to.fullPath}`,
+            }),
+          },
+        }),
       successCallback: () => next(),
     });
     return;

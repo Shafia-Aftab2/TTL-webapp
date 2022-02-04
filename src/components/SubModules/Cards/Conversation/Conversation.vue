@@ -194,7 +194,6 @@ import { ResponseService, FileService, FeedbackService } from "@/api/services";
 import FilePurposes from "@/utils/constants/filePurposes";
 import rolesList from "@/utils/constants/roles";
 import { notifications } from "@/components/UIActions";
-import { TalkieAudioPlayer } from "@/components/SubModules/AudioManager";
 
 export default {
   name: "ConversationCard",
@@ -209,7 +208,6 @@ export default {
     TalkieBackDropLoader,
     ConversationMessage,
     ConversationRecorder,
-    TalkieAudioPlayer,
   },
   props: {
     userMode: {

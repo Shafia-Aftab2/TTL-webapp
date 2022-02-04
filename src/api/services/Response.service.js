@@ -20,4 +20,12 @@ export default class ResponseRoutes {
   static async AddResponseScore(responseId, payload) {
     return HTTPClient.put(`/responses/${responseId}/score`, payload);
   }
+
+  static async GetMyStats(classId, query = {}) {
+    return HTTPClient.get(
+      `/responses/my-scores/${classId}?${Object.entries(query).map(
+        ([key, value]) => `${key}=${encodeURIComponent(value)}&`
+      )}`
+    );
+  }
 }

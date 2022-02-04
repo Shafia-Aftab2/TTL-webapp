@@ -36,7 +36,7 @@
         </p>
       </div>
     </div>
-    <talkie-button :outlined="true" :onClick="redirectToCommingSoonPage">
+    <talkie-button :outlined="true" :onClick="handleStatsLinkClick">
       View my Stats
     </talkie-button>
   </div>
@@ -87,6 +87,9 @@ export default {
     },
     handlePracticeModeButtonClick() {
       this.$router.push(`/classes/practice`);
+    },
+    handleStatsLinkClick() {
+      this.$router.push(`/classes/stats`);
     },
   },
 };
