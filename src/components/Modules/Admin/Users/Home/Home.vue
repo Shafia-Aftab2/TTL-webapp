@@ -43,6 +43,7 @@
               :studentName="_user.name"
               :studentAvatar="_user.image"
               :studentSchoolName="_user.schoolName"
+              :onInfoClick="() => handleUserInfoRedirect(_user?.id)"
             />
           </template>
         </template>
@@ -145,6 +146,9 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleUserInfoRedirect(userId) {
+      this.$router.push(`/admin/users/${userId}`);
+    },
     handleUsersFilter(e) {
       this.currentFilter = e.target.value.trim()?.toLowerCase();
     },
