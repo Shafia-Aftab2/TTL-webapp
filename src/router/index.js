@@ -29,6 +29,7 @@ import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
 import AdminUsersHome from "../components/Modules/Admin/Users/Home";
+import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
 import AdminSummary from "../components/Modules/Admin/Summary";
 import TeachersFree from "../components/Modules/Admin/Free";
 import TeachersPaid from "../components/Modules/Admin/Paid";
@@ -336,6 +337,17 @@ const routes = [
         name: "AdminUsersHome",
         path: "/admin/users",
         component: AdminUsersHome,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT, roles.TEACHER],
+          },
+        },
+      },
+      {
+        name: "AdminUserAnalytics",
+        path: "/admin/users/:userId",
+        component: AdminUserAnalytics,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
