@@ -42,6 +42,7 @@
               :mode="'info'"
               :studentName="_user.name"
               :studentAvatar="_user.image"
+              :studentSchoolName="_user.schoolName"
             />
           </template>
         </template>
