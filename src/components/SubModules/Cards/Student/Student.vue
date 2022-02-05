@@ -29,9 +29,18 @@
           v-html="studentAvatar"
         >
         </span>
-        <p class="p" style="margin-bottom: 0 !important" v-if="studentName">
-          {{ studentName }}
-        </p>
+        <div class="talkie-student-card-details-title">
+          <p class="p" style="margin-bottom: 0 !important" v-if="studentName">
+            {{ studentName }}
+          </p>
+          <p
+            class="p talkie-student-card-details-subtitle"
+            style="margin-bottom: 0 !important"
+            v-if="studentSchoolName"
+          >
+            {{ studentSchoolName }}
+          </p>
+        </div>
       </template>
 
       <!-- Add Mode -->
@@ -281,6 +290,9 @@ export default {
     studentName: {
       type: String,
     },
+    studentSchoolName: {
+      type: String,
+    },
     studentAvatar: {
       type: String,
     },
@@ -386,6 +398,14 @@ export default {
   height: var(--image-size);
   width: var(--image-size);
 }
+.talkie-student-card-details-title {
+  display: flex;
+  flex-direction: column;
+}
+.talkie-student-card-details-subtitle {
+  font-size: 0.9em;
+  color: var(--t-gray);
+}
 .talkie-student-card-options {
   display: flex;
   align-items: center;
@@ -429,6 +449,7 @@ export default {
   }
   .talkie-student-card-details-title {
     padding: 0 var(--t-space-8);
+    gap: var(--t-space-3);
   }
   .talkie-student-card-options {
     gap: var(--t-space-12);
@@ -479,6 +500,7 @@ export default {
   }
   .talkie-student-card-details-title {
     padding: 0 var(--t-space-8);
+    gap: var(--t-space-5);
   }
   .talkie-student-card-options {
     gap: var(--t-space-12);
