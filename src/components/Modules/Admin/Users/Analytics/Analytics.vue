@@ -1,44 +1,56 @@
 <template>
   <div class="admin-users-analytics-wrapper">
-    <!-- Header -->
-    <div class="admin-users-analytics-header-wrapper">
-      <img
-        :src="require(`@/assets/images/person-placeholder-image.png`)"
-        class="admin-users-analytics-header-image"
-      />
-      <div class="admin-users-analytics-header-info-wrapper">
-        <h2 class="h2">Mr Bookes</h2>
-        <h5 class="h5">Hollyfield Academy</h5>
+    <template v-if="!loading">
+      <!-- Header -->
+      <div class="admin-users-analytics-header-wrapper">
+        <img
+          :src="require(`@/assets/images/person-placeholder-image.png`)"
+          class="admin-users-analytics-header-image"
+        />
+        <div class="admin-users-analytics-header-info-wrapper">
+          <h2 class="h2">Mr Bookes</h2>
+          <h5 class="h5">Hollyfield Academy</h5>
+        </div>
       </div>
-    </div>
 
-    <!-- Body -->
-    <div
-      :class="[
-        'admin-users-analytics-content-wrapper',
-        'admin-users-analytics-content-wrapper-multi-col',
-      ]"
-    >
-      <div class="admin-users-analytics-content-item">
-        <h2 class="h2">36</h2>
-        <p class="p">Students</p>
+      <!-- Body -->
+      <div
+        :class="[
+          'admin-users-analytics-content-wrapper',
+          'admin-users-analytics-content-wrapper-multi-col',
+        ]"
+      >
+        <div class="admin-users-analytics-content-item">
+          <h2 class="h2">36</h2>
+          <p class="p">Students</p>
+        </div>
+        <div class="admin-users-analytics-content-item">
+          <h2 class="h2">2</h2>
+          <p class="p">Classes</p>
+        </div>
+        <div class="admin-users-analytics-content-item">
+          <h2 class="h2">9</h2>
+          <p class="p">Questions</p>
+        </div>
+        <div class="admin-users-analytics-content-item">
+          <h2 class="h2">Active</h2>
+          <p class="p">Last Login: Yesterday</p>
+        </div>
       </div>
-      <div class="admin-users-analytics-content-item">
-        <h2 class="h2">2</h2>
-        <p class="p">Classes</p>
-      </div>
-      <div class="admin-users-analytics-content-item">
-        <h2 class="h2">9</h2>
-        <p class="p">Questions</p>
-      </div>
-      <div class="admin-users-analytics-content-item">
-        <h2 class="h2">Active</h2>
-        <p class="p">Last Login: Yesterday</p>
-      </div>
-    </div>
 
-    <!-- Footer -->
-    <talkie-button> Remove User </talkie-button>
+      <!-- Footer -->
+      <talkie-button> Remove User </talkie-button>
+    </template>
+
+    <!-- Load wrapper -->
+    <template v-if="loading">
+      <div class="admin-users-analytics-loading-wrapper">
+        <talkie-loader :size="'large'" />
+      </div>
+    </template>
+
+    <!-- Backdrop load wrapper -->
+    <talkie-back-drop-loader v-if="backdropLoading" />
   </div>
 </template>
 
@@ -78,6 +90,71 @@ export default {
     TalkieQuestionCard,
     TalkieStudentCard,
     TalkieInput,
+  },
+  data() {
+    return {
+      usersList: [],
+      userAnalytics: {},
+      loading: false,
+      backdropLoading: false,
+    };
+  },
+  async created() {
+    // update page state
+    this.loading = true;
+
+    // get list of users
+    const usersList = await this.getUsersList();
+    if (!usersList) return this.$router.push("/404");
+
+    // success case
+    this.usersList = usersList?.map((x) => ({
+      id: x?.id,
+      name: x?.name,
+    }));
+    // sidebar data
+    const sidebarItems = usersList?.map((x) => ({
+      name: x?.name,
+      hasRightIcon: true,
+      link: `/admin/users/${x?.id}`,
+      onClick: () => this.$router.push(`/admin/users/${x?.id}`),
+      isActive: this.$route.path === `/admin/users/${x?.id}`,
+    }));
+    this.handleSidebarMutation({ items: sidebarItems });
+
+    this.loading = false;
+  },
+  methods: {
+    handleStoreMutation(key, value) {
+      this.$store.state[key] = value;
+    },
+    handleSidebarMutation(data) {
+      const sidebar = this.$store.state.sidebar;
+      const updatedData = {
+        hasBackLink: data.hasOwnProperty("hasBackLink")
+          ? data.hasBackLink
+          : sidebar.hasBackLink,
+        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
+        checkboxes: data.hasOwnProperty("checkboxes")
+          ? data.checkboxes
+          : sidebar.checkboxes,
+        buttons: data.hasOwnProperty("buttons")
+          ? data.buttons
+          : sidebar.buttons,
+      };
+
+      this.handleStoreMutation(
+        "sidebar",
+        Object.assign({}, { ...updatedData })
+      );
+    },
+    async getUsersList() {
+      const query = { limit: 1000 };
+
+      const response = await UserService.GetUsersList(query).catch(() => null);
+
+      return response?.data?.results || null;
+    },
   },
 };
 </script>
