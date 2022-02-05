@@ -18,6 +18,7 @@
         <talkie-input
           :placeholder="'Search name / school / keyword'"
           :customClass="'admin-users-home-options-custom-input'"
+          :onChange="handleUsersFilter"
         />
       </div>
 
@@ -31,8 +32,12 @@
           <template v-for="_user in usersList" :key="_user">
             <talkie-student-card
               v-if="
-                (activeTab === 'free' && !_user.isSubscriber) ||
-                (activeTab === 'paid' && _user.isSubscriber)
+                ((activeTab === 'free' && !_user.isSubscriber) ||
+                  (activeTab === 'paid' && _user.isSubscriber)) &&
+                (currentFilter
+                  ? _user?.name?.toLowerCase()?.includes(currentFilter) ||
+                    _user?.schoolName?.toLowerCase()?.includes(currentFilter)
+                  : true)
               "
               :mode="'info'"
               :studentName="_user.name"
@@ -97,6 +102,7 @@ export default {
       backdropLoading: false,
       activeTab: "free",
       tabs: ["Free", "Paid"],
+      currentFilter: "",
     };
   },
   async created() {
@@ -128,6 +134,7 @@ export default {
     this.usersList = usersList?.map((x) => ({
       id: x?.id,
       name: x?.name,
+      schoolName: x?.schools?.[0]?.name,
       image: x?.image
         ? generateAvatar(x?.image?.split("-")[1], x?.image)
         : null,
@@ -137,6 +144,9 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleUsersFilter(e) {
+      this.currentFilter = e.target.value.trim()?.toLowerCase();
+    },
     handleTabChange(x) {
       this.activeTab = x.toLowerCase();
       URLModifier.addToURL("tab", x.toLowerCase());
