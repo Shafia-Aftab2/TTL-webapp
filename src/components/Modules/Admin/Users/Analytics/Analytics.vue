@@ -8,8 +8,10 @@
           class="admin-users-analytics-header-image"
         />
         <div class="admin-users-analytics-header-info-wrapper">
-          <h2 class="h2">Mr Bookes</h2>
-          <h5 class="h5">Hollyfield Academy</h5>
+          <h2 class="h2" v-if="userDetails.name">{{ userDetails.name }}</h2>
+          <h5 class="h5" v-if="userDetails.schoolName">
+            {{ userDetails.schoolName }}
+          </h5>
         </div>
       </div>
 
@@ -20,22 +22,18 @@
           'admin-users-analytics-content-wrapper-multi-col',
         ]"
       >
-        <div class="admin-users-analytics-content-item">
-          <h2 class="h2">36</h2>
-          <p class="p">Students</p>
-        </div>
-        <div class="admin-users-analytics-content-item">
-          <h2 class="h2">2</h2>
-          <p class="p">Classes</p>
-        </div>
-        <div class="admin-users-analytics-content-item">
-          <h2 class="h2">9</h2>
-          <p class="p">Questions</p>
-        </div>
-        <div class="admin-users-analytics-content-item">
-          <h2 class="h2">Active</h2>
-          <p class="p">Last Login: Yesterday</p>
-        </div>
+        <template v-if="userAnalytics && userAnalytics.length > 0">
+          <template v-for="_userAnalytic in userAnalytics" :key="_userAnalytic">
+            <div class="admin-users-analytics-content-item">
+              <h2 class="h2" v-if="_userAnalytic.descripter">
+                {{ _userAnalytic.descripter }}
+              </h2>
+              <p class="p" v-if="_userAnalytic.summary">
+                {{ _userAnalytic.summary }}
+              </p>
+            </div>
+          </template>
+        </template>
       </div>
 
       <!-- Footer -->
@@ -76,7 +74,7 @@ import URLModifier from "@/utils/helpers/URLModifier";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 
 export default {
-  name: "AdminUserAnalytics",
+  name: "AdminUserDetails",
   components: {
     TalkieIcon,
     TalkieTab,
@@ -94,7 +92,28 @@ export default {
   data() {
     return {
       usersList: [],
-      userAnalytics: {},
+      userDetails: {
+        name: "Mr Bookes",
+        schoolName: "Hollyfield Academy",
+      },
+      userAnalytics: [
+        {
+          descripter: "36",
+          summary: "Students",
+        },
+        {
+          descripter: "2",
+          summary: "Classes",
+        },
+        {
+          descripter: "9",
+          summary: "Questions",
+        },
+        {
+          descripter: "Active",
+          summary: "Last Login: Yesterday",
+        },
+      ],
       loading: false,
       backdropLoading: false,
     };
