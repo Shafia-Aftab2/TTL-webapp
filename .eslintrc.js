@@ -19,9 +19,9 @@ module.exports = {
     "no-prototype-builtins": "off",
     "no-extra-boolean-cast": "off",
     "no-useless-escape": "off",
-    "no-unused-vars": "off",
-    "vue/no-unused-vars": "off",
-    "vue/no-unused-components": "off",
+    // "no-unused-vars": "off",
+    // "vue/no-unused-vars": "off",
+    // "vue/no-unused-components": "off",
   },
   overrides: [
     {

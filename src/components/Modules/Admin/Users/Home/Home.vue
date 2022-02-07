@@ -64,20 +64,12 @@
 
 <script>
 import {
-  TalkieIcon,
   TalkieTab,
-  TalkieSelect,
-  TalkieModal,
   TalkieLoader,
-  TalkieSwitch,
-  TalkieButtonDropDown,
   TalkieBackDropLoader,
   TalkieInput,
 } from "@/components/UICore";
-import {
-  TalkieQuestionCard,
-  TalkieStudentCard,
-} from "@/components/SubModules/Cards";
+import { TalkieStudentCard } from "@/components/SubModules/Cards";
 import { UserService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
@@ -85,17 +77,11 @@ import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 export default {
   name: "AdminUsersHome",
   components: {
-    TalkieIcon,
     TalkieTab,
-    TalkieSelect,
-    TalkieModal,
-    TalkieButtonDropDown,
     TalkieLoader,
-    TalkieSwitch,
     TalkieBackDropLoader,
-    TalkieQuestionCard,
-    TalkieStudentCard,
     TalkieInput,
+    TalkieStudentCard,
   },
   data() {
     return {

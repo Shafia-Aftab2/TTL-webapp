@@ -30,11 +30,6 @@ import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
 import AdminUsersHome from "../components/Modules/Admin/Users/Home";
 import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
-import AdminSummary from "../components/Modules/Admin/Summary";
-import TeachersFree from "../components/Modules/Admin/Free";
-import TeachersPaid from "../components/Modules/Admin/Paid";
-import QuizStats from "../components/Modules/Admin/Stats";
-import StudentsStats from "../components/Modules/Admin/Students";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
