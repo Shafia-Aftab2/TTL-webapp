@@ -142,8 +142,12 @@ export default {
         summary: "Question(s)",
       },
       {
-        descripter: "Active",
-        summary: `Last Login: ${userAnalytics.lastLogin}`,
+        descripter: userAnalytics.lastLogin ? "Active" : "Inactive",
+        summary: `Last Login: ${
+          userAnalytics.lastLogin
+            ? new Date(userAnalytics.lastLogin)?.toLocaleString()
+            : "N/A"
+        }`,
       },
     ];
 
