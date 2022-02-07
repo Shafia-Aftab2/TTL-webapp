@@ -5,6 +5,10 @@ export default class AuthRoutes {
     return HTTPClient.get(`/users/my-profile`);
   }
 
+  static async GetUserProfileById(userId) {
+    return HTTPClient.get(`/users/${userId}/profile`);
+  }
+
   static async UpdateProfile(payload) {
     return HTTPClient.put(`/users/profile`, payload);
   }
@@ -15,5 +19,9 @@ export default class AuthRoutes {
         .map(([key, value]) => `${key}=${encodeURIComponent(value)}&`)
         ?.join("")}`
     );
+  }
+
+  static async GetUserAnalytics(userId) {
+    return HTTPClient.get(`/users/${userId}/analytics`);
   }
 }
