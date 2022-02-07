@@ -61,39 +61,19 @@
 
 <script>
 import {
-  TalkieIcon,
-  TalkieTab,
-  TalkieSelect,
-  TalkieModal,
   TalkieLoader,
-  TalkieSwitch,
-  TalkieButtonDropDown,
   TalkieBackDropLoader,
-  TalkieInput,
   TalkieButton,
 } from "@/components/UICore";
-import {
-  TalkieQuestionCard,
-  TalkieStudentCard,
-} from "@/components/SubModules/Cards";
 import { UserService } from "@/api/services";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 
 export default {
   name: "AdminUserDetails",
   components: {
-    TalkieIcon,
-    TalkieTab,
-    TalkieSelect,
-    TalkieModal,
-    TalkieButtonDropDown,
     TalkieButton,
     TalkieLoader,
-    TalkieSwitch,
     TalkieBackDropLoader,
-    TalkieQuestionCard,
-    TalkieStudentCard,
-    TalkieInput,
   },
   data() {
     return {
