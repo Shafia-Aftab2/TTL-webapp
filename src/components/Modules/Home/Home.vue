@@ -52,6 +52,12 @@ export default {
       return;
     }
 
+    // redirect admin to dashboard
+    if (userRole === roles.ADMIN) {
+      this.$router.push(`/admin/users`);
+      return;
+    }
+
     // redirect student to home
     if (userRole === roles.STUDENT) {
       this.isStudent === true;
