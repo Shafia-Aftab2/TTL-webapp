@@ -421,6 +421,12 @@ export default {
         name: responseProfile?.name,
         role: responseProfile?.role,
         username: responseProfile?.username,
+        ...(responseProfile?.image && {
+          image: await generateAvatar(
+            responseProfile?.image?.split("-")[1],
+            responseProfile?.image
+          ),
+        }),
       };
 
       const userFullName = responseProfile?.name?.split(" ");
