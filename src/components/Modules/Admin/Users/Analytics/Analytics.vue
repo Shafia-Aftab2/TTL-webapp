@@ -4,9 +4,16 @@
       <!-- Header -->
       <div class="admin-users-analytics-header-wrapper">
         <img
+          v-if="!userDetails.image"
           :src="require(`@/assets/images/person-placeholder-image.png`)"
           class="admin-users-analytics-header-image"
         />
+        <span
+          v-if="userDetails.image"
+          v-html="userDetails.image"
+          class="admin-users-analytics-header-image"
+        >
+        </span>
         <div class="admin-users-analytics-header-info-wrapper">
           <h2 class="h2" v-if="userDetails.name">{{ userDetails.name }}</h2>
           <h5 class="h5" v-if="userDetails.schoolName">
@@ -70,7 +77,6 @@ import {
   TalkieStudentCard,
 } from "@/components/SubModules/Cards";
 import { UserService } from "@/api/services";
-import URLModifier from "@/utils/helpers/URLModifier";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 
 export default {
@@ -92,28 +98,8 @@ export default {
   data() {
     return {
       usersList: [],
-      userDetails: {
-        name: "Mr Bookes",
-        schoolName: "Hollyfield Academy",
-      },
-      userAnalytics: [
-        {
-          descripter: "36",
-          summary: "Students",
-        },
-        {
-          descripter: "2",
-          summary: "Classes",
-        },
-        {
-          descripter: "9",
-          summary: "Questions",
-        },
-        {
-          descripter: "Active",
-          summary: "Last Login: Yesterday",
-        },
-      ],
+      userDetails: {},
+      userAnalytics: [],
       loading: false,
       backdropLoading: false,
     };
@@ -126,11 +112,19 @@ export default {
     const usersList = await this.getUsersList();
     if (!usersList) return this.$router.push("/404");
 
+    // get the current user id from params
+    const userId = this.$route.params.userId;
+
+    // get user details with id from params
+    const userDetails = await this.getUserDetails(userId);
+    if (!userDetails) return this.$router.push("/404");
+
+    // get user analytics with id from params
+    const userAnalytics = await this.getUserAnalytics(userId);
+    if (!userAnalytics) return this.$router.push("/404");
+
     // success case
-    this.usersList = usersList?.map((x) => ({
-      id: x?.id,
-      name: x?.name,
-    }));
+
     // sidebar data
     const sidebarItems = usersList?.map((x) => ({
       name: x?.name,
@@ -140,6 +134,38 @@ export default {
       isActive: this.$route.path === `/admin/users/${x?.id}`,
     }));
     this.handleSidebarMutation({ items: sidebarItems });
+
+    this.usersList = usersList?.map((x) => ({
+      id: x?.id,
+      name: x?.name,
+    }));
+
+    this.userDetails = {
+      name: userDetails.name,
+      schoolName: "", // TODO: add this when the api updates
+      image: userDetails?.image
+        ? generateAvatar(userDetails?.image?.split("-")[1], userDetails?.image)
+        : null,
+    };
+
+    this.userAnalytics = [
+      {
+        descripter: userAnalytics.students || "0",
+        summary: "Student(s)",
+      },
+      {
+        descripter: userAnalytics.classes || "0",
+        summary: "Class(es)",
+      },
+      {
+        descripter: userAnalytics.questions || "0",
+        summary: "Question(s)",
+      },
+      {
+        descripter: "Active",
+        summary: `Last Login: ${userAnalytics.lastLogin}`,
+      },
+    ];
 
     this.loading = false;
   },
@@ -173,6 +199,20 @@ export default {
       const response = await UserService.GetUsersList(query).catch(() => null);
 
       return response?.data?.results || null;
+    },
+    async getUserDetails(userId) {
+      const response = await UserService.GetUserProfileById(userId).catch(
+        () => null
+      );
+
+      return response?.data || null;
+    },
+    async getUserAnalytics(userId) {
+      const response = await UserService.GetUserAnalytics(userId).catch(
+        () => null
+      );
+
+      return response?.data || null;
     },
   },
 };
