@@ -63,6 +63,20 @@
             :disabled="true"
           />
         </template>
+        <template v-if="user?.role === rolesList.ADMIN">
+          <talkie-input
+            :value="user?.name"
+            :placeholder="'Name'"
+            :customClass="'profile-input'"
+            :disabled="true"
+          />
+          <talkie-input
+            :value="user?.email"
+            :placeholder="'Email Address'"
+            :customClass="'profile-input'"
+            :disabled="true"
+          />
+        </template>
       </div>
     </template>
 
@@ -102,6 +116,26 @@
             :hint="{
               type: errors.displayName ? 'error' : null,
               message: errors.displayName ? errors.displayName : null,
+            }"
+          />
+          <talkie-input
+            :name="'email'"
+            :placeholder="'Email Address'"
+            :customClass="'profile-input'"
+            :hint="{
+              type: errors.email ? 'error' : null,
+              message: errors.email ? errors.email : null,
+            }"
+          />
+        </template>
+        <template v-if="user?.role === rolesList.ADMIN">
+          <talkie-input
+            :name="'name'"
+            :placeholder="'Name'"
+            :customClass="'profile-input'"
+            :hint="{
+              type: errors.name ? 'error' : null,
+              message: errors.name ? errors.name : null,
             }"
           />
           <talkie-input
@@ -411,6 +445,10 @@ export default {
         ...(this.user?.role === rolesList.TEACHER && {
           name,
           displayName,
+          email,
+        }),
+        ...(this.user?.role === rolesList.ADMIN && {
+          name,
           email,
         }),
         ...(this.user?.role === rolesList.STUDENT && {
