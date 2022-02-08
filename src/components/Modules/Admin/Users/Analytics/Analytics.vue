@@ -128,7 +128,7 @@ export default {
 
     this.userDetails = {
       name: userDetails.name,
-      schoolName: "", // TODO: add this when the api updates
+      schoolName: userDetails?.schools?.[0]?.name || "",
       image: userDetails?.image
         ? generateAvatar(userDetails?.image?.split("-")[1], userDetails?.image)
         : null,
