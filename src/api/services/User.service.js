@@ -5,8 +5,12 @@ export default class AuthRoutes {
     return HTTPClient.get(`/users/my-profile`);
   }
 
-  static async GetUserProfileById(userId) {
+  static async GetUserById(userId) {
     return HTTPClient.get(`/users/${userId}/profile`);
+  }
+
+  static async RemoveUserById(userId) {
+    return HTTPClient.delete(`/users/${userId}`);
   }
 
   static async UpdateProfile(payload) {
