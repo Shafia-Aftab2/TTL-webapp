@@ -44,7 +44,9 @@
       </div>
 
       <!-- Footer -->
-      <talkie-button> Remove User </talkie-button>
+      <talkie-button :onClick="handleUserRemoveClick" :loading="isRemovingUser">
+        Remove User
+      </talkie-button>
     </template>
 
     <!-- Load wrapper -->
@@ -66,6 +68,7 @@ import {
   TalkieButton,
 } from "@/components/UICore";
 import { UserService } from "@/api/services";
+import { notifications } from "@/components/UIActions";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 
 export default {
@@ -77,11 +80,13 @@ export default {
   },
   data() {
     return {
+      userId: null,
       usersList: [],
       userDetails: {},
       userAnalytics: [],
       loading: false,
       backdropLoading: false,
+      isRemovingUser: false,
     };
   },
   async created() {
@@ -94,6 +99,7 @@ export default {
 
     // get the current user id from params
     const userId = this.$route.params.userId;
+    this.userId = userId;
 
     // get user details with id from params
     const userDetails = await this.getUserDetails(userId);
@@ -122,7 +128,7 @@ export default {
 
     this.userDetails = {
       name: userDetails.name,
-      schoolName: "", // TODO: add this when the api updates
+      schoolName: userDetails?.schools?.[0]?.name || "",
       image: userDetails?.image
         ? generateAvatar(userDetails?.image?.split("-")[1], userDetails?.image)
         : null,
@@ -177,6 +183,33 @@ export default {
         Object.assign({}, { ...updatedData })
       );
     },
+    async handleUserRemoveClick() {
+      // update page state
+      this.isRemovingUser = true;
+
+      // api call
+      const response = await UserService.RemoveUserById(this.userId).catch(
+        () => ({ error: "Could not remove user..!" })
+      );
+
+      // failure case
+      if (response.error) {
+        this.isRemovingUser = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.isRemovingUser = false;
+      notifications.show("User Removed. Redirecting..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.$router.push(`/`);
+    },
     async getUsersList() {
       const query = { limit: 1000 };
 
@@ -185,9 +218,7 @@ export default {
       return response?.data?.results || null;
     },
     async getUserDetails(userId) {
-      const response = await UserService.GetUserProfileById(userId).catch(
-        () => null
-      );
+      const response = await UserService.GetUserById(userId).catch(() => null);
 
       return response?.data || null;
     },
