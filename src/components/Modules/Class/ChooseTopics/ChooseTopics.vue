@@ -224,7 +224,7 @@ export default {
 .class-choose-topics-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
   width: 100%;
   margin: auto;
 }
@@ -334,6 +334,7 @@ export default {
     padding: var(--t-space-24) 0;
   }
   .class-choose-topics-info {
+    padding: calc(var(--t-space-70) * 3) 0;
     gap: var(--t-space-16);
   }
   .class-choose-topics-form {
