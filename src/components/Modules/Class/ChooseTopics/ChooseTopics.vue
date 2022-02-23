@@ -17,6 +17,22 @@
       :onSubmit="handleCustomFormValidation"
     >
       <div class="class-choose-topics-sub-form">
+        <h4 class="h4">Intermediate/Advanced</h4>
+        <!-- <p class="p" style="margin-bottom: 0 !important">GCSE Level</p> -->
+        <template v-if="!pageLoading">
+          <template v-for="topic in topicsList.advanced" :key="topic.id">
+            <talkie-check-box
+              :name="topic.id"
+              :label="topic.name"
+              :defaultChecked="classTopics?.includes(topic.id)"
+            />
+          </template>
+        </template>
+        <template v-if="pageLoading">
+          <talkie-loader :size="'large'" />
+        </template>
+      </div>
+      <div class="class-choose-topics-sub-form">
         <h4 class="h4">Beginners/Intermediate</h4>
         <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
         <template v-if="!pageLoading">
