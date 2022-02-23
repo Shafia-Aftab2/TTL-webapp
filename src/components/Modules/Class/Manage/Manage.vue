@@ -107,6 +107,19 @@
 
       <!-- Topics tab -->
       <template v-if="activeTab === 'topics'">
+        <h4 class="h4">Intermediate / Advanced</h4>
+        <talkie-topic-card
+          v-for="_topic in topicsList.advanced"
+          :key="_topic"
+          :topicName="_topic.name"
+          :customClass="'class-manage-content-card'"
+          :topicSelected="activeClassTopicIds?.includes(_topic.id)"
+          :onTopicCheckToggle="
+            async (isSelected) =>
+              await handleTopicSelectToggle(isSelected, _topic.id)
+          "
+        />
+
         <h4 class="h4">Beginners / Intermediate</h4>
         <talkie-topic-card
           v-for="_topic in topicsList.intermediate"
