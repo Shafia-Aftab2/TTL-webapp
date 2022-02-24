@@ -18,6 +18,7 @@
     >
       <div class="class-choose-topics-sub-form">
         <h4 class="h4">Intermediate/Advanced</h4>
+        <p class="p" style="margin-bottom: 0 !important">A Level</p>
         <!-- <p class="p" style="margin-bottom: 0 !important">GCSE Level</p> -->
         <template v-if="!pageLoading">
           <template v-for="topic in topicsList.advanced" :key="topic.id">
