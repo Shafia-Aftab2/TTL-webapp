@@ -48,11 +48,14 @@
         <div>
           <p class="auth-split-form-options-info">View Talkie’s</p>
           <p class="auth-split-form-options-info">
-            <a class="auth-split-form-options-info-link" href="#">
+            <a class="auth-split-form-options-info-link" href="/services/terms">
               Terms of Service
             </a>
             and
-            <a class="auth-split-form-options-info-link" href="#">
+            <a
+              class="auth-split-form-options-info-link"
+              href="/services/privacy-policy"
+            >
               Privacy Policy.
             </a>
           </p>
