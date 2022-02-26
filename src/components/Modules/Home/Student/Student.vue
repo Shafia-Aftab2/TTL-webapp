@@ -17,22 +17,22 @@
         <p class="student-home-content-item-header">Class Mode</p>
         <p class="student-home-content-item-description">
           <!-- You have <strong>3 new </strong>tasks -->
-          You may have due tasks
+          <!-- You may have due tasks -->
+          Q&amp;A
         </p>
       </div>
       <div class="student-home-content-item">
         <talkie-button
           type="button"
-          class="student-home-content-item-button-secondary"
-          :variant="'secondary'"
-          :outlined="true"
+          class="student-home-content-item-button-primary"
           :onClick="handlePracticeModeButtonClick"
         >
           Enter
         </talkie-button>
-        <p class="student-home-content-item-header">Practice Mode</p>
+        <!-- <p class="student-home-content-item-header">Practice Mode</p> -->
+        <p class="student-home-content-item-header">Quiz Mode</p>
         <p class="student-home-content-item-description">
-          Do you own thing here. Always remember Little, but often
+          Do your own thing here.<br />Always remember: <br />Little, but often
         </p>
       </div>
     </div>
@@ -116,6 +116,7 @@ export default {
 }
 .student-home-content-item {
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -123,6 +124,9 @@ export default {
   border-style: solid;
   border-color: var(--t-primary);
   border-radius: var(--t-space-20);
+}
+.student-home-content-item-button-primary {
+  font-family: var(--t-ff-bold);
 }
 .student-home-content-item-button-primary,
 .student-home-content-item-button-secondary {
@@ -149,7 +153,7 @@ export default {
     gap: var(--t-space-16);
   }
   .student-home-content-item {
-    width: 100%;
+    min-width: 100%;
     border-width: var(--t-space-2);
     padding: var(--t-space-24);
     gap: var(--t-space-16);
@@ -164,7 +168,7 @@ export default {
     gap: var(--t-space-24);
   }
   .student-home-content-item {
-    width: 50%;
+    min-width: 80%;
     height: 60vh;
     border-width: var(--t-space-3);
     gap: var(--t-space-16);
@@ -179,7 +183,7 @@ export default {
     gap: var(--t-space-30);
   }
   .student-home-content-item {
-    width: 70%;
+    min-width: 70%;
     padding: var(--t-space-24);
   }
   .student-home-content-item-button-primary,
