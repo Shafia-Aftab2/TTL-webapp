@@ -104,13 +104,16 @@
             By signing up, you accept Talkie’s
           </p>
           <p class="auth-split-form-options-info">
-            <a class="auth-split-form-options-info-link" href="#"
-              >Terms of Service</a
-            >
+            <a class="auth-split-form-options-info-link" href="/services/terms">
+              Terms of Service
+            </a>
             and
-            <a class="auth-split-form-options-info-link" href="#"
-              >Privacy Policy.</a
+            <a
+              class="auth-split-form-options-info-link"
+              href="/services/privacy-policy"
             >
+              Privacy Policy.
+            </a>
           </p>
         </div>
         <p class="auth-split-form-options-info">
