@@ -49,6 +49,9 @@
             <div class="talkie-navbar-profile-options-wrapper">
               <ul class="talkie-navbar-profile-options-list">
                 <li class="talkie-navbar-profile-options-list-item">
+                  <a href="/">Home</a>
+                </li>
+                <li class="talkie-navbar-profile-options-list-item">
                   <a href="/profile/self">Profile</a>
                 </li>
                 <li
