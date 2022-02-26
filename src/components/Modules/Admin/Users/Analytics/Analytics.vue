@@ -15,10 +15,15 @@
         >
         </span>
         <div class="admin-users-analytics-header-info-wrapper">
-          <h2 class="h2" v-if="userDetails.name">{{ userDetails.name }}</h2>
-          <h5 class="h5" v-if="userDetails.schoolName">
-            {{ userDetails.schoolName }}
-          </h5>
+          <h2 class="h2" v-if="userDetails.name">
+            {{ userDetails.name }}
+          </h2>
+          <p class="p" v-if="userDetails.schoolName">
+            {{ "Role: " + userDetails.role }}
+          </p>
+          <p class="p" v-if="userDetails.schoolName">
+            {{ "School: " + userDetails.schoolName }}
+          </p>
         </div>
       </div>
 
@@ -44,9 +49,9 @@
       </div>
 
       <!-- Footer -->
-      <talkie-button :onClick="handleUserRemoveClick" :loading="isRemovingUser">
+      <!-- <talkie-button :onClick="handleUserRemoveClick" :loading="isRemovingUser">
         Remove User
-      </talkie-button>
+      </talkie-button> -->
     </template>
 
     <!-- Load wrapper -->
@@ -65,7 +70,7 @@
 import {
   TalkieLoader,
   TalkieBackDropLoader,
-  TalkieButton,
+  // TalkieButton,
 } from "@/components/UICore";
 import { UserService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
@@ -74,7 +79,7 @@ import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 export default {
   name: "AdminUserDetails",
   components: {
-    TalkieButton,
+    // TalkieButton,
     TalkieLoader,
     TalkieBackDropLoader,
   },
@@ -129,6 +134,9 @@ export default {
     this.userDetails = {
       name: userDetails.name,
       schoolName: userDetails?.schools?.[0]?.name || "",
+      role:
+        userDetails?.role?.charAt(0)?.toUpperCase() +
+          userDetails?.role?.slice(1) || "",
       image: userDetails?.image
         ? generateAvatar(userDetails?.image?.split("-")[1], userDetails?.image)
         : null,
