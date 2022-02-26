@@ -22,7 +22,11 @@
       <template v-if="computedIsLoggedIn">
         <template v-if="!hideLinks" class="talkie-navbar">
           <li class="talkie-navbar-link-item" v-for="link in links" :key="link">
-            <a :href="link.url">{{ link.text }}</a>
+            <a
+              :href="link.url"
+              v-if="link?.displayForRoles?.includes(computedUser.role)"
+              >{{ link.text }}</a
+            >
           </li>
         </template>
         <li class="talkie-navbar-profile-link-item">
@@ -52,7 +56,11 @@
                   v-for="link in links"
                   :key="link.text"
                 >
-                  <a :href="link.url">{{ link.text }}</a>
+                  <a
+                    :href="link.url"
+                    v-if="link?.displayForRoles?.includes(computedUser.role)"
+                    >{{ link.text }}</a
+                  >
                 </li>
                 <li class="talkie-navbar-profile-options-list-item">
                   <a href="/auth/logout">Logout</a>
@@ -79,6 +87,7 @@
 import LogoTalkie from "@/components/SVGs/LogoTalkie.vue";
 import TalkieIcon from "@/components/UICore/Icon.vue";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
+import roles from "@/utils/constants/roles";
 
 export default {
   name: "Header",
@@ -90,6 +99,7 @@ export default {
         {
           text: "Upgrade",
           url: "/services/upgrade",
+          displayForRoles: [roles.TEACHER, roles.ADMIN],
         },
         // {
         //   text: "Help",
