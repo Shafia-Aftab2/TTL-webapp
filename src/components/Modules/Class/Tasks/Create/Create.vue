@@ -410,11 +410,9 @@ export default {
 
     // get current task type from url
     const taskType = URLModifier.getURLParam("type");
-    if (!taskType) URLModifier.addToURL("type", "Q&A");
-    if (this.allowedTaskTypes?.includes(taskType)) {
-      this.selectedTaskType = taskType;
-    } else {
-      return this.$router.push("/404");
+    if (!taskType) {
+      URLModifier.addToURL("type", TaskTypes.QUESTION_ANSWER);
+      this.selectedTaskType = TaskTypes.QUESTION_ANSWER;
     }
 
     // class id from params
