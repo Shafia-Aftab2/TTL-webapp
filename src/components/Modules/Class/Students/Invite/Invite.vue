@@ -76,7 +76,7 @@ export default {
       this.isCopiedToClipboard = true;
     },
     handleNextButtonClick() {
-      this.$router.push(`/classes/${this.classId}/tasks/create`);
+      this.$router.push(`/classes/${this.classId}/tasks/create?type=Q&A`);
     },
   },
 };

@@ -321,6 +321,12 @@ const routes = [
         name: "ServicesUpgrade",
         path: "/services/upgrade",
         component: ServicesUpgrade,
+        meta: {
+          middlewareConfig: {
+            // requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ServicesPrivacyPolicy",
