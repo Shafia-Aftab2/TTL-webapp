@@ -199,7 +199,7 @@
                 <talkie-icon
                   :name="'square'"
                   :isActive="true"
-                  :variant="'secondary'"
+                  :variant="'success'"
                   :size="50"
                   :iconToSizeRatio="1.5"
                   :customClass="'class-create-task-form-options-stop-recording-button'"
@@ -225,18 +225,23 @@
                 <p
                   :class="[
                     'class-create-task-form-options-item-label',
-                    errors.voiceForQnA &&
-                      'class-create-task-form-options-item-label-error',
+                    isRecording
+                      ? 'class-create-task-form-options-item-label-success'
+                      : errors.voiceForQnA
+                      ? 'class-create-task-form-options-item-label-error'
+                      : '',
                   ]"
                 >
                   {{
-                    !!errors.voiceForQnA
+                    isRecording
+                      ? "Recording"
+                      : errors.voiceForQnA
                       ? errors.voiceForQnA
                       : !currentRecording
                       ? "Tap To Record"
-                      : !isAudioPlaying
-                      ? "Play"
-                      : "Pause"
+                      : isAudioPlaying
+                      ? "Pause"
+                      : "Play"
                   }}
                 </p>
               </div>
@@ -703,6 +708,9 @@ export default {
   color: transparent;
   user-select: none;
 }
+.class-create-task-form-options-item-label-success {
+  color: var(--t-green);
+}
 .class-create-task-form-options-item-label-error {
   color: var(--t-red);
 }
@@ -711,7 +719,7 @@ export default {
   border-style: solid !important;
 }
 .class-create-task-form-options-stop-recording-button {
-  border-color: var(--t-secondary) !important;
+  border-color: var(--t-green) !important;
   border-style: solid !important;
 }
 .class-create-task-form-submit-button {
