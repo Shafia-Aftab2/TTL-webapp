@@ -32,6 +32,7 @@ import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
 import AdminUsersHome from "../components/Modules/Admin/Users/Home";
 import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
+import AdminQuizzesHome from "../components/Modules/Admin/Quizzes/Home";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -361,6 +362,17 @@ const routes = [
         name: "AdminUserAnalytics",
         path: "/admin/users/:userId",
         component: AdminUserAnalytics,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT, roles.TEACHER],
+          },
+        },
+      },
+      {
+        name: "AdminQuizzesHome",
+        path: "/admin/quizzes",
+        component: AdminQuizzesHome,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
