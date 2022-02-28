@@ -415,6 +415,7 @@ export default {
 
     // get current task type from url
     const taskType = URLModifier.getURLParam("type");
+    this.selectedTaskType = taskType;
     if (!taskType) {
       URLModifier.addToURL("type", TaskTypes.QUESTION_ANSWER);
       this.selectedTaskType = TaskTypes.QUESTION_ANSWER;
