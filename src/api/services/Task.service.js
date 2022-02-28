@@ -21,6 +21,14 @@ export default class TaskRoutes {
     );
   }
 
+  static async GetTasksFromAllClasses(query = {}) {
+    return HTTPClient.get(
+      `/tasks/all?${Object.entries(query)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}&`)
+        .join("")}`
+    );
+  }
+
   static async Delete(id) {
     return HTTPClient.delete(`/tasks/${id}`);
   }
