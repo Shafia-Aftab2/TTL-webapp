@@ -12,6 +12,17 @@
           'class-quizzes-home-content-wrapper-multi-col',
         ]"
       >
+        <talkie-modal
+          :type="'confirm'"
+          :contentPadded="true"
+          :closeButton="true"
+          :centered="true"
+          :title="'Are You Sure'"
+          :description="'Your students responses and your feedbacks will also be deleted.'"
+          :onClose="handleTopicDeleteDialogClose"
+          :onConfirm="handleTaskDeletion"
+          v-if="taskToDelete"
+        />
         <template v-if="classTasks && classTasks.length > 0">
           <template v-for="_question in classTasks" :key="_question">
             <talkie-question-card
@@ -25,7 +36,7 @@
               :description="_question.description"
               :manageModeOptions="{
                 canEdit: false,
-                canDelete: false,
+                canDelete: true,
               }"
               :centered="false"
               :hoverAnimation="true"
@@ -74,6 +85,7 @@ import {
   TalkieIcon,
   TalkieTab,
   TalkieSelect,
+  TalkieModal,
   TalkieLoader,
   TalkieSwitch,
   TalkieBackDropLoader,
@@ -84,6 +96,7 @@ import {
 } from "@/components/SubModules/Cards";
 import { TaskService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ClassQuizzesHome",
@@ -91,6 +104,7 @@ export default {
     TalkieIcon,
     TalkieTab,
     TalkieSelect,
+    TalkieModal,
     TalkieLoader,
     TalkieSwitch,
     TalkieBackDropLoader,
@@ -218,6 +232,35 @@ export default {
         "sidebar",
         Object.assign({}, { ...updatedData })
       );
+    },
+    async handleTaskDeletion() {
+      const taskId = this.taskToDelete;
+      this.taskToDelete = null;
+      this.backdropLoading = true;
+
+      // api call
+      const response = await TaskService.Delete(taskId).catch(() => null);
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Failed To Delete Task..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Task Deleted Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.classTasks = this.classTasks?.filter((x) => x?.id !== taskId);
+    },
+    handleTopicDeleteDialogClose() {
+      this.taskToDelete = null;
     },
     async getTasksFromAllClasses() {
       const query = {
