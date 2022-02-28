@@ -73,9 +73,11 @@ import { TalkieStudentCard } from "@/components/SubModules/Cards";
 import { UserService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
+import handleSidebarMutation from "../../_common/mixins/handleSidebarMutation";
 
 export default {
   name: "AdminUsersHome",
+  mixins: [handleSidebarMutation],
   components: {
     TalkieTab,
     TalkieLoader,
@@ -106,19 +108,6 @@ export default {
     const usersList = await this.getUsersList();
     if (!usersList) return this.$router.push("/404");
 
-    // sidebar data
-    const sidebarItems = [
-      {
-        name: "Users",
-        hasRightIcon: true,
-        link: `/admin/users`,
-        onClick: () => this.$router.push(`/admin/users`),
-        isActive: this.$route.path === `/admin/users`,
-      },
-    ];
-    this.handleSidebarMutation({
-      items: sidebarItems,
-    });
     this.usersList = usersList?.map((x) => ({
       id: x?.id,
       name: x?.name,
@@ -141,29 +130,6 @@ export default {
     handleTabChange(x) {
       this.activeTab = x.toLowerCase();
       URLModifier.addToURL("tab", x.toLowerCase());
-    },
-    handleStoreMutation(key, value) {
-      this.$store.state[key] = value;
-    },
-    handleSidebarMutation(data) {
-      const sidebar = this.$store.state.sidebar;
-      const updatedData = {
-        hasBackLink: data.hasOwnProperty("hasBackLink")
-          ? data.hasBackLink
-          : sidebar.hasBackLink,
-        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
-        checkboxes: data.hasOwnProperty("checkboxes")
-          ? data.checkboxes
-          : sidebar.checkboxes,
-        buttons: data.hasOwnProperty("buttons")
-          ? data.buttons
-          : sidebar.buttons,
-      };
-
-      this.handleStoreMutation(
-        "sidebar",
-        Object.assign({}, { ...updatedData })
-      );
     },
     async getUsersList() {
       const query = { limit: 1000 };
