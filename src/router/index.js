@@ -33,6 +33,7 @@ import ComingSoon from "../components/Modules/ComingSoon";
 import AdminUsersHome from "../components/Modules/Admin/Users/Home";
 import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
 import AdminQuizzesHome from "../components/Modules/Admin/Quizzes/Home";
+import AdminQuizzesCreate from "../components/Modules/Admin/Quizzes/Create";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -373,6 +374,24 @@ const routes = [
         name: "AdminQuizzesHome",
         path: "/admin/quizzes",
         component: AdminQuizzesHome,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT, roles.TEACHER],
+          },
+        },
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
+      {
+        name: "AdminQuizzesCreate",
+        path: "/admin/quizzes/create",
+        component: AdminQuizzesCreate,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
