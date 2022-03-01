@@ -323,12 +323,7 @@ import {
   createTranslationTopicSchema,
   createEmojiStoryTopicSchema,
 } from "@/utils/validations/task.validation";
-import {
-  FileService,
-  TaskService,
-  ClassService,
-  TopicService,
-} from "@/api/services";
+import { FileService, GeneralTaskService, TopicService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
@@ -393,7 +388,6 @@ export default {
       handleAudioPlayerToggle: () => {},
       setFormValue: () => {},
       triggerFormSubmission: () => {},
-      classId: null,
       selectedTaskType: TaskTypes.CAPTION_THIS,
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
@@ -599,26 +593,24 @@ export default {
       if (questionText) payload.questionText = questionText;
 
       // api call
-      const response = await TaskService.Create(this.classId, payload).catch(
-        (e) => {
-          const errorMap = {
-            ['"title" contains bad word']: "Title should not be unethical..!",
-            ['"questiontext" contains bad word']:
-              "Question text should not be unethical..!",
-            ['"topic" must be a valid mongo id']: "Invalid Topic",
-            ["Q&A"]: "Could not create conversation..!",
-            ["Caption-This"]: "Could not create caption task..!",
-            ["Translation"]: "Could not create translation task..!",
-            ["Emoji-Story"]: "Could not create emoji story task..!",
-          };
+      const response = await GeneralTaskService.Create(payload).catch((e) => {
+        const errorMap = {
+          ['"title" contains bad word']: "Title should not be unethical..!",
+          ['"questiontext" contains bad word']:
+            "Question text should not be unethical..!",
+          ['"topic" must be a valid mongo id']: "Invalid Topic",
+          ["Q&A"]: "Could not create conversation..!",
+          ["Caption-This"]: "Could not create caption task..!",
+          ["Translation"]: "Could not create translation task..!",
+          ["Emoji-Story"]: "Could not create emoji story task..!",
+        };
 
-          return {
-            error:
-              errorMap[e.response.data.message.toLowerCase()] ||
-              errorMap[this.selectedTaskType],
-          };
-        }
-      );
+        return {
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[this.selectedTaskType],
+        };
+      });
 
       // failure case
       if (response.error) {
