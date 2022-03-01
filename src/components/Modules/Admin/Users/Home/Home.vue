@@ -21,6 +21,15 @@
           :onChange="handleUsersFilter"
         />
       </div>
+      <div class="admin-users-home-options-wrapper">
+        <div class="admin-users-home-options-selector">
+          <talkie-select
+            :placeholder="'Select Users By Role'"
+            :options="Object.values(roles)?.map((x) => `${x}s`)"
+            :onChange="handleUserRoleChange"
+          />
+        </div>
+      </div>
 
       <div
         :class="[
@@ -30,21 +39,29 @@
       >
         <template v-if="usersList && usersList.length > 0">
           <template v-for="_user in usersList" :key="_user">
-            <talkie-student-card
+            <template
               v-if="
-                ((activeTab === 'free' && !_user.isSubscriber) ||
-                  (activeTab === 'paid' && _user.isSubscriber)) &&
-                (currentFilter
-                  ? _user?.name?.toLowerCase()?.includes(currentFilter) ||
-                    _user?.schoolName?.toLowerCase()?.includes(currentFilter)
-                  : true)
+                selectedUserRole?.length > 0
+                  ? _user.role === selectedUserRole
+                  : true
               "
-              :mode="'info'"
-              :studentName="_user.name"
-              :studentAvatar="_user.image"
-              :studentSchoolName="_user.schoolName"
-              :onInfoClick="() => handleUserInfoRedirect(_user?.id)"
-            />
+            >
+              <talkie-student-card
+                v-if="
+                  ((activeTab === 'free' && !_user.isSubscriber) ||
+                    (activeTab === 'paid' && _user.isSubscriber)) &&
+                  (currentFilter
+                    ? _user?.name?.toLowerCase()?.includes(currentFilter) ||
+                      _user?.schoolName?.toLowerCase()?.includes(currentFilter)
+                    : true)
+                "
+                :mode="'info'"
+                :studentName="_user.name"
+                :studentAvatar="_user.image"
+                :studentSchoolName="_user.schoolName"
+                :onInfoClick="() => handleUserInfoRedirect(_user?.id)"
+              />
+            </template>
           </template>
         </template>
       </div>
@@ -68,12 +85,14 @@ import {
   TalkieLoader,
   TalkieBackDropLoader,
   TalkieInput,
+  TalkieSelect,
 } from "@/components/UICore";
 import { TalkieStudentCard } from "@/components/SubModules/Cards";
 import { UserService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import handleSidebarMutation from "../../_common/mixins/handleSidebarMutation";
+import rolesList from "@/utils/constants/roles";
 
 export default {
   name: "AdminUsersHome",
@@ -83,6 +102,7 @@ export default {
     TalkieLoader,
     TalkieBackDropLoader,
     TalkieInput,
+    TalkieSelect,
     TalkieStudentCard,
   },
   data() {
@@ -93,6 +113,8 @@ export default {
       activeTab: "free",
       tabs: ["Free", "Paid"],
       currentFilter: "",
+      roles: rolesList,
+      selectedUserRole: "",
     };
   },
   async created() {
@@ -112,6 +134,7 @@ export default {
       id: x?.id,
       name: x?.name,
       schoolName: x?.schools?.[0]?.name,
+      role: x.role,
       image: x?.image
         ? generateAvatar(x?.image?.split("-")[1], x?.image)
         : null,
@@ -130,6 +153,14 @@ export default {
     handleTabChange(x) {
       this.activeTab = x.toLowerCase();
       URLModifier.addToURL("tab", x.toLowerCase());
+    },
+    handleUserRoleChange(e) {
+      const selectedIndex = e.target.selectedIndex;
+
+      this.selectedUserRole =
+        selectedIndex > 0
+          ? Object.keys(rolesList)?.[selectedIndex - 1].toLowerCase()
+          : "";
     },
     async getUsersList() {
       const query = { limit: 1000 };
@@ -194,6 +225,9 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+.admin-users-home-options-selector > div {
+  min-width: 100%;
+}
 .admin-users-home-content-wrapper {
   display: grid;
 }
@@ -232,6 +266,9 @@ export default {
   .admin-users-home-options-wrapper {
     gap: var(--t-space-12);
   }
+  .admin-users-home-options-selector {
+    min-width: 100%;
+  }
   .admin-users-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 2.25) !important;
   }
@@ -267,6 +304,9 @@ export default {
   .admin-users-home-options-wrapper {
     gap: var(--t-space-16);
   }
+  .admin-users-home-options-selector {
+    min-width: 70%;
+  }
   .admin-users-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 3) !important;
   }
@@ -281,6 +321,11 @@ export default {
   }
   .admin-users-home-content-error-image {
     --image-size: calc(var(--t-space-70) * 1.7);
+  }
+}
+@media (min-width: 900px) {
+  .admin-users-home-options-selector {
+    min-width: 40%;
   }
 }
 @media (min-width: 900px) {
