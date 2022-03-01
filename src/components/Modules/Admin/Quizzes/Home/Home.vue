@@ -6,6 +6,17 @@
         <h2 class="h2">Quizzes</h2>
       </div>
 
+      <!-- Questions tab -->
+      <div class="class-quizzes-home-options-wrapper">
+        <talkie-button-drop-down
+          :size="'small'"
+          :variant="'primary'"
+          :dropDownItems="newTaskOptions"
+        >
+          + New Task
+        </talkie-button-drop-down>
+      </div>
+
       <div
         :class="[
           'class-quizzes-home-content-wrapper',
@@ -82,18 +93,12 @@
 
 <script>
 import {
-  TalkieIcon,
-  TalkieTab,
-  TalkieSelect,
   TalkieModal,
   TalkieLoader,
-  TalkieSwitch,
+  TalkieButtonDropDown,
   TalkieBackDropLoader,
 } from "@/components/UICore";
-import {
-  TalkieQuestionCard,
-  TalkieStudentCard,
-} from "@/components/SubModules/Cards";
+import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { TaskService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import { notifications } from "@/components/UIActions";
@@ -103,15 +108,11 @@ export default {
   name: "AdminQuizzesHome",
   mixins: [handleSidebarMutation],
   components: {
-    TalkieIcon,
-    TalkieTab,
-    TalkieSelect,
     TalkieModal,
+    TalkieButtonDropDown,
     TalkieLoader,
-    TalkieSwitch,
     TalkieBackDropLoader,
     TalkieQuestionCard,
-    TalkieStudentCard,
   },
   data() {
     return {
@@ -121,7 +122,7 @@ export default {
           name: "Photo",
           onClick: () =>
             this.handleRedirection(
-              `/classes/${this.classId}/tasks/create?type=${TaskTypes.CAPTION_THIS}`,
+              `/admin/quizzes/create?type=${TaskTypes.CAPTION_THIS}`,
               100
             ),
         },
@@ -129,7 +130,7 @@ export default {
           name: "Emoji Story",
           onClick: () =>
             this.handleRedirection(
-              `/classes/${this.classId}/tasks/create?type=${TaskTypes.EMOJI_STORY}`,
+              `/admin/quizzes/create?type=${TaskTypes.EMOJI_STORY}`,
               100
             ),
         },
@@ -137,7 +138,7 @@ export default {
           name: "Translation",
           onClick: () =>
             this.handleRedirection(
-              `/classes/${this.classId}/tasks/create?type=${TaskTypes.TRANSLATION}`,
+              `/admin/quizzes/create?type=${TaskTypes.TRANSLATION}`,
               100
             ),
         },

@@ -5,18 +5,21 @@
       v-slot="{ errors, setValue, values, triggerFormSubmit }"
       :validationSchema="computedValidationSchema"
       :onSubmit="handleSubmit"
-      :customClass="'class-create-task-wrapper'"
+      :customClass="'admin-create-quizzes-wrapper'"
     >
       <span hidden>
         <!-- TODO: updated these states via a handler -->
         {{ (this.setFormValue = setValue) }}
         {{ (this.triggerFormSubmission = triggerFormSubmit) }}
       </span>
-      <h2 class="class-create-task-header h2" v-if="computedSelectedTaskHeader">
+      <h2
+        class="admin-create-quizzes-header h2"
+        v-if="computedSelectedTaskHeader"
+      >
         {{ computedSelectedTaskHeader }}
       </h2>
 
-      <div class="class-create-task-form">
+      <div class="admin-create-quizzes-form">
         <!-- Common fields -->
         <talkie-select
           :name="'topic'"
@@ -69,13 +72,13 @@
               {{ (this.isAudioPlaying = isPlaying) }}
               {{ (this.handleAudioPlayerToggle = togglePlayer) }}
             </span>
-            <div class="class-create-task-form-options-audio-player-wrapper">
+            <div class="admin-create-quizzes-form-options-audio-player-wrapper">
               <talkie-audio-timeline
                 :percentage="currentAudioPercentage"
                 :onHeadChange="updateAudioPercentage"
               />
               <span
-                class="class-create-task-form-options-audio-player-timestamps"
+                class="admin-create-quizzes-form-options-audio-player-timestamps"
                 >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
               </span>
             </div>
@@ -163,9 +166,9 @@
           v-slot="{ startRecording, stopRecording, isRecording }"
           :onRecordingStopped="handleRecordedItem"
         >
-          <div class="class-create-task-form-options-wrapper">
-            <div class="class-create-task-form-options">
-              <div class="class-create-task-form-options-item">
+          <div class="admin-create-quizzes-form-options-wrapper">
+            <div class="admin-create-quizzes-form-options">
+              <div class="admin-create-quizzes-form-options-item">
                 <talkie-icon
                   :name="'arrow-rounded-left'"
                   :isActive="true"
@@ -175,15 +178,15 @@
                 />
                 <p
                   :class="[
-                    'class-create-task-form-options-item-label',
+                    'admin-create-quizzes-form-options-item-label',
                     !currentRecording &&
-                      'class-create-task-form-options-item-label-non-visiable',
+                      'admin-create-quizzes-form-options-item-label-non-visiable',
                   ]"
                 >
                   Redo
                 </p>
               </div>
-              <div class="class-create-task-form-options-item">
+              <div class="admin-create-quizzes-form-options-item">
                 <talkie-icon
                   :name="'mike-unmuted'"
                   :isActive="true"
@@ -192,7 +195,7 @@
                   :onClick="startRecording"
                   :customClass="
                     errors.voiceForQnA &&
-                    'class-create-task-form-options-mike-unmuted-button-error'
+                    'admin-create-quizzes-form-options-mike-unmuted-button-error'
                   "
                   v-if="!isRecording && !currentRecording"
                 />
@@ -202,7 +205,7 @@
                   :variant="'success'"
                   :size="50"
                   :iconToSizeRatio="1.5"
-                  :customClass="'class-create-task-form-options-stop-recording-button'"
+                  :customClass="'admin-create-quizzes-form-options-stop-recording-button'"
                   :onClick="stopRecording"
                   v-if="isRecording && !currentRecording"
                 />
@@ -224,11 +227,11 @@
                 />
                 <p
                   :class="[
-                    'class-create-task-form-options-item-label',
+                    'admin-create-quizzes-form-options-item-label',
                     isRecording
-                      ? 'class-create-task-form-options-item-label-success'
+                      ? 'admin-create-quizzes-form-options-item-label-success'
                       : errors.voiceForQnA
-                      ? 'class-create-task-form-options-item-label-error'
+                      ? 'admin-create-quizzes-form-options-item-label-error'
                       : '',
                   ]"
                 >
@@ -245,7 +248,7 @@
                   }}
                 </p>
               </div>
-              <div class="class-create-task-form-options-item">
+              <div class="admin-create-quizzes-form-options-item">
                 <talkie-icon
                   :type="'submit'"
                   :name="'send'"
@@ -255,9 +258,9 @@
                 />
                 <p
                   :class="[
-                    'class-create-task-form-options-item-label',
+                    'admin-create-quizzes-form-options-item-label',
                     !currentRecording &&
-                      'class-create-task-form-options-item-label-non-visiable',
+                      'admin-create-quizzes-form-options-item-label-non-visiable',
                   ]"
                 >
                   Preview send
@@ -276,20 +279,20 @@
           selectedTaskType === taskTypes.EMOJI_STORY
         "
       >
-        <div class="class-create-task-form-submit-button">
+        <div class="admin-create-quizzes-form-submit-button">
           <talkie-button :loading="formStatus?.loading"> Create </talkie-button>
         </div>
       </template>
     </talkie-form>
-    <div class="class-create-task-footer">
-      <a :href="`/classes/${classId}`" class="class-create-task-footer-link">
+    <div class="admin-create-quizzes-footer">
+      <a :href="`/admin/quizzes`" class="admin-create-quizzes-footer-link">
         Not now
       </a>
     </div>
   </template>
   <!-- loading -->
   <template v-if="computedPageLoading">
-    <div class="class-create-task-loading-wrapper">
+    <div class="admin-create-quizzes-loading-wrapper">
       <talkie-loader :size="'large'" />
     </div>
   </template>
@@ -320,13 +323,13 @@ import {
   createTranslationTopicSchema,
   createEmojiStoryTopicSchema,
 } from "@/utils/validations/task.validation";
-import { FileService, TaskService, ClassService } from "@/api/services";
+import { FileService, GeneralTaskService, TopicService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
 
 export default {
-  name: "ClassTaskCreate",
+  name: "AdminCreateQuizzes",
   components: {
     TalkieInput,
     TalkieSelect,
@@ -385,8 +388,7 @@ export default {
       handleAudioPlayerToggle: () => {},
       setFormValue: () => {},
       triggerFormSubmission: () => {},
-      classId: null,
-      selectedTaskType: "Q&A",
+      selectedTaskType: TaskTypes.CAPTION_THIS,
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
         ["Caption-This"]: "Add a caption task for practice.",
@@ -416,21 +418,17 @@ export default {
     // get current task type from url
     const taskType = URLModifier.getURLParam("type");
     this.selectedTaskType = taskType;
-    if (!taskType) {
-      URLModifier.addToURL("type", TaskTypes.QUESTION_ANSWER);
-      this.selectedTaskType = TaskTypes.QUESTION_ANSWER;
+    if (!taskType || taskType === TaskTypes.QUESTION_ANSWER) {
+      URLModifier.addToURL("type", TaskTypes.CAPTION_THIS);
+      this.selectedTaskType = TaskTypes.CAPTION_THIS;
     }
 
-    // class id from params
-    const classId = this.$route.params.id;
-    this.classId = classId;
-
-    // class details (+ failure case)
-    const classDetails = await this.getClassDetails(classId);
-    if (!classDetails) return this.$router.push("/404");
+    // get topics list (+ failure case)
+    const topicsList = await this.getTopicsList();
+    if (!topicsList) return this.$router.push("/404");
 
     // success case
-    this.topics = classDetails.topics;
+    this.topics = topicsList || [];
     this.pageLoading = false;
   },
   methods: {
@@ -595,26 +593,24 @@ export default {
       if (questionText) payload.questionText = questionText;
 
       // api call
-      const response = await TaskService.Create(this.classId, payload).catch(
-        (e) => {
-          const errorMap = {
-            ['"title" contains bad word']: "Title should not be unethical..!",
-            ['"questiontext" contains bad word']:
-              "Question text should not be unethical..!",
-            ['"topic" must be a valid mongo id']: "Invalid Topic",
-            ["Q&A"]: "Could not create conversation..!",
-            ["Caption-This"]: "Could not create caption task..!",
-            ["Translation"]: "Could not create translation task..!",
-            ["Emoji-Story"]: "Could not create emoji story task..!",
-          };
+      const response = await GeneralTaskService.Create(payload).catch((e) => {
+        const errorMap = {
+          ['"title" contains bad word']: "Title should not be unethical..!",
+          ['"questiontext" contains bad word']:
+            "Question text should not be unethical..!",
+          ['"topic" must be a valid mongo id']: "Invalid Topic",
+          ["Q&A"]: "Could not create conversation..!",
+          ["Caption-This"]: "Could not create caption task..!",
+          ["Translation"]: "Could not create translation task..!",
+          ["Emoji-Story"]: "Could not create emoji story task..!",
+        };
 
-          return {
-            error:
-              errorMap[e.response.data.message.toLowerCase()] ||
-              errorMap[this.selectedTaskType],
-          };
-        }
-      );
+        return {
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[this.selectedTaskType],
+        };
+      });
 
       // failure case
       if (response.error) {
@@ -645,103 +641,101 @@ export default {
         animateEllipse: false,
         loading: false,
       };
-      const taskId = response?.data?.id;
-      this.handleRedirection(
-        `/classes/${this.classId}/tasks/${taskId}/status?status=created`,
-        200
-      );
+      this.handleRedirection(`/admin/quizzes`, 200);
     },
-    async getClassDetails(id) {
-      const response = await ClassService.GetDetails(id).catch(() => null);
+    async getTopicsList() {
+      const query = {};
 
-      return response.data || null;
+      const response = await TopicService.Query(query).catch(() => null);
+
+      return !!response.data ? response.data.results : null;
     },
   },
 };
 </script>
 
 <style scoped>
-.class-create-task-wrapper {
+.admin-create-quizzes-wrapper {
   display: flex;
   flex-direction: column;
   margin: auto;
   background: var(--t-white);
   gap: var(--t-space-36);
 }
-.class-create-task-header {
+.admin-create-quizzes-header {
   text-align: center;
   --font-size: var(--t-fs-h2);
 }
-.class-create-task-form {
+.admin-create-quizzes-form {
   display: flex;
   flex-direction: column;
   margin: auto;
 }
-.class-create-task-form-options-audio-player-wrapper {
+.admin-create-quizzes-form-options-audio-player-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-.class-create-task-form-options-audio-player-timestamps {
+.admin-create-quizzes-form-options-audio-player-timestamps {
   margin-left: auto;
   color: var(--t-black-100);
 }
-.class-create-task-form-options-wrapper {
+.admin-create-quizzes-form-options-wrapper {
   position: relative;
 }
-.class-create-task-form-options {
+.admin-create-quizzes-form-options {
   display: flex;
   align-items: center;
   position: absolute;
   left: 50%;
 }
-.class-create-task-form-options-item {
+.admin-create-quizzes-form-options-item {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
-.class-create-task-form-options-item-label {
+.admin-create-quizzes-form-options-item-label {
   text-align: center;
   line-height: 1.1;
 }
-.class-create-task-form-options-item-label-non-visiable {
+.admin-create-quizzes-form-options-item-label-non-visiable {
   color: transparent;
   user-select: none;
 }
-.class-create-task-form-options-item-label-success {
+.admin-create-quizzes-form-options-item-label-success {
   color: var(--t-green);
 }
-.class-create-task-form-options-item-label-error {
+.admin-create-quizzes-form-options-item-label-error {
   color: var(--t-red);
 }
-.class-create-task-form-options-mike-unmuted-button-error {
+.admin-create-quizzes-form-options-mike-unmuted-button-error {
   border-color: var(--t-red) !important;
   border-style: solid !important;
 }
-.class-create-task-form-options-stop-recording-button {
+.admin-create-quizzes-form-options-stop-recording-button {
   border-color: var(--t-green) !important;
   border-style: solid !important;
 }
-.class-create-task-form-submit-button {
+.admin-create-quizzes-form-submit-button {
   margin: auto;
 }
-.class-create-task-footer {
+.admin-create-quizzes-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: auto;
 }
-.class-create-task-footer-link {
+.admin-create-quizzes-footer-link {
   text-decoration: underline;
 }
-.class-create-task-footer-link,
-.class-create-task-footer-link:hover,
-.class-create-task-footer-link:visited {
+.admin-create-quizzes-footer-link,
+.admin-create-quizzes-footer-link:hover,
+.admin-create-quizzes-footer-link:visited {
   text-decoration: underline;
   color: var(--t-black);
 }
-.class-create-task-loading-wrapper {
+.admin-create-quizzes-loading-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -750,151 +744,151 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .class-create-task-wrapper {
+  .admin-create-quizzes-wrapper {
     padding: var(--t-space-32);
     padding-bottom: var(--t-space-40);
     margin-top: var(--t-space-24);
     border-radius: var(--t-br-small);
     min-width: 80%;
   }
-  .class-create-task-header {
+  .admin-create-quizzes-header {
     font-size: calc(var(--font-size) * 0.7);
   }
-  .class-create-task-form {
+  .admin-create-quizzes-form {
     gap: var(--t-space-12);
     width: 100%;
   }
-  .class-create-task-form-options {
+  .admin-create-quizzes-form-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-36);
   }
-  .class-create-task-form-options-item {
+  .admin-create-quizzes-form-options-item {
     gap: var(--t-space-8);
     min-width: var(--t-space-64);
   }
-  .class-create-task-form-options-item-label {
+  .admin-create-quizzes-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-create-task-form-options-audio-player-wrapper {
+  .admin-create-quizzes-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-12);
   }
-  .class-create-task-form-options-audio-player-timestamps {
+  .admin-create-quizzes-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-create-task-form-options-mike-unmuted-button-error {
+  .admin-create-quizzes-form-options-mike-unmuted-button-error {
     border-width: var(--t-space-2) !important;
   }
-  .class-create-task-form-options-stop-recording-button {
+  .admin-create-quizzes-form-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
   }
-  .class-create-task-footer {
+  .admin-create-quizzes-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-64);
   }
-  .class-create-task-footer-link {
+  .admin-create-quizzes-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-create-task-loading-wrapper {
+  .admin-create-quizzes-loading-wrapper {
     padding: var(--t-space-32);
     margin-top: var(--t-space-24);
   }
 }
 @media (min-width: 600px) {
-  .class-create-task-wrapper {
+  .admin-create-quizzes-wrapper {
     padding: var(--t-space-32);
     padding-bottom: var(--t-space-36);
     margin-top: var(--t-space-24);
     border-radius: var(--t-br-large);
     max-width: 80%;
   }
-  .class-create-task-header {
+  .admin-create-quizzes-header {
     font-size: calc(var(--font-size) * 0.75);
   }
-  .class-create-task-form {
+  .admin-create-quizzes-form {
     gap: var(--t-space-16);
     width: 65%;
   }
-  .class-create-task-form-options {
+  .admin-create-quizzes-form-options {
     transform: translate(-50%, -5%);
     gap: var(--t-space-40);
   }
-  .class-create-task-form-options-item {
+  .admin-create-quizzes-form-options-item {
     gap: var(--t-space-10);
     min-width: calc(var(--t-space-64) * 1.5);
   }
-  .class-create-task-form-options-item-label {
+  .admin-create-quizzes-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-create-task-form-options-audio-player-wrapper {
+  .admin-create-quizzes-form-options-audio-player-wrapper {
     gap: var(--t-space-8);
     margin-top: var(--t-space-10);
   }
-  .class-create-task-form-options-audio-player-timestamps {
+  .admin-create-quizzes-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-create-task-form-options-mike-unmuted-button-error {
+  .admin-create-quizzes-form-options-mike-unmuted-button-error {
     border-width: var(--t-space-3) !important;
   }
-  .class-create-task-form-options-stop-recording-button {
+  .admin-create-quizzes-form-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
   }
-  .class-create-task-footer {
+  .admin-create-quizzes-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-64);
   }
-  .class-create-task-footer-link {
+  .admin-create-quizzes-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-create-task-loading-wrapper {
+  .admin-create-quizzes-loading-wrapper {
     padding: var(--t-space-32);
     margin-top: var(--t-space-24);
   }
 }
 @media (min-width: 900px) {
-  .class-create-task-header {
+  .admin-create-quizzes-header {
     font-size: calc(var(--font-size) * 0.85);
   }
 }
 @media (min-width: 1200px) {
-  .class-create-task-wrapper {
+  .admin-create-quizzes-wrapper {
     padding: var(--t-space-48);
     padding-bottom: var(--t-space-58);
     margin-top: var(--t-space-48);
   }
-  .class-create-task-header {
+  .admin-create-quizzes-header {
     font-size: var(--font-size);
   }
-  .class-create-task-form {
+  .admin-create-quizzes-form {
     gap: var(--t-space-24);
     width: 70%;
   }
-  .class-create-task-form-options {
+  .admin-create-quizzes-form-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-48);
   }
-  .class-create-task-form-options-item {
+  .admin-create-quizzes-form-options-item {
     gap: var(--t-space-12);
     min-width: calc(var(--t-space-48) * 2);
   }
-  .class-create-task-form-options-item-label {
+  .admin-create-quizzes-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-create-task-form-options-audio-player-wrapper {
+  .admin-create-quizzes-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-16);
   }
-  .class-create-task-form-options-audio-player-timestamps {
+  .admin-create-quizzes-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-create-task-footer {
+  .admin-create-quizzes-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-50);
   }
-  .class-create-task-footer-link {
+  .admin-create-quizzes-footer-link {
     font-size: var(--t-fs-small);
   }
-  .class-create-task-loading-wrapper {
+  .admin-create-quizzes-loading-wrapper {
     padding: var(--t-space-48);
     margin-top: var(--t-space-48);
   }

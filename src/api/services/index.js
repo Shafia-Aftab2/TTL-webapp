@@ -2,6 +2,7 @@ import AuthService from "./Auth.service";
 import ClassService from "./Class.service";
 import FileService from "./File.service";
 import TaskService from "./Task.service";
+import GeneralTaskService from "./GeneralTask.service";
 import TopicService from "./Topic.service";
 import ResponseService from "./Response.service";
 import FeedbackService from "./Feedback.service";
@@ -14,6 +15,7 @@ export {
   ClassService,
   FileService,
   TaskService,
+  GeneralTaskService,
   TopicService,
   ResponseService,
   FeedbackService,
