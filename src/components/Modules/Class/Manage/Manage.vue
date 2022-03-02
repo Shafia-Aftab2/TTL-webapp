@@ -4,12 +4,12 @@
     <div class="class-manage-header-wrapper">
       <div class="class-manage-header-details-wrapper">
         <h2 class="h2" v-if="classDetails.name && !editClassMode">
-          <a
-            :href="computedClassHomeLink"
+          <router-link
+            :to="computedClassHomeLink"
             class="class-manage-header-details-class-name-link"
           >
             {{ classDetails.name }}
-          </a>
+          </router-link>
         </h2>
         <talkie-form
           :customClass="'class-manage-header-details-update-form-wrapper'"

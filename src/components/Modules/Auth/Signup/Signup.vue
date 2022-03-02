@@ -104,39 +104,42 @@
             By signing up, you accept Talkie’s
           </p>
           <p class="auth-split-form-options-info">
-            <a class="auth-split-form-options-info-link" href="/services/terms">
-              Terms of Service
-            </a>
-            and
-            <a
+            <router-link
               class="auth-split-form-options-info-link"
-              href="/services/privacy-policy"
+              to="/services/terms"
+            >
+              Terms of Service
+            </router-link>
+            and
+            <router-link
+              class="auth-split-form-options-info-link"
+              to="/services/privacy-policy"
             >
               Privacy Policy.
-            </a>
+            </router-link>
           </p>
         </div>
         <p class="auth-split-form-options-info">
           Are you a {{ signupMode === "teacher" ? "student" : "teacher" }}?
-          <a
+          <router-link
             class="auth-split-form-options-info-link"
-            :href="`/auth/signup/${
+            :to="`/auth/signup/${
               signupMode === 'teacher' ? 'student' : 'teacher'
             }`"
           >
             Signup here
-          </a>
+          </router-link>
         </p>
         <p class="auth-split-form-options-info">
           Already have an account?
-          <a
+          <router-link
             class="auth-split-form-options-info-link"
-            :href="`/auth/login${
+            :to="`/auth/login${
               redirectURL ? `?redirect_url=${redirectURL}` : ''
             }`"
           >
             Log in
-          </a>
+          </router-link>
         </p>
       </div>
     </talkie-form>

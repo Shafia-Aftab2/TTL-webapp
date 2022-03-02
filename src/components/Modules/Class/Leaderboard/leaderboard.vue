@@ -4,12 +4,12 @@
     <div class="class-leaderboard-header-wrapper">
       <div class="class-leaderboard-header-details-wrapper">
         <h2 class="h2" v-if="classDetails.name">
-          <a
-            :href="computedClassHomeLink"
+          <router-link
+            :to="computedClassHomeLink"
             class="class-leaderboard-header-details-class-name-link"
           >
             {{ classDetails.name }}
-          </a>
+          </router-link>
         </h2>
       </div>
     </div>

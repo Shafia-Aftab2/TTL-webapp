@@ -7,12 +7,12 @@
       >
         <h3 class="h3">
           You are already a member of
-          <a
+          <router-link
             class="class-join-link-content-class-name"
-            :href="classDetails.link"
+            :to="classDetails.link"
           >
             {{ classDetails.name }}
-          </a>
+          </router-link>
         </h3>
 
         <talkie-button :onClick="handleCTAButtonClick">
@@ -32,12 +32,12 @@
       >
         <h3 class="h3" v-if="isJoined">
           You are now a member of
-          <a
+          <router-link
             class="class-join-link-content-class-name"
-            :href="classDetails.link"
+            :to="classDetails.link"
           >
             {{ classDetails.name }}
-          </a>
+          </router-link>
         </h3>
         <h3 class="h3" v-if="!isJoined">Could not join class..!</h3>
 

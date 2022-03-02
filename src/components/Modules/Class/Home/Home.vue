@@ -138,7 +138,9 @@
             <p class="p class-home-content-error-info">
               Hmm..! It looks like there are no students in your class. You can
               invite them from the class management page.
-              <a :href="`/classes/${classId}/manage`">Click Here</a>
+              <router-link :to="`/classes/${classId}/manage`">
+                Click Here
+              </router-link>
             </p>
           </template>
         </div>

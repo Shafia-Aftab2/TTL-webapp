@@ -29,12 +29,12 @@
       <p
         class="auth-split-form-options-info auth-split-form-options-info-right"
       >
-        <a
+        <router-link
           class="auth-split-form-options-info-link"
-          href="/auth/forgot-password"
+          to="/auth/forgot-password"
         >
           Forgot Password?
-        </a>
+        </router-link>
       </p>
       <talkie-alert
         :text="formStatus.message"
@@ -48,28 +48,31 @@
         <div>
           <p class="auth-split-form-options-info">View Talkie’s</p>
           <p class="auth-split-form-options-info">
-            <a class="auth-split-form-options-info-link" href="/services/terms">
-              Terms of Service
-            </a>
-            and
-            <a
+            <router-link
               class="auth-split-form-options-info-link"
-              href="/services/privacy-policy"
+              to="/services/terms"
+            >
+              Terms of Service
+            </router-link>
+            and
+            <router-link
+              class="auth-split-form-options-info-link"
+              to="/services/privacy-policy"
             >
               Privacy Policy.
-            </a>
+            </router-link>
           </p>
         </div>
         <p class="auth-split-form-options-info">
           Don't have an account?
-          <a
+          <router-link
             class="auth-split-form-options-info-link"
-            :href="`/auth/signup${
+            :to="`/auth/signup${
               redirectURL ? `?redirect_url=${redirectURL}` : ''
             }`"
           >
             Create Account
-          </a>
+          </router-link>
         </p>
       </div>
     </talkie-form>

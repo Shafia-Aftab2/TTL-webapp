@@ -13,9 +13,9 @@
       >
         <talkie-icon :name="'hamburger'" :onClick="onSidebarIconClick" />
       </span>
-      <a href="/" class="talkie-navbar-brand-logo-link">
+      <router-link to="/" class="talkie-navbar-brand-logo-link">
         <logo-talkie />
-      </a>
+      </router-link>
     </ul>
     <!-- Right Side -->
     <ul class="talkie-navbar-links-wrapper" v-if="!hideLinksAndProfile">
@@ -31,8 +31,8 @@
         </template>
         <li class="talkie-navbar-profile-link-item">
           <div class="talkie-navbar-profile-wrapper" tabindex="0">
-            <a class="talkie-navbar-profile-name" href="#"
-              >{{ computedUser?.name }}
+            <a class="talkie-navbar-profile-name" href="#">
+              {{ computedUser?.name }}
             </a>
             <talkie-icon
               v-if="!computedUser?.image"
@@ -49,24 +49,25 @@
             <div class="talkie-navbar-profile-options-wrapper">
               <ul class="talkie-navbar-profile-options-list">
                 <li class="talkie-navbar-profile-options-list-item">
-                  <a href="/">Home</a>
+                  <router-link to="/">Home</router-link>
                 </li>
                 <li class="talkie-navbar-profile-options-list-item">
-                  <a href="/profile/self">Profile</a>
+                  <router-link to="/profile/self">Profile</router-link>
                 </li>
                 <li
                   class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
                   v-for="link in links"
                   :key="link.text"
                 >
-                  <a
-                    :href="link.url"
+                  <router-link
+                    :to="link.url"
                     v-if="link?.displayForRoles?.includes(computedUser.role)"
-                    >{{ link.text }}</a
                   >
+                    {{ link.text }}
+                  </router-link>
                 </li>
                 <li class="talkie-navbar-profile-options-list-item">
-                  <a href="/auth/logout">Logout</a>
+                  <router-link to="/auth/logout">Logout</router-link>
                 </li>
               </ul>
             </div>
@@ -77,9 +78,9 @@
         <li
           class="talkie-navbar-link-item talkie-navbar-link-item-always-visiable"
         >
-          <a href="/auth/login">Login</a>
+          <router-link to="/auth/login">Login</router-link>
           &nbsp;<strong>/</strong>&nbsp;
-          <a href="/auth/signup">Signup</a>
+          <router-link to="/auth/signup">Signup</router-link>
         </li>
       </template>
     </ul>

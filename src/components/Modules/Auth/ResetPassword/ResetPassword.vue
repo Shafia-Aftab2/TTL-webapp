@@ -50,9 +50,12 @@
       </div>
 
       <div class="auth-reset-password-footer">
-        <a class="auth-reset-password-footer-link" href="/auth/forgot-password">
+        <router-link
+          class="auth-reset-password-footer-link"
+          to="/auth/forgot-password"
+        >
           Request Password Change
-        </a>
+        </router-link>
       </div>
     </talkie-form>
   </template>

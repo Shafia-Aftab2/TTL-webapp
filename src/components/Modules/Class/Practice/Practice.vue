@@ -18,21 +18,21 @@
 
       <!-- If there are no class tasks for practice -->
       <template v-if="classTasks.length === 0 && !noMoreTasks">
-        <a class="class-practice-header-wrapper-link" href="/">
+        <router-link class="class-practice-header-wrapper-link" to="/">
           &#8592; Exit
-        </a>
+        </router-link>
         <h4 class="h4">Practice Mode</h4>
       </template>
 
       <!-- If there are class tasks for practice -->
       <template v-if="classTasks.length > 0 && !noMoreTasks">
-        <a
+        <router-link
           class="class-practice-header-wrapper-link"
-          href="/"
+          to="/"
           v-if="currentTask.canExit"
         >
           &#8592; Exit
-        </a>
+        </router-link>
         <h4 class="h4" v-if="currentTask.title">{{ currentTask.title }}</h4>
         <a
           class="class-practice-header-wrapper-link"
