@@ -181,9 +181,11 @@ import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
 import { notifications } from "@/components/UIActions";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
+import handleSidebarMutation from "@/utils/mixins/handleSidebarMutation";
 
 export default {
   name: "ClassHome",
+  mixins: [handleSidebarMutation],
   components: {
     TalkieIcon,
     TalkieTab,
@@ -485,29 +487,6 @@ export default {
     handleTopicFilterChange(e) {
       const selectedTopic = e.target.value;
       this.currentTopicFilter = selectedTopic;
-    },
-    handleStoreMutation(key, value) {
-      this.$store.state[key] = value;
-    },
-    handleSidebarMutation(data) {
-      const sidebar = this.$store.state.sidebar;
-      const updatedData = {
-        hasBackLink: data.hasOwnProperty("hasBackLink")
-          ? data.hasBackLink
-          : sidebar.hasBackLink,
-        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
-        checkboxes: data.hasOwnProperty("checkboxes")
-          ? data.checkboxes
-          : sidebar.checkboxes,
-        buttons: data.hasOwnProperty("buttons")
-          ? data.buttons
-          : sidebar.buttons,
-      };
-
-      this.handleStoreMutation(
-        "sidebar",
-        Object.assign({}, { ...updatedData })
-      );
     },
     async getMyClasses() {
       const response = await ClassService.GetMyClasses().catch(() => null);
