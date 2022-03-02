@@ -130,15 +130,14 @@ export default {
       this.formStatus = { type: null, message: null };
 
       // form data
-      const { _emailOrUsername, password } = values;
-      const emailOrUsername = _emailOrUsername?.trim();
+      const { emailOrUsername, password } = values;
 
       // payload
       const payload = { password };
       if (this.isValidEmail(emailOrUsername)) {
-        payload.email = emailOrUsername;
+        payload.email = emailOrUsername.trim();
       } else {
-        payload.username = emailOrUsername;
+        payload.username = emailOrUsername.trim();
       }
 
       // api call
