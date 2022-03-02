@@ -91,12 +91,12 @@ import { TalkieStudentCard } from "@/components/SubModules/Cards";
 import { UserService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
-import handleSidebarMutation from "../../_common/mixins/handleSidebarMutation";
+import handleSidebarItemsMutation from "../../_common/mixins/handleSidebarItemsMutation";
 import rolesList from "@/utils/constants/roles";
 
 export default {
   name: "AdminUsersHome",
-  mixins: [handleSidebarMutation],
+  mixins: [handleSidebarItemsMutation],
   components: {
     TalkieTab,
     TalkieLoader,

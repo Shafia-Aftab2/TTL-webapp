@@ -75,9 +75,11 @@ import {
 import { UserService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
+import hanldeSidebarMutation from "@/utils/mixins/handleSidebarMutation";
 
 export default {
   name: "AdminUserDetails",
+  mixins: [hanldeSidebarMutation],
   components: {
     // TalkieButton,
     TalkieLoader,
@@ -168,29 +170,6 @@ export default {
     this.loading = false;
   },
   methods: {
-    handleStoreMutation(key, value) {
-      this.$store.state[key] = value;
-    },
-    handleSidebarMutation(data) {
-      const sidebar = this.$store.state.sidebar;
-      const updatedData = {
-        hasBackLink: data.hasOwnProperty("hasBackLink")
-          ? data.hasBackLink
-          : sidebar.hasBackLink,
-        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
-        checkboxes: data.hasOwnProperty("checkboxes")
-          ? data.checkboxes
-          : sidebar.checkboxes,
-        buttons: data.hasOwnProperty("buttons")
-          ? data.buttons
-          : sidebar.buttons,
-      };
-
-      this.handleStoreMutation(
-        "sidebar",
-        Object.assign({}, { ...updatedData })
-      );
-    },
     async handleUserRemoveClick() {
       // update page state
       this.isRemovingUser = true;
