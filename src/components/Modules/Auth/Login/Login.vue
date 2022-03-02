@@ -130,7 +130,8 @@ export default {
       this.formStatus = { type: null, message: null };
 
       // form data
-      const { emailOrUsername, password } = values;
+      const { _emailOrUsername, password } = values;
+      const emailOrUsername = _emailOrUsername?.trim();
 
       // payload
       const payload = { password };

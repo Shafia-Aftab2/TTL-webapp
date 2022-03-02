@@ -225,7 +225,7 @@ export default {
         if (this.signupMode === "student") {
           return {
             name: `${firstName} ${lastName}`,
-            username,
+            username: username?.trim(),
             password,
             role: roles.STUDENT,
           };
@@ -235,7 +235,7 @@ export default {
             name,
             displayName,
             schoolName,
-            email,
+            email: email?.trim(),
             password,
             role: roles.TEACHER,
           };

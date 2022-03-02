@@ -90,7 +90,10 @@ export default {
       const { email } = values;
 
       // payload
-      const payload = { email, clientRedirectURI: this.clientRedirectURI };
+      const payload = {
+        email: email?.trim(),
+        clientRedirectURI: this.clientRedirectURI,
+      };
 
       // api call
       const response = await AuthService.ForgotPassword(payload).catch((e) => {
