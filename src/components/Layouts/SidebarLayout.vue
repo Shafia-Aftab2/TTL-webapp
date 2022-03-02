@@ -138,6 +138,7 @@ export default {
   background-color: var(--t-white);
   transition: 0.15s ease-in-out;
   overflow-y: scroll;
+  z-index: var(--t-zindex-70);
 }
 .talkie-sidebar-navigation-wrapper::-webkit-scrollbar {
   display: none !important;
