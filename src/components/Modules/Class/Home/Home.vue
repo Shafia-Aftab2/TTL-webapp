@@ -24,16 +24,18 @@
       <!-- Questions tab -->
       <template v-if="activeTab === 'questions'">
         <div class="class-home-options-wrapper">
-          <talkie-select
-            :placeholder="'Filter by topic'"
-            :customClass="'class-home-options-custom-talkie-select'"
-            :options="
-              classDetails?.topics && classDetails?.topics?.length > 0
-                ? classDetails?.topics?.map((x) => x.name)
-                : []
-            "
-            :onChange="handleTopicFilterChange"
-          />
+          <div class="class-home-options-selector">
+            <talkie-select
+              :placeholder="'Filter by topic'"
+              :customClass="'class-home-options-custom-talkie-select'"
+              :options="
+                classDetails?.topics && classDetails?.topics?.length > 0
+                  ? classDetails?.topics?.map((x) => x.name)
+                  : []
+              "
+              :onChange="handleTopicFilterChange"
+            />
+          </div>
           <talkie-button-drop-down
             :size="'small'"
             :variant="'primary'"
@@ -563,8 +565,12 @@ export default {
 }
 .class-home-options-wrapper {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+}
+.class-home-options-selector > div {
+  min-width: 100%;
 }
 .class-home-content-wrapper {
   display: grid;
@@ -604,6 +610,9 @@ export default {
   .class-home-options-wrapper {
     gap: var(--t-space-12);
   }
+  .class-home-options-selector {
+    min-width: 100%;
+  }
   .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 2.25) !important;
   }
@@ -639,6 +648,9 @@ export default {
   .class-home-options-wrapper {
     gap: var(--t-space-16);
   }
+  .class-home-options-selector {
+    min-width: 70%;
+  }
   .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 3) !important;
   }
@@ -658,6 +670,9 @@ export default {
 @media (min-width: 900px) {
   .class-home-wrapper {
     gap: var(--t-space-36);
+  }
+  .class-home-options-selector {
+    min-width: 40%;
   }
   .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 5) !important;
