@@ -50,9 +50,12 @@
       </div>
     </talkie-form>
     <div class="class-update-convo-footer">
-      <a :href="`/classes/${classId}`" class="class-update-convo-footer-link">
+      <router-link
+        :to="`/classes/${classId}`"
+        class="class-update-convo-footer-link"
+      >
         Not now
-      </a>
+      </router-link>
     </div>
   </template>
 

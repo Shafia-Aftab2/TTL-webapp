@@ -24,9 +24,12 @@
     </div>
   </div>
   <div class="class-students-invite-footer">
-    <a :href="`/classes/${classId}`" class="class-students-invite-footer-link">
+    <router-link
+      :to="`/classes/${classId}`"
+      class="class-students-invite-footer-link"
+    >
       Not now
-    </a>
+    </router-link>
   </div>
 </template>
 

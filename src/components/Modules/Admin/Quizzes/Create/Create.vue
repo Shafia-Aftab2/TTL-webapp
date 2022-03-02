@@ -285,9 +285,12 @@
       </template>
     </talkie-form>
     <div class="admin-create-quizzes-footer">
-      <a :href="`/admin/quizzes`" class="admin-create-quizzes-footer-link">
+      <router-link
+        :to="`/admin/quizzes`"
+        class="admin-create-quizzes-footer-link"
+      >
         Not now
-      </a>
+      </router-link>
     </div>
   </template>
   <!-- loading -->

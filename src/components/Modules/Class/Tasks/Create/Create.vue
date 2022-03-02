@@ -282,9 +282,12 @@
       </template>
     </talkie-form>
     <div class="class-create-task-footer">
-      <a :href="`/classes/${classId}`" class="class-create-task-footer-link">
+      <router-link
+        :to="`/classes/${classId}`"
+        class="class-create-task-footer-link"
+      >
         Not now
-      </a>
+      </router-link>
     </div>
   </template>
   <!-- loading -->

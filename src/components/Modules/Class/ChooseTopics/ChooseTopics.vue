@@ -74,9 +74,12 @@
     </talkie-form>
   </div>
   <div class="class-choose-topics-footer">
-    <a :href="`/classes/${classId}`" class="class-choose-topics-footer-link">
+    <router-link
+      :to="`/classes/${classId}`"
+      class="class-choose-topics-footer-link"
+    >
       Not now
-    </a>
+    </router-link>
   </div>
 </template>
 
