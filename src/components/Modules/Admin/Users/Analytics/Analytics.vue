@@ -97,79 +97,87 @@ export default {
     };
   },
   async created() {
-    // update page state
-    this.loading = true;
-
-    // get list of users
-    const usersList = await this.getUsersList();
-    if (!usersList) return this.$router.push("/404");
-
-    // get the current user id from params
-    const userId = this.$route.params.userId;
-    this.userId = userId;
-
-    // get user details with id from params
-    const userDetails = await this.getUserDetails(userId);
-    if (!userDetails) return this.$router.push("/404");
-
-    // get user analytics with id from params
-    const userAnalytics = await this.getUserAnalytics(userId);
-    if (!userAnalytics) return this.$router.push("/404");
-
-    // success case
-
-    // sidebar data
-    const sidebarItems = usersList?.map((x) => ({
-      name: x?.name,
-      hasRightIcon: true,
-      link: `/admin/users/${x?.id}`,
-      onClick: () => this.$router.push(`/admin/users/${x?.id}`),
-      isActive: this.$route.path === `/admin/users/${x?.id}`,
-    }));
-    this.handleSidebarMutation({ items: sidebarItems });
-
-    this.usersList = usersList?.map((x) => ({
-      id: x?.id,
-      name: x?.name,
-    }));
-
-    this.userDetails = {
-      name: userDetails.name,
-      schoolName: userDetails?.schools?.[0]?.name || "",
-      role:
-        userDetails?.role?.charAt(0)?.toUpperCase() +
-          userDetails?.role?.slice(1) || "",
-      image: userDetails?.image
-        ? generateAvatar(userDetails?.image?.split("-")[1], userDetails?.image)
-        : null,
-    };
-
-    this.userAnalytics = [
-      {
-        descripter: userAnalytics.students || "0",
-        summary: "Student(s)",
-      },
-      {
-        descripter: userAnalytics.classes || "0",
-        summary: "Class(es)",
-      },
-      {
-        descripter: userAnalytics.questions || "0",
-        summary: "Question(s)",
-      },
-      {
-        descripter: userAnalytics.lastLogin ? "Active" : "Inactive",
-        summary: `Last Login: ${
-          userAnalytics.lastLogin
-            ? new Date(userAnalytics.lastLogin)?.toLocaleString()
-            : "N/A"
-        }`,
-      },
-    ];
-
-    this.loading = false;
+    await this.handleLoadSequence(this.$route.params.userId);
+  },
+  async beforeRouteUpdate(to) {
+    await this.handleLoadSequence(to.params.userId);
   },
   methods: {
+    async handleLoadSequence(userId) {
+      // update page state
+      this.loading = true;
+
+      // get list of users
+      const usersList = await this.getUsersList();
+      if (!usersList) return this.$router.push("/404");
+
+      // get the current user id from params
+      this.userId = userId;
+
+      // get user details with id from params
+      const userDetails = await this.getUserDetails(userId);
+      if (!userDetails) return this.$router.push("/404");
+
+      // get user analytics with id from params
+      const userAnalytics = await this.getUserAnalytics(userId);
+      if (!userAnalytics) return this.$router.push("/404");
+
+      // success case
+
+      // sidebar data
+      const sidebarItems = usersList?.map((x) => ({
+        name: x?.name,
+        hasRightIcon: true,
+        link: `/admin/users/${x?.id}`,
+        onClick: () => this.$router.push(`/admin/users/${x?.id}`),
+        isActive: userId === x?.id,
+      }));
+      this.handleSidebarMutation({ items: sidebarItems });
+
+      this.usersList = usersList?.map((x) => ({
+        id: x?.id,
+        name: x?.name,
+      }));
+
+      this.userDetails = {
+        name: userDetails.name,
+        schoolName: userDetails?.schools?.[0]?.name || "",
+        role:
+          userDetails?.role?.charAt(0)?.toUpperCase() +
+            userDetails?.role?.slice(1) || "",
+        image: userDetails?.image
+          ? generateAvatar(
+              userDetails?.image?.split("-")[1],
+              userDetails?.image
+            )
+          : null,
+      };
+
+      this.userAnalytics = [
+        {
+          descripter: userAnalytics.students || "0",
+          summary: "Student(s)",
+        },
+        {
+          descripter: userAnalytics.classes || "0",
+          summary: "Class(es)",
+        },
+        {
+          descripter: userAnalytics.questions || "0",
+          summary: "Question(s)",
+        },
+        {
+          descripter: userAnalytics.lastLogin ? "Active" : "Inactive",
+          summary: `Last Login: ${
+            userAnalytics.lastLogin
+              ? new Date(userAnalytics.lastLogin)?.toLocaleString()
+              : "N/A"
+          }`,
+        },
+      ];
+
+      this.loading = false;
+    },
     async handleUserRemoveClick() {
       // update page state
       this.isRemovingUser = true;
