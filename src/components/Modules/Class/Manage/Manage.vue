@@ -302,7 +302,7 @@ export default {
   },
   computed: {
     computedClassHomeLink() {
-      return `${window.location.origin}/classes/${this.classId}`;
+      return `/classes/${this.classId}`;
     },
     computedClassJoinLink() {
       return `${window.location.origin}/classes/${this.classId}/join`;
