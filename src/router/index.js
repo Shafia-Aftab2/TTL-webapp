@@ -472,7 +472,7 @@ router.beforeEach(async (to, from, next) => {
           name: "AuthLogin",
           query: {
             ...(middlewareConfig.redirectToOriginal && {
-              redirect_url: `${window.location.origin}${to.fullPath}`,
+              redirect_route: to.fullPath,
             }),
           },
         }),
@@ -494,7 +494,7 @@ router.beforeEach(async (to, from, next) => {
           name: "AuthLogin",
           query: {
             ...(middlewareConfig.redirectToOriginal && {
-              redirect_url: `${window.location.origin}${to.fullPath}`,
+              redirect_route: to.fullPath,
             }),
           },
         }),
