@@ -162,7 +162,7 @@ import { roles } from "@/utils/constants";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
-import URLModifier from "@/utils/helpers/URLModifier";
+// import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthSignup",
@@ -199,7 +199,7 @@ export default {
   },
   created() {
     // get redirect url from params
-    const redirectURL = URLModifier.getURLParam("redirect_url");
+    const redirectURL = this?.$route?.query?.redirect_url;
     this.redirectURL = redirectURL;
   },
   methods: {

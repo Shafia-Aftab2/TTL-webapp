@@ -316,7 +316,7 @@ export default {
     this.pageLoading = true;
 
     // get current tab from url
-    const tab = URLModifier.getURLParam("tab");
+    const tab = this?.$route?.query?.tab;
     if (!tab) URLModifier.addToURL("tab", "students");
     if (["students", "topics"].includes(tab)) this.activeTab = tab;
 

@@ -116,7 +116,7 @@ export default {
   },
   created() {
     // get redirect url from params
-    const redirectURL = URLModifier.getURLParam("redirect_url");
+    const redirectURL = this?.$route?.query?.redirect_url;
     this.redirectURL = redirectURL;
   },
   methods: {
