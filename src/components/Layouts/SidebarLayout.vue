@@ -22,14 +22,14 @@
         v-if="computedSidebar.items && computedSidebar.items.length > 0"
       >
         <component
-          :is="item.link ? 'a' : 'li'"
+          :is="item.link ? 'router-link' : 'li'"
           :class="[
             'talkie-sidebar-navigation-content-item',
             item.isActive && 'talkie-sidebar-navigation-content-item-active',
           ]"
           v-for="item in computedSidebar.items"
           :key="item"
-          :href="item.link"
+          :to="item.link"
           @click="item.onClick"
         >
           <p class="p" v-if="item.name">
@@ -104,7 +104,11 @@ import TalkieCheckBox from "../UICore/CheckBox.vue";
 
 export default {
   name: "SidebarLayout",
-  components: { TalkieIcon, TalkieButton, TalkieCheckBox },
+  components: {
+    TalkieIcon,
+    TalkieButton,
+    TalkieCheckBox,
+  },
   computed: {
     computedSidebar() {
       return this.$store.state.sidebar;
@@ -138,6 +142,7 @@ export default {
   background-color: var(--t-white);
   transition: 0.15s ease-in-out;
   overflow-y: scroll;
+  z-index: var(--t-zindex-70);
 }
 .talkie-sidebar-navigation-wrapper::-webkit-scrollbar {
   display: none !important;

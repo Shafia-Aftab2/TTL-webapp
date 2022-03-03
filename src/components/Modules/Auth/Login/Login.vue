@@ -135,9 +135,9 @@ export default {
       // payload
       const payload = { password };
       if (this.isValidEmail(emailOrUsername)) {
-        payload.email = emailOrUsername;
+        payload.email = emailOrUsername.trim();
       } else {
-        payload.username = emailOrUsername;
+        payload.username = emailOrUsername.trim();
       }
 
       // api call

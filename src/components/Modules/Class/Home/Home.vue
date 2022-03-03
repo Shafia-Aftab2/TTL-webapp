@@ -24,16 +24,18 @@
       <!-- Questions tab -->
       <template v-if="activeTab === 'questions'">
         <div class="class-home-options-wrapper">
-          <talkie-select
-            :placeholder="'Filter by topic'"
-            :customClass="'class-home-options-custom-talkie-select'"
-            :options="
-              classDetails?.topics && classDetails?.topics?.length > 0
-                ? classDetails?.topics?.map((x) => x.name)
-                : []
-            "
-            :onChange="handleTopicFilterChange"
-          />
+          <div class="class-home-options-selector">
+            <talkie-select
+              :placeholder="'Filter by topic'"
+              :customClass="'class-home-options-custom-talkie-select'"
+              :options="
+                classDetails?.topics && classDetails?.topics?.length > 0
+                  ? classDetails?.topics?.map((x) => x.name)
+                  : []
+              "
+              :onChange="handleTopicFilterChange"
+            />
+          </div>
           <talkie-button-drop-down
             :size="'small'"
             :variant="'primary'"
@@ -181,9 +183,11 @@ import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
 import { notifications } from "@/components/UIActions";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
+import handleSidebarMutation from "@/utils/mixins/handleSidebarMutation";
 
 export default {
   name: "ClassHome",
+  mixins: [handleSidebarMutation],
   components: {
     TalkieIcon,
     TalkieTab,
@@ -251,126 +255,131 @@ export default {
     };
   },
   async created() {
-    // update page state
-    this.loading = true;
-
-    // get current tab from url
-    const tab = URLModifier.getURLParam("tab");
-    if (!tab) URLModifier.addToURL("tab", "questions");
-    if (["students", "questions"].includes(tab)) this.activeTab = tab;
-
-    // get auth user
-    this.user = authUser.getUser();
-
-    // get user role
-    if (this.user.role === roles.TEACHER) this.isTeacher = true;
-    else this.isStudent = true;
-
-    // class id from params
-    const classId = this.$route.params.id;
-    this.classId = classId;
-
-    // classes list (+ failure case)
-    const myClasses = await this.getMyClasses();
-    if (!myClasses) return this.$router.push("/404");
-
-    // class details (+ failure case)
-    const classDetails = await this.getClassDetails(classId);
-    if (!classDetails) return this.$router.push("/404");
-
-    // class tasks
-    const classTasks = await this.getClassTasks(classId);
-    if (!classTasks) return this.$router.push("/404");
-
-    // class topics
-    const classTopics = await this.getClassTopics(classId);
-    if (!classTopics) return this.$router.push("/404");
-
-    // success case
-    this.classDetails = {
-      id: classDetails.id,
-      name: classDetails.name,
-      langugage: classDetails.langugage,
-      parentSchool: classDetails.schoolName,
-      teacher: {
-        id: classDetails.teacher.id,
-        name: classDetails.teacher.name,
-        image: classDetails.teacher.image,
-      },
-      topics: classDetails.topics.map((x) => ({
-        name: x.name,
-        type: x.type,
-        id: x.id,
-      })),
-      tasks: classDetails.tasks.map((x) => ({
-        title: x.title,
-        type: x.type,
-        id: x.id,
-      })),
-    };
-
-    // sidebar data
-    const sidebarItems = myClasses.map((x) => ({
-      name: x.name,
-      hasRightIcon: true,
-      link: `/classes/${x.id}`,
-      onClick: () => this.$router.push(`/classes/${x.id}`),
-      isActive: x.id === classId,
-    }));
-    const sidebarButtons = [
-      {
-        text: "+ New Class",
-        type: "button",
-        variant: "primary",
-        size: "small",
-        outlined: true,
-        loading: false,
-        disabled: false,
-        onClick: () => this.$router.push("/classes/create"),
-      },
-    ];
-    this.handleSidebarMutation({
-      items: sidebarItems,
-      buttons: sidebarButtons,
-    });
-
-    this.classTasks = classTasks.results.map((x) => ({
-      id: x.id,
-      type: x.type,
-      title: x.title,
-      topic: x.topic.name,
-      description: x.questionText,
-      isForPractice: x?.isPracticeMode,
-      ...(x.type === TaskTypes.QUESTION_ANSWER && {
-        audioSource: x.voiceForQnA,
-      }),
-      ...(x.type === TaskTypes.CAPTION_THIS && {
-        image: x.captionThisImage,
-      }),
-      ...(x.type === TaskTypes.TRANSLATION && {
-        translation: {
-          textToTranslate: x?.textToTranslate,
-          translatedText: x?.answer,
-        },
-      }),
-      ...(x.type === TaskTypes.EMOJI_STORY && {
-        emojiStory: x?.emojiStory,
-      }),
-    }));
-
-    this.classStudents = classDetails.students.map((x) => ({
-      id: x.id,
-      name: x.name,
-      image: x?.image
-        ? generateAvatar(x?.image?.split("-")[1], x?.image)
-        : null,
-    }));
-
-    this.classTopics = classTopics;
-
-    this.loading = false;
+    await this.handleLoadSequence(this.$route.params.id);
+  },
+  async beforeRouteUpdate(to) {
+    await this.handleLoadSequence(to.params.id);
   },
   methods: {
+    async handleLoadSequence(classId) {
+      // update page state
+      this.loading = true;
+
+      // get current tab from url
+      const tab = URLModifier.getURLParam("tab");
+      if (!tab) URLModifier.addToURL("tab", "questions");
+      if (["students", "questions"].includes(tab)) this.activeTab = tab;
+
+      // get auth user
+      this.user = authUser.getUser();
+
+      // get user role
+      if (this.user.role === roles.TEACHER) this.isTeacher = true;
+      else this.isStudent = true;
+
+      // class id from params
+      this.classId = classId;
+
+      // classes list (+ failure case)
+      const myClasses = await this.getMyClasses();
+      if (!myClasses) return this.$router.push("/404");
+
+      // class details (+ failure case)
+      const classDetails = await this.getClassDetails(classId);
+      if (!classDetails) return this.$router.push("/404");
+
+      // class tasks
+      const classTasks = await this.getClassTasks(classId);
+      if (!classTasks) return this.$router.push("/404");
+
+      // class topics
+      const classTopics = await this.getClassTopics(classId);
+      if (!classTopics) return this.$router.push("/404");
+
+      // success case
+      this.classDetails = {
+        id: classDetails.id,
+        name: classDetails.name,
+        langugage: classDetails.langugage,
+        parentSchool: classDetails.schoolName,
+        teacher: {
+          id: classDetails.teacher.id,
+          name: classDetails.teacher.name,
+          image: classDetails.teacher.image,
+        },
+        topics: classDetails.topics.map((x) => ({
+          name: x.name,
+          type: x.type,
+          id: x.id,
+        })),
+        tasks: classDetails.tasks.map((x) => ({
+          title: x.title,
+          type: x.type,
+          id: x.id,
+        })),
+      };
+
+      // sidebar data
+      const sidebarItems = myClasses.map((x) => ({
+        name: x.name,
+        hasRightIcon: true,
+        link: `/classes/${x.id}`,
+        onClick: () => this.$router.push(`/classes/${x.id}`),
+        isActive: x.id === classId,
+      }));
+      const sidebarButtons = [
+        {
+          text: "+ New Class",
+          type: "button",
+          variant: "primary",
+          size: "small",
+          outlined: true,
+          loading: false,
+          disabled: false,
+          onClick: () => this.$router.push("/classes/create"),
+        },
+      ];
+      this.handleSidebarMutation({
+        items: sidebarItems,
+        buttons: sidebarButtons,
+      });
+
+      this.classTasks = classTasks.results.map((x) => ({
+        id: x.id,
+        type: x.type,
+        title: x.title,
+        topic: x.topic.name,
+        description: x.questionText,
+        isForPractice: x?.isPracticeMode,
+        ...(x.type === TaskTypes.QUESTION_ANSWER && {
+          audioSource: x.voiceForQnA,
+        }),
+        ...(x.type === TaskTypes.CAPTION_THIS && {
+          image: x.captionThisImage,
+        }),
+        ...(x.type === TaskTypes.TRANSLATION && {
+          translation: {
+            textToTranslate: x?.textToTranslate,
+            translatedText: x?.answer,
+          },
+        }),
+        ...(x.type === TaskTypes.EMOJI_STORY && {
+          emojiStory: x?.emojiStory,
+        }),
+      }));
+
+      this.classStudents = classDetails.students.map((x) => ({
+        id: x.id,
+        name: x.name,
+        image: x?.image
+          ? generateAvatar(x?.image?.split("-")[1], x?.image)
+          : null,
+      }));
+
+      this.classTopics = classTopics;
+
+      this.loading = false;
+    },
     redirectToCommingSoonPage() {
       this.$router.push(`/coming-soon`);
     },
@@ -486,29 +495,6 @@ export default {
       const selectedTopic = e.target.value;
       this.currentTopicFilter = selectedTopic;
     },
-    handleStoreMutation(key, value) {
-      this.$store.state[key] = value;
-    },
-    handleSidebarMutation(data) {
-      const sidebar = this.$store.state.sidebar;
-      const updatedData = {
-        hasBackLink: data.hasOwnProperty("hasBackLink")
-          ? data.hasBackLink
-          : sidebar.hasBackLink,
-        items: data.hasOwnProperty("items") ? data.items : sidebar.items,
-        checkboxes: data.hasOwnProperty("checkboxes")
-          ? data.checkboxes
-          : sidebar.checkboxes,
-        buttons: data.hasOwnProperty("buttons")
-          ? data.buttons
-          : sidebar.buttons,
-      };
-
-      this.handleStoreMutation(
-        "sidebar",
-        Object.assign({}, { ...updatedData })
-      );
-    },
     async getMyClasses() {
       const response = await ClassService.GetMyClasses().catch(() => null);
 
@@ -584,8 +570,12 @@ export default {
 }
 .class-home-options-wrapper {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+}
+.class-home-options-selector > div {
+  min-width: 100%;
 }
 .class-home-content-wrapper {
   display: grid;
@@ -625,6 +615,9 @@ export default {
   .class-home-options-wrapper {
     gap: var(--t-space-12);
   }
+  .class-home-options-selector {
+    min-width: 100%;
+  }
   .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 2.25) !important;
   }
@@ -660,6 +653,9 @@ export default {
   .class-home-options-wrapper {
     gap: var(--t-space-16);
   }
+  .class-home-options-selector {
+    min-width: 70%;
+  }
   .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 3) !important;
   }
@@ -679,6 +675,9 @@ export default {
 @media (min-width: 900px) {
   .class-home-wrapper {
     gap: var(--t-space-36);
+  }
+  .class-home-options-selector {
+    min-width: 40%;
   }
   .class-home-options-custom-talkie-select {
     min-width: calc(var(--t-space-70) * 5) !important;

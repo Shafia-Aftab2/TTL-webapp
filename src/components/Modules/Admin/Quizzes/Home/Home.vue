@@ -102,11 +102,11 @@ import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { TaskService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import { notifications } from "@/components/UIActions";
-import handleSidebarMutation from "../../_common/mixins/handleSidebarMutation";
+import handleSidebarItemsMutation from "../../_common/mixins/handleSidebarItemsMutation";
 
 export default {
   name: "AdminQuizzesHome",
-  mixins: [handleSidebarMutation],
+  mixins: [handleSidebarItemsMutation],
   components: {
     TalkieModal,
     TalkieButtonDropDown,
