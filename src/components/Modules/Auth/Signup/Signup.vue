@@ -135,7 +135,7 @@
           <router-link
             class="auth-split-form-options-info-link"
             :to="`/auth/login${
-              redirectURL ? `?redirect_url=${redirectURL}` : ''
+              redirectRoute ? `?redirect_route=${redirectRoute}` : ''
             }`"
           >
             Log in
@@ -162,7 +162,7 @@ import { roles } from "@/utils/constants";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
-import URLModifier from "@/utils/helpers/URLModifier";
+// import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthSignup",
@@ -174,7 +174,7 @@ export default {
         type: null,
         message: null,
       },
-      redirectURL: null,
+      redirectRoute: null,
     };
   },
   computed: {
@@ -199,8 +199,8 @@ export default {
   },
   created() {
     // get redirect url from params
-    const redirectURL = URLModifier.getURLParam("redirect_url");
-    this.redirectURL = redirectURL;
+    const redirectRoute = this?.$route?.query?.redirect_route;
+    this.redirectRoute = redirectRoute;
   },
   methods: {
     async handleSubmit(values) {
@@ -294,7 +294,7 @@ export default {
         type: "success",
         message: "Account Created. Redirecting..!",
       };
-      window.location = this.redirectURL ? this.redirectURL : "/";
+      this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
     },
   },
 };

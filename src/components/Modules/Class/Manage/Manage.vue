@@ -302,7 +302,7 @@ export default {
   },
   computed: {
     computedClassHomeLink() {
-      return `${window.location.origin}/classes/${this.classId}`;
+      return `/classes/${this.classId}`;
     },
     computedClassJoinLink() {
       return `${window.location.origin}/classes/${this.classId}/join`;
@@ -316,7 +316,7 @@ export default {
     this.pageLoading = true;
 
     // get current tab from url
-    const tab = URLModifier.getURLParam("tab");
+    const tab = this?.$route?.query?.tab;
     if (!tab) URLModifier.addToURL("tab", "students");
     if (["students", "topics"].includes(tab)) this.activeTab = tab;
 

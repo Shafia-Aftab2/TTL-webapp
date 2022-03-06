@@ -419,7 +419,7 @@ export default {
     this.pageLoading = true;
 
     // get current task type from url
-    const taskType = URLModifier.getURLParam("type");
+    const taskType = this?.$route?.query?.type;
     this.selectedTaskType = taskType;
     if (!taskType || taskType === TaskTypes.QUESTION_ANSWER) {
       URLModifier.addToURL("type", TaskTypes.CAPTION_THIS);

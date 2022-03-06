@@ -89,7 +89,7 @@ export default {
     this.classId = classId;
 
     // get status query param from url
-    const statusQueryParam = URLModifier.getURLParam("status");
+    const statusQueryParam = this?.$route?.query?.status;
     this.taskStatusQueryParam = statusQueryParam;
 
     // remove param from url

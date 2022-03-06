@@ -68,7 +68,7 @@
           <router-link
             class="auth-split-form-options-info-link"
             :to="`/auth/signup${
-              redirectURL ? `?redirect_url=${redirectURL}` : ''
+              redirectRoute ? `?redirect_route=${redirectRoute}` : ''
             }`"
           >
             Create Account
@@ -91,7 +91,7 @@ import { loginSchema } from "@/utils/validations/auth.validation";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
-import URLModifier from "@/utils/helpers/URLModifier";
+// import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthLogin",
@@ -104,7 +104,7 @@ export default {
         type: null,
         message: null,
       },
-      redirectURL: null,
+      redirectRoute: null,
     };
   },
   components: {
@@ -116,8 +116,8 @@ export default {
   },
   created() {
     // get redirect url from params
-    const redirectURL = URLModifier.getURLParam("redirect_url");
-    this.redirectURL = redirectURL;
+    const redirectRoute = this?.$route?.query?.redirect_route;
+    this.redirectRoute = redirectRoute;
   },
   methods: {
     isValidEmail(email) {
@@ -183,7 +183,7 @@ export default {
         type: "success",
         message: "Login Successfull. Redirecting..!",
       };
-      window.location = this.redirectURL ? this.redirectURL : "/";
+      this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
     },
     handleStoreMutation(key, value) {
       this.$store.state[key] = value;
