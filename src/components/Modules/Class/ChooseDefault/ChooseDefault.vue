@@ -27,8 +27,7 @@ export default {
     const user = authUser.getUser();
 
     // get user classes
-    const classes =
-      user?.schools?.length > 0 ? user?.schools[0]?.classes : null;
+    const classes = user?.schools?.[0]?.classes || null;
 
     // check if user has no classes
     if (!classes || classes?.length === 0) {
