@@ -32,7 +32,7 @@
         <!-- <p class="student-home-content-item-header">Practice Mode</p> -->
         <p class="student-home-content-item-header">Quiz Mode</p>
         <p class="student-home-content-item-description">
-          Do your own thing here.<br />Always remember: <br />Little, but often
+          Do your own thing here.<br />Always remember: <br />Little, but often!
         </p>
       </div>
     </div>

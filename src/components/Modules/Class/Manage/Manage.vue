@@ -257,7 +257,7 @@ import {
   TalkieTopicCard,
 } from "@/components/SubModules/Cards";
 import URLModifier from "@/utils/helpers/URLModifier";
-import { ClassService, TopicService } from "@/api/services";
+import { ClassService, TopicService, UserService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
 import {
   updateClassSchema,
@@ -266,6 +266,7 @@ import {
 import topicTypes from "@/utils/constants/topicTypes";
 import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "ClassManage",
@@ -502,7 +503,25 @@ export default {
         variant: "success",
         displayIcon: true,
       });
+      // update user profile data (+failure case)
+      const isProfileUpdated = await this.updateUserProfile();
+      if (!isProfileUpdated) return this.$router.push("/404");
       this.$router.push("/");
+    },
+    async updateUserProfile() {
+      // api call
+      const response = await UserService.GetMyProfile().catch();
+
+      // failure case
+      if (!response?.data) return false;
+
+      // success case
+      const expires = (date) => ({ expires: new Date(date) });
+      const nextDay = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toISOString();
+      authUser.setUser(response?.data, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
+      return true;
     },
     async handleStudentRemove() {
       // form data

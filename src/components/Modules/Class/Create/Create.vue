@@ -65,7 +65,7 @@ import {
   TalkieAlert,
 } from "@/components/UICore";
 import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
-import { ClassService } from "@/api/services";
+import { ClassService, UserService } from "@/api/services";
 import { createClassSchema } from "@/utils/validations/class.validation";
 import supportedLangugages from "@/utils/constants/supportedLangugages";
 import authUser from "@/utils/helpers/auth";
@@ -158,7 +158,25 @@ export default {
         message: "Class Created. Redirecting..!",
       };
       const classId = response?.data?.id;
+      // update user profile data (+failure case)
+      const isProfileUpdated = await this.updateUserProfile();
+      if (!isProfileUpdated) return this.$router.push("/404");
       this.$router.push(`/classes/${classId}/choose-topics`);
+    },
+    async updateUserProfile() {
+      // api call
+      const response = await UserService.GetMyProfile().catch();
+
+      // failure case
+      if (!response?.data) return false;
+
+      // success case
+      const expires = (date) => ({ expires: new Date(date) });
+      const nextDay = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toISOString();
+      authUser.setUser(response?.data, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
+      return true;
     },
   },
 };
