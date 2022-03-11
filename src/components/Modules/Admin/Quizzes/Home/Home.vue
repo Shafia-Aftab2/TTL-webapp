@@ -17,6 +17,16 @@
         </talkie-button-drop-down>
       </div>
 
+      <talkie-switch
+        :checkLabel="`Showing ${
+          !showActiveTasks ? 'Active' : 'Inactive'
+        } Tasks`"
+        :uncheckLabel="`Showing ${
+          showActiveTasks ? 'Active' : 'Inactive'
+        } Tasks`"
+        :onToggle="handleActiveTasksToggleChange"
+      />
+
       <div
         :class="[
           'class-quizzes-home-content-wrapper',
@@ -112,6 +122,7 @@ import {
   TalkieButtonDropDown,
   TalkieBackDropLoader,
   TalkieChip,
+  TalkieSwitch,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { TaskService, TaskTemplateService } from "@/api/services";
@@ -128,6 +139,7 @@ export default {
     TalkieLoader,
     TalkieBackDropLoader,
     TalkieChip,
+    TalkieSwitch,
     TalkieQuestionCard,
   },
   data() {
@@ -163,42 +175,46 @@ export default {
       loading: false,
       backdropLoading: false,
       TaskTypes: TaskTypes,
+      showActiveTasks: true,
     };
   },
   async created() {
-    // update page state
-    this.loading = true;
-
-    // class tasks
-    const classTasks = await this.getTaskTemplates();
-
-    this.classTasks = (classTasks?.results || [])
-      ?.filter((x) => x.type !== TaskTypes.QUESTION_ANSWER)
-      .map((x) => ({
-        id: x.id,
-        type: x.type,
-        title: x.title,
-        isActive: x?.isActive,
-        topic: x.topic.name,
-        description: x.questionText,
-        isForPractice: x?.isPracticeMode,
-        ...(x.type === TaskTypes.CAPTION_THIS && {
-          image: x.captionThisImage,
-        }),
-        ...(x.type === TaskTypes.TRANSLATION && {
-          translation: {
-            textToTranslate: x?.textToTranslate,
-            translatedText: x?.answer,
-          },
-        }),
-        ...(x.type === TaskTypes.EMOJI_STORY && {
-          emojiStory: x?.emojiStory,
-        }),
-      }));
-
-    this.loading = false;
+    await this.handleLoadSequence();
   },
   methods: {
+    async handleLoadSequence() {
+      // update page state
+      this.loading = true;
+
+      // class tasks
+      const classTasks = await this.getTaskTemplates(this.showActiveTasks);
+
+      this.classTasks = (classTasks?.results || [])
+        ?.filter((x) => x.type !== TaskTypes.QUESTION_ANSWER)
+        .map((x) => ({
+          id: x.id,
+          type: x.type,
+          title: x.title,
+          isActive: x?.isActive,
+          topic: x.topic.name,
+          description: x.questionText,
+          isForPractice: x?.isPracticeMode,
+          ...(x.type === TaskTypes.CAPTION_THIS && {
+            image: x.captionThisImage,
+          }),
+          ...(x.type === TaskTypes.TRANSLATION && {
+            translation: {
+              textToTranslate: x?.textToTranslate,
+              translatedText: x?.answer,
+            },
+          }),
+          ...(x.type === TaskTypes.EMOJI_STORY && {
+            emojiStory: x?.emojiStory,
+          }),
+        }));
+
+      this.loading = false;
+    },
     handleRedirection(link, timeout = 100) {
       const self = this;
       setTimeout(function () {
@@ -265,6 +281,10 @@ export default {
       });
       this.classTasks = this.classTasks?.filter((x) => x?.id !== id);
     },
+    async handleActiveTasksToggleChange() {
+      this.showActiveTasks = !this.showActiveTasks;
+      await this.handleLoadSequence();
+    },
     handleTopicDeleteDialogClose() {
       this.taskToDelete = null;
     },
@@ -280,10 +300,11 @@ export default {
 
       return response?.data || null;
     },
-    async getTaskTemplates() {
+    async getTaskTemplates(isActive) {
       const query = {
         isPracticeMode: true,
         limit: 1000,
+        isActive,
       };
 
       const response = await TaskTemplateService.QueryTaskTemplates(
