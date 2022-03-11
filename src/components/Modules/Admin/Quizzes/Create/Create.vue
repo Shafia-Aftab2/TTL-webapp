@@ -592,6 +592,7 @@ export default {
         topic: topicId,
         type: this.selectedTaskType,
         ...taskSpecificFields,
+        isPracticeMode: true,
       };
       if (questionText) payload.questionText = questionText;
 

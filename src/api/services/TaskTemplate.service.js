@@ -5,9 +5,9 @@ export default class TaskTemplateRoutes {
     return HTTPClient.post(`/task-templates/`, payload);
   }
 
-  static async QueryTaskTemplates(classId, query) {
+  static async QueryTaskTemplates(query) {
     return HTTPClient.get(
-      `/task-templates/${classId}?${Object.entries(query)
+      `/task-templates/?${Object.entries(query)
         .map(([key, value]) => `${key}=${encodeURIComponent(value)}&`)
         .join("")}`
     );
