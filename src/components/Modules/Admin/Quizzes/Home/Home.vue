@@ -99,7 +99,7 @@ import {
   TalkieBackDropLoader,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
-import { TaskService } from "@/api/services";
+import { TaskService, TaskTemplateService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import { notifications } from "@/components/UIActions";
 import handleSidebarItemsMutation from "../../_common/mixins/handleSidebarItemsMutation";
@@ -154,10 +154,9 @@ export default {
     this.loading = true;
 
     // class tasks
-    const classTasks = await this.getTasksFromAllClasses();
-    if (!classTasks) return this.$router.push("/404");
+    const classTasks = await this.getTaskTemplates();
 
-    this.classTasks = classTasks.results
+    this.classTasks = (classTasks?.results || [])
       ?.filter((x) => x.type !== TaskTypes.QUESTION_ANSWER)
       .map((x) => ({
         id: x.id,
@@ -231,7 +230,19 @@ export default {
         () => null
       );
 
-      return response.data || null;
+      return response?.data || null;
+    },
+    async getTaskTemplates() {
+      const query = {
+        isPracticeMode: true,
+        limit: 1000,
+      };
+
+      const response = await TaskTemplateService.QueryTaskTemplates(
+        query
+      ).catch(() => null);
+
+      return response?.data || null;
     },
   },
 };
