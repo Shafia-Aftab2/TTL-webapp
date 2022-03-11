@@ -326,7 +326,7 @@ import {
   createTranslationTopicSchema,
   createEmojiStoryTopicSchema,
 } from "@/utils/validations/task.validation";
-import { FileService, GeneralTaskService, TopicService } from "@/api/services";
+import { FileService, TaskTemplateService, TopicService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
@@ -596,7 +596,7 @@ export default {
       if (questionText) payload.questionText = questionText;
 
       // api call
-      const response = await GeneralTaskService.Create(payload).catch((e) => {
+      const response = await TaskTemplateService.Create(payload).catch((e) => {
         const errorMap = {
           ['"title" contains bad word']: "Title should not be unethical..!",
           ['"questiontext" contains bad word']:
