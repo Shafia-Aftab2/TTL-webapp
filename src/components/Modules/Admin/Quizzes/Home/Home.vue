@@ -47,7 +47,7 @@
               :description="_question.description"
               :manageModeOptions="{
                 canEdit: false,
-                canDelete: true,
+                canDelete: false,
               }"
               :centered="false"
               :hoverAnimation="true"
@@ -73,7 +73,21 @@
               "
               :onEditClick="() => handleTopicCardEditClick(_question.id)"
               :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
-            />
+            >
+              <template v-slot:action-buttons>
+                <talkie-chip
+                  :label="_question.isActive ? 'Make Inactive' : 'Make Active'"
+                  :variant="'danger'"
+                  :onClick="
+                    async () =>
+                      await handleTaskTemplateStatusChange(
+                        _question.id,
+                        !_question.isActive
+                      )
+                  "
+                />
+              </template>
+            </talkie-question-card>
           </template>
         </template>
       </div>
@@ -97,6 +111,7 @@ import {
   TalkieLoader,
   TalkieButtonDropDown,
   TalkieBackDropLoader,
+  TalkieChip,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { TaskService, TaskTemplateService } from "@/api/services";
@@ -112,6 +127,7 @@ export default {
     TalkieButtonDropDown,
     TalkieLoader,
     TalkieBackDropLoader,
+    TalkieChip,
     TalkieQuestionCard,
   },
   data() {
@@ -162,6 +178,7 @@ export default {
         id: x.id,
         type: x.type,
         title: x.title,
+        isActive: x?.isActive,
         topic: x.topic.name,
         description: x.questionText,
         isForPractice: x?.isPracticeMode,
@@ -216,6 +233,37 @@ export default {
         displayIcon: true,
       });
       this.classTasks = this.classTasks?.filter((x) => x?.id !== taskId);
+    },
+    async handleTaskTemplateStatusChange(id, newStatus) {
+      const taskId = id;
+      this.backdropLoading = true;
+
+      // api payload
+      const payload = { isActive: newStatus };
+
+      // api call
+      const response = await TaskTemplateService.UpdateStatus(
+        taskId,
+        payload
+      ).catch(() => null);
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Failed To Update Task Status..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Task Status Updated Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.classTasks = this.classTasks?.filter((x) => x?.id !== id);
     },
     handleTopicDeleteDialogClose() {
       this.taskToDelete = null;

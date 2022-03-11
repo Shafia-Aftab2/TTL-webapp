@@ -12,4 +12,8 @@ export default class TaskTemplateRoutes {
         .join("")}`
     );
   }
+
+  static async UpdateStatus(taskId, payload) {
+    return HTTPClient.patch(`/task-templates/${taskId}/status`, payload);
+  }
 }
