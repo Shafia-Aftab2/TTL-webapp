@@ -24,6 +24,8 @@
 </template>
 <script>
 import { TalkieInput, TalkieButton } from "@/components/UICore";
+import isValidId from "@/utils/helpers/isValidId";
+import isValidURL from "@/utils/helpers/isValidURL";
 
 export default {
   name: "ClassJoinModule",
@@ -38,15 +40,15 @@ export default {
   },
   components: { TalkieInput, TalkieButton },
   methods: {
-    validURL(url = "") {
-      return url.match(
-        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
-      );
-    },
     handleUrlChange(e) {
       this.joinClassLink = e.target.value.trim();
     },
     handleJoinClassClick() {
+      this.formState = {
+        type: null,
+        message: null,
+      };
+
       const url = this.joinClassLink?.trim();
 
       // validate if there is a url
@@ -59,7 +61,8 @@ export default {
       }
 
       // validate if url is valid
-      if (!this.validURL(url)) {
+      const classId = url?.split("/classes/")?.[1]?.split("/join")?.[0];
+      if (!(isValidURL(url) && isValidId(classId))) {
         this.formState = {
           type: "error",
           message: "Invalid URL..!",
@@ -67,8 +70,8 @@ export default {
         return;
       }
 
-      // redirect to url
-      window.location = url;
+      // redirect to join class page
+      this.$router.push(`/classes/${classId}/join`);
     },
   },
 };
