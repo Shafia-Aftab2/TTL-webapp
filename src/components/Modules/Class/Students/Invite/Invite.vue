@@ -37,7 +37,7 @@
 import { TalkieInput, TalkieButton } from "@/components/UICore";
 import { notifications } from "@/components/UIActions";
 import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
-import { getOrigin } from "@/utils/helpers/URLModifier";
+import { getDomain } from "@/utils/helpers/URLModifier";
 
 export default {
   name: "InviteStudents",
@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     computedClassLink() {
-      return `${getOrigin()}/classes/${this.classId}/join`;
+      return `${getDomain()}/classes/${this.classId}/join`;
     },
   },
   created() {

@@ -41,6 +41,8 @@ const getURLParam = (queryParamName) => {
 
 const getOrigin = () => window.location.origin;
 
+const getDomain = () => window.location.origin;
+
 const getHref = () => window.location.href;
 
 const getPathname = () => window.location.pathname;
@@ -52,6 +54,7 @@ export {
   removeFromURL,
   getURLParam,
   getOrigin,
+  getDomain,
   getHref,
   getPathname,
   getSearchParams,
@@ -62,6 +65,7 @@ export default {
   removeFromURL,
   getURLParam,
   getOrigin,
+  getDomain,
   getHref,
   getPathname,
   getSearchParams,

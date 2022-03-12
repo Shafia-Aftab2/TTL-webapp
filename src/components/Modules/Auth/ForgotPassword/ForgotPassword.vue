@@ -55,7 +55,7 @@ import {
 import { AuthService } from "@/api/services";
 import { forgotPasswordSchema } from "@/utils/validations/auth.validation";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
-import { getOrigin } from "@/utils/helpers/URLModifier";
+import { getDomain } from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthForgotPassword",
@@ -78,7 +78,7 @@ export default {
     };
   },
   created() {
-    const clientRedirectURI = `${getOrigin()}/auth/reset-password`;
+    const clientRedirectURI = `${getDomain()}/auth/reset-password`;
     this.clientRedirectURI = clientRedirectURI;
   },
   methods: {
