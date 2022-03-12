@@ -17,6 +17,16 @@
         </talkie-button-drop-down>
       </div>
 
+      <talkie-switch
+        :checkLabel="`Showing ${
+          !showActiveTasks ? 'Active' : 'Inactive'
+        } Tasks`"
+        :uncheckLabel="`Showing ${
+          showActiveTasks ? 'Active' : 'Inactive'
+        } Tasks`"
+        :onToggle="handleActiveTasksToggleChange"
+      />
+
       <div
         :class="[
           'class-quizzes-home-content-wrapper',
@@ -47,7 +57,7 @@
               :description="_question.description"
               :manageModeOptions="{
                 canEdit: false,
-                canDelete: true,
+                canDelete: false,
               }"
               :centered="false"
               :hoverAnimation="true"
@@ -73,7 +83,21 @@
               "
               :onEditClick="() => handleTopicCardEditClick(_question.id)"
               :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
-            />
+            >
+              <template v-slot:action-buttons>
+                <talkie-chip
+                  :label="_question.isActive ? 'Make Inactive' : 'Make Active'"
+                  :variant="'danger'"
+                  :onClick="
+                    async () =>
+                      await handleTaskTemplateStatusChange(
+                        _question.id,
+                        !_question.isActive
+                      )
+                  "
+                />
+              </template>
+            </talkie-question-card>
           </template>
         </template>
       </div>
@@ -97,9 +121,11 @@ import {
   TalkieLoader,
   TalkieButtonDropDown,
   TalkieBackDropLoader,
+  TalkieChip,
+  TalkieSwitch,
 } from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
-import { TaskService } from "@/api/services";
+import { TaskService, TaskTemplateService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import { notifications } from "@/components/UIActions";
 import handleSidebarItemsMutation from "../../_common/mixins/handleSidebarItemsMutation";
@@ -112,6 +138,8 @@ export default {
     TalkieButtonDropDown,
     TalkieLoader,
     TalkieBackDropLoader,
+    TalkieChip,
+    TalkieSwitch,
     TalkieQuestionCard,
   },
   data() {
@@ -147,42 +175,46 @@ export default {
       loading: false,
       backdropLoading: false,
       TaskTypes: TaskTypes,
+      showActiveTasks: true,
     };
   },
   async created() {
-    // update page state
-    this.loading = true;
-
-    // class tasks
-    const classTasks = await this.getTasksFromAllClasses();
-    if (!classTasks) return this.$router.push("/404");
-
-    this.classTasks = classTasks.results
-      ?.filter((x) => x.type !== TaskTypes.QUESTION_ANSWER)
-      .map((x) => ({
-        id: x.id,
-        type: x.type,
-        title: x.title,
-        topic: x.topic.name,
-        description: x.questionText,
-        isForPractice: x?.isPracticeMode,
-        ...(x.type === TaskTypes.CAPTION_THIS && {
-          image: x.captionThisImage,
-        }),
-        ...(x.type === TaskTypes.TRANSLATION && {
-          translation: {
-            textToTranslate: x?.textToTranslate,
-            translatedText: x?.answer,
-          },
-        }),
-        ...(x.type === TaskTypes.EMOJI_STORY && {
-          emojiStory: x?.emojiStory,
-        }),
-      }));
-
-    this.loading = false;
+    await this.handleLoadSequence();
   },
   methods: {
+    async handleLoadSequence() {
+      // update page state
+      this.loading = true;
+
+      // class tasks
+      const classTasks = await this.getTaskTemplates(this.showActiveTasks);
+
+      this.classTasks = (classTasks?.results || [])
+        ?.filter((x) => x.type !== TaskTypes.QUESTION_ANSWER)
+        .map((x) => ({
+          id: x.id,
+          type: x.type,
+          title: x.title,
+          isActive: x?.isActive,
+          topic: x.topic.name,
+          description: x.questionText,
+          isForPractice: x?.isPracticeMode,
+          ...(x.type === TaskTypes.CAPTION_THIS && {
+            image: x.captionThisImage,
+          }),
+          ...(x.type === TaskTypes.TRANSLATION && {
+            translation: {
+              textToTranslate: x?.textToTranslate,
+              translatedText: x?.answer,
+            },
+          }),
+          ...(x.type === TaskTypes.EMOJI_STORY && {
+            emojiStory: x?.emojiStory,
+          }),
+        }));
+
+      this.loading = false;
+    },
     handleRedirection(link, timeout = 100) {
       const self = this;
       setTimeout(function () {
@@ -218,6 +250,41 @@ export default {
       });
       this.classTasks = this.classTasks?.filter((x) => x?.id !== taskId);
     },
+    async handleTaskTemplateStatusChange(id, newStatus) {
+      const taskId = id;
+      this.backdropLoading = true;
+
+      // api payload
+      const payload = { isActive: newStatus };
+
+      // api call
+      const response = await TaskTemplateService.UpdateStatus(
+        taskId,
+        payload
+      ).catch(() => null);
+
+      // failure case
+      if (!response) {
+        this.backdropLoading = false;
+        notifications.show("Failed To Update Task Status..!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      notifications.show("Task Status Updated Successfully..!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      this.classTasks = this.classTasks?.filter((x) => x?.id !== id);
+    },
+    async handleActiveTasksToggleChange() {
+      this.showActiveTasks = !this.showActiveTasks;
+      await this.handleLoadSequence();
+    },
     handleTopicDeleteDialogClose() {
       this.taskToDelete = null;
     },
@@ -231,7 +298,20 @@ export default {
         () => null
       );
 
-      return response.data || null;
+      return response?.data || null;
+    },
+    async getTaskTemplates(isActive) {
+      const query = {
+        isPracticeMode: true,
+        limit: 1000,
+        isActive,
+      };
+
+      const response = await TaskTemplateService.QueryTaskTemplates(
+        query
+      ).catch(() => null);
+
+      return response?.data || null;
     },
   },
 };

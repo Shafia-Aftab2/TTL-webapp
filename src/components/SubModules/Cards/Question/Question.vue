@@ -80,6 +80,7 @@
         :variant="'neutral'"
         v-if="manageModeOptions.isForPractice"
       />
+      <slot name="action-buttons"></slot>
     </div>
     <question-card-expand-content
       :translation="expandContent.translation"
