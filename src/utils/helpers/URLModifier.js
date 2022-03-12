@@ -1,12 +1,12 @@
 const _getParams = () => {
-  return new URLSearchParams(window.location.search);
+  return new URLSearchParams(getSearchParams());
 };
 
 const _updateURL = (newParams) => {
   const _sanitizedNewParams =
     newParams.toString().length > 0 ? "?" + newParams.toString() : "";
 
-  const newRelativePathQuery = window.location.pathname + _sanitizedNewParams;
+  const newRelativePathQuery = getPathname() + _sanitizedNewParams;
 
   history.pushState(null, "", newRelativePathQuery);
 };
@@ -39,6 +39,30 @@ const getURLParam = (queryParamName) => {
   return searchParams.get(queryParamName);
 };
 
-export { addToURL, removeFromURL, getURLParam };
+const getOrigin = () => window.location.origin;
 
-export default { addToURL, removeFromURL, getURLParam };
+const getHref = () => window.location.href;
+
+const getPathname = () => window.location.pathname;
+
+const getSearchParams = () => window.location.search;
+
+export {
+  addToURL,
+  removeFromURL,
+  getURLParam,
+  getOrigin,
+  getHref,
+  getPathname,
+  getSearchParams,
+};
+
+export default {
+  addToURL,
+  removeFromURL,
+  getURLParam,
+  getOrigin,
+  getHref,
+  getPathname,
+  getSearchParams,
+};

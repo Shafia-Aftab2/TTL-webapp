@@ -306,7 +306,7 @@ export default {
       return `/classes/${this.classId}`;
     },
     computedClassJoinLink() {
-      return `${window.location.origin}/classes/${this.classId}/join`;
+      return `${URLModifier.getOrigin()}/classes/${this.classId}/join`;
     },
     computedPageLoading() {
       return this.pageLoading;
