@@ -41,7 +41,7 @@ const getURLParam = (queryParamName) => {
 
 const getOrigin = () => window.location.origin;
 
-const getDomain = () => window.location.origin;
+const getDomain = () => window.location.origin; // NOTE: will reflect domain or file hosting
 
 const getHref = () => window.location.href;
 
