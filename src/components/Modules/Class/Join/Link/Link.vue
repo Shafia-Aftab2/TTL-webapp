@@ -9,9 +9,9 @@
           You are already a member of
           <router-link
             class="class-join-link-content-class-name"
-            :to="classDetails.link"
+            :to="classDetails?.link"
           >
-            {{ classDetails.name }}
+            {{ classDetails?.name }}
           </router-link>
         </h3>
 
@@ -34,9 +34,9 @@
           You are now a member of
           <router-link
             class="class-join-link-content-class-name"
-            :to="classDetails.link"
+            :to="classDetails?.link"
           >
-            {{ classDetails.name }}
+            {{ classDetails?.name }}
           </router-link>
         </h3>
         <h3 class="h3" v-if="!isJoined">Could not join class..!</h3>
@@ -130,45 +130,53 @@ export default {
     },
   },
   async created() {
-    // get class id from params
-    const classId = this.$route.params.id;
-    this.classId = classId;
-
-    // get user data
-    const user = authUser.getUser();
-
-    // check if user has joined a class
-    const joinedClassId =
-      user?.schools?.length > 0 && user?.schools[0]?.classes?.length > 0
-        ? user?.schools[0]?.classes[0]
-        : null;
-
-    // handle if class is already joined
-    if (joinedClassId === classId) {
-      this.pageLoading = true;
-      const classDetails = await this.getClassDetails(classId);
-      this.classDetails = classDetails;
-      this.classAlreadyJoined = true;
-      this.pageLoading = false;
-      return;
-    }
-
-    // handle join sequence if no class joined
-    if (!joinedClassId) {
-      await this.handleClassJoinSequence();
-      return;
-    }
-
-    // handle leave if already joined a class
-    this.pageLoading = true;
-    this.requiredClassIdToLeave = joinedClassId;
-    const classToLeaveDetails = await this.getClassDetails(
-      this.requiredClassIdToLeave
-    );
-    this.classToLeaveDetails = classToLeaveDetails;
-    this.pageLoading = false;
+    await this.handleLoadSequence();
   },
   methods: {
+    async handleLoadSequence() {
+      // update page state
+      this.pageLoading = true;
+
+      // get class id from params
+      const classId = this.$route.params.id;
+      this.classId = classId;
+
+      // get user data
+      const user = authUser.getUser();
+
+      // check if user has joined a class
+      const joinedClassId =
+        user?.schools?.length > 0 && user?.schools[0]?.classes?.length > 0
+          ? user?.schools[0]?.classes[0]
+          : null;
+
+      // handle if class is already joined
+      if (joinedClassId === classId) {
+        const classDetails = await this.getClassDetails(classId);
+        this.classDetails = {
+          id: classDetails?.id,
+          name: classDetails?.name,
+          link: `/classes/${classDetails?.id}`,
+        };
+        this.classAlreadyJoined = true;
+        this.pageLoading = false;
+        return;
+      }
+
+      // handle join sequence if no classx joined
+      if (!joinedClassId) {
+        await this.handleClassJoinSequence();
+        return;
+      }
+
+      // handle leave if already joined a class
+      this.requiredClassIdToLeave = joinedClassId;
+      const classToLeaveDetails = await this.getClassDetails(
+        this.requiredClassIdToLeave
+      );
+      this.classToLeaveDetails = classToLeaveDetails;
+      this.pageLoading = false;
+    },
     handleBackClick() {
       this.$router.go(-1);
     },
@@ -185,7 +193,7 @@ export default {
       return response?.data || null;
     },
     async getClassDetails(classId) {
-      const response = await ClassService.GetDetails(classId).catch();
+      const response = await ClassService.GetDetails(classId).catch(() => null);
 
       return response?.data || null;
     },
@@ -238,9 +246,9 @@ export default {
       authUser.setUser(responseProfile, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
       const classDetails = responseJoin.data;
       this.classDetails = {
-        id: classDetails.id,
-        name: classDetails.name,
-        link: `/classes/${classDetails.id}`,
+        id: classDetails?.id,
+        name: classDetails?.name,
+        link: `/classes/${classDetails?.id}`,
       };
       this.isJoined = true;
       this.pageLoading = false;
