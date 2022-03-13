@@ -59,6 +59,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { notifications } from "@/components/UIActions";
 import authUser from "@/utils/helpers/auth";
 import subscriptionStatus from "@/utils/constants/subscriptionStatus";
+import { getDomain } from "@/utils/helpers/URLModifier";
 
 export default {
   name: "ServicesUpgrade",
@@ -136,7 +137,7 @@ export default {
         // setup options
         const confirmSetupOptions = {
           elements,
-          confirmParams: { return_url: window.location.origin },
+          confirmParams: { return_url: getDomain() },
           redirect: "if_required",
         };
 

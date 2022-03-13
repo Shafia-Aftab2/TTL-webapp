@@ -46,7 +46,9 @@ export default {
       const payload = { refreshToken };
 
       // api call
-      await AuthService.Logout(payload).then().catch();
+      await AuthService.Logout(payload)
+        .then(() => null)
+        .catch(() => null);
 
       // update page state
       this.loading = false;
