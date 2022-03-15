@@ -1,6 +1,6 @@
 import roles from "./roles";
-import supportedLangugages from "./supportedLangugages";
+import supportedLanguages from "./supportedLanguages";
 import filePurposes from "./filePurposes";
 import taskTypes from "./taskTypes";
 
-export { roles, supportedLangugages, filePurposes, taskTypes };
+export { roles, supportedLanguages, filePurposes, taskTypes };

@@ -128,13 +128,13 @@ export default {
     const classId = this.$route.params.id;
     this.classId = classId;
 
-    // get topics list (+ failure case)
-    const topicsList = await this.getTopicsList();
-    if (!topicsList) return this.$router.push("/404");
-
     // class details (+ failure case)
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
+
+    // get topics list (+ failure case)
+    const topicsList = await this.getTopicsList(classDetails?.language);
+    if (!topicsList) return this.$router.push("/404");
 
     // success case
     this.topicsList = {
@@ -208,8 +208,10 @@ export default {
       };
       this.$router.push(`/classes/${classId}/students/invite`);
     },
-    async getTopicsList() {
-      const query = {};
+    async getTopicsList(language) {
+      const query = {
+        ...(language && { language }),
+      };
 
       const response = await TopicService.Query(query).catch(() => null);
 

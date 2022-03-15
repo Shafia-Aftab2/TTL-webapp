@@ -330,7 +330,7 @@ export default {
     if (!classDetails) return this.$router.push("/404");
 
     // get topics list (+ failure case)
-    const topicsList = await this.getTopicsList();
+    const topicsList = await this.getTopicsList(classDetails?.language);
     if (!topicsList) return this.$router.push("/404");
 
     // success case
@@ -470,8 +470,8 @@ export default {
 
       return response.data || null;
     },
-    async getTopicsList() {
-      const query = {};
+    async getTopicsList(language) {
+      const query = { ...(language && { language }) };
 
       const response = await TopicService.Query(query).catch(() => null);
 

@@ -186,7 +186,7 @@ export default {
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
     },
     handleStoreMutation(key, value) {
-      this.$store?.state[key] = value;
+      this.$store.state[key] = value;
     },
   },
 };
