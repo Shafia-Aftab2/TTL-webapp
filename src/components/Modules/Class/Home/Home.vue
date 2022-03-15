@@ -292,9 +292,6 @@ export default {
       const classTasks = await this.getClassTasks(classId);
       if (!classTasks) return this.$router.push("/404");
 
-      console.log("==Choose Topics==");
-      console.log("classDetails => ", classDetails);
-      console.log("classDetails.id => ", classDetails.id);
       // class topics
       const classTopics = await this.getClassTopics(classDetails?.language);
       if (!classTopics) return this.$router.push("/404");
