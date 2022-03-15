@@ -61,7 +61,7 @@ export default {
       this.$router.push("/auth/login");
     },
     handleStoreMutation(key, value) {
-      this.$store.state[key] = value;
+      this.$store?.state[key] = value;
     },
   },
 };

@@ -150,13 +150,13 @@ export default {
 
         return {
           error:
-            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[e?.response?.data?.message?.toLowerCase()] ||
             "Could not login..!",
         };
       });
 
       // failure case
-      if (response.error) {
+      if (response?.error) {
         this.loading = false;
         this.formStatus = {
           type: "error",
@@ -166,17 +166,17 @@ export default {
       }
 
       // success case
-      const { user, tokens } = response.data;
+      const { user, tokens } = response?.data;
       this.handleStoreMutation("user", user);
       const expires = (date) => ({ expires: new Date(date) });
-      authUser.setUser(user, expires(tokens.refresh.expiry));
+      authUser.setUser(user, expires(tokens?.refresh?.expiry));
       authUser.setAccessToken(
-        tokens.access.token,
-        expires(tokens.access.expiry)
+        tokens?.access?.token,
+        expires(tokens?.access?.expiry)
       );
       authUser.setRefreshToken(
-        tokens.refresh.token,
-        expires(tokens.refresh.expiry)
+        tokens?.refresh?.token,
+        expires(tokens?.refresh?.expiry)
       );
       this.loading = false;
       this.formStatus = {
@@ -186,7 +186,7 @@ export default {
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
     },
     handleStoreMutation(key, value) {
-      this.$store.state[key] = value;
+      this.$store?.state[key] = value;
     },
   },
 };

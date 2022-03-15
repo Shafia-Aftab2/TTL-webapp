@@ -106,7 +106,7 @@ export default {
 
         return {
           error:
-            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[e?.response?.data?.message?.toLowerCase()] ||
             "Could not make reset password request..!",
         };
       });
