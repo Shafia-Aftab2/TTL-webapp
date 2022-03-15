@@ -21,13 +21,14 @@
     <ul class="talkie-navbar-links-wrapper" v-if="!hideLinksAndProfile">
       <template v-if="computedIsLoggedIn">
         <template v-if="!hideLinks" class="talkie-navbar">
-          <li class="talkie-navbar-link-item" v-for="link in links" :key="link">
-            <a
-              :href="link.url"
+          <template v-for="link in links" :key="link">
+            <li
+              class="talkie-navbar-link-item"
               v-if="link?.displayForRoles?.includes(computedUser.role)"
-              >{{ link.text }}</a
             >
-          </li>
+              <a :href="link.url">{{ link.text }}</a>
+            </li>
+          </template>
         </template>
         <li class="talkie-navbar-profile-link-item">
           <div class="talkie-navbar-profile-wrapper" tabindex="0">
@@ -54,18 +55,16 @@
                 <li class="talkie-navbar-profile-options-list-item">
                   <router-link to="/profile/self">Profile</router-link>
                 </li>
-                <li
-                  class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
-                  v-for="link in links"
-                  :key="link.text"
-                >
-                  <router-link
-                    :to="link.url"
+                <template v-for="link in links" :key="link.text">
+                  <li
+                    class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
                     v-if="link?.displayForRoles?.includes(computedUser.role)"
                   >
-                    {{ link.text }}
-                  </router-link>
-                </li>
+                    <router-link :to="link.url">
+                      {{ link.text }}
+                    </router-link>
+                  </li>
+                </template>
                 <li class="talkie-navbar-profile-options-list-item">
                   <router-link to="/auth/logout">Logout</router-link>
                 </li>
