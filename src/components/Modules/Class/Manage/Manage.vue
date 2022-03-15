@@ -107,7 +107,9 @@
 
       <!-- Topics tab -->
       <template v-if="activeTab === 'topics'">
-        <h4 class="h4">Intermediate / Advanced</h4>
+        <h4 class="h4" v-if="topicsList?.advanced?.length > 0">
+          Intermediate / Advanced
+        </h4>
         <talkie-topic-card
           v-for="_topic in topicsList.advanced"
           :key="_topic"
@@ -120,7 +122,9 @@
           "
         />
 
-        <h4 class="h4">Beginners / Intermediate</h4>
+        <h4 class="h4" v-if="topicsList?.intermediate?.length > 0">
+          Beginners / Intermediate
+        </h4>
         <talkie-topic-card
           v-for="_topic in topicsList.intermediate"
           :key="_topic"
@@ -133,7 +137,7 @@
           "
         />
 
-        <h4 class="h4">Beginners</h4>
+        <h4 class="h4" v-if="topicsList?.beginner?.length > 0">Beginners</h4>
         <talkie-topic-card
           v-for="_topic in topicsList.beginner"
           :key="_topic"
