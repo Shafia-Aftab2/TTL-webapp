@@ -67,7 +67,7 @@ import {
 import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
 import { ClassService, UserService } from "@/api/services";
 import { createClassSchema } from "@/utils/validations/class.validation";
-import supportedLangugages from "@/utils/constants/supportedLangugages";
+import supportedLanguages from "@/utils/constants/supportedLanguages";
 import authUser from "@/utils/helpers/auth";
 
 export default {
@@ -83,7 +83,7 @@ export default {
   data() {
     return {
       createClassSchema: createClassSchema,
-      languageList: [...Object.values(supportedLangugages)],
+      languageList: [...Object.values(supportedLanguages)],
       schoolId: null,
       loading: false,
       formStatus: {

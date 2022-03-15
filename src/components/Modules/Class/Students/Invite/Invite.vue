@@ -38,6 +38,7 @@ import { TalkieInput, TalkieButton } from "@/components/UICore";
 import { notifications } from "@/components/UIActions";
 import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
 import { getDomain } from "@/utils/helpers/URLModifier";
+import { taskTypes } from "@/utils/constants";
 
 export default {
   name: "InviteStudents",
@@ -80,7 +81,11 @@ export default {
       this.isCopiedToClipboard = true;
     },
     handleNextButtonClick() {
-      this.$router.push(`/classes/${this.classId}/tasks/create?type=Q&A`);
+      this.$router.push(
+        `/classes/${this.classId}/tasks/create?type=${encodeURIComponent(
+          taskTypes.QUESTION_ANSWER
+        )}`
+      );
     },
   },
 };

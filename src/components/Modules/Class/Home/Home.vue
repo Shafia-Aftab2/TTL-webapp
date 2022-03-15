@@ -293,7 +293,7 @@ export default {
       if (!classTasks) return this.$router.push("/404");
 
       // class topics
-      const classTopics = await this.getClassTopics(classId);
+      const classTopics = await this.getClassTopics(classDetails?.language);
       if (!classTopics) return this.$router.push("/404");
 
       // success case
@@ -516,12 +516,12 @@ export default {
 
       return response.data || null;
     },
-    async getClassTopics() {
-      const query = {};
+    async getClassTopics(language) {
+      const query = { ...(language && { language }) };
 
       const response = await TopicService.Query(query).catch(() => null);
 
-      return !!response.data ? response.data.results : null;
+      return !!response?.data ? response?.data?.results : null;
     },
   },
 };

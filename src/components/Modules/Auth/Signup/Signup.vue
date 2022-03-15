@@ -262,7 +262,7 @@ export default {
 
         return {
           error:
-            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[e?.response?.data?.message?.toLowerCase()] ||
             "Could not create account..!",
         };
       });
@@ -278,16 +278,16 @@ export default {
       }
 
       // success case
-      const { user, tokens } = response.data;
+      const { user, tokens } = response?.data;
       const expires = (date) => ({ expires: new Date(date) });
-      authUser.setUser(user, expires(tokens.refresh.expiry));
+      authUser.setUser(user, expires(tokens?.refresh?.expiry));
       authUser.setAccessToken(
-        tokens.access.token,
-        expires(tokens.access.expiry)
+        tokens?.access?.token,
+        expires(tokens?.access?.expiry)
       );
       authUser.setRefreshToken(
-        tokens.refresh.token,
-        expires(tokens.refresh.expiry)
+        tokens?.refresh?.token,
+        expires(tokens?.refresh?.expiry)
       );
       this.loading = false;
       this.formStatus = {

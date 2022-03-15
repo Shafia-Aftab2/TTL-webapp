@@ -16,7 +16,10 @@
       :customClass="'class-choose-topics-form'"
       :onSubmit="handleCustomFormValidation"
     >
-      <div class="class-choose-topics-sub-form">
+      <div
+        class="class-choose-topics-sub-form"
+        v-if="topicsList?.advanced?.length > 0"
+      >
         <h4 class="h4">Intermediate/Advanced</h4>
         <p class="p" style="margin-bottom: 0 !important">A Level</p>
         <!-- <p class="p" style="margin-bottom: 0 !important">GCSE Level</p> -->
@@ -33,7 +36,10 @@
           <talkie-loader :size="'large'" />
         </template>
       </div>
-      <div class="class-choose-topics-sub-form">
+      <div
+        class="class-choose-topics-sub-form"
+        v-if="topicsList?.intermediate?.length > 0"
+      >
         <h4 class="h4">Beginners/Intermediate</h4>
         <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
         <template v-if="!pageLoading">
@@ -49,7 +55,10 @@
           <talkie-loader :size="'large'" />
         </template>
       </div>
-      <div class="class-choose-topics-sub-form">
+      <div
+        class="class-choose-topics-sub-form"
+        v-if="topicsList?.beginner?.length > 0"
+      >
         <h4 class="h4">Beginners</h4>
         <p class="p" style="margin-bottom: 0 !important">KS3 Level</p>
         <template v-if="!pageLoading">
@@ -128,13 +137,13 @@ export default {
     const classId = this.$route.params.id;
     this.classId = classId;
 
-    // get topics list (+ failure case)
-    const topicsList = await this.getTopicsList();
-    if (!topicsList) return this.$router.push("/404");
-
     // class details (+ failure case)
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
+
+    // get topics list (+ failure case)
+    const topicsList = await this.getTopicsList(classDetails?.language);
+    if (!topicsList) return this.$router.push("/404");
 
     // success case
     this.topicsList = {
@@ -208,8 +217,10 @@ export default {
       };
       this.$router.push(`/classes/${classId}/students/invite`);
     },
-    async getTopicsList() {
-      const query = {};
+    async getTopicsList(language) {
+      const query = {
+        ...(language && { language }),
+      };
 
       const response = await TopicService.Query(query).catch(() => null);
 

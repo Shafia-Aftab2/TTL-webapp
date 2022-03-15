@@ -155,7 +155,7 @@ export default {
 
         return {
           error:
-            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[e?.response?.data?.message?.toLowerCase()] ||
             "Failed to change password..!",
         };
       });
