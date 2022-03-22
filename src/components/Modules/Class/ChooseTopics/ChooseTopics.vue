@@ -20,6 +20,15 @@
         class="class-choose-topics-sub-form"
         v-if="topicsList?.advanced?.length > 0"
       >
+        <h3 class="h3">
+          Topics are based on your class language
+          {{ classDetails?.language && `(${classDetails?.language})` }}.
+        </h3>
+      </div>
+      <div
+        class="class-choose-topics-sub-form"
+        v-if="topicsList?.advanced?.length > 0"
+      >
         <h4 class="h4">Intermediate/Advanced</h4>
         <p class="p" style="margin-bottom: 0 !important">A Level</p>
         <!-- <p class="p" style="margin-bottom: 0 !important">GCSE Level</p> -->
@@ -127,6 +136,7 @@ export default {
         type: null,
         message: null,
       },
+      classDetails: {},
     };
   },
   async created() {
@@ -140,6 +150,7 @@ export default {
     // class details (+ failure case)
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
+    this.classDetails = classDetails;
 
     // get topics list (+ failure case)
     const topicsList = await this.getTopicsList(classDetails?.language);
