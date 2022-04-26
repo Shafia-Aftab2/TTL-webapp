@@ -190,25 +190,25 @@ export default {
       const classTasks = await this.getTaskTemplates(this.showActiveTasks);
 
       this.classTasks = (classTasks?.results || [])
-        ?.filter((x) => x.type !== TaskTypes.QUESTION_ANSWER)
+        ?.filter((x) => x?.type !== TaskTypes.QUESTION_ANSWER)
         .map((x) => ({
-          id: x.id,
-          type: x.type,
-          title: x.title,
+          id: x?.id,
+          type: x?.type,
+          title: x?.title,
           isActive: x?.isActive,
-          topic: x.topic.name,
-          description: x.questionText,
+          topic: x?.topic?.name,
+          description: x?.questionText,
           isForPractice: x?.isPracticeMode,
-          ...(x.type === TaskTypes.CAPTION_THIS && {
-            image: x.captionThisImage,
+          ...(x?.type === TaskTypes.CAPTION_THIS && {
+            image: x?.captionThisImage,
           }),
-          ...(x.type === TaskTypes.TRANSLATION && {
+          ...(x?.type === TaskTypes.TRANSLATION && {
             translation: {
               textToTranslate: x?.textToTranslate,
               translatedText: x?.answer,
             },
           }),
-          ...(x.type === TaskTypes.EMOJI_STORY && {
+          ...(x?.type === TaskTypes.EMOJI_STORY && {
             emojiStory: x?.emojiStory,
           }),
         }));
