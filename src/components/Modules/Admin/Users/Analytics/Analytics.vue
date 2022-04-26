@@ -49,9 +49,13 @@
       </div>
 
       <!-- Footer -->
-      <!-- <talkie-button :onClick="handleUserRemoveClick" :loading="isRemovingUser">
+      <talkie-button
+        :variant="'primary'"
+        :onClick="handleUserRemoveClick"
+        :loading="isRemovingUser"
+      >
         Remove User
-      </talkie-button> -->
+      </talkie-button>
     </template>
 
     <!-- Load wrapper -->
@@ -70,7 +74,7 @@
 import {
   TalkieLoader,
   TalkieBackDropLoader,
-  // TalkieButton,
+  TalkieButton,
 } from "@/components/UICore";
 import { UserService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
@@ -81,7 +85,7 @@ export default {
   name: "AdminUserDetails",
   mixins: [hanldeSidebarMutation],
   components: {
-    // TalkieButton,
+    TalkieButton,
     TalkieLoader,
     TalkieBackDropLoader,
   },
