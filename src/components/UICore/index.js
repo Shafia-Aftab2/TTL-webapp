@@ -6,6 +6,7 @@ import TalkieButtonDropDown from "./ButtonDropDown.vue";
 import TalkieInput from "./Input.vue";
 import TalkieInputEmojis from "./InputEmojis.vue";
 import TalkieSelect from "./Select.vue";
+import TalkieSelectGroup from "./SelectGroup.vue";
 import TalkieChip from "./Chip.vue";
 import TalkieSwitch from "./Switch.vue";
 import TalkieTab from "./Tab.vue";
@@ -29,6 +30,7 @@ export {
   TalkieInput,
   TalkieInputEmojis,
   TalkieSelect,
+  TalkieSelectGroup,
   TalkieChip,
   TalkieSwitch,
   TalkieTab,
