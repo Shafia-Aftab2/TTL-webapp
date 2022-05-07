@@ -21,10 +21,10 @@
 
       <div class="admin-create-quizzes-form">
         <!-- Common fields -->
-        <talkie-select
+        <talkie-select-group
           :name="'topic'"
           :placeholder="'Choose topic'"
-          :options="topics.map((x) => x.name)"
+          :options="topicsGrouped?.length > 0 ? topicsGrouped : []"
           :hint="{
             type: errors.topic ? 'error' : null,
             message: errors.topic ? errors.topic : null,
@@ -304,7 +304,7 @@
 <script>
 import {
   TalkieInput,
-  TalkieSelect,
+  TalkieSelectGroup,
   TalkieIcon,
   TalkieAlert,
   TalkieForm,
@@ -330,12 +330,13 @@ import { FileService, TaskTemplateService, TopicService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
+import topicTypes from "@/utils/constants/topicTypes";
 
 export default {
   name: "AdminCreateQuizzes",
   components: {
     TalkieInput,
-    TalkieSelect,
+    TalkieSelectGroup,
     TalkieIcon,
     TalkieAudioRecorder,
     TalkieAudioPlayer,
@@ -401,6 +402,7 @@ export default {
       selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),
       taskTypes: TaskTypes,
+      topicsGrouped: [],
     };
   },
   computed: {
@@ -432,6 +434,27 @@ export default {
 
     // success case
     this.topics = topicsList || [];
+    const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+    this.topicsGrouped = [
+      {
+        title: capitalize(topicTypes.ADVANCED),
+        items: topicsList
+          ?.filter((x) => x.type === topicTypes.ADVANCED)
+          ?.map((x) => x.name),
+      },
+      {
+        title: capitalize(topicTypes.INTERMEDIATE),
+        items: topicsList
+          ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x.name),
+      },
+      {
+        title: capitalize(topicTypes.BEGINNER),
+        items: topicsList
+          ?.filter((x) => x.type === topicTypes.BEGINNER)
+          ?.map((x) => x.name),
+      },
+    ];
     this.pageLoading = false;
   },
   methods: {

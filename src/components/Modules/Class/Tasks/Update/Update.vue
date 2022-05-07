@@ -14,10 +14,10 @@
     >
       <h2 class="class-update-convo-header h2">Edit Task</h2>
       <div class="class-update-convo-form">
-        <talkie-select
+        <talkie-select-group
           :name="'topic'"
           :placeholder="'Choose topic'"
-          :options="topics.map((x) => x.name)"
+          :options="topicsGrouped?.length > 0 ? topicsGrouped : []"
           :hint="{
             type: errors.topic ? 'error' : null,
             message: errors.topic ? errors.topic : null,
@@ -71,7 +71,7 @@
 import {
   TalkieInput,
   TalkieButton,
-  TalkieSelect,
+  TalkieSelectGroup,
   TalkieAlert,
   TalkieForm,
   TalkieLoader,
@@ -79,13 +79,14 @@ import {
 import { updateQandATopicSchema } from "@/utils/validations/task.validation";
 import { TaskService, ClassService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
+import topicTypes from "@/utils/constants/topicTypes";
 
 export default {
   name: "ClassTaskUpdate",
   components: {
     TalkieInput,
     TalkieButton,
-    TalkieSelect,
+    TalkieSelectGroup,
     TalkieAlert,
     TalkieForm,
     TalkieLoader,
@@ -105,6 +106,7 @@ export default {
       taskId: null,
       classDetails: {},
       taskDetails: {},
+      topicsGrouped: [],
     };
   },
   computed: {
@@ -127,6 +129,28 @@ export default {
     // class details (+ failure case)
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
+
+    const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+    this.topicsGrouped = [
+      {
+        title: capitalize(topicTypes.ADVANCED),
+        items: classDetails?.topics
+          ?.filter((x) => x.type === topicTypes.ADVANCED)
+          ?.map((x) => x.name),
+      },
+      {
+        title: capitalize(topicTypes.INTERMEDIATE),
+        items: classDetails?.topics
+          ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x.name),
+      },
+      {
+        title: capitalize(topicTypes.BEGINNER),
+        items: classDetails?.topics
+          ?.filter((x) => x.type === topicTypes.BEGINNER)
+          ?.map((x) => x.name),
+      },
+    ];
 
     // task details (+ failure case)
     const taskDetails = await this.getTaskDetails(taskId);

@@ -6,7 +6,7 @@
         <div class="class-home-header-details-wrapper">
           <h2 class="h2" v-if="classDetails?.name">{{ classDetails?.name }}</h2>
           <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
-            <talkie-icon :name="'trophy'" :onClick="hanldeClassTrophyClick" />
+            <talkie-icon :name="'trophy'" :onClick="handleClassTrophyClick" />
             <talkie-icon :name="'setting'" :onClick="handleClassManageClick" />
           </div>
         </div>
@@ -25,13 +25,11 @@
       <template v-if="activeTab === 'questions'">
         <div class="class-home-options-wrapper">
           <div class="class-home-options-selector">
-            <talkie-select
+            <talkie-select-group
               :placeholder="'Filter by topic'"
               :customClass="'class-home-options-custom-talkie-select'"
               :options="
-                classDetails?.topics && classDetails?.topics?.length > 0
-                  ? classDetails?.topics?.map((x) => x?.name)
-                  : []
+                classTopicsGrouped?.length > 0 ? classTopicsGrouped : []
               "
               :onChange="handleTopicFilterChange"
             />
@@ -165,7 +163,7 @@
 import {
   TalkieIcon,
   TalkieTab,
-  TalkieSelect,
+  TalkieSelectGroup,
   TalkieModal,
   TalkieLoader,
   TalkieSwitch,
@@ -184,6 +182,7 @@ import roles from "@/utils/constants/roles";
 import { notifications } from "@/components/UIActions";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import handleSidebarMutation from "@/utils/mixins/handleSidebarMutation";
+import topicTypes from "@/utils/constants/topicTypes";
 
 export default {
   name: "ClassHome",
@@ -191,7 +190,7 @@ export default {
   components: {
     TalkieIcon,
     TalkieTab,
-    TalkieSelect,
+    TalkieSelectGroup,
     TalkieModal,
     TalkieButtonDropDown,
     TalkieLoader,
@@ -252,6 +251,7 @@ export default {
       tabs: ["Questions", "Students"],
       currentTopicFilter: null,
       TaskTypes: TaskTypes,
+      classTopicsGrouped: {},
     };
   },
   async created() {
@@ -288,6 +288,28 @@ export default {
       const classDetails = await this.getClassDetails(classId);
       if (!classDetails) return this.$router.push("/404");
 
+      const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+      this.classTopicsGrouped = [
+        {
+          title: capitalize(topicTypes.ADVANCED),
+          items: classDetails?.topics
+            ?.filter((x) => x.type === topicTypes.ADVANCED)
+            ?.map((x) => x.name),
+        },
+        {
+          title: capitalize(topicTypes.INTERMEDIATE),
+          items: classDetails?.topics
+            ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
+            ?.map((x) => x.name),
+        },
+        {
+          title: capitalize(topicTypes.BEGINNER),
+          items: classDetails?.topics
+            ?.filter((x) => x.type === topicTypes.BEGINNER)
+            ?.map((x) => x.name),
+        },
+      ];
+
       // class tasks
       const classTasks = await this.getClassTasks(classId);
       if (!classTasks) return this.$router.push("/404");
@@ -300,7 +322,7 @@ export default {
       this.classDetails = {
         id: classDetails?.id,
         name: classDetails?.name,
-        langugage: classDetails?.langugage,
+        language: classDetails?.language,
         parentSchool: classDetails?.schoolName,
         teacher: {
           id: classDetails?.teacher.id,
@@ -380,16 +402,13 @@ export default {
 
       this.loading = false;
     },
-    redirectToCommingSoonPage() {
-      this.$router.push(`/coming-soon`);
-    },
     handleRedirection(link, timeout = 100) {
       const self = this;
       setTimeout(function () {
         self.$router.push(link);
       }, timeout);
     },
-    hanldeClassTrophyClick() {
+    handleClassTrophyClick() {
       this.handleRedirection(`/classes/${this.classId}/leaderboard`, 1);
     },
     handleClassManageClick() {
@@ -492,7 +511,7 @@ export default {
       URLModifier.addToURL("tab", x?.toLowerCase());
     },
     handleTopicFilterChange(e) {
-      const selectedTopic = e.target.value;
+      const selectedTopic = e.target.value.trim();
       this.currentTopicFilter = selectedTopic;
     },
     async getMyClasses() {
