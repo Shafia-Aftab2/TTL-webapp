@@ -5,13 +5,9 @@
       <div class="class-tasks-inbox-header-wrapper">
         <h2 class="h2">Speaking Portfolio</h2>
         <div class="class-tasks-inbox-header-select-wrapper">
-          <talkie-select
+          <talkie-select-group
             :placeholder="'Filter by question type'"
-            :options="
-              classTopics && classTopics.length > 0
-                ? classTopics.map((x) => x.name)
-                : []
-            "
+            :options="topicsGrouped?.length > 0 ? topicsGrouped : []"
             :onChange="handleTopicFilterChange"
           />
         </div>
@@ -49,15 +45,16 @@
 </template>
 
 <script>
-import { TalkieSelect, TalkieLoader } from "@/components/UICore";
+import { TalkieSelectGroup, TalkieLoader } from "@/components/UICore";
 import { TalkieConversationCard } from "@/components/SubModules/Cards";
 import { ClassService, TaskService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
+import topicTypes from "@/utils/constants/topicTypes";
 
 export default {
   name: "TasksInbox",
   components: {
-    TalkieSelect,
+    TalkieSelectGroup,
     TalkieLoader,
     TalkieConversationCard,
   },
@@ -69,6 +66,7 @@ export default {
       classId: null,
       tasksList: [],
       loading: false,
+      topicsGrouped: [],
     };
   },
   computed: {
@@ -95,6 +93,28 @@ export default {
     // get class details
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
+
+    const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+    this.topicsGrouped = [
+      {
+        title: capitalize(topicTypes.ADVANCED),
+        items: classDetails?.topics
+          ?.filter((x) => x.type === topicTypes.ADVANCED)
+          ?.map((x) => x.name),
+      },
+      {
+        title: capitalize(topicTypes.INTERMEDIATE),
+        items: classDetails?.topics
+          ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x.name),
+      },
+      {
+        title: capitalize(topicTypes.BEGINNER),
+        items: classDetails?.topics
+          ?.filter((x) => x.type === topicTypes.BEGINNER)
+          ?.map((x) => x.name),
+      },
+    ];
 
     // get class tasks list
     const tasksList = await this.getClassTasks(classId);
@@ -127,7 +147,7 @@ export default {
   },
   methods: {
     handleTopicFilterChange(e) {
-      const selectedTopic = e.target.value;
+      const selectedTopic = e.target.value.trim();
       this.currentTopicFilter = selectedTopic;
     },
     async getClassDetails(classId) {

@@ -4,9 +4,9 @@
     <template v-if="!loading">
       <div class="class-home-header-wrapper">
         <div class="class-home-header-details-wrapper">
-          <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
+          <h2 class="h2" v-if="classDetails?.name">{{ classDetails?.name }}</h2>
           <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
-            <talkie-icon :name="'trophy'" :onClick="hanldeClassTrophyClick" />
+            <talkie-icon :name="'trophy'" :onClick="handleClassTrophyClick" />
             <talkie-icon :name="'setting'" :onClick="handleClassManageClick" />
           </div>
         </div>
@@ -25,13 +25,11 @@
       <template v-if="activeTab === 'questions'">
         <div class="class-home-options-wrapper">
           <div class="class-home-options-selector">
-            <talkie-select
+            <talkie-select-group
               :placeholder="'Filter by topic'"
               :customClass="'class-home-options-custom-talkie-select'"
               :options="
-                classDetails?.topics && classDetails?.topics?.length > 0
-                  ? classDetails?.topics?.map((x) => x.name)
-                  : []
+                classTopicsGrouped?.length > 0 ? classTopicsGrouped : []
               "
               :onChange="handleTopicFilterChange"
             />
@@ -69,7 +67,7 @@
             :onConfirm="handleTaskDeletion"
             v-if="taskToDelete"
           />
-          <template v-if="classTasks && classTasks.length > 0">
+          <template v-if="classTasks && classTasks?.length > 0">
             <template v-for="_question in classTasks" :key="_question">
               <talkie-question-card
                 v-if="
@@ -165,7 +163,7 @@
 import {
   TalkieIcon,
   TalkieTab,
-  TalkieSelect,
+  TalkieSelectGroup,
   TalkieModal,
   TalkieLoader,
   TalkieSwitch,
@@ -184,6 +182,7 @@ import roles from "@/utils/constants/roles";
 import { notifications } from "@/components/UIActions";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import handleSidebarMutation from "@/utils/mixins/handleSidebarMutation";
+import topicTypes from "@/utils/constants/topicTypes";
 
 export default {
   name: "ClassHome",
@@ -191,7 +190,7 @@ export default {
   components: {
     TalkieIcon,
     TalkieTab,
-    TalkieSelect,
+    TalkieSelectGroup,
     TalkieModal,
     TalkieButtonDropDown,
     TalkieLoader,
@@ -252,6 +251,7 @@ export default {
       tabs: ["Questions", "Students"],
       currentTopicFilter: null,
       TaskTypes: TaskTypes,
+      classTopicsGrouped: {},
     };
   },
   async created() {
@@ -288,6 +288,28 @@ export default {
       const classDetails = await this.getClassDetails(classId);
       if (!classDetails) return this.$router.push("/404");
 
+      const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+      this.classTopicsGrouped = [
+        {
+          title: capitalize(topicTypes.ADVANCED),
+          items: classDetails?.topics
+            ?.filter((x) => x.type === topicTypes.ADVANCED)
+            ?.map((x) => x.name),
+        },
+        {
+          title: capitalize(topicTypes.INTERMEDIATE),
+          items: classDetails?.topics
+            ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
+            ?.map((x) => x.name),
+        },
+        {
+          title: capitalize(topicTypes.BEGINNER),
+          items: classDetails?.topics
+            ?.filter((x) => x.type === topicTypes.BEGINNER)
+            ?.map((x) => x.name),
+        },
+      ];
+
       // class tasks
       const classTasks = await this.getClassTasks(classId);
       if (!classTasks) return this.$router.push("/404");
@@ -298,34 +320,34 @@ export default {
 
       // success case
       this.classDetails = {
-        id: classDetails.id,
-        name: classDetails.name,
-        langugage: classDetails.langugage,
-        parentSchool: classDetails.schoolName,
+        id: classDetails?.id,
+        name: classDetails?.name,
+        language: classDetails?.language,
+        parentSchool: classDetails?.schoolName,
         teacher: {
-          id: classDetails.teacher.id,
-          name: classDetails.teacher.name,
-          image: classDetails.teacher.image,
+          id: classDetails?.teacher.id,
+          name: classDetails?.teacher.name,
+          image: classDetails?.teacher.image,
         },
-        topics: classDetails.topics.map((x) => ({
-          name: x.name,
-          type: x.type,
-          id: x.id,
+        topics: classDetails?.topics?.map((x) => ({
+          name: x?.name,
+          type: x?.type,
+          id: x?.id,
         })),
-        tasks: classDetails.tasks.map((x) => ({
-          title: x.title,
-          type: x.type,
-          id: x.id,
+        tasks: classDetails?.tasks?.map((x) => ({
+          title: x?.title,
+          type: x?.type,
+          id: x?.id,
         })),
       };
 
       // sidebar data
-      const sidebarItems = myClasses.map((x) => ({
-        name: x.name,
+      const sidebarItems = myClasses?.map((x) => ({
+        name: x?.name,
         hasRightIcon: true,
-        link: `/classes/${x.id}`,
-        onClick: () => this.$router.push(`/classes/${x.id}`),
-        isActive: x.id === classId,
+        link: `/classes/${x?.id}`,
+        onClick: () => this.$router.push(`/classes/${x?.id}`),
+        isActive: x?.id === classId,
       }));
       const sidebarButtons = [
         {
@@ -344,33 +366,33 @@ export default {
         buttons: sidebarButtons,
       });
 
-      this.classTasks = classTasks.results.map((x) => ({
-        id: x.id,
-        type: x.type,
-        title: x.title,
-        topic: x.topic.name,
-        description: x.questionText,
+      this.classTasks = classTasks?.results?.map((x) => ({
+        id: x?.id,
+        type: x?.type,
+        title: x?.title,
+        topic: x?.topic?.name,
+        description: x?.questionText,
         isForPractice: x?.isPracticeMode,
-        ...(x.type === TaskTypes.QUESTION_ANSWER && {
-          audioSource: x.voiceForQnA,
+        ...(x?.type === TaskTypes.QUESTION_ANSWER && {
+          audioSource: x?.voiceForQnA,
         }),
-        ...(x.type === TaskTypes.CAPTION_THIS && {
-          image: x.captionThisImage,
+        ...(x?.type === TaskTypes.CAPTION_THIS && {
+          image: x?.captionThisImage,
         }),
-        ...(x.type === TaskTypes.TRANSLATION && {
+        ...(x?.type === TaskTypes.TRANSLATION && {
           translation: {
             textToTranslate: x?.textToTranslate,
             translatedText: x?.answer,
           },
         }),
-        ...(x.type === TaskTypes.EMOJI_STORY && {
+        ...(x?.type === TaskTypes.EMOJI_STORY && {
           emojiStory: x?.emojiStory,
         }),
       }));
 
-      this.classStudents = classDetails.students.map((x) => ({
-        id: x.id,
-        name: x.name,
+      this.classStudents = classDetails?.students?.map((x) => ({
+        id: x?.id,
+        name: x?.name,
         image: x?.image
           ? generateAvatar(x?.image?.split("-")[1], x?.image)
           : null,
@@ -380,16 +402,13 @@ export default {
 
       this.loading = false;
     },
-    redirectToCommingSoonPage() {
-      this.$router.push(`/coming-soon`);
-    },
     handleRedirection(link, timeout = 100) {
       const self = this;
       setTimeout(function () {
         self.$router.push(link);
       }, timeout);
     },
-    hanldeClassTrophyClick() {
+    handleClassTrophyClick() {
       this.handleRedirection(`/classes/${this.classId}/leaderboard`, 1);
     },
     handleClassManageClick() {
@@ -437,26 +456,26 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      this.classTasks = classTasks.results.map((x) => ({
-        id: x.id,
-        type: x.type,
-        title: x.title,
-        topic: x.topic.name,
-        description: x.questionText,
+      this.classTasks = classTasks?.results?.map((x) => ({
+        id: x?.id,
+        type: x?.type,
+        title: x?.title,
+        topic: x?.topic.name,
+        description: x?.questionText,
         isForPractice: x?.isPracticeMode,
-        ...(x.type === TaskTypes.QUESTION_ANSWER && {
-          audioSource: x.voiceForQnA,
+        ...(x?.type === TaskTypes.QUESTION_ANSWER && {
+          audioSource: x?.voiceForQnA,
         }),
-        ...(x.type === TaskTypes.CAPTION_THIS && {
-          image: x.captionThisImage,
+        ...(x?.type === TaskTypes.CAPTION_THIS && {
+          image: x?.captionThisImage,
         }),
-        ...(x.type === TaskTypes.TRANSLATION && {
+        ...(x?.type === TaskTypes.TRANSLATION && {
           translation: {
             textToTranslate: x?.textToTranslate,
             translatedText: x?.answer,
           },
         }),
-        ...(x.type === TaskTypes.EMOJI_STORY && {
+        ...(x?.type === TaskTypes.EMOJI_STORY && {
           emojiStory: x?.emojiStory,
         }),
       }));
@@ -488,11 +507,11 @@ export default {
       this.classTasks = this.classTasks?.filter((x) => x?.id !== taskId);
     },
     handleTabChange(x) {
-      this.activeTab = x.toLowerCase();
-      URLModifier.addToURL("tab", x.toLowerCase());
+      this.activeTab = x?.toLowerCase();
+      URLModifier.addToURL("tab", x?.toLowerCase());
     },
     handleTopicFilterChange(e) {
-      const selectedTopic = e.target.value;
+      const selectedTopic = e.target.value.trim();
       this.currentTopicFilter = selectedTopic;
     },
     async getMyClasses() {
