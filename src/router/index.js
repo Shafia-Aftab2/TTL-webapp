@@ -25,7 +25,7 @@ import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
-// import ServicesUpgrade from "../components/Modules/Services/Upgrade";
+import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import ServicesPrivacyPolicy from "../components/Modules/Services/PrivacyPolicy";
 import ServicesTermsOfService from "../components/Modules/Services/TermsOfService";
 import Error404 from "../components/Modules/Error404";
@@ -322,7 +322,7 @@ const routes = [
       {
         name: "ServicesUpgrade",
         path: "/services/upgrade",
-        component: ComingSoon,
+        component: ServicesUpgrade,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
