@@ -6,6 +6,7 @@ export default createStore({
     sidebar: {
       hasBackLink: true,
     },
+    isTrialOver: false,
   },
   mutations: {},
   actions: {},

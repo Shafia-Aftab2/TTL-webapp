@@ -3,6 +3,7 @@ import authUser from "../utils/helpers/auth";
 import { TALKIE_MONO_API_BASE_URL } from "./config";
 import AuthService from "./services/Auth.service";
 import UserService from "./services/User.service";
+import store from "../store";
 
 let baseURL = TALKIE_MONO_API_BASE_URL;
 
@@ -135,6 +136,30 @@ client.interceptors.response.use(
 
       // retry request
       return client(originalReq);
+    }
+
+    // subscription/trail status update
+    if (error?.response?.status === 403) {
+      if (
+        error?.response?.data?.message?.toLowerCase() ===
+        "please upgrade your account"
+      ) {
+        store.state.isTrialOver = true;
+      }
+
+      if (
+        error?.response?.data?.message?.toLowerCase() ===
+        "your subscription has been expired"
+      ) {
+        store.state.isTrialOver = true; // TODO: show personalized message for expired subscription
+      }
+
+      if (
+        error?.response?.data?.message?.toLowerCase() ===
+        "please complete your subscription"
+      ) {
+        store.state.isTrialOver = true; // TODO: show personalized message to complete subscription
+      }
     }
 
     return Promise.reject(error);
