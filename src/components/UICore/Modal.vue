@@ -42,7 +42,7 @@
           v-if="type === 'confirm'"
         >
           <talkie-button
-            variant="danger"
+            :variant="confirmButtonVariant"
             :noHighlights="true"
             :onClick="onConfirm"
             :size="size"
@@ -121,6 +121,11 @@ export default {
     confirmButtonText: {
       type: String,
       default: "Delete",
+    },
+    confirmButtonVariant: {
+      type: String,
+      default: "danger",
+      validator: (val) => ["primary", "danger"].includes(val),
     },
     onConfirm: {
       type: Function,
