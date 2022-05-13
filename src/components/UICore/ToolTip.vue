@@ -14,7 +14,7 @@ export default {
     },
     position: {
       type: String,
-      default: "bottom",
+      default: "bottom-left",
       validator: (val) => ["top", "bottom", "left", "right"].includes(val),
     },
   },
@@ -29,11 +29,13 @@ export default {
 [tooltip]::after {
   text-transform: none;
   line-height: 1;
-  user-select: none;
-  pointer-events: none;
   position: absolute;
   display: none;
   opacity: 0;
+  /* user-select: none;
+  pointer-events: none; */
+  /* display: block;
+  opacity: 1; */
 }
 [tooltip]::before {
   content: "";
@@ -42,25 +44,31 @@ export default {
 }
 [tooltip]::after {
   content: attr(tooltip);
-  text-align: center;
-  min-width: 3em;
+  min-width: 21em;
   max-width: 21em;
+  max-height: 21em;
   z-index: var(--t-zindex-70);
   padding: 1ch 1.5ch;
   box-shadow: 0 var(--t-space-1) var(--t-space-3) rgba(0, 0, 0, 0.12),
     0 var(--t-space-1) var(--t-space-2) rgba(0, 0, 0, 0.24);
   border-radius: 0.3ch;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: scroll;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   background: var(--t-white);
   color: var(--t-black);
   border: var(--t-space-1) solid var(--t-gray-50);
   border-radius: var(--t-br-small);
+  line-height: 1.5;
+  /* text-align: center; */
+  /* white-space: wrap; */
+  /* text-overflow: ellipsis; */
 }
 [tooltip]:hover::before,
 [tooltip]:hover::after {
+  display: block;
+}
+[tooltip]::before:hover,
+[tooltip]::after:hover {
   display: block;
 }
 
@@ -106,6 +114,21 @@ export default {
   transform: translate(-50%, 0.5em);
 }
 
+/* bottom left */
+[tooltip][position^="bottom-left"]::before {
+  top: 100%;
+  border-top-width: 0;
+  border-bottom-color: var(--t-white);
+}
+[tooltip][position^="bottom-left"]::after {
+  top: calc(100% + var(--t-space-5));
+}
+[tooltip][position^="bottom-left"]::before,
+[tooltip][position^="bottom-left"]::after {
+  transform: translate(-50%, 0.5em);
+  left: -50%;
+}
+
 /* Left */
 [tooltip][position^="left"]::before {
   top: 50%;
@@ -138,7 +161,7 @@ export default {
 @keyframes tooltips-vert {
   to {
     opacity: 0.9;
-    transform: translate(-50%, 0);
+    transform: translate(-58%, -1%);
   }
 }
 @keyframes tooltips-horz {
@@ -152,7 +175,9 @@ export default {
 [tooltip][position^="top"]:hover::before,
 [tooltip][position^="top"]:hover::after,
 [tooltip][position^="bottom"]:hover::before,
-[tooltip][position^="bottom"]:hover::after {
+[tooltip][position^="bottom"]:hover::after,
+[tooltip][position^="bottom-left"]:hover::before,
+[tooltip][position^="bottom-left"]:hover::after {
   animation: tooltips-vert 300ms ease-out forwards;
 }
 

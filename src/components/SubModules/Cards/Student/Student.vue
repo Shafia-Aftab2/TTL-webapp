@@ -71,6 +71,7 @@
         'talkie-student-card-options',
         currentRecording && 'talkie-student-card-options-wrap-content',
       ]"
+      v-if="actionButton"
     >
       <!-- Feedback Mode || Question Mode -->
       <template v-if="mode === 'feedback' || mode === 'question'">
@@ -276,6 +277,10 @@ export default {
         ),
     },
     fullWidth: {
+      type: Boolean,
+      default: true,
+    },
+    actionButton: {
       type: Boolean,
       default: true,
     },
