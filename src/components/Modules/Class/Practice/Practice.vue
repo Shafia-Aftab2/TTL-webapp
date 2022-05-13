@@ -471,7 +471,7 @@ import {
   TalkieAudioPlayer,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
-import { filePurposes, taskTypes } from "@/utils/constants";
+import { filePurposes, supportedLanguages, taskTypes } from "@/utils/constants";
 import {
   ClassService,
   TaskService,
@@ -525,12 +525,22 @@ export default {
         ["Caption-This"]: "5",
       },
       appericiationMessages: {
-        ["Emoji-Story"]: "¡Excelente!",
-        ["Translation"]: {
-          correctAnswer: "¡Bien hecho!",
-          wrongAnswer: "¡Ayy, qué pena! :(",
+        [supportedLanguages.SPANISH?.toLowerCase()]: {
+          ["Emoji-Story"]: "¡Excelente!",
+          ["Translation"]: {
+            correctAnswer: "¡Bien hecho!",
+            wrongAnswer: "¡Ayy, qué pena! :(",
+          },
+          ["Caption-This"]: "¡Muy bien!",
         },
-        ["Caption-This"]: "¡Muy bien!",
+        [supportedLanguages.FRENCH?.toLowerCase()]: {
+          ["Emoji-Story"]: "Génial!",
+          ["Translation"]: {
+            correctAnswer: "Bien fait!",
+            wrongAnswer: "Oh quel dommage! :(",
+          },
+          ["Caption-This"]: "Très bien!",
+        },
       },
     };
   },
@@ -572,7 +582,7 @@ export default {
     this.classDetails = {
       id: classDetails.id,
       name: classDetails.name,
-      langugage: classDetails.langugage,
+      language: classDetails.language,
       parentSchool: classDetails.schoolName,
       teacher: {
         id: classDetails.teacher.id,
@@ -742,9 +752,15 @@ export default {
         appericiationMessage:
           this.currentTask.type === taskTypes.TRANSLATION
             ? this.currentTaskAnswered.isCorrectAnswer
-              ? this.appericiationMessages[this.currentTask.type].correctAnswer
-              : this.appericiationMessages[this.currentTask.type].wrongAnswer
-            : this.appericiationMessages[this.currentTask.type],
+              ? this.appericiationMessages?.[
+                  this.classDetails?.language?.toLowerCase()
+                ]?.[this.currentTask.type]?.correctAnswer
+              : this.appericiationMessages?.[
+                  this.classDetails?.language?.toLowerCase()
+                ]?.[this.currentTask.type]?.wrongAnswer
+            : this.appericiationMessages?.[
+                this.classDetails?.language?.toLowerCase()
+              ]?.[this.currentTask.type],
       };
     },
     async handleTaskScoring() {
