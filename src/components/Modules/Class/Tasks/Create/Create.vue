@@ -610,7 +610,9 @@ export default {
       // form data
       const { title, topic: topicName, questionText } = values;
 
-      const topicId = this.topics.find((x) => x.name === topicName).id;
+      const topicId = this.topics?.find(
+        (x) => x?.name?.trim() === topicName?.trim()
+      )?.id;
 
       // payload
       const payload = {
