@@ -128,6 +128,7 @@
               :mode="'info'"
               :studentName="_student.name"
               :studentAvatar="_student.image"
+              :actionButton="false"
             />
           </template>
           <template v-if="classStudents?.length === 0">
