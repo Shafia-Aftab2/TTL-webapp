@@ -611,6 +611,9 @@ export default {
   text-align: center;
   line-height: 1.5;
 }
+.class-home-content-error-info > a {
+  color: var(--t-black);
+}
 .class-home-loading-wrapper {
   margin: auto;
 }
