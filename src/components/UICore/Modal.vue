@@ -34,8 +34,19 @@
         <h3 class="h3" v-if="type === 'confirm' && title">
           {{ title }}
         </h3>
-        <p class="p" v-if="type === 'confirm' && description">
-          {{ description }}
+        <p
+          class="p talkie-modal-description"
+          v-if="type === 'confirm' && description"
+        >
+          <template v-if="description?.includes('<br>')">
+            <template v-for="line in description?.split('<br>')" :key="line">
+              {{ line }}
+              <br />
+            </template>
+          </template>
+          <template v-if="!description?.includes('<br>')">
+            {{ description }}
+          </template>
         </p>
         <div
           class="talkie-confirm-modal-action-buttons"
@@ -180,6 +191,10 @@ export default {
 .talkie-confirm-modal-action-buttons {
   margin: auto;
   display: flex;
+}
+
+.talkie-modal-description {
+  line-height: 1.5;
 }
 
 /* Responsive variants */
