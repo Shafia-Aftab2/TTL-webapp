@@ -43,7 +43,7 @@
         <h3 class="h3" v-if="!isJoined">Could not join class!</h3>
 
         <talkie-button :onClick="handleCTAButtonClick">
-          {{ isJoined ? `Go To Class Inbox` : `Try Again` }}
+          {{ isJoined ? `Back Home` : `Try Again` }}
         </talkie-button>
       </div>
     </template>
@@ -184,7 +184,7 @@ export default {
     handleCTAButtonClick() {
       this.$router.push(
         this.isJoined || this.classAlreadyJoined
-          ? `/classes/tasks/inbox`
+          ? `/`
           : `/classes/${this.classId}/join`
       );
     },
