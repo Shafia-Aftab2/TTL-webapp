@@ -25,6 +25,7 @@ import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
+import ProfileSubscriptionHalt from "../components/Modules/Profile/Settings/Subscription/Halt";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import ServicesUpgradeSuccess from "../components/Modules/Services/Upgrade/Success";
 import ServicesPrivacyPolicy from "../components/Modules/Services/PrivacyPolicy";
@@ -312,6 +313,12 @@ const routes = [
             requiresAuth: true,
           },
         },
+      },
+      {
+        name: "ProfileSubscriptionPause",
+        path: "/profile/self/settings/pause-subscription",
+        props: { haltMode: "pause" },
+        component: ProfileSubscriptionHalt,
       },
     ],
   },
