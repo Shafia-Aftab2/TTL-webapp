@@ -10,6 +10,7 @@
         `talkie-button-${variant.toString()}-interaction`,
       `talkie-button-${size.toString()}`,
       outlined && `talkie-button-outlined`,
+      outlined && variant === 'dark' && `talkie-button-dark-outlined`,
       fullWidth && `talkie-button-fullWidth`,
       loading && `talkie-button-loading`,
       disabled && `talkie-button-disabled`,
@@ -148,7 +149,10 @@ export default {
 .talkie-button-dark {
   background-color: var(--t-black);
   color: var(--t-white);
-  border-color: transparent;
+  border-color: var(--t-black);
+}
+.talkie-button-dark-outlined {
+  color: var(--t-black);
 }
 .talkie-button-dark-interaction:hover {
   filter: opacity(0.8);
