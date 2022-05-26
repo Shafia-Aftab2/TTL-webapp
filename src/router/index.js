@@ -314,15 +314,22 @@ const routes = [
           },
         },
       },
+    ],
+  },
+  {
+    path: "/profile/settings",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
       {
         name: "ProfileSubscriptionPause",
-        path: "/profile/self/settings/pause-subscription",
+        path: "/profile/settings/pause-subscription",
         props: { haltMode: "pause" },
         component: ProfileSubscriptionHalt,
       },
       {
         name: "ProfileSubscriptionCancel",
-        path: "/profile/self/settings/cancel-subscription",
+        path: "/profile/settings/cancel-subscription",
         props: { haltMode: "cancel" },
         component: ProfileSubscriptionHalt,
       },
