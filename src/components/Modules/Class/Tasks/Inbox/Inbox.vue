@@ -3,7 +3,7 @@
   <template v-if="!computedLoading">
     <div class="class-tasks-inbox-wrapper">
       <div class="class-tasks-inbox-header-wrapper">
-        <h2 class="h2">Speaking Portfolio</h2>
+        <h2 class="h2">Your inbox</h2>
         <div class="class-tasks-inbox-header-select-wrapper">
           <talkie-select-group
             :placeholder="'Filter by question type'"
@@ -99,20 +99,20 @@ export default {
       {
         title: capitalize(topicTypes.ADVANCED),
         items: classDetails?.topics
-          ?.filter((x) => x.type === topicTypes.ADVANCED)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.ADVANCED)
+          ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.INTERMEDIATE),
         items: classDetails?.topics
-          ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.BEGINNER),
         items: classDetails?.topics
-          ?.filter((x) => x.type === topicTypes.BEGINNER)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.BEGINNER)
+          ?.map((x) => x?.name),
       },
     ];
 

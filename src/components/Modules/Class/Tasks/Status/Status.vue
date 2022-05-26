@@ -6,21 +6,21 @@
         <talkie-question-card
           :title="taskDetails?.title"
           :topic="taskDetails?.topic"
-          :description="taskDetails.description"
+          :description="taskDetails?.description"
           :fullWidth="false"
           :hoverAnimation="false"
           :audioSource="
-            taskDetails.type === taskTypes.QUESTION_ANSWER &&
-            taskDetails.audioSource
+            taskDetails?.type === taskTypes.QUESTION_ANSWER &&
+            taskDetails?.audioSource
           "
           :image="
-            taskDetails.type === taskTypes.CAPTION_THIS && taskDetails.image
+            taskDetails?.type === taskTypes.CAPTION_THIS && taskDetails?.image
           "
           :expandContent="
-            taskDetails.type === taskTypes.TRANSLATION
-              ? { translation: taskDetails.translation }
-              : taskDetails.type === taskTypes.EMOJI_STORY
-              ? { emojis: taskDetails.emojiStory }
+            taskDetails?.type === taskTypes.TRANSLATION
+              ? { translation: taskDetails?.translation }
+              : taskDetails?.type === taskTypes.EMOJI_STORY
+              ? { emojis: taskDetails?.emojiStory }
               : {}
           "
         />
@@ -105,25 +105,25 @@ export default {
 
     // success case
     this.taskDetails = {
-      id: taskDetails.id,
-      type: taskDetails.type,
-      title: taskDetails.title,
-      topic: taskDetails.topic.name,
-      description: taskDetails.questionText,
+      id: taskDetails?.id,
+      type: taskDetails?.type,
+      title: taskDetails?.title,
+      topic: taskDetails?.topic.name,
+      description: taskDetails?.questionText,
       isForPractice: taskDetails?.isPracticeMode,
-      ...(taskDetails.type === TaskTypes.QUESTION_ANSWER && {
-        audioSource: taskDetails.voiceForQnA,
+      ...(taskDetails?.type === TaskTypes.QUESTION_ANSWER && {
+        audioSource: taskDetails?.voiceForQnA,
       }),
-      ...(taskDetails.type === TaskTypes.CAPTION_THIS && {
-        image: taskDetails.captionThisImage,
+      ...(taskDetails?.type === TaskTypes.CAPTION_THIS && {
+        image: taskDetails?.captionThisImage,
       }),
-      ...(taskDetails.type === TaskTypes.TRANSLATION && {
+      ...(taskDetails?.type === TaskTypes.TRANSLATION && {
         translation: {
           textToTranslate: taskDetails?.textToTranslate,
           translatedText: taskDetails?.answer,
         },
       }),
-      ...(taskDetails.type === TaskTypes.EMOJI_STORY && {
+      ...(taskDetails?.type === TaskTypes.EMOJI_STORY && {
         emojiStory: taskDetails?.emojiStory,
       }),
     };

@@ -45,8 +45,8 @@
         </div>
 
         <talkie-switch
-          :checkLabel="'Showing Practice Mode Tasks'"
-          :uncheckLabel="'Show Practice Mode Tasks'"
+          :checkLabel="'Showing practice mode tasks'"
+          :uncheckLabel="'Show other quizzes'"
           :onToggle="handlePracticeModeToggleChange"
         />
 
@@ -62,7 +62,7 @@
             :closeButton="true"
             :centered="true"
             :title="'Are You Sure'"
-            :description="'Your students responses and your feedbacks will also be deleted.'"
+            :description="'Are you sure? Your student\'s responses and feedback will also be deleted.'"
             :onClose="handleTopicDeleteDialogClose"
             :onConfirm="handleTaskDeletion"
             v-if="taskToDelete"
@@ -137,11 +137,11 @@
               class="class-home-content-error-image"
             />
             <p class="p class-home-content-error-info">
-              Hmm..! It looks like there are no students in your class. You can
-              invite them from the class management page.
+              Hmm... it looks like no one's here yet. Click
               <router-link :to="`/classes/${classId}/manage`">
-                Click Here
+                here
               </router-link>
+              to invite your students to this class.
             </p>
           </template>
         </div>
@@ -275,7 +275,7 @@ export default {
       this.user = authUser.getUser();
 
       // get user role
-      if (this.user.role === roles.TEACHER) this.isTeacher = true;
+      if (this.user?.role === roles.TEACHER) this.isTeacher = true;
       else this.isStudent = true;
 
       // class id from params
@@ -294,20 +294,20 @@ export default {
         {
           title: capitalize(topicTypes.ADVANCED),
           items: classDetails?.topics
-            ?.filter((x) => x.type === topicTypes.ADVANCED)
-            ?.map((x) => x.name),
+            ?.filter((x) => x?.type === topicTypes.ADVANCED)
+            ?.map((x) => x?.name),
         },
         {
           title: capitalize(topicTypes.INTERMEDIATE),
           items: classDetails?.topics
-            ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
-            ?.map((x) => x.name),
+            ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+            ?.map((x) => x?.name),
         },
         {
           title: capitalize(topicTypes.BEGINNER),
           items: classDetails?.topics
-            ?.filter((x) => x.type === topicTypes.BEGINNER)
-            ?.map((x) => x.name),
+            ?.filter((x) => x?.type === topicTypes.BEGINNER)
+            ?.map((x) => x?.name),
         },
       ];
 
@@ -446,7 +446,7 @@ export default {
         notifications.show(
           `Failed To Get ${
             showPracticeModeTasks ? "Practice" : "Class"
-          } Mode Task..!`,
+          } Mode Task!`,
           {
             variant: "error",
             displayIcon: true,
@@ -492,7 +492,7 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Delete Task..!", {
+        notifications.show("Failed To Delete Task!", {
           variant: "error",
           displayIcon: true,
         });
@@ -501,7 +501,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Task Deleted Successfully..!", {
+      notifications.show("Task Deleted Successfully!", {
         variant: "success",
         displayIcon: true,
       });
@@ -610,6 +610,9 @@ export default {
   max-width: 80%;
   text-align: center;
   line-height: 1.5;
+}
+.class-home-content-error-info > a {
+  color: var(--t-black);
 }
 .class-home-loading-wrapper {
   margin: auto;

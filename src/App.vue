@@ -1,19 +1,19 @@
 <template>
   <router-view />
 
-  <!-- Handle Global Subscription Updates -->
+  <!-- display if the trail period is over -->
   <talkie-modal
     :type="'confirm'"
     :contentPadded="true"
     :closeButton="true"
     :centered="true"
     :maxWidth="700"
-    :title="'Your trial has expired.'"
-    :description="'Thank you for trying out talkie! Your free trial has now ended. We’ll keep your existing data for now but setting new tasks and recording new feedback have been disabled.'"
+    :title="'Your trial has now ended.'"
+    :description="'Thank you for trying out talkie! <br> We’ll keep your existing data for now but setting new tasks and recording new feedback have been disabled.'"
     :onClose="handleUpgradeModalClose"
     :onConfirm="handleUpgradeMyAccount"
     :confirmButtonText="'I’m ready to upgrade!'"
-    :confirmButtonVariant="'primary'"
+    :confirmButtonVariant="'dark'"
     v-if="computedIsTrialOver"
   />
 </template>

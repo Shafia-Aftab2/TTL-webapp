@@ -55,7 +55,7 @@ export default {
       if (url?.length === 0) {
         this.formState = {
           type: "error",
-          message: "Url is required..!",
+          message: "Url is required!",
         };
         return;
       }
@@ -65,7 +65,7 @@ export default {
       if (!(isValidURL(url) && isValidId(classId))) {
         this.formState = {
           type: "error",
-          message: "Invalid URL..!",
+          message: "Invalid URL!",
         };
         return;
       }

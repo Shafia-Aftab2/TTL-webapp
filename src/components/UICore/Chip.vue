@@ -50,7 +50,6 @@ export default {
   cursor: pointer;
   border: transparent;
   transition: 0.1s ease;
-  text-transform: capitalize;
 }
 .talkie-chip:hover {
   filter: opacity(0.8);

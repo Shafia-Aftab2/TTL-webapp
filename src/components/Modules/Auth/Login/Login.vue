@@ -122,7 +122,7 @@ export default {
   methods: {
     isValidEmail(email) {
       const emailTestRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailTestRegex.test(email);
+      return emailTestRegex?.test(email);
     },
     async handleSubmit(values) {
       // update page state
@@ -144,14 +144,14 @@ export default {
       const response = await AuthService.Login(payload).catch((e) => {
         const errorMap = {
           ["incorrect email or password"]:
-            "Incorrect email/username or password..!",
-          ['"email" must be a valid email']: "Email must be valid..!",
+            "Incorrect email/username or password!",
+          ['"email" must be a valid email']: "Email must be valid!",
         };
 
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Could not login..!",
+            "Could not login!",
         };
       });
 
@@ -181,7 +181,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Login Successfull. Redirecting..!",
+        message: "Login Successfull. Redirecting!",
       };
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
     },

@@ -245,25 +245,24 @@ export default {
       // api call
       const response = await AuthService.Signup(payload).catch((e) => {
         const errorMap = {
-          ['"name" contains bad word']: "Name should not be unethical..!",
-          ['"username" contains bad word']:
-            "Username should not be unethical..!",
+          ['"name" contains bad word']: "Name should not be unethical!",
+          ['"username" contains bad word']: "Username should not be unethical!",
           ['"displayname" contains bad word']:
-            "Display name should not be unethical..!",
+            "Display name should not be unethical!",
           ['"schoolname" contains bad word']:
-            "School name should not be unethical..!",
-          ["email already exists"]: "Email already exists..!",
-          ["username already exists"]: "Username already exists..!",
+            "School name should not be unethical!",
+          ["email already exists"]: "Email already exists!",
+          ["username already exists"]: "Username already exists!",
           ["password must be at least 8 characters"]:
-            "Password must contain at least 8 characters..!",
+            "Password must contain at least 8 characters!",
           ["password must contain at least 1 letter and 1 number"]:
-            "Password must contain at least 1 letter and 1 number..!",
+            "Password must contain at least 1 letter and 1 number!",
         };
 
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Could not create account..!",
+            "Could not create account!",
         };
       });
 
@@ -292,7 +291,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Account Created. Redirecting..!",
+        message: "Account Created. Redirecting!",
       };
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
     },

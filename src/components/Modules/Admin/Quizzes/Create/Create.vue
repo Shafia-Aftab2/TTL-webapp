@@ -42,7 +42,7 @@
           <talkie-input
             :multiline="true"
             :name="'questionText'"
-            :placeholder="'Question text (optional)'"
+            :placeholder="'Anything else you want to say? (optional)'"
           />
         </template>
 
@@ -147,7 +147,7 @@
           <talkie-input
             :multiline="true"
             :name="'questionText'"
-            :placeholder="'Question text (optional)'"
+            :placeholder="'Anything else you want to say? (optional)'"
           />
         </template>
 
@@ -439,20 +439,20 @@ export default {
       {
         title: capitalize(topicTypes.ADVANCED),
         items: topicsList
-          ?.filter((x) => x.type === topicTypes.ADVANCED)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.ADVANCED)
+          ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.INTERMEDIATE),
         items: topicsList
-          ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.BEGINNER),
         items: topicsList
-          ?.filter((x) => x.type === topicTypes.BEGINNER)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.BEGINNER)
+          ?.map((x) => x?.name),
       },
     ];
     this.pageLoading = false;
@@ -543,7 +543,7 @@ export default {
             this.loading = false;
             this.formStatus = {
               type: "error",
-              message: "Could not upload audio file..!",
+              message: "Could not upload audio file!",
               loading: false,
             };
             return;
@@ -573,7 +573,7 @@ export default {
             this.loading = false;
             this.formStatus = {
               type: "error",
-              message: "Could not upload image file..!",
+              message: "Could not upload image file!",
               loading: false,
             };
             return;
@@ -607,7 +607,7 @@ export default {
       // form data
       const { title, topic: topicName, questionText } = values;
 
-      const topicId = this.topics.find((x) => x.name === topicName).id;
+      const topicId = this.topics.find((x) => x?.name === topicName).id;
 
       // payload
       const payload = {
@@ -622,14 +622,14 @@ export default {
       // api call
       const response = await TaskTemplateService.Create(payload).catch((e) => {
         const errorMap = {
-          ['"title" contains bad word']: "Title should not be unethical..!",
+          ['"title" contains bad word']: "Title should not be unethical!",
           ['"questiontext" contains bad word']:
-            "Question text should not be unethical..!",
+            "Question text should not be unethical!",
           ['"topic" must be a valid mongo id']: "Invalid Topic",
-          ["Q&A"]: "Could not create conversation..!",
-          ["Caption-This"]: "Could not create caption task..!",
-          ["Translation"]: "Could not create translation task..!",
-          ["Emoji-Story"]: "Could not create emoji story task..!",
+          ["Q&A"]: "Could not create conversation!",
+          ["Caption-This"]: "Could not create caption task!",
+          ["Translation"]: "Could not create translation task!",
+          ["Emoji-Story"]: "Could not create emoji story task!",
         };
 
         return {
@@ -657,13 +657,13 @@ export default {
         type: "success",
         message:
           this.selectedTaskType === TaskTypes.QUESTION_ANSWER
-            ? "Conversation Created. Redirecting..!"
+            ? "Conversation Created. Redirecting!"
             : this.selectedTaskType === TaskTypes.CAPTION_THIS
-            ? "Caption Task Created. Redirecting..!"
+            ? "Caption Task Created. Redirecting!"
             : this.selectedTaskType === TaskTypes.TRANSLATION
-            ? "Translation Task Created. Redirecting..!"
+            ? "Translation Task Created. Redirecting!"
             : this.selectedTaskType === TaskTypes.EMOJI_STORY
-            ? "Emoji Story Task Created. Redirecting..!"
+            ? "Emoji Story Task Created. Redirecting!"
             : "",
         animateEllipse: false,
         loading: false,

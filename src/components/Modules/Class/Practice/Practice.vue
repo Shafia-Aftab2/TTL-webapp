@@ -6,7 +6,7 @@
         <span> </span>
         <h4 class="h4">
           Practice Mode <br />
-          (All Done)
+          (All done!)
         </h4>
         <a
           class="class-practice-header-wrapper-link"
@@ -417,7 +417,7 @@
           class="class-practice-body-no-tasks-image"
         />
         <p class="p class-practice-body-no-tasks-description">
-          Hmm. It looks like there are no tasks for practice at this moment.
+          Hmm... It looks like there are no tasks for practice at this moment.
           They will apear here once your teacher adds them in the class.
         </p>
         <talkie-button :onClick="handleHomeButtonClick">
@@ -436,8 +436,8 @@
           class="class-practice-body-no-tasks-image"
         />
         <p class="p class-practice-body-no-tasks-description">
-          Congrats, You have finished all quizes. Come back again for more
-          practice.
+          Congrats! You got through all the quizzes! Check back tomorrow for
+          more.
         </p>
         <talkie-button :onClick="handleHomeButtonClick">
           Back Home
@@ -580,19 +580,19 @@ export default {
 
     // success case
     this.classDetails = {
-      id: classDetails.id,
-      name: classDetails.name,
-      language: classDetails.language,
-      parentSchool: classDetails.schoolName,
+      id: classDetails?.id,
+      name: classDetails?.name,
+      language: classDetails?.language,
+      parentSchool: classDetails?.schoolName,
       teacher: {
-        id: classDetails.teacher.id,
-        name: classDetails.teacher.name,
-        image: classDetails.teacher.image,
+        id: classDetails?.teacher.id,
+        name: classDetails?.teacher.name,
+        image: classDetails?.teacher.image,
       },
-      topics: classDetails.topics.map((x) => ({
-        name: x.name,
-        type: x.type,
-        id: x.id,
+      topics: classDetails?.topics.map((x) => ({
+        name: x?.name,
+        type: x?.type,
+        id: x?.id,
       })),
     };
     this.classTasks = classTasks?.results
@@ -648,7 +648,7 @@ export default {
     },
     handleFinishLinkClick() {
       this.$router.push("/");
-      notifications.show("Thanks for trying out practice mode..!", {
+      notifications.show("See you next time!", {
         variant: "success",
         displayIcon: true,
       });
@@ -705,7 +705,7 @@ export default {
         this.currentRecording.blob
       );
       if (!voiceRecording) {
-        notifications.show("Could not add your answer..!", {
+        notifications.show("Could not add your answer!", {
           variant: "error",
           displayIcon: true,
         });
@@ -728,7 +728,7 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Could not add your answer..!", {
+        notifications.show("Could not add your answer!", {
           variant: "error",
           displayIcon: true,
         });
@@ -737,10 +737,10 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Answered Successfully..!", {
-        variant: "success",
-        displayIcon: true,
-      });
+      // notifications.show("Answered Successfully!", {
+      //   variant: "success",
+      //   displayIcon: true,
+      // });
       this.currentTaskAnswered = {
         responseId: response.data.id,
         scores:
@@ -783,7 +783,7 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Could not add scores to your answer..!", {
+        notifications.show("Could not add scores to your answer!", {
           variant: "error",
           displayIcon: true,
         });

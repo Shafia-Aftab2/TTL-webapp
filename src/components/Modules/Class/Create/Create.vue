@@ -127,17 +127,17 @@ export default {
       // api call
       const response = await ClassService.Create(payload).catch((e) => {
         const errorMap = {
-          ['"name" contains bad word']: "Name should not be unethical..!",
+          ['"name" contains bad word']: "Name should not be unethical!",
           ['"schoolid" must be a valid mongo id']: "Invalid School",
           ["school not found"]: "Invalid School",
           ["class already exists in school"]:
-            "Class with same name already exists..!",
+            "Class with same name already exists!",
         };
 
         return {
           error:
             errorMap[e.response.data.message.toLowerCase()] ||
-            "Could not create class..!",
+            "Could not create class!",
         };
       });
 
@@ -155,7 +155,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Class Created. Redirecting..!",
+        message: "Class Created. Redirecting!",
       };
       const classId = response?.data?.id;
       // update user profile data (+failure case)

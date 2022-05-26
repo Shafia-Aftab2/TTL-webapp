@@ -3,12 +3,12 @@
   <div class="class-leaderboard-wrapper" v-if="!computedPageLoading">
     <div class="class-leaderboard-header-wrapper">
       <div class="class-leaderboard-header-details-wrapper">
-        <h2 class="h2" v-if="classDetails.name">
+        <h2 class="h2" v-if="classDetails?.name">
           <router-link
             :to="computedClassHomeLink"
             class="class-leaderboard-header-details-class-name-link"
           >
-            {{ classDetails.name }}
+            {{ classDetails?.name }}
           </router-link>
         </h2>
       </div>
@@ -53,9 +53,8 @@
           class="class-leaderboard-header-details-top-student-trophy-image"
         />
         <p class="p">
-          Oops..! It looks like there is no data for leaderboard. It will appear
-          here once the teacher has given some points to students for an
-          attempted task.
+          Nothing to see here yet! The leaderboard will appear here once your
+          students start to complete tasks and earn points.
         </p>
         <talkie-button :onClick="handleHomeRedirect" :varinat="'neutral'">
           Back Home
@@ -113,9 +112,9 @@ export default {
 
     // success case
     this.classDetails = {
-      id: classDetails.id,
-      name: classDetails.name,
-      langugage: classDetails.langugage,
+      id: classDetails?.id,
+      name: classDetails?.name,
+      langugage: classDetails?.langugage,
     };
     this.classLeaderboard = classLeaderboard
       ?.map((x) => ({

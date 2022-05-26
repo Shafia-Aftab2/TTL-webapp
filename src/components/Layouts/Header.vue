@@ -1,89 +1,110 @@
 <template>
-  <nav class="talkie-navbar-wrapper">
-    <!-- Left Side -->
-    <ul class="talkie-navbar-brand-wrapper">
-      <span
-        :class="[
-          hideSideBarIconOn
-            .map((x) =>
-              `talkie-navbar-brand-wrapper-toggle-button-${x}-hidden`.toString()
-            )
-            .join(' '),
-        ]"
-      >
-        <talkie-icon :name="'hamburger'" :onClick="onSidebarIconClick" />
+  <div class="talkie-navbar-wrapper-container">
+    <!-- display if there are trial days remaining -->
+    <div class="trial-bar" v-if="remainingTrialDays > 0">
+      Your free trial ends in {{ remainingTrialDays }}
+      {{ remainingTrialDays > 1 ? "days" : "day" }}.
+      <span class="trial-bar-close">
+        <talkie-icon
+          :size="16"
+          :noHighlights="true"
+          :name="'x-mark'"
+          :onClick="onCloseTrailBarClick"
+        />
       </span>
-      <router-link to="/" class="talkie-navbar-brand-logo-link">
-        <logo-talkie />
-      </router-link>
-    </ul>
-    <!-- Right Side -->
-    <ul class="talkie-navbar-links-wrapper" v-if="!hideLinksAndProfile">
-      <template v-if="computedIsLoggedIn">
-        <template v-if="!hideLinks" class="talkie-navbar">
-          <template v-for="link in links" :key="link">
-            <li
-              class="talkie-navbar-link-item"
-              v-if="link?.displayForRoles?.includes(computedUser.role)"
-            >
-              <a :href="link.url">{{ link.text }}</a>
-            </li>
-          </template>
-        </template>
-        <li class="talkie-navbar-profile-link-item">
-          <div class="talkie-navbar-profile-wrapper" tabindex="0">
-            <a class="talkie-navbar-profile-name" href="#">
-              {{ computedUser?.name }}
-            </a>
-            <talkie-icon
-              v-if="!computedUser?.image"
-              :size="25"
-              :name="'profile'"
-              :isActive="true"
-            />
-            <span
-              class="talkie-navbar-profile-avatar"
-              v-html="computedUser?.image"
-              v-if="computedUser?.image"
-            >
-            </span>
-            <div class="talkie-navbar-profile-options-wrapper">
-              <ul class="talkie-navbar-profile-options-list">
-                <li class="talkie-navbar-profile-options-list-item">
-                  <router-link to="/">Home</router-link>
-                </li>
-                <li class="talkie-navbar-profile-options-list-item">
-                  <router-link to="/profile/self">Profile</router-link>
-                </li>
-                <template v-for="link in links" :key="link.text">
-                  <li
-                    class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
-                    v-if="link?.displayForRoles?.includes(computedUser.role)"
-                  >
-                    <router-link :to="link.url">
-                      {{ link.text }}
-                    </router-link>
-                  </li>
-                </template>
-                <li class="talkie-navbar-profile-options-list-item">
-                  <router-link to="/auth/logout">Logout</router-link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </li>
-      </template>
-      <template v-if="!computedIsLoggedIn">
-        <li
-          class="talkie-navbar-link-item talkie-navbar-link-item-always-visiable"
+    </div>
+
+    <nav
+      :class="[
+        'talkie-navbar-wrapper',
+        remainingTrialDays > 0 && 'talkie-navbar-wrapper-trail-pad',
+      ]"
+    >
+      <!-- Left Side -->
+      <ul class="talkie-navbar-brand-wrapper">
+        <span
+          :class="[
+            hideSideBarIconOn
+              .map((x) =>
+                `talkie-navbar-brand-wrapper-toggle-button-${x}-hidden`.toString()
+              )
+              .join(' '),
+          ]"
         >
-          <router-link to="/auth/login">Login</router-link>
-          &nbsp;<strong>/</strong>&nbsp;
-          <router-link to="/auth/signup">Signup</router-link>
-        </li>
-      </template>
-    </ul>
-  </nav>
+          <talkie-icon :name="'hamburger'" :onClick="onSidebarIconClick" />
+        </span>
+        <router-link to="/" class="talkie-navbar-brand-logo-link">
+          <logo-talkie />
+        </router-link>
+      </ul>
+      <!-- Right Side -->
+      <ul class="talkie-navbar-links-wrapper" v-if="!hideLinksAndProfile">
+        <template v-if="computedIsLoggedIn">
+          <template v-if="!hideLinks" class="talkie-navbar">
+            <template v-for="link in links" :key="link">
+              <li
+                class="talkie-navbar-link-item"
+                v-if="link?.displayForRoles?.includes(computedUser.role)"
+              >
+                <a :href="link.url">{{ link.text }}</a>
+              </li>
+            </template>
+          </template>
+          <li class="talkie-navbar-profile-link-item">
+            <div class="talkie-navbar-profile-wrapper" tabindex="0">
+              <a class="talkie-navbar-profile-name" href="#">
+                {{ computedUser?.name }}
+              </a>
+              <talkie-icon
+                v-if="!computedUser?.image"
+                :size="25"
+                :name="'profile'"
+                :isActive="true"
+              />
+              <span
+                class="talkie-navbar-profile-avatar"
+                v-html="computedUser?.image"
+                v-if="computedUser?.image"
+              >
+              </span>
+              <div class="talkie-navbar-profile-options-wrapper">
+                <ul class="talkie-navbar-profile-options-list">
+                  <li class="talkie-navbar-profile-options-list-item">
+                    <router-link to="/">Home</router-link>
+                  </li>
+                  <li class="talkie-navbar-profile-options-list-item">
+                    <router-link to="/profile/self">Profile</router-link>
+                  </li>
+                  <template v-for="link in links" :key="link.text">
+                    <li
+                      class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
+                      v-if="link?.displayForRoles?.includes(computedUser.role)"
+                    >
+                      <router-link :to="link.url">
+                        {{ link.text }}
+                      </router-link>
+                    </li>
+                  </template>
+                  <li class="talkie-navbar-profile-options-list-item">
+                    <router-link to="/auth/logout">Logout</router-link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li>
+        </template>
+        <template v-if="!computedIsLoggedIn">
+          <li
+            class="talkie-navbar-link-item talkie-navbar-link-item-always-disable"
+          >
+            <router-link to="/auth/login">Login</router-link>
+            &nbsp;<strong>/</strong>&nbsp;
+            <router-link to="/auth/signup">Signup</router-link>
+          </li>
+        </template>
+      </ul>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -109,6 +130,7 @@ export default {
         //   url: "#",
         // },
       ],
+      remainingTrialDays: 0, // TODO: get this from api
     };
   },
   computed: {
@@ -148,18 +170,41 @@ export default {
       // validator: (val) => ["phone", "tablet", "desktop"].includes(val), TODO: fix validation
     },
   },
+  methods: {
+    onCloseTrailBarClick() {
+      this.remainingTrialDays = null;
+    },
+  },
 };
 </script>
 
 <style scoped>
+.trial-bar {
+  position: fixed;
+  z-index: var(--t-zindex-80);
+  width: 100%;
+  background-color: var(--t-primary);
+  text-align: center;
+  padding: var(--t-space-8);
+  font-size: var(--t-fs-base);
+}
+.trial-bar-close {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: var(--t-space-8);
+}
+.talkie-navbar-wrapper-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
 .talkie-navbar-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: var(--t-shadow-dark);
   background-color: var(--t-white);
-  position: fixed;
-  top: 0;
   width: 100%;
   z-index: var(--t-zindex-70);
 }
@@ -278,6 +323,13 @@ export default {
 
 /* Responsiveness */
 @media (max-width: 599px) {
+  .trial-bar {
+    padding: var(--t-space-5);
+    font-size: var(--t-fs-small);
+  }
+  .talkie-navbar-wrapper-trail-pad {
+    margin-top: var(--t-space-24);
+  }
   .talkie-navbar-wrapper {
     padding: 0 var(--t-space-16);
     min-height: var(--t-space-50);
@@ -325,6 +377,13 @@ export default {
   }
 }
 @media (min-width: 600px) {
+  .trial-bar {
+    padding: var(--t-space-8);
+    font-size: var(--t-fs-base);
+  }
+  .talkie-navbar-wrapper-trail-pad {
+    margin-top: var(--t-space-32);
+  }
   .talkie-navbar-wrapper {
     padding: 0 var(--t-space-24);
     min-height: var(--t-space-58);

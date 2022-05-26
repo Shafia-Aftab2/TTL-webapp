@@ -5,7 +5,7 @@
       class="coming-soon-image"
     />
     <h4 class="h4">Coming Soon</h4>
-    <p class="p">This page is under construction. Stay Tuned..!</p>
+    <p class="p">This page is under construction. Stay Tuned!</p>
     <talkie-button
       :size="'medium'"
       :onClick="handleBackClick"

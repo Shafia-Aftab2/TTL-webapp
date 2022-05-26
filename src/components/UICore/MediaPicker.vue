@@ -170,7 +170,7 @@ export default {
           file: file,
         };
         if (!this.isValidMedia(mediaPicked?.file?.type)) {
-          notifications.show("Invalid Media Type..!", {
+          notifications.show("Invalid Media Type!", {
             variant: "error",
             displayIcon: true,
           });

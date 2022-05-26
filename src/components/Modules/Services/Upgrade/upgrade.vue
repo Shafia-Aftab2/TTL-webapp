@@ -3,7 +3,7 @@
     <div class="upgrade-info-wrapper">
       <h2 class="h2" v-if="!userIsSubscribed">Upgrade - Pricing</h2>
       <h2 class="h2" v-if="userIsSubscribed">
-        You account is Already Upgraded..!
+        You account is Already Upgraded!
       </h2>
 
       <h4 class="h4">£30 individual teacher / annual</h4>
@@ -174,7 +174,7 @@ export default {
       const response = await SubscriptionService.CreateSubscription().catch(
         () => {
           return {
-            error: "Failed to create subscription..!",
+            error: "Failed to create subscription!",
           };
         }
       );
@@ -192,7 +192,7 @@ export default {
       // success case
       this.backdropLoading = false;
       this.userIsSubscribed = true;
-      notifications.show("Subscription created successfully..!", {
+      notifications.show("Subscription created successfully!", {
         variant: "success",
         displayIcon: true,
       });
@@ -205,7 +205,7 @@ export default {
       const response = await SubscriptionService.RemoveSubscription().catch(
         () => {
           return {
-            error: "Failed to remove subscription..!",
+            error: "Failed to remove subscription!",
           };
         }
       );
@@ -223,7 +223,7 @@ export default {
       // success case
       this.backdropLoading = false;
       this.userIsSubscribed = false;
-      notifications.show("Subscription removed successfully..!", {
+      notifications.show("Subscription removed successfully!", {
         variant: "success",
         displayIcon: true,
       });

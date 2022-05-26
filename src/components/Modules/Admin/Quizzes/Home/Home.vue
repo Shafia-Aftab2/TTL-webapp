@@ -39,7 +39,7 @@
           :closeButton="true"
           :centered="true"
           :title="'Are You Sure'"
-          :description="'Your students responses and your feedbacks will also be deleted.'"
+          :description="'Are you sure? Your student\'s responses and feedback will also be deleted.'"
           :onClose="handleTopicDeleteDialogClose"
           :onConfirm="handleTaskDeletion"
           v-if="taskToDelete"
@@ -235,7 +235,7 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Delete Task..!", {
+        notifications.show("Failed To Delete Task!", {
           variant: "error",
           displayIcon: true,
         });
@@ -244,7 +244,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Task Deleted Successfully..!", {
+      notifications.show("Task Deleted Successfully!", {
         variant: "success",
         displayIcon: true,
       });
@@ -266,7 +266,7 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Update Task Status..!", {
+        notifications.show("Failed to update task status!", {
           variant: "error",
           displayIcon: true,
         });
@@ -275,7 +275,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Task Status Updated Successfully..!", {
+      notifications.show("Task status updated successfully!", {
         variant: "success",
         displayIcon: true,
       });
