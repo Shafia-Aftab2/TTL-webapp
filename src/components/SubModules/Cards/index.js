@@ -3,6 +3,7 @@ import TalkieFeedbackCard from "./Feedback";
 import TalkieStudentCard from "./Student";
 import TalkieConversationCard from "./Conversation";
 import TalkieTopicCard from "./Topic";
+import TalkiePricePlanCard from "./PricePlan";
 
 export {
   TalkieQuestionCard,
@@ -10,4 +11,5 @@ export {
   TalkieStudentCard,
   TalkieConversationCard,
   TalkieTopicCard,
+  TalkiePricePlanCard,
 };
