@@ -25,6 +25,7 @@ import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
+import ProfileSettingsAccount from "../components/Modules/Profile/Settings/Account";
 import ProfileSubscriptionHalt from "../components/Modules/Profile/Settings/Subscription/Halt";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
 import ServicesUpgradeSuccess from "../components/Modules/Services/Upgrade/Success";
@@ -321,6 +322,12 @@ const routes = [
     component: Layout,
     props: { variant: "dark" },
     children: [
+      {
+        name: "ProfileSettingsAccount",
+        path: "/profile/settings/account",
+        alias: "/profile/settings",
+        component: ProfileSettingsAccount,
+      },
       {
         name: "ProfileSubscriptionPause",
         path: "/profile/settings/pause-subscription",
