@@ -1,23 +1,23 @@
 <template>
   <div class="profile-subscription-halt-wrapper">
     <h2 class="h2">
-      {{ this.copy.pause.title }}
+      {{ this.copy?.[this.haltMode]?.title }}
     </h2>
 
     <p
       class="p profile-subscription-halt-description"
-      v-html="this.copy.pause.description"
+      v-html="this.copy?.[this.haltMode]?.description"
     ></p>
 
     <div class="profile-subscription-halt-topics-wrapper">
       <talkie-topic-card
-        v-for="reason in this.copy.pause.reasons"
+        v-for="reason in this.copy?.[this.haltMode]?.reasons"
         :key="reason"
         :fullWidth="true"
-        :topicName="reason.text"
+        :topicName="reason?.text"
       />
       <talkie-button class="ml-auto" :variant="'dark'">
-        {{ this.copy.pause.ctaText }}
+        {{ this.copy?.[this.haltMode]?.ctaText }}
       </talkie-button>
     </div>
   </div>
@@ -72,6 +72,44 @@ export default {
           ],
           ctaText: "Pause plan",
         },
+        cancel: {
+          title: "Cancel subscription",
+          description: `
+            We’re sorry to see you go :( 
+
+            <br />
+            <br />
+            We’d love to know why you want to cancel. 
+            <br />
+            Please tick as many as you want:`,
+          reasons: [
+            {
+              checked: false,
+              text: "It’s too expensive",
+            },
+            {
+              checked: false,
+              text: "Products and features are too complicated for me",
+            },
+            {
+              checked: false,
+              text: "The app didn’t work as expected",
+            },
+            {
+              checked: false,
+              text: "I’m not using it enough",
+            },
+            {
+              checked: false,
+              text: "I only needed it for this term / for a short period",
+            },
+            {
+              checked: false,
+              text: "Other (please specify)",
+            },
+          ],
+          ctaText: "Cancel plan",
+        },
       },
     };
   },
@@ -80,11 +118,6 @@ export default {
       type: String,
       default: "pause",
       validator: (val) => ["pause", "cancel"].includes(val),
-    },
-  },
-  methods: {
-    log(text) {
-      console.log("text => ", text);
     },
   },
 };

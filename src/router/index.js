@@ -320,6 +320,12 @@ const routes = [
         props: { haltMode: "pause" },
         component: ProfileSubscriptionHalt,
       },
+      {
+        name: "ProfileSubscriptionCancel",
+        path: "/profile/self/settings/cancel-subscription",
+        props: { haltMode: "cancel" },
+        component: ProfileSubscriptionHalt,
+      },
     ],
   },
   {
