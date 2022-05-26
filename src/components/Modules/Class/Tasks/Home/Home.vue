@@ -4,7 +4,7 @@
     <template v-if="!loading">
       <div class="class-home-header-wrapper">
         <div class="class-home-header-details-wrapper">
-          <h2 class="h2" v-if="classDetails.name">{{ classDetails.name }}</h2>
+          <h2 class="h2" v-if="classDetails?.name">{{ classDetails?.name }}</h2>
           <div class="class-home-header-details-icons-wrapper" v-if="isTeacher">
             <talkie-icon :name="'trophy'" :onClick="hanldeClassTrophyClick" />
             <talkie-icon :name="'setting'" :onClick="handleClassManageClick" />
@@ -84,7 +84,7 @@
       :closeButton="true"
       :centered="true"
       :title="'Are You Sure'"
-      :description="'Your students responses and your feedbacks will also be deleted.'"
+      :description="'Are you sure? Your student\'s responses and feedback will also be deleted.'"
       :onClose="handleTaskDeleteReset"
       :onConfirm="handleTaskDeletion"
       v-if="showDeleteTaskDialog"
@@ -312,7 +312,7 @@ export default {
       );
 
       if (!taskFeedback) {
-        notifications.show("Could not create feedback..!", {
+        notifications.show("Could not create feedback!", {
           variant: "error",
           displayIcon: true,
         });
@@ -335,7 +335,7 @@ export default {
     },
     async handleTaskWholeClassFeedbackSend() {
       if (!this.taskResponsesWholeClassFeedbackRecording) {
-        notifications.show("Could not create feedback..!", {
+        notifications.show("Could not create feedback!", {
           variant: "error",
           displayIcon: true,
         });
@@ -414,7 +414,7 @@ export default {
 
       // file upload failure
       if (!voiceRecording) {
-        notifications.show("Could not create feedback..!", {
+        notifications.show("Could not create feedback!", {
           variant: "error",
           displayIcon: true,
         });
@@ -437,7 +437,7 @@ export default {
 
       // failure case
       if (!response) {
-        notifications.show("Could not create feedback..!", {
+        notifications.show("Could not create feedback!", {
           variant: "error",
           displayIcon: true,
         });
@@ -446,7 +446,7 @@ export default {
       }
 
       // success case
-      notifications.show("Feeback Created..!", {
+      notifications.show("Feedback Created!", {
         variant: "success",
         displayIcon: true,
       });
@@ -462,7 +462,7 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Delete Task..!", {
+        notifications.show("Failed To Delete Task!", {
           variant: "error",
           displayIcon: true,
         });
@@ -471,7 +471,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Task Deleted Successfully..!", {
+      notifications.show("Task Deleted Successfully!", {
         variant: "success",
         displayIcon: true,
       });

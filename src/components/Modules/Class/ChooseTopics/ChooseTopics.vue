@@ -178,7 +178,7 @@ export default {
         this.loading = false;
         this.formStatus = {
           type: "error",
-          message: "At least one topic must be selected..!",
+          message: "At least one topic must be selected!",
         };
         return;
       }
@@ -205,7 +205,7 @@ export default {
       const response = await ClassService.AddTopics(classId, payload).catch(
         () => {
           return {
-            error: "Could not add class topic/s..!",
+            error: "Could not add class topic/s!",
           };
         }
       );
@@ -224,7 +224,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Class Topics Added. Redirecting..!",
+        message: "Class Topics Added. Redirecting!",
       };
       this.$router.push(`/classes/${classId}/students/invite`);
     },

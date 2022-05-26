@@ -99,15 +99,15 @@ export default {
       // api call
       const response = await AuthService.ForgotPassword(payload).catch((e) => {
         const errorMap = {
-          ["no users found with this email"]: "Account not found..!",
-          ["inactive account"]: "Inactive account..!",
-          ['"email" must be a valid email']: "Email must be valid..!",
+          ["no users found with this email"]: "Account not found!",
+          ["inactive account"]: "Inactive account!",
+          ['"email" must be a valid email']: "Email must be valid!",
         };
 
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Could not make reset password request..!",
+            "Could not make reset password request!",
         };
       });
 
@@ -126,7 +126,7 @@ export default {
       this.formStatus = {
         type: "success",
         message:
-          "Password Reset Link Sent To Your Email..! Please check your inbox for more details.",
+          "Password Reset Link Sent To Your Email! Please check your inbox for more details.",
       };
     },
   },

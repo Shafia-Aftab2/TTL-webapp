@@ -39,7 +39,7 @@
           <talkie-input
             :multiline="true"
             :name="'questionText'"
-            :placeholder="'Question text (optional)'"
+            :placeholder="'Anything else you want to say? (optional)'"
           />
         </template>
 
@@ -111,7 +111,7 @@
         <template v-if="selectedTaskType === taskTypes.TRANSLATION">
           <talkie-input
             :name="'textToTranslate'"
-            :placeholder="'Text To Translate (required)'"
+            :placeholder="'What do students need to translate?'"
             :hint="{
               type: errors.textToTranslate ? 'error' : null,
               message: errors.textToTranslate ? errors.textToTranslate : null,
@@ -119,7 +119,7 @@
           />
           <talkie-input
             :name="'translatedText'"
-            :placeholder="'Translated Text (required)'"
+            :placeholder="'What\'s the correct translation?'"
             :hint="{
               type: errors.translatedText ? 'error' : null,
               message: errors.translatedText ? errors.translatedText : null,
@@ -131,7 +131,7 @@
         <template v-if="selectedTaskType === taskTypes.EMOJI_STORY">
           <talkie-input-emojis
             :name="'emojiStory'"
-            :placeholder="'Pick emojis'"
+            :placeholder="'Select your emojis here'"
             :hint="{
               type: errors.emojiStory ? 'error' : null,
               message: errors.emojiStory ? errors.emojiStory : null,
@@ -144,7 +144,7 @@
           <talkie-input
             :multiline="true"
             :name="'questionText'"
-            :placeholder="'Question text (optional)'"
+            :placeholder="'Anything else you want to say?'"
           />
         </template>
 
@@ -546,7 +546,7 @@ export default {
             this.loading = false;
             this.formStatus = {
               type: "error",
-              message: "Could not upload audio file..!",
+              message: "Could not upload audio file!",
               loading: false,
             };
             return;
@@ -576,7 +576,7 @@ export default {
             this.loading = false;
             this.formStatus = {
               type: "error",
-              message: "Could not upload image file..!",
+              message: "Could not upload image file!",
               loading: false,
             };
             return;
@@ -627,14 +627,14 @@ export default {
       const response = await TaskService.Create(this.classId, payload).catch(
         (e) => {
           const errorMap = {
-            ['"title" contains bad word']: "Title should not be unethical..!",
+            ['"title" contains bad word']: "Title should not be unethical!",
             ['"questiontext" contains bad word']:
-              "Question text should not be unethical..!",
+              "Question text should not be unethical!",
             ['"topic" must be a valid mongo id']: "Invalid Topic",
-            ["Q&A"]: "Could not create conversation..!",
-            ["Caption-This"]: "Could not create caption task..!",
-            ["Translation"]: "Could not create translation task..!",
-            ["Emoji-Story"]: "Could not create emoji story task..!",
+            ["Q&A"]: "Could not create conversation!",
+            ["Caption-This"]: "Could not create caption task!",
+            ["Translation"]: "Could not create translation task!",
+            ["Emoji-Story"]: "Could not create emoji story task!",
           };
 
           return {
@@ -659,21 +659,21 @@ export default {
 
       // success case
       this.loading = false;
-      this.formStatus = {
-        type: "success",
-        message:
-          this.selectedTaskType === TaskTypes.QUESTION_ANSWER
-            ? "Conversation Created. Redirecting..!"
-            : this.selectedTaskType === TaskTypes.CAPTION_THIS
-            ? "Caption Task Created. Redirecting..!"
-            : this.selectedTaskType === TaskTypes.TRANSLATION
-            ? "Translation Task Created. Redirecting..!"
-            : this.selectedTaskType === TaskTypes.EMOJI_STORY
-            ? "Emoji Story Task Created. Redirecting..!"
-            : "",
-        animateEllipse: false,
-        loading: false,
-      };
+      // this.formStatus = {
+      //   type: "success",
+      //   message:
+      //     this.selectedTaskType === TaskTypes.QUESTION_ANSWER
+      //       ? "Conversation Created. Redirecting!"
+      //       : this.selectedTaskType === TaskTypes.CAPTION_THIS
+      //       ? "Caption Task Created. Redirecting!"
+      //       : this.selectedTaskType === TaskTypes.TRANSLATION
+      //       ? "Translation Task Created. Redirecting!"
+      //       : this.selectedTaskType === TaskTypes.EMOJI_STORY
+      //       ? "Emoji Story Task Created. Redirecting!"
+      //       : "",
+      //   animateEllipse: false,
+      //   loading: false,
+      // };
       const taskId = response?.data?.id;
       this.handleRedirection(
         `/classes/${this.classId}/tasks/${taskId}/status?status=created`,

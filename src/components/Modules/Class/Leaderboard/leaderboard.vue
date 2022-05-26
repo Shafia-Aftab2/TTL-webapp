@@ -53,9 +53,8 @@
           class="class-leaderboard-header-details-top-student-trophy-image"
         />
         <p class="p">
-          Oops..! It looks like there is no data for leaderboard. It will appear
-          here once the teacher has given some points to students for an
-          attempted task.
+          Nothing to see here yet! The leaderboard will appear here once your
+          students start to complete tasks and earn points.
         </p>
         <talkie-button :onClick="handleHomeRedirect" :varinat="'neutral'">
           Back Home

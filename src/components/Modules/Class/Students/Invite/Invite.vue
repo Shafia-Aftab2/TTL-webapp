@@ -3,7 +3,7 @@
     <div class="class-students-invite-info-wrapper">
       <h2 class="h2">Invite your students</h2>
       <p class="p" style="margin-bottom: 0 !important">
-        Copy and paste the url below
+        Share this url with your students to invite them to the class
       </p>
     </div>
 
@@ -65,7 +65,7 @@ export default {
 
       // error case
       if (!isCopiedToClipboard) {
-        notifications.show("Failed To Copy To Clipboard..!", {
+        notifications.show("Failed to copy to clipboard!", {
           variant: "error",
           displayIcon: true,
         });
@@ -74,7 +74,7 @@ export default {
       }
 
       // success case
-      notifications.show("Copied To Clipboard..!", {
+      notifications.show("Copied to clipboard!", {
         variant: "success",
         displayIcon: true,
       });

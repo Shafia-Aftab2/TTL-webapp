@@ -146,17 +146,17 @@ export default {
         payload
       ).catch((e) => {
         const errorMap = {
-          ["token not found"]: "Invalid Reset Link..!",
+          ["token not found"]: "Invalid Reset Link!",
           ["password must be at least 8 characters"]:
-            "Password must contain at least 8 characters..!",
+            "Password must contain at least 8 characters!",
           ["password must contain at least 1 letter and 1 number"]:
-            "Password must contain at least 1 letter and 1 number..!",
+            "Password must contain at least 1 letter and 1 number!",
         };
 
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Failed to change password..!",
+            "Failed to change password!",
         };
       });
 
@@ -174,7 +174,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Password reset successfull..!",
+        message: "Password reset successfull!",
       };
       this.isPasswordChanged = true;
     },

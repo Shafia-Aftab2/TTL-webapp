@@ -328,7 +328,7 @@ export default {
 
       // validate form data
       if (!responseId) {
-        notifications.show("No student response to add rating for..!", {
+        notifications.show("No student response to add rating for!", {
           variant: "error",
           displayIcon: true,
         });
@@ -349,7 +349,7 @@ export default {
         payload
       ).catch(() => {
         return {
-          error: "Could not add response rating..!",
+          error: "Could not add response rating!",
         };
       });
 
@@ -365,7 +365,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Rating response added successfully..!", {
+      notifications.show("Rating response added successfully!", {
         variant: "success",
         displayIcon: true,
       });
@@ -433,7 +433,7 @@ export default {
           loading: false,
           message: {
             type: "error",
-            text: "Failed to load latest responses..!",
+            text: "Failed to load latest responses!",
           },
         };
         return;
@@ -512,7 +512,7 @@ export default {
     async handleMessageCreation(recording) {
       // if teacher has no response to give feedback for
       if (!this.computedResponseId && this.userMode === rolesList.TEACHER) {
-        notifications.show("No Student Responses To Give Feedback For..!", {
+        notifications.show("No Student Responses To Give Feedback For!", {
           variant: "error",
           displayIcon: true,
         });
@@ -539,7 +539,7 @@ export default {
             type: "error",
             text: `Failed To Create ${
               this.userMode === rolesList.STUDENT ? "Response" : "Feedback"
-            }..!`,
+            }!`,
           },
         };
         return;
@@ -567,7 +567,7 @@ export default {
             type: "error",
             text: `Failed To Create ${
               this.userMode === rolesList.STUDENT ? "Response" : "Feedback"
-            }..!`,
+            }!`,
           },
         };
         return;

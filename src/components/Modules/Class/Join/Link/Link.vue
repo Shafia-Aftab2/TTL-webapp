@@ -31,15 +31,16 @@
         class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
       >
         <h3 class="h3" v-if="isJoined">
-          You are now a member of
+          Awesome! You're now a member of
           <router-link
             class="class-join-link-content-class-name"
             :to="classDetails?.link"
           >
             {{ classDetails?.name }}
           </router-link>
+          . 🥳
         </h3>
-        <h3 class="h3" v-if="!isJoined">Could not join class..!</h3>
+        <h3 class="h3" v-if="!isJoined">Could not join class!</h3>
 
         <talkie-button :onClick="handleCTAButtonClick">
           {{ isJoined ? `Go To Class Inbox` : `Try Again` }}
@@ -271,7 +272,7 @@ export default {
         this.backdropLoading = false;
         this.requiredClassIdToLeaveStatus = {
           type: "error",
-          message: "Failed To Leave Existing Class..!",
+          message: "Failed To Leave Existing Class!",
         };
         return;
       }
@@ -284,7 +285,7 @@ export default {
         this.backdropLoading = false;
         this.requiredClassIdToLeaveStatus = {
           type: "error",
-          message: "Failed To Leave Existing Class. Please Try Again..!",
+          message: "Failed To Leave Existing Class. Please Try Again!",
         };
         return;
       }

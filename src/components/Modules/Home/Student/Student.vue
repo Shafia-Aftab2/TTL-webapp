@@ -14,11 +14,9 @@
         >
           Enter
         </talkie-button>
-        <p class="student-home-content-item-header">Class Mode</p>
+        <p class="student-home-content-item-header">Your Inbox</p>
         <p class="student-home-content-item-description">
-          <!-- You have <strong>3 new </strong>tasks -->
-          <!-- You may have due tasks -->
-          Q&amp;A
+          Your main tasks set by your teacher can be found here.
         </p>
       </div>
       <div class="student-home-content-item">

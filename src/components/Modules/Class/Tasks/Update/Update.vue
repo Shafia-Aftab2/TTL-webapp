@@ -4,15 +4,15 @@
     <talkie-form
       v-slot="{ errors }"
       :initialValues="{
-        topic: taskDetails.topic,
-        title: taskDetails.title,
-        questionText: taskDetails.questionText,
+        topic: taskDetails?.topic,
+        title: taskDetails?.title,
+        questionText: taskDetails?.questionText,
       }"
       :validationSchema="updateQandATopicSchema"
       :onSubmit="handleSubmit"
       :customClass="'class-update-convo-wrapper'"
     >
-      <h2 class="class-update-convo-header h2">Edit Task</h2>
+      <h2 class="class-update-convo-header h2">Edit task</h2>
       <div class="class-update-convo-form">
         <talkie-select-group
           :name="'topic'"
@@ -34,7 +34,7 @@
         <talkie-input
           :multiline="true"
           :name="'questionText'"
-          :placeholder="'Question text (optional)'"
+          :placeholder="'Anything else you want to say? (optional)'"
         />
         <talkie-alert
           :text="formStatus.message"
@@ -135,30 +135,30 @@ export default {
       {
         title: capitalize(topicTypes.ADVANCED),
         items: classDetails?.topics
-          ?.filter((x) => x.type === topicTypes.ADVANCED)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.ADVANCED)
+          ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.INTERMEDIATE),
         items: classDetails?.topics
-          ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.BEGINNER),
         items: classDetails?.topics
-          ?.filter((x) => x.type === topicTypes.BEGINNER)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.BEGINNER)
+          ?.map((x) => x?.name),
       },
     ];
 
     // task details (+ failure case)
     const taskDetails = await this.getTaskDetails(taskId);
-    if (!taskDetails || taskDetails.type !== TaskTypes.QUESTION_ANSWER)
+    if (!taskDetails || taskDetails?.type !== TaskTypes.QUESTION_ANSWER)
       return this.$router.push("/404");
 
     // success case
-    this.topics = classDetails.topics;
+    this.topics = classDetails?.topics;
     this.taskDetails = {
       topic: taskDetails?.topic?.name,
       title: taskDetails?.title,
@@ -175,7 +175,7 @@ export default {
 
       // form data
       const { title, topic: topicName, questionText } = values;
-      const voiceForQnA = this.taskDetails.voiceForQnA;
+      const voiceForQnA = this.taskDetails?.voiceForQnA;
       const topicId = this?.topics?.find(
         (x) => x?.name?.trim() === topicName?.trim()
       )?.id;
@@ -192,16 +192,16 @@ export default {
       const response = await TaskService.Update(this.taskId, payload).catch(
         (e) => {
           const errorMap = {
-            ['"title" contains bad word']: "Title should not be unethical..!",
+            ['"title" contains bad word']: "Title should not be unethical!",
             ['"questiontext" contains bad word']:
-              "Question text should not be unethical..!",
+              "Question text should not be unethical!",
             ['"topic" must be a valid mongo id']: "Invalid Topic",
           };
 
           return {
             error:
               errorMap[e.response.data.message.toLowerCase()] ||
-              "Could not update task..!",
+              "Could not update task!",
           };
         }
       );
@@ -221,7 +221,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Task Updated. Redirecting..!",
+        message: "Task Updated. Redirecting!",
         animateEllipse: false,
       };
       this.$router.push(

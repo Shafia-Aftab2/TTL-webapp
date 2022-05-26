@@ -3,7 +3,7 @@
   <template v-if="!computedLoading">
     <div class="class-tasks-inbox-wrapper">
       <div class="class-tasks-inbox-header-wrapper">
-        <h2 class="h2">Speaking Portfolio</h2>
+        <h2 class="h2">Your inbox</h2>
         <div class="class-tasks-inbox-header-select-wrapper">
           <talkie-select-group
             :placeholder="'Filter by question type'"

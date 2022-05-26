@@ -233,12 +233,13 @@
         <div class="class-manage-modal-invite-students-header-wrapper">
           <h3 class="h3">Delete Class</h3>
           <p class="p">
-            Your students, feedbacks, responses, tasks, leaderboards and other
-            data related to this class will be deleted permanently.?
+            All the class data including your students' recordings and your
+            feedback will be deleted permanently. Are you sure you want to
+            delete?
           </p>
         </div>
         <talkie-button :variant="'danger'" :onClick="handleClassDeletion">
-          Yes, Delete
+          Yes, I'm sure.
         </talkie-button>
       </div>
     </template>
@@ -373,7 +374,7 @@ export default {
 
       // error case
       if (!isCopiedToClipboard) {
-        notifications.show("Failed To Copy To Clipboard..!", {
+        notifications.show("Failed to copy to clipboard!", {
           variant: "error",
           displayIcon: true,
         });
@@ -381,7 +382,7 @@ export default {
       }
 
       // success case
-      notifications.show("Copied To Clipboard..!", {
+      notifications.show("Copied to clipboard!", {
         variant: "success",
         displayIcon: true,
       });
@@ -412,7 +413,7 @@ export default {
       const response = await ClassService.AddTopics(classId, payload).catch(
         () => {
           return {
-            error: "Could not update class topic/s..!",
+            error: "Could not update class topic/s!",
           };
         }
       );
@@ -429,7 +430,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Class topics updated..!", {
+      notifications.show("Class topics updated!", {
         variant: "success",
         displayIcon: true,
       });
@@ -494,7 +495,7 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Delete Class..!", {
+        notifications.show("Failed To Delete Class!", {
           variant: "error",
           displayIcon: true,
         });
@@ -503,7 +504,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Class Deleted Successfully..!", {
+      notifications.show("Class Deleted Successfully!", {
         variant: "success",
         displayIcon: true,
       });
@@ -547,7 +548,7 @@ export default {
         payload
       ).catch(() => {
         return {
-          error: "Could not remove student..!",
+          error: "Could not remove student!",
         };
       });
 
@@ -566,7 +567,7 @@ export default {
       this.classStudents = [
         ...this.classStudents.filter((x) => x?.id !== studentId),
       ];
-      notifications.show("Student removed successfully..!", {
+      notifications.show("Student removed successfully!", {
         variant: "success",
         displayIcon: true,
       });
@@ -591,7 +592,7 @@ export default {
         payload
       ).catch(() => {
         return {
-          error: "Could not update student password..!",
+          error: "Could not update student password!",
         };
       });
 
@@ -607,7 +608,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Student password updated successfully..!", {
+      notifications.show("Student password updated successfully!", {
         variant: "success",
         displayIcon: true,
       });
@@ -623,7 +624,7 @@ export default {
       if (name === this.classDetails?.name) {
         this.backdropLoading = false;
         this.editClassMode = false;
-        notifications.show("Class updated successfully..!", {
+        notifications.show("Class updated successfully!", {
           variant: "success",
           displayIcon: true,
         });
@@ -637,15 +638,15 @@ export default {
       const response = await ClassService.Update(this.classId, payload).catch(
         (e) => {
           const errorMap = {
-            ['"name" contains bad word']: "Name should not be unethical..!",
+            ['"name" contains bad word']: "Name should not be unethical!",
             ["class already exists in school"]:
-              "Class with same name already exists..!",
+              "Class with same name already exists!",
           };
 
           return {
             error:
               errorMap[e.response.data.message.toLowerCase()] ||
-              "Could not update class..!",
+              "Could not update class!",
           };
         }
       );
@@ -664,7 +665,7 @@ export default {
       this.classDetails.name = name; // update class name in state
       this.backdropLoading = false;
       this.editClassMode = false;
-      notifications.show("Class updated successfully..!", {
+      notifications.show("Class updated successfully!", {
         variant: "success",
         displayIcon: true,
       });
