@@ -26,6 +26,7 @@ import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
 import ServicesUpgrade from "../components/Modules/Services/Upgrade";
+import ServicesUpgradeSuccess from "../components/Modules/Services/Upgrade/Success";
 import ServicesPrivacyPolicy from "../components/Modules/Services/PrivacyPolicy";
 import ServicesTermsOfService from "../components/Modules/Services/TermsOfService";
 import Error404 from "../components/Modules/Error404";
@@ -329,6 +330,11 @@ const routes = [
             blockedRoles: [roles.STUDENT],
           },
         },
+      },
+      {
+        name: "ServicesUpgradeSuccess",
+        path: "/services/upgrade/success",
+        component: ServicesUpgradeSuccess,
       },
       {
         name: "ServicesPrivacyPolicy",
