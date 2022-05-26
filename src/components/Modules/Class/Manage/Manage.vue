@@ -3,12 +3,12 @@
   <div class="class-manage-wrapper" v-if="!computedPageLoading">
     <div class="class-manage-header-wrapper">
       <div class="class-manage-header-details-wrapper">
-        <h2 class="h2" v-if="classDetails.name && !editClassMode">
+        <h2 class="h2" v-if="classDetails?.name && !editClassMode">
           <router-link
             :to="computedClassHomeLink"
             class="class-manage-header-details-class-name-link"
           >
-            {{ classDetails.name }}
+            {{ classDetails?.name }}
           </router-link>
         </h2>
         <talkie-form
@@ -16,7 +16,7 @@
           v-if="editClassMode"
           v-slot="{ errors }"
           :initialValues="{
-            name: classDetails.name,
+            name: classDetails?.name,
           }"
           :validationSchema="updateClassSchema"
           :onSubmit="handleEditClassSubmit"
@@ -339,9 +339,9 @@ export default {
 
     // success case
     this.classDetails = {
-      id: classDetails.id,
-      name: classDetails.name,
-      langugage: classDetails.langugage,
+      id: classDetails?.id,
+      name: classDetails?.name,
+      langugage: classDetails?.langugage,
     };
     this.classStudents = classDetails?.students?.map((x) => ({
       id: x?.id,
@@ -357,11 +357,11 @@ export default {
     }));
     this.activeClassTopicIds = (classDetails?.topics || [])?.map((x) => x?.id);
     this.topicsList = {
-      beginner: topicsList.filter((x) => x.type === topicTypes.BEGINNER),
+      beginner: topicsList.filter((x) => x?.type === topicTypes.BEGINNER),
       intermediate: topicsList.filter(
-        (x) => x.type === topicTypes.INTERMEDIATE
+        (x) => x?.type === topicTypes.INTERMEDIATE
       ),
-      advanced: topicsList.filter((x) => x.type === topicTypes.ADVANCED),
+      advanced: topicsList.filter((x) => x?.type === topicTypes.ADVANCED),
     };
     this.pageLoading = false;
   },
@@ -435,8 +435,8 @@ export default {
       });
     },
     handleTabChange(x) {
-      this.activeTab = x.toLowerCase();
-      URLModifier.addToURL("tab", x.toLowerCase());
+      this.activeTab = x?.toLowerCase();
+      URLModifier.addToURL("tab", x?.toLowerCase());
     },
     handleAddStudentButtonClick() {
       this.modalMode = "invite-students";
@@ -620,7 +620,7 @@ export default {
       const { name } = values;
 
       // if name is same then return
-      if (name === this.classDetails.name) {
+      if (name === this.classDetails?.name) {
         this.backdropLoading = false;
         this.editClassMode = false;
         notifications.show("Class updated successfully..!", {

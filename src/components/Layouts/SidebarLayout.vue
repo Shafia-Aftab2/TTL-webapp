@@ -51,15 +51,15 @@
       >
         <talkie-check-box
           v-for="_checkbox in computedSidebar.checkboxes"
-          :label="_checkbox.label"
-          :isChecked="_checkbox.isChecked"
-          :disabled="_checkbox.disabled"
-          :onToggle="_checkbox.onToggle"
+          :label="_checkbox?.label"
+          :isChecked="_checkbox?.isChecked"
+          :disabled="_checkbox?.disabled"
+          :onToggle="_checkbox?.onToggle"
           :key="_checkbox"
           :customClass="`${
-            _checkbox.isActive &&
+            _checkbox?.isActive &&
             'talkie-sidebar-navigation-content-checkbox-active'
-          } ${_checkbox.customClass}`"
+          } ${_checkbox?.customClass}`"
         />
       </ul>
       <ul

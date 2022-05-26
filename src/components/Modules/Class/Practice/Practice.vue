@@ -580,19 +580,19 @@ export default {
 
     // success case
     this.classDetails = {
-      id: classDetails.id,
-      name: classDetails.name,
-      language: classDetails.language,
-      parentSchool: classDetails.schoolName,
+      id: classDetails?.id,
+      name: classDetails?.name,
+      language: classDetails?.language,
+      parentSchool: classDetails?.schoolName,
       teacher: {
-        id: classDetails.teacher.id,
-        name: classDetails.teacher.name,
-        image: classDetails.teacher.image,
+        id: classDetails?.teacher.id,
+        name: classDetails?.teacher.name,
+        image: classDetails?.teacher.image,
       },
-      topics: classDetails.topics.map((x) => ({
-        name: x.name,
-        type: x.type,
-        id: x.id,
+      topics: classDetails?.topics.map((x) => ({
+        name: x?.name,
+        type: x?.type,
+        id: x?.id,
       })),
     };
     this.classTasks = classTasks?.results

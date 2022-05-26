@@ -94,9 +94,9 @@ export default {
 
     // success case
     this.classDetails = {
-      id: classDetails.id,
-      name: classDetails.name,
-      langugage: classDetails.langugage,
+      id: classDetails?.id,
+      name: classDetails?.name,
+      langugage: classDetails?.langugage,
     };
     this.userStats = {
       name: user?.name,
@@ -105,7 +105,7 @@ export default {
       image: user?.image
         ? generateAvatar(user?.image?.split("-")[1], user?.image)
         : null,
-      className: classDetails.name,
+      className: classDetails?.name,
     };
     this.pageLoading = false;
   },

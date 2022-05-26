@@ -580,7 +580,9 @@ export default {
         {
           id: createdMessage?.id,
           from:
-            this.userMode === rolesList.STUDENT ? this.studentId : this.user.id,
+            this.userMode === rolesList.STUDENT
+              ? this.studentId
+              : this.user?.id,
           audio: createdMessage?.voiceRecording,
         },
       ];

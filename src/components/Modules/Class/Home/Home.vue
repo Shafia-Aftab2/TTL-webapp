@@ -275,7 +275,7 @@ export default {
       this.user = authUser.getUser();
 
       // get user role
-      if (this.user.role === roles.TEACHER) this.isTeacher = true;
+      if (this.user?.role === roles.TEACHER) this.isTeacher = true;
       else this.isStudent = true;
 
       // class id from params
@@ -294,20 +294,20 @@ export default {
         {
           title: capitalize(topicTypes.ADVANCED),
           items: classDetails?.topics
-            ?.filter((x) => x.type === topicTypes.ADVANCED)
-            ?.map((x) => x.name),
+            ?.filter((x) => x?.type === topicTypes.ADVANCED)
+            ?.map((x) => x?.name),
         },
         {
           title: capitalize(topicTypes.INTERMEDIATE),
           items: classDetails?.topics
-            ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
-            ?.map((x) => x.name),
+            ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+            ?.map((x) => x?.name),
         },
         {
           title: capitalize(topicTypes.BEGINNER),
           items: classDetails?.topics
-            ?.filter((x) => x.type === topicTypes.BEGINNER)
-            ?.map((x) => x.name),
+            ?.filter((x) => x?.type === topicTypes.BEGINNER)
+            ?.map((x) => x?.name),
         },
       ];
 

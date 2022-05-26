@@ -122,7 +122,7 @@ export default {
   methods: {
     isValidEmail(email) {
       const emailTestRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailTestRegex.test(email);
+      return emailTestRegex?.test(email);
     },
     async handleSubmit(values) {
       // update page state

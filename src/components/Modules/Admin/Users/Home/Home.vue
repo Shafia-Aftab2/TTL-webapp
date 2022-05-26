@@ -134,7 +134,7 @@ export default {
       id: x?.id,
       name: x?.name,
       schoolName: x?.schools?.[0]?.name,
-      role: x.role,
+      role: x?.role,
       image: x?.image
         ? generateAvatar(x?.image?.split("-")[1], x?.image)
         : null,
@@ -151,8 +151,8 @@ export default {
       this.currentFilter = e.target.value.trim()?.toLowerCase();
     },
     handleTabChange(x) {
-      this.activeTab = x.toLowerCase();
-      URLModifier.addToURL("tab", x.toLowerCase());
+      this.activeTab = x?.toLowerCase();
+      URLModifier.addToURL("tab", x?.toLowerCase());
     },
     handleUserRoleChange(e) {
       const selectedIndex = e.target.selectedIndex;

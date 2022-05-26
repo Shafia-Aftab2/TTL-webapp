@@ -158,11 +158,11 @@ export default {
 
     // success case
     this.topicsList = {
-      beginner: topicsList.filter((x) => x.type === topicTypes.BEGINNER),
+      beginner: topicsList.filter((x) => x?.type === topicTypes.BEGINNER),
       intermediate: topicsList.filter(
-        (x) => x.type === topicTypes.INTERMEDIATE
+        (x) => x?.type === topicTypes.INTERMEDIATE
       ),
-      advanced: topicsList.filter((x) => x.type === topicTypes.ADVANCED),
+      advanced: topicsList.filter((x) => x?.type === topicTypes.ADVANCED),
     };
     this.classTopics = (classDetails?.topics || [])?.map((x) => x?.id);
     this.pageLoading = false;

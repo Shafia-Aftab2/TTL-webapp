@@ -439,20 +439,20 @@ export default {
       {
         title: capitalize(topicTypes.ADVANCED),
         items: topicsList
-          ?.filter((x) => x.type === topicTypes.ADVANCED)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.ADVANCED)
+          ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.INTERMEDIATE),
         items: topicsList
-          ?.filter((x) => x.type === topicTypes.INTERMEDIATE)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.BEGINNER),
         items: topicsList
-          ?.filter((x) => x.type === topicTypes.BEGINNER)
-          ?.map((x) => x.name),
+          ?.filter((x) => x?.type === topicTypes.BEGINNER)
+          ?.map((x) => x?.name),
       },
     ];
     this.pageLoading = false;

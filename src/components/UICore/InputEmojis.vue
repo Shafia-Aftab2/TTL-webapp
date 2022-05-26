@@ -128,8 +128,8 @@ export default {
       const _input = [...input];
 
       const emojis = _input
-        ?.filter((x) => x.nodeName === "IMG")
-        ?.map((x) => x.src);
+        ?.filter((x) => x?.nodeName === "IMG")
+        ?.map((x) => x?.src);
 
       this.emojis = emojis;
       this.setValue([...emojis]);

@@ -3,12 +3,12 @@
   <div class="class-leaderboard-wrapper" v-if="!computedPageLoading">
     <div class="class-leaderboard-header-wrapper">
       <div class="class-leaderboard-header-details-wrapper">
-        <h2 class="h2" v-if="classDetails.name">
+        <h2 class="h2" v-if="classDetails?.name">
           <router-link
             :to="computedClassHomeLink"
             class="class-leaderboard-header-details-class-name-link"
           >
-            {{ classDetails.name }}
+            {{ classDetails?.name }}
           </router-link>
         </h2>
       </div>
@@ -113,9 +113,9 @@ export default {
 
     // success case
     this.classDetails = {
-      id: classDetails.id,
-      name: classDetails.name,
-      langugage: classDetails.langugage,
+      id: classDetails?.id,
+      name: classDetails?.name,
+      langugage: classDetails?.langugage,
     };
     this.classLeaderboard = classLeaderboard
       ?.map((x) => ({
