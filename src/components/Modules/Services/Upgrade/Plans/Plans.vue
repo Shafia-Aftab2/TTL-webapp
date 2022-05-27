@@ -63,14 +63,13 @@ import { TalkieTab } from "@/components/UICore";
 import { TalkiePricePlanCard } from "@/components/SubModules/Cards";
 import authUser from "@/utils/helpers/auth";
 import { pricingPlans } from "@/utils/constants";
+import isMobileScreen from "../_common/mixins/isMobileScreen";
 
 export default {
   name: "ServicesUpgradePlans",
+  mixins: [isMobileScreen],
   components: { TalkieTab, TalkiePricePlanCard },
   data() {
-    const mobileSize = 900;
-    const _isMobileScreen = window.innerWidth < mobileSize;
-
     return {
       user: null,
       plans: pricingPlans?.planData,
@@ -80,8 +79,6 @@ export default {
         YEAR: "year",
         TRIAL: "",
       },
-      mobileSize: mobileSize,
-      isMobileScreen: _isMobileScreen,
     };
   },
   computed: {
@@ -94,17 +91,9 @@ export default {
     const user = authUser.getUser();
     this.user = user;
   },
-  mounted() {
-    this.$nextTick(() => {
-      window.addEventListener("resize", this.onWindowResize);
-    });
-  },
   methods: {
     handlePlanTimelineChange(newTimeline) {
       this.activePlanTimeline = newTimeline;
-    },
-    onWindowResize() {
-      this.isMobileScreen = window.innerWidth < this.mobileSize;
     },
     onPlanSelected(planName) {
       // redirect to signup if there is logged in user
