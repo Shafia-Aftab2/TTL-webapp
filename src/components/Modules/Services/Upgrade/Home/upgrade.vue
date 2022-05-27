@@ -1,89 +1,141 @@
 <template>
   <div class="talkie-upgrade-wrapper">
     <template v-if="computedPlanToSubscribe">
-    <h2 class="h2 m-auto text-center lh-1.5">
-      Upgrade to
+      <h2 class="h2 m-auto text-center lh-1.5">
+        Upgrade to
         <span>{{ computedPlanToSubscribe?.name }}</span>
-    </h2>
+      </h2>
 
-    <div class="talkie-upgrade-timeline-selectors">
-      <talkie-tab
-        :label="'Monthly'"
-        :active="activePlanTimeline === planTimelines.MONTH"
-        :onClick="() => handlePlanTimelineChange(planTimelines.MONTH)"
-      />
-      <talkie-tab
-        :label="'Annually - save 10%!'"
-        :active="activePlanTimeline === planTimelines.YEAR"
-        :onClick="() => handlePlanTimelineChange(planTimelines.YEAR)"
-      />
-    </div>
+      <div class="talkie-upgrade-timeline-selectors">
+        <talkie-tab
+          :label="'Monthly'"
+          :active="activePlanTimeline === planTimelines.MONTH"
+          :onClick="() => handlePlanTimelineChange(planTimelines.MONTH)"
+        />
+        <talkie-tab
+          :label="'Annually - save 10%!'"
+          :active="activePlanTimeline === planTimelines.YEAR"
+          :onClick="() => handlePlanTimelineChange(planTimelines.YEAR)"
+        />
+      </div>
 
-    <div class="talkie-upgrade-content-wrapper">
-      <talkie-price-plan-card
-        :name="computedPlanToSubscribe?.name"
-        :price="
-          computedPlanToSubscribe?.prices[
-            activePlanTimeline === planTimelines.MONTH ? 0 : 1
-          ]?.price
-        "
-        :payPeriod="
-          computedPlanToSubscribe?.prices[
-            activePlanTimeline === planTimelines.MONTH ? 0 : 1
-          ]?.showPeriod
-            ? `/${
+      <div class="talkie-upgrade-content-wrapper">
+        <talkie-price-plan-card
+          :name="computedPlanToSubscribe?.name"
+          :price="
+            computedPlanToSubscribe?.prices[
+              activePlanTimeline === planTimelines.MONTH ? 0 : 1
+            ]?.price
+          "
+          :payPeriod="
+            computedPlanToSubscribe?.prices[
+              activePlanTimeline === planTimelines.MONTH ? 0 : 1
+            ]?.showPeriod
+              ? `/${
+                  computedPlanToSubscribe?.prices[
+                    activePlanTimeline === planTimelines.MONTH ? 0 : 1
+                  ]?.period
+                }`
+              : ''
+          "
+          :features="computedPlanToSubscribe?.features"
+          :description="computedPlanToSubscribe?.description"
+          :variant="computedPlanToSubscribe?.theme"
+          :expandable="isMobileScreen ? true : false"
+          :defaultExpanded="false"
+        />
+
+        <form
+          class="talkie-upgrade-content-stripe-form-wrapper"
+          id="talkie-stripe-payments-form"
+        >
+          <!-- If the user has no payment method -->
+          <template v-if="!hasPaymentMethod">
+            <p class="p text-center lh-1.5">
+              <strong>IMPORTANT:</strong> It looks like you haven't added any
+              payment methods yet. To continue, please add one below.
+            </p>
+
+            <h3 class="h3">Add Payment Method</h3>
+
+            <talkie-loader v-if="isStripeElementsLoading" />
+
+            <div
+              style="display: none"
+              class="talkie-upgrade-content-stripe-form-elements"
+              id="talkie-stripe-payments-element"
+            >
+              <!-- Stripe elements will be plugged in here -->
+            </div>
+
+            <talkie-alert v-if="error" :text="error" :variant="'error'" />
+
+            <talkie-button
+              :type="'submit'"
+              :loading="addingPaymentMethod"
+              :disabled="addingPaymentMethod"
+              v-if="!isStripeElementsLoading"
+            >
+              Add
+            </talkie-button>
+          </template>
+
+          <!-- If the user has a payment method -->
+          <template v-if="hasPaymentMethod">
+            <p class="p text-center lh-1.5">
+              <strong>IMPORTANT:</strong> You will be charged
+              {{
                 computedPlanToSubscribe?.prices[
                   activePlanTimeline === planTimelines.MONTH ? 0 : 1
-                ]?.period
-              }`
-            : ''
-        "
-        :features="computedPlanToSubscribe?.features"
-        :description="computedPlanToSubscribe?.description"
-        :variant="computedPlanToSubscribe?.theme"
-        :expandable="isMobileScreen ? true : false"
-        :defaultExpanded="false"
-      />
+                ]?.price
+              }}
+              on a {{ `${activePlanTimeline}ly` }} basis from your selected card
+              below.
+              <br />
+              <br />
+              Also note that your selected card will be set as default.
+            </p>
+            <div class="talkie-stripe-payments-form-bankcards-list">
+              <talkie-bank-card
+                v-for="card in userPaymentMethods"
+                :key="card"
+                :number="card?.number"
+                :isSelected="card?.id === selectedCardId"
+                :isDefault="card?.id === userDefaultPaymentMethod?.id"
+                :expiry="card?.expiry"
+                :brand="card?.brand"
+                :onClick="() => setSelectedCardId(card?.id)"
+              />
+            </div>
 
-      <!-- If the user has no payment method -->
-      <form
-        class="talkie-upgrade-content-stripe-form-wrapper"
-        id="talkie-stripe-payments-form"
-      >
-        <p class="p text-center lh-1.5">
-          <strong>IMPORTANT:</strong> It looks like you haven't added any
-          payment methods yet. To continue, please add one below.
-        </p>
+            <talkie-alert v-if="error" :text="error" :variant="'error'" />
 
-        <h3 class="h3">Add Payment Method</h3>
+            <div class="talkie-stripe-payments-form-bankcards-action-buttons">
+              <talkie-button
+                :type="'button'"
+                :variant="'danger'"
+                :onClick="handleHomeRedirection"
+                :disabled="subscribingToPlan"
+              >
+                No, Not Now
+              </talkie-button>
+              <talkie-button
+                :type="'button'"
+                :loading="subscribingToPlan"
+                :disabled="subscribingToPlan"
+                :onClick="handlePlanSubscription"
+              >
+                Yes, Subscribe
+              </talkie-button>
+            </div>
+          </template>
+        </form>
+      </div>
 
-        <talkie-loader v-if="isStripeElementsLoading" />
-
-        <div
-          style="display: none"
-          class="talkie-upgrade-content-stripe-form-elements"
-          id="talkie-stripe-payments-element"
-        >
-          <!-- Stripe elements will be plugged in here -->
-        </div>
-
-        <talkie-alert v-if="error" :text="error" :variant="'error'" />
-
-        <talkie-button
-          :type="'submit'"
-          :loading="addingPaymentMethod"
-          :disabled="addingPaymentMethod"
-          v-if="!isStripeElementsLoading"
-        >
-          Add
-        </talkie-button>
-      </form>
-    </div>
-
-    <p class="p m-auto text-center lh-1.5 px-12">
-      Not the plan you are looking for? Choose a different one from
-      <router-link to="/pricing"><a>here.</a></router-link>
-    </p>
+      <p class="p m-auto text-center lh-1.5 px-12">
+        Not the plan you are looking for? Choose a different one from
+        <router-link to="/pricing"><a>here.</a></router-link>
+      </p>
     </template>
     <template v-if="!computedPlanToSubscribe">
       <h2 class="h2 m-auto text-center lh-1.5">NOT FOUND</h2>
@@ -111,8 +163,10 @@ import { TalkiePricePlanCard } from "@/components/SubModules/Cards";
 import isMobileScreen from "../_common/mixins/isMobileScreen";
 import { loadStripe } from "@stripe/stripe-js";
 import { getDomain } from "@/utils/helpers/URLModifier";
-import { AuthService, SubscriptionService } from "@/api/services";
+import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
+import authUser from "@/utils/helpers/auth";
+import { TalkieBankCard } from "@/components/SubModules/Cards";
 
 export default {
   name: "ServicesUpgrade",
@@ -123,6 +177,7 @@ export default {
     TalkiePricePlanCard,
     TalkieTab,
     TalkieAlert,
+    TalkieBankCard,
   },
   data() {
     return {
@@ -135,9 +190,13 @@ export default {
       },
       isStripeElementsLoading: true,
       error: null,
+      subscribingToPlan: false,
       hasPaymentMethod: false,
       user: {},
       addingPaymentMethod: false,
+      userPaymentMethods: [],
+      userDefaultPaymentMethod: null,
+      selectedCardId: null,
     };
   },
   computed: {
@@ -178,6 +237,9 @@ export default {
     await this.mountStripePaymentElementsFormToUI();
   },
   methods: {
+    setSelectedCardId(id) {
+      this.selectedCardId = id;
+    },
     handlePlanTimelineChange(newTimeline) {
       this.activePlanTimeline = newTimeline;
     },
@@ -301,6 +363,75 @@ export default {
         this.selectedCardId = defaultPaymentMethod?.id;
       }
     },
+    async handleHomeRedirection() {
+      this.$router.push("/");
+    },
+    async updateUserDefaultCard() {
+      const response = await AuthService.SetDefaultPaymentMethod(
+        this.selectedCardId
+      );
+
+      return response?.data;
+    },
+    async handlePlanSubscription() {
+      this.subscribingToPlan = true;
+
+      // check if the user has used a non-default card, set it default
+      if (this.selectedCardId !== this.userDefaultPaymentMethod?.id) {
+        const isDefaultCardSet = await this.updateUserDefaultCard();
+        if (!isDefaultCardSet) {
+          this.subscribingToPlan = false;
+          this.error =
+            "Could not use your selected card at the moment! Please try again.";
+          return;
+        }
+      }
+
+      const query = (() => {
+        const payloadDataMap = {
+          plans: {
+            [this.planTimelines.MONTH]: "monthly",
+            [this.planTimelines.YEAR]: "annually",
+          },
+          period: {
+            [pricingPlans.planNames.EXAM_READY]: "exam-ready",
+            [pricingPlans.planNames.BUDDING_SPEAKERS]: "budding-speakers",
+          },
+        };
+        return {
+          planName: payloadDataMap.plans?.[this.activePlanTimeline],
+          priceName: payloadDataMap.period?.[this.planToSubscribe?.name],
+        };
+      })();
+
+      // api call
+      const response = await SubscriptionService.CreateSubscription(
+        query
+      ).catch(() => {
+        return {
+          // todo: added message "user has no payment-method"
+          error: "Failed to create subscription!",
+        };
+      });
+
+      // failure case
+      if (response?.error) {
+        this.subscribingToPlan = false;
+        this.error = response?.error;
+        return;
+      }
+
+      // success case
+      await this.updateUserProfile();
+      this.subscribingToPlan = false;
+      notifications.show("Subscription created successfully!", {
+        variant: "success",
+        displayIcon: true,
+      });
+      setTimeout(() => {
+        this.$router.push("/profile/settings/account");
+      }, 1500);
+    },
     async getMySubscription() {
       const response = await SubscriptionService.GetMySubscription().catch(
         () => null
@@ -352,7 +483,7 @@ export default {
   width: 100%;
 }
 
-/* TODO: add card flipper carousel */
+/*  */
 .talkie-stripe-payments-form-bankcards-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
