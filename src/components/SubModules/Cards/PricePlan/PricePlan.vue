@@ -36,6 +36,7 @@
         class="talkie-pricing-plan-card-cta"
         :onClick="ctaAction"
         :variant="'dark'"
+        v-if="ctaText"
       >
         {{ ctaText }}
       </talkie-button>
@@ -85,7 +86,6 @@ export default {
     },
     ctaText: {
       type: String,
-      default: "Subscribe",
     },
     ctaAction: {
       type: Function,
