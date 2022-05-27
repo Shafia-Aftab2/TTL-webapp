@@ -1,5 +1,5 @@
 <template>
-  <div class="talkie-upgrade-wrapper">
+  <div class="talkie-upgrade-wrapper" v-if="!computedBackdropLoading">
     <template v-if="computedPlanToSubscribe">
       <h2 class="h2 m-auto text-center lh-1.5">
         Upgrade to
@@ -149,6 +149,7 @@
       </p>
     </template>
   </div>
+  <talkie-back-drop-loader v-if="computedBackdropLoading" />
 </template>
 
 <script>
@@ -157,6 +158,7 @@ import {
   TalkieLoader,
   TalkieTab,
   TalkieAlert,
+  TalkieBackDropLoader,
 } from "@/components/UICore";
 import { pricingPlans } from "@/utils/constants";
 import { TalkiePricePlanCard } from "@/components/SubModules/Cards";
@@ -177,6 +179,7 @@ export default {
     TalkiePricePlanCard,
     TalkieTab,
     TalkieAlert,
+    TalkieBackDropLoader,
     TalkieBankCard,
   },
   data() {
@@ -197,14 +200,29 @@ export default {
       userPaymentMethods: [],
       userDefaultPaymentMethod: null,
       selectedCardId: null,
+      backdropLoading: false,
     };
   },
   computed: {
     computedPlanToSubscribe() {
       return this.planToSubscribe;
     },
+    computedBackdropLoading() {
+      return this.backdropLoading;
+    },
   },
   async created() {
+    this.backdropLoading = true;
+
+    // check if user has subscription (could be canceled also)
+    const subscription = await this.getMySubscription();
+
+    this.backdropLoading = false;
+    if (subscription) {
+      this.$router.push("/profile/settings/account");
+      return;
+    }
+
     // get the plan & period name from url
     const plan = this.$route.query.plan;
     const period = this.$route.query.period;
