@@ -75,9 +75,15 @@
                   <li class="talkie-navbar-profile-options-list-item">
                     <router-link to="/profile/self">Profile</router-link>
                   </li>
+                  <li class="talkie-navbar-profile-options-list-item">
+                    <router-link to="/profile/settings">Settings</router-link>
+                  </li>
                   <template v-for="link in links" :key="link.text">
                     <li
-                      class="talkie-navbar-profile-options-list-item talkie-navbar-profile-options-list-link"
+                      :class="[
+                        'talkie-navbar-profile-options-list-item',
+                        'talkie-navbar-profile-options-list-link',
+                      ]"
                       v-if="link?.displayForRoles?.includes(computedUser.role)"
                     >
                       <router-link :to="link.url">
@@ -95,7 +101,10 @@
         </template>
         <template v-if="!computedIsLoggedIn">
           <li
-            class="talkie-navbar-link-item talkie-navbar-link-item-always-disable"
+            :class="[
+              'talkie-navbar-link-item',
+              'talkie-navbar-link-item-always-disable',
+            ]"
           >
             <router-link to="/auth/login">Login</router-link>
             &nbsp;<strong>/</strong>&nbsp;
