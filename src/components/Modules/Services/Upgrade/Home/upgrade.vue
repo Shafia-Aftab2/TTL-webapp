@@ -1,8 +1,9 @@
 <template>
   <div class="talkie-upgrade-wrapper">
+    <template v-if="computedPlanToSubscribe">
     <h2 class="h2 m-auto text-center lh-1.5">
       Upgrade to
-      <span>FREE TRIAL</span>
+        <span>{{ computedPlanToSubscribe?.name }}</span>
     </h2>
 
     <div class="talkie-upgrade-timeline-selectors">
@@ -83,6 +84,18 @@
       Not the plan you are looking for? Choose a different one from
       <router-link to="/pricing"><a>here.</a></router-link>
     </p>
+    </template>
+    <template v-if="!computedPlanToSubscribe">
+      <h2 class="h2 m-auto text-center lh-1.5">NOT FOUND</h2>
+
+      <p class="p m-auto text-center lh-1.5 px-12">
+        Looks like the link is broken!
+        <br />
+        <br />
+        This page is for subscribing to our payment plans, check them out
+        <router-link to="/pricing"><a>here.</a></router-link>
+      </p>
+    </template>
   </div>
 </template>
 
