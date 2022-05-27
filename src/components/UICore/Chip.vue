@@ -5,8 +5,10 @@
       'talkie-chip',
       `talkie-chip-${size.toString()}`,
       `talkie-chip-${variant.toString()}`,
+      disabled && `talkie-chip-disabled`,
     ]"
-    @click="onClick"
+    @click="async (e) => (!disabled ? await onClick(e) : () => {})"
+    :disabled="disabled"
   >
     {{ label }}
   </button>
@@ -35,6 +37,10 @@ export default {
     customClass: {
       type: String,
       default: "",
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
 };
@@ -85,6 +91,19 @@ export default {
 }
 .talkie-chip-neutral {
   background: var(--t-white-200);
+}
+
+/* Disabled variant */
+.talkie-chip-disabled {
+  background: var(--t-white-300);
+  border-color: var(--t-white-300);
+  color: var(--t-gray-50);
+  cursor: not-allowed;
+}
+.talkie-chip-disabled:hover {
+  background: var(--t-white-300);
+  border-color: var(--t-white-300);
+  color: var(--t-gray-50);
 }
 
 /* Responsive variants */
