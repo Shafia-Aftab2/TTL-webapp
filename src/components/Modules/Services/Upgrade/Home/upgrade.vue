@@ -252,12 +252,54 @@ export default {
       }
 
       // success case
+      await new Promise((r) => setTimeout(r, 3500)); // stripe will take the card no, send a webhook to server, wait for that
+      await this.updateUserProfile(); // update user profile cookies
+      const user = authUser.getUser(); // get auth user
+      this.user = user;
+      this.updateUserPaymentMethodsInfo();
       this.hasPaymentMethod = true;
       this.addingPaymentMethod = false;
       notifications.show("Your bank card was added successfully!", {
         variant: "success",
         displayIcon: true,
       });
+    },
+    async updateUserProfile() {
+      // TODO: store max age as a cookie
+      // api call
+      const response = await UserService.GetMyProfile().catch();
+
+      // failure case
+      if (!response?.data) return false;
+
+      // success case
+      const expires = (date) => ({ expires: new Date(date) });
+      const nextDay = new Date(
+        new Date().setDate(new Date().getDate() + 1)
+      ).toISOString();
+      authUser.setUser(response?.data, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
+      return true;
+    },
+    updateUserPaymentMethodsInfo() {
+      const stripeCustomer = { ...(this.user?.stripe?.customer || {}) };
+      const paymentMethods = stripeCustomer?.paymentMethods?.map((x) => ({
+        id: x?.id,
+        brand: x?.card?.brand,
+        // TODO
+        expiry: `${x?.card?.exp_month?.length === 1 ? "0" : ""}${
+          x?.card?.exp_month
+        }/${x?.card?.exp_year}`,
+        number: `XXXX XXXX XXXX ${x?.card?.last4}`,
+      }));
+      const defaultPaymentMethod = paymentMethods?.find(
+        (x) => x?.id === stripeCustomer?.defaultPayMethodId
+      );
+      this.userPaymentMethods = paymentMethods;
+      this.userDefaultPaymentMethod = defaultPaymentMethod;
+      if (defaultPaymentMethod) {
+        this.hasPaymentMethod = true;
+        this.selectedCardId = defaultPaymentMethod?.id;
+      }
     },
     async getMySubscription() {
       const response = await SubscriptionService.GetMySubscription().catch(
