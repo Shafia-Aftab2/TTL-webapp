@@ -1,120 +1,192 @@
 <template>
-  <div class="upgrade-wrapper">
-    <div class="upgrade-info-wrapper">
-      <h2 class="h2" v-if="!userIsSubscribed">Upgrade - Pricing</h2>
-      <h2 class="h2" v-if="userIsSubscribed">
-        You account is Already Upgraded!
-      </h2>
+  <div class="talkie-upgrade-wrapper">
+    <h2 class="h2 m-auto text-center lh-1.5">
+      Upgrade to
+      <span>FREE TRIAL</span>
+    </h2>
 
-      <h4 class="h4">£30 individual teacher / annual</h4>
-      <h3 class="h3">£2.50/month</h3>
+    <div class="talkie-upgrade-timeline-selectors">
+      <talkie-tab
+        :label="'Monthly'"
+        :active="activePlanTimeline === planTimelines.MONTH"
+        :onClick="() => handlePlanTimelineChange(planTimelines.MONTH)"
+      />
+      <talkie-tab
+        :label="'Annually - save 10%!'"
+        :active="activePlanTimeline === planTimelines.YEAR"
+        :onClick="() => handlePlanTimelineChange(planTimelines.YEAR)"
+      />
     </div>
 
-    <div
-      class="upgrade-fields-wrapper"
-      :class="!showPaymentCardDetailsForm && 'upgrade-fields-wrapper-hidden'"
-    >
+    <div class="talkie-upgrade-content-wrapper">
+      <talkie-price-plan-card
+        :name="computedPlanToSubscribe?.name"
+        :price="
+          computedPlanToSubscribe?.prices[
+            activePlanTimeline === planTimelines.MONTH ? 0 : 1
+          ]?.price
+        "
+        :payPeriod="
+          computedPlanToSubscribe?.prices[
+            activePlanTimeline === planTimelines.MONTH ? 0 : 1
+          ]?.showPeriod
+            ? `/${
+                computedPlanToSubscribe?.prices[
+                  activePlanTimeline === planTimelines.MONTH ? 0 : 1
+                ]?.period
+              }`
+            : ''
+        "
+        :features="computedPlanToSubscribe?.features"
+        :description="computedPlanToSubscribe?.description"
+        :variant="computedPlanToSubscribe?.theme"
+        :expandable="isMobileScreen ? true : false"
+        :defaultExpanded="false"
+      />
+
+      <!-- If the user has no payment method -->
       <form
-        class="talkie-stripe-payments-form"
+        class="talkie-upgrade-content-stripe-form-wrapper"
         id="talkie-stripe-payments-form"
       >
+        <p class="p text-center lh-1.5">
+          <strong>IMPORTANT:</strong> It looks like you haven't added any
+          payment methods yet. To continue, please add one below.
+        </p>
+
         <h3 class="h3">Add Payment Method</h3>
-        <div id="talkie-stripe-payments-element">
-          <!-- Elements will create form elements here -->
-        </div>
+
+        <talkie-loader v-if="isStripeElementsLoading" />
+
         <div
-          class="talkie-stripe-payments-form-error-message-wrapper"
-          id="talkie-stripe-payments-form-error-message-wrapper"
+          style="display: none"
+          class="talkie-upgrade-content-stripe-form-elements"
+          id="talkie-stripe-payments-element"
         >
-          <!-- Display error message to your customers here -->
+          <!-- Stripe elements will be plugged in here -->
         </div>
-        <talkie-button :type="'submit'">Upgrade</talkie-button>
+
+        <talkie-alert v-if="error" :text="error" :variant="'error'" />
+
+        <talkie-button
+          :type="'submit'"
+          :loading="addingPaymentMethod"
+          :disabled="addingPaymentMethod"
+          v-if="!isStripeElementsLoading"
+        >
+          Add
+        </talkie-button>
       </form>
-      <div class="talkie-stripe-payments-form-wrapper"></div>
     </div>
 
-    <div class="upgrade-options-wrapper">
-      <talkie-button
-        :onClick="handleUpgradeAccountFlow"
-        v-if="!userIsSubscribed && !showPaymentCardDetailsForm"
-      >
-        Upgrade
-      </talkie-button>
-
-      <talkie-button
-        :onClick="handleDowngradeAccountFlow"
-        v-if="userIsSubscribed"
-      >
-        Downgrade
-      </talkie-button>
-    </div>
+    <p class="p m-auto text-center lh-1.5 px-12">
+      Not the plan you are looking for? Choose a different one from
+      <router-link to="/pricing"><a>here.</a></router-link>
+    </p>
   </div>
-  <talkie-back-drop-loader v-if="backdropLoading" />
 </template>
 
 <script>
-import { TalkieButton, TalkieBackDropLoader } from "@/components/UICore";
-import { AuthService, UserService, SubscriptionService } from "@/api/services";
+import {
+  TalkieButton,
+  TalkieLoader,
+  TalkieTab,
+  TalkieAlert,
+} from "@/components/UICore";
+import { pricingPlans } from "@/utils/constants";
+import { TalkiePricePlanCard } from "@/components/SubModules/Cards";
+import isMobileScreen from "../_common/mixins/isMobileScreen";
 import { loadStripe } from "@stripe/stripe-js";
-import { notifications } from "@/components/UIActions";
-import authUser from "@/utils/helpers/auth";
-import subscriptionStatus from "@/utils/constants/subscriptionStatus";
 import { getDomain } from "@/utils/helpers/URLModifier";
+import { AuthService, SubscriptionService } from "@/api/services";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ServicesUpgrade",
-  components: { TalkieButton, TalkieBackDropLoader },
+  mixins: [isMobileScreen],
+  components: {
+    TalkieButton,
+    TalkieLoader,
+    TalkiePricePlanCard,
+    TalkieTab,
+    TalkieAlert,
+  },
   data() {
     return {
+      planToSubscribe: null,
+      activePlanTimeline: "month",
+      planTimelines: {
+        MONTH: "month",
+        YEAR: "year",
+        TRIAL: "",
+      },
+      isStripeElementsLoading: true,
+      error: null,
+      hasPaymentMethod: false,
       user: {},
-      backdropLoading: false,
-      userHasPaymentMethod: false,
-      userIsSubscribed: false,
-      showPaymentCardDetailsForm: false,
+      addingPaymentMethod: false,
     };
   },
+  computed: {
+    computedPlanToSubscribe() {
+      return this.planToSubscribe;
+    },
+  },
   async created() {
-    // update user profile data (+failure case)
-    const isProfileUpdated = await this.updateUserProfile();
-    if (!isProfileUpdated) return this.$router.push("/404");
+    // get the plan & period name from url
+    const plan = this.$route.query.plan;
+    const period = this.$route.query.period;
 
-    // get auth user data
-    const user = authUser.getUser();
-    this.user = user;
+    // set the active timeline period (if present in url), else use default one
+    if (
+      [this.planTimelines.MONTH, this.planTimelines.YEAR]?.includes(
+        period?.toLowerCase()
+      )
+    ) {
+      this.activePlanTimeline = period?.toLowerCase();
+    }
 
-    // check if user has a payment method
-    const userHasPaymentMethod =
-      user?.stripe?.customer?.paymentMethods?.length > 0;
-    this.userHasPaymentMethod = userHasPaymentMethod;
+    // check if plan exists
+    const foundPlan = pricingPlans?.planData?.find(
+      (x) => x?.name?.toLowerCase() === plan?.toLowerCase()
+    );
 
-    // check if the user is subscribed
-    const subscription = await this.getMySubscription();
-    const isActive = [
-      subscriptionStatus.ACTIVE,
-      subscriptionStatus.PAST_DUE,
-      subscriptionStatus.UNPAID,
-    ]?.includes(subscription?.status);
-    this.userIsSubscribed = isActive;
+    if (foundPlan) {
+      this.planToSubscribe = {
+        name: foundPlan?.name,
+        description: foundPlan?.description,
+        theme: "primary", // todo: have consistency
+        features: foundPlan?.features,
+        prices: foundPlan?.prices,
+      };
+    }
   },
   async mounted() {
     await this.mountStripePaymentElementsFormToUI();
   },
   methods: {
+    handlePlanTimelineChange(newTimeline) {
+      this.activePlanTimeline = newTimeline;
+    },
     async getStripeClientSecret() {
       const response = await AuthService.GenerateClientSecret().catch();
 
       return response?.data?.client_secret || null;
     },
     async mountStripePaymentElementsFormToUI() {
-      //  get stripe pk from env
-      const stripePK = process.env.VUE_APP_TALKIE_MONO_API_STRIPE_PK;
+      //  get stripe key from env
+      const stripeKey = process.env.VUE_APP_TALKIE_MONO_API_STRIPE_PK;
 
       // init stripe
-      const stripe = await loadStripe(stripePK);
+      const stripe = await loadStripe(stripeKey);
 
       // generate client secret (+ failure case)
       const stripeClientSecret = await this.getStripeClientSecret();
-      if (!stripeClientSecret) return this.$router.push("/404");
+      if (!stripeClientSecret) {
+        this.isStripeElementsLoading = false;
+        this.error =
+          "Error loading the payment form! Make sure that your internet connection is working";
+      }
 
       // create stripe elements
       const options = { clientSecret: stripeClientSecret };
@@ -124,124 +196,55 @@ export default {
       const paymentElement = elements.create("payment");
       paymentElement.mount("#talkie-stripe-payments-element");
 
+      this.isStripeElementsLoading = false;
+      if (!!paymentElement) {
+        document.getElementById(
+          "talkie-stripe-payments-element"
+        ).style.display = "initial";
+      } else {
+        this.error =
+          "Error loading the payment form! Make sure that your internet connection is working";
+        return;
+      }
+
       // get stripe payments element form
       const form = document.getElementById("talkie-stripe-payments-form");
 
       // add submit handler
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-
-        // update page state
-        this.backdropLoading = true;
-
-        // setup options
-        const confirmSetupOptions = {
-          elements,
-          confirmParams: { return_url: getDomain() },
-          redirect: "if_required",
-        };
-
-        // api call (add payment method)
-        const { error } = await stripe.confirmSetup(confirmSetupOptions);
-
-        // failure case
-        if (error) {
-          this.backdropLoading = false;
-          const errorMessageContainer = document.querySelector(
-            "#talkie-stripe-payments-form-error-message-wrapper"
-          );
-          errorMessageContainer.textContent = error.message;
-          return;
-        }
-
-        // success case
-        await new Promise((r) => setTimeout(r, 2000));
-        this.backdropLoading = false;
-        await this.handleUpgradeAccountFlow(false);
+        await this.addPaymentMethod(stripe, elements);
       });
     },
-    async handleUpgradeAccountFlow(handleCardCheck = true) {
-      // check if user has a payment method
-      if (!this.userHasPaymentMethod && handleCardCheck) {
-        this.showPaymentCardDetailsForm = true;
-        return;
-      }
+    async addPaymentMethod(stripeInstance, stripeElements) {
+      // reset form state
+      this.error = null;
+      this.addingPaymentMethod = true;
 
-      // update page state
-      this.backdropLoading = true;
+      // setup options
+      const confirmSetupOptions = {
+        elements: stripeElements,
+        confirmParams: { return_url: getDomain() },
+        redirect: "if_required",
+      };
 
-      // api call
-      const response = await SubscriptionService.CreateSubscription().catch(
-        () => {
-          return {
-            error: "Failed to create subscription!",
-          };
-        }
-      );
+      // api call (add payment method)
+      const stripeRes = await stripeInstance.confirmSetup(confirmSetupOptions);
 
       // failure case
-      if (response.error) {
-        this.backdropLoading = false;
-        notifications.show(response.error, {
-          variant: "error",
-          displayIcon: true,
-        });
-        return;
+      if (stripeRes?.error) {
+        this.addingPaymentMethod = false;
+        this.error = stripeRes?.error?.message;
+        return false;
       }
 
       // success case
-      this.backdropLoading = false;
-      this.userIsSubscribed = true;
-      notifications.show("Subscription created successfully!", {
+      this.hasPaymentMethod = true;
+      this.addingPaymentMethod = false;
+      notifications.show("Your bank card was added successfully!", {
         variant: "success",
         displayIcon: true,
       });
-    },
-    async handleDowngradeAccountFlow() {
-      // update page state
-      this.backdropLoading = true;
-
-      // api call
-      const response = await SubscriptionService.RemoveSubscription().catch(
-        () => {
-          return {
-            error: "Failed to remove subscription!",
-          };
-        }
-      );
-
-      // failure case
-      if (response.error) {
-        this.backdropLoading = false;
-        notifications.show(response.error, {
-          variant: "error",
-          displayIcon: true,
-        });
-        return;
-      }
-
-      // success case
-      this.backdropLoading = false;
-      this.userIsSubscribed = false;
-      notifications.show("Subscription removed successfully!", {
-        variant: "success",
-        displayIcon: true,
-      });
-    },
-    async updateUserProfile() {
-      // api call
-      const response = await UserService.GetMyProfile().catch();
-
-      // failure case
-      if (!response?.data) return false;
-
-      // success case
-      const expires = (date) => ({ expires: new Date(date) });
-      const nextDay = new Date(
-        new Date().setDate(new Date().getDate() + 1)
-      ).toISOString();
-      authUser.setUser(response?.data, expires(nextDay)); // NOTE: expiry date from here is not the same as refresh expiry
-      return true;
     },
     async getMySubscription() {
       const response = await SubscriptionService.GetMySubscription().catch(
@@ -255,105 +258,121 @@ export default {
 </script>
 
 <style scoped>
-.upgrade-wrapper {
+.talkie-upgrade-wrapper {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  margin: auto;
-  background-color: var(--t-white);
 }
-.upgrade-info-wrapper,
-.upgrade-options-wrapper {
+.talkie-upgrade-timeline-selectors {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin: auto;
   gap: var(--t-space-12);
 }
-.upgrade-fields-wrapper {
+.m-auto {
+  margin: auto;
+}
+.text-center {
+  text-align: center;
+}
+.lh-1\.5 {
+  line-height: 1.5;
+}
+.px-12 {
+  padding: 0 var(--t-space-12);
+}
+.talkie-upgrade-content-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  margin: auto;
+  align-items: center;
+}
+.talkie-upgrade-content-stripe-form-wrapper {
+  border: var(--t-space-2) solid var(--t-gray-100);
+  background: var(--t-white);
+  border-radius: var(--t-br-large);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.talkie-upgrade-content-stripe-form-elements {
+  width: 100%;
+}
+
+/* TODO: add card flipper carousel */
+.talkie-stripe-payments-form-bankcards-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: var(--t-space-12);
 }
-.upgrade-fields-wrapper-hidden {
-  display: none;
-}
-.upgrade-input {
-  margin: auto;
-}
-.upgrade-footer {
+.talkie-stripe-payments-form-bankcards-action-buttons {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: auto;
-}
-.upgrade-footer-link {
-  text-decoration: underline;
-}
-.upgrade-footer-link,
-.upgrade-footer-link:hover,
-.upgrade-footer-link:visited {
-  text-decoration: underline;
-  color: var(--t-black);
+  gap: var(--t-space-24);
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .upgrade-wrapper {
-    max-width: 100%;
-    gap: var(--t-space-36);
-    padding: var(--t-space-32);
-    margin-top: var(--t-space-50);
-    border-radius: var(--t-br-medium);
+  .talkie-upgrade-wrapper {
+    padding: var(--t-space-40) 0;
+    padding-bottom: var(--t-space-50);
+    gap: var(--t-space-24);
   }
-  .upgrade-fields-wrapper {
+  .talkie-upgrade-timeline-selectors {
+    /* TODO: proper layout */
+    margin: -12px 0;
+  }
+  .talkie-upgrade-content-wrapper {
+    gap: var(--t-space-24);
+    padding: var(--t-space-12);
+  }
+  .talkie-upgrade-content-stripe-form-wrapper {
+    padding: var(--t-space-20);
+    gap: var(--t-space-24);
     width: 100%;
-  }
-  .upgrade-input {
-    max-width: 100%;
-  }
-  .upgrade-footer {
-    padding: var(--t-space-50);
-  }
-  .upgrade-footer-link {
-    font-size: calc(var(--t-fs-small) * 0.9);
   }
 }
 @media (min-width: 600px) {
-  .upgrade-wrapper {
-    max-width: 65%;
-    gap: var(--t-space-48);
-    padding: var(--t-space-48);
-    margin-top: var(--t-space-70);
-    border-radius: var(--t-br-medium);
+  .talkie-upgrade-wrapper {
+    padding: var(--t-space-40) 0;
+    padding-bottom: var(--t-space-70);
+    gap: var(--t-space-36);
   }
-  .upgrade-fields-wrapper {
-    width: 80%;
+  .talkie-upgrade-timeline-selectors {
+    /* TODO: proper layout */
+    margin: -12px 0;
   }
-  .upgrade-input {
-    max-width: 100%;
+  .talkie-upgrade-content-wrapper {
+    gap: var(--t-space-24);
   }
-  .upgrade-footer {
-    margin-top: var(--t-space-24);
-    padding: var(--t-space-36);
+  .talkie-upgrade-content-stripe-form-wrapper {
+    padding: var(--t-space-24);
+    gap: var(--t-space-24);
+    width: 70%;
   }
-  .upgrade-footer-link {
-    font-size: calc(var(--t-fs-small) * 0.9);
+}
+@media (min-width: 900px) {
+  .talkie-upgrade-wrapper {
+    padding: var(--t-space-40) var(--t-space-40);
+  }
+  .talkie-upgrade-content-wrapper {
+    gap: var(--t-space-36);
+    flex-direction: row;
+    align-items: initial;
+  }
+  .talkie-upgrade-content-stripe-form-wrapper {
+    gap: var(--t-space-36);
+    width: 100%;
   }
 }
 @media (min-width: 1200px) {
-  .upgrade-wrapper {
-    max-width: 80%;
-    padding: var(--t-space-48);
-    border-radius: var(--t-br-large);
+  .talkie-upgrade-wrapper {
+    gap: var(--t-space-50);
+    padding: var(--t-space-24) 0;
+    padding-bottom: var(--t-space-70);
   }
-  .upgrade-input {
-    max-width: 85%;
-  }
-  .upgrade-footer-link {
-    font-size: var(--t-fs-small);
+  .talkie-upgrade-timeline-selectors {
+    /* TODO: proper layout */
+    margin: -20px 0;
   }
 }
 </style>
