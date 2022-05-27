@@ -27,7 +27,9 @@
     <!-- Cards -->
     <div class="upgrade-plan-cards-wrapper">
       <template v-for="plan in plans" :key="plan">
+        <!-- hide free plan for user, he is already subscribed -->
         <talkie-price-plan-card
+          v-if="computedUser ? plan.name !== 'FREE TRIAL' : true"
           :name="plan.name"
           :price="
             plan?.prices[activePlanTimeline === planTimelines.MONTH ? 0 : 1]
@@ -58,6 +60,7 @@
 <script>
 import { TalkieTab } from "@/components/UICore";
 import { TalkiePricePlanCard } from "@/components/SubModules/Cards";
+import authUser from "@/utils/helpers/auth";
 import { pricingPlans } from "@/utils/constants";
 
 export default {
@@ -68,6 +71,7 @@ export default {
     const _isMobileScreen = window.innerWidth < mobileSize;
 
     return {
+      user: null,
       plans: pricingPlans?.planData,
       activePlanTimeline: "month",
       planTimelines: {
@@ -78,6 +82,16 @@ export default {
       mobileSize: mobileSize,
       isMobileScreen: _isMobileScreen,
     };
+  },
+  computed: {
+    computedUser() {
+      return this.user;
+    },
+  },
+  async created() {
+    // get auth user data
+    const user = authUser.getUser();
+    this.user = user;
   },
   mounted() {
     this.$nextTick(() => {
