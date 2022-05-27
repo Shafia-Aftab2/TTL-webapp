@@ -250,6 +250,16 @@ export default {
         prices: foundPlan?.prices,
       };
     }
+
+    // update user profile cookies
+    await this.updateUserProfile();
+
+    // get auth user data
+    const user = authUser.getUser();
+    this.user = user;
+
+    // check if the user has a payment method or bank cards
+    this.updateUserPaymentMethodsInfo(); // TODO: delete payment methods token issue
   },
   async mounted() {
     await this.mountStripePaymentElementsFormToUI();
