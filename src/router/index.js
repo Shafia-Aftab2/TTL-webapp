@@ -27,7 +27,7 @@ import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
 import ProfileSettingsAccount from "../components/Modules/Profile/Settings/Account";
 import ProfileSubscriptionHalt from "../components/Modules/Profile/Settings/Subscription/Halt";
-import ServicesUpgrade from "../components/Modules/Services/Upgrade";
+import ServicesUpgrade from "../components/Modules/Services/Upgrade/Home";
 import ServicesUpgradeSuccess from "../components/Modules/Services/Upgrade/Success";
 import ServicesUpgradePlans from "../components/Modules/Services/Upgrade/Plans";
 import ServicesPrivacyPolicy from "../components/Modules/Services/PrivacyPolicy";
