@@ -48,6 +48,7 @@
           :features="plan.features"
           :description="plan.description"
           :ctaText="plan.cta.text"
+          :ctaAction="() => onPlanSelected(plan.name)"
           :variant="plan.theme"
           :expandable="isMobileScreen ? true : false"
           :defaultExpanded="false"
@@ -104,6 +105,12 @@ export default {
     },
     onWindowResize() {
       this.isMobileScreen = window.innerWidth < this.mobileSize;
+    },
+    onPlanSelected(planName) {
+      // redirect to upgrade page with selected plan
+      this.$router.push(
+        `/services/upgrade?plan=${planName}&period=${this.activePlanTimeline}`
+      );
     },
   },
 };
