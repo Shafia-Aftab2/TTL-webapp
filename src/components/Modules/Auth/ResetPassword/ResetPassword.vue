@@ -63,7 +63,7 @@
   <template v-if="isPasswordChanged">
     <div class="auth-reset-password-wrapper">
       <div class="auth-reset-password-info-wrapper" v-if="isPasswordChanged">
-        <h2 class="h2">Password Reset Successfull</h2>
+        <h2 class="h2">Password Reset Successful</h2>
         <p class="p" style="margin-bottom: 0 !important">
           Please login to your account with the new password
         </p>
@@ -174,7 +174,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Password reset successfull!",
+        message: "Password reset successful!",
       };
       this.isPasswordChanged = true;
     },

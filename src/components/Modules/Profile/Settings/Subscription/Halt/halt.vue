@@ -28,7 +28,7 @@ import { TalkieButton } from "@/components/UICore";
 import { TalkieTopicCard } from "@/components/SubModules/Cards";
 
 export default {
-  name: "ServicesUpgrade",
+  name: "SettingsSubscriptionHalt",
   components: { TalkieButton, TalkieTopicCard },
   data() {
     return {
