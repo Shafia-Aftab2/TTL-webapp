@@ -107,6 +107,14 @@ export default {
       this.isMobileScreen = window.innerWidth < this.mobileSize;
     },
     onPlanSelected(planName) {
+      // redirect to signup if there is logged in user
+      if (!this.user) {
+        this.$router.push(
+          `/auth/signup/teacher?redirect_route=${window.location.pathname}`
+        );
+        return;
+      }
+
       // redirect to upgrade page with selected plan
       this.$router.push(
         `/services/upgrade?plan=${planName}&period=${this.activePlanTimeline}`
