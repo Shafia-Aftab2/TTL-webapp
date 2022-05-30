@@ -91,10 +91,26 @@
       <h5 class="h5">Current Plan</h5>
       <div class="profile-account-settings-section-card">
         <div class="profile-account-settings-section-card-header">
-          <h5 class="h5">Exam-ready</h5>
-          <p class="p">£10/month</p>
+          <template v-if="userSubscription?.currentPlan">
+            <h5 class="h5 capitalize">
+              {{ userSubscription?.currentPlan?.name }}
+            </h5>
+            <p class="p">
+              {{ userSubscription?.currentPlan?.price }}/{{
+                userSubscription?.currentPlan?.period
+              }}
+            </p>
+          </template>
+          <template v-if="!userSubscription?.currentPlan">
+            <p class="p">You are not subscribed</p>
+          </template>
         </div>
-        <talkie-chip :variant="'neutral'" :label="'Change my plan'" />
+        <talkie-chip
+          v-if="userSubscription?.currentPlan"
+          :variant="'neutral'"
+          :label="'Change my plan'"
+          :onClick="redirectToPricing"
+        />
       </div>
     </div>
 
@@ -221,7 +237,7 @@
             class="profile-account-settings-section-card-add-form"
             v-if="showAddNewPaymentMethodForm"
           >
-            <h3 class="h3">Add Payment Method</h3>
+            <h3 class="h3 text-center">Add Payment Method</h3>
 
             <talkie-loader v-if="isStripeElementsLoading" />
 
@@ -396,6 +412,9 @@ export default {
     }
   },
   methods: {
+    redirectToPricing() {
+      this.$router.push(`/pricing`);
+    },
     async getUserSubscription() {
       const periods = { monthly: "month", annually: "year" };
       const subscription = await this.getMySubscription();
@@ -754,6 +773,9 @@ export default {
 }
 .color-green {
   color: var(--t-green);
+}
+.text-center {
+  text-align: center;
 }
 
 /* todo: responsiveness */
