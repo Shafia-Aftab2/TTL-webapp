@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-subscription-halt-wrapper">
+  <div class="profile-subscription-halt-wrapper" v-if="!isHalted">
     <h2 class="h2">
       {{ this.copy?.[this.haltMode]?.title }}
     </h2>
@@ -16,20 +16,52 @@
         :fullWidth="true"
         :topicName="reason?.text"
       />
-      <talkie-button class="ml-auto" :variant="'dark'">
+      <talkie-button
+        class="ml-auto"
+        :variant="'dark'"
+        :onClick="() => setShowConfirmationModal(true)"
+      >
         {{ this.copy?.[this.haltMode]?.ctaText }}
       </talkie-button>
     </div>
+    <talkie-modal
+      :type="'confirm'"
+      :contentPadded="true"
+      :closeButton="true"
+      :centered="true"
+      :maxWidth="700"
+      :title="'Before you go...'"
+      :description="'Please note we’ll keep your data for another 3 months. <br> After that, it’ll be a clean slate and you’ll no longer have access to your previous data. Are you sure you want to pause?'"
+      :onClose="() => setShowConfirmationModal(false)"
+      :onConfirm="haltSubscription"
+      :confirmButtonText="'Yes, I’m sure'"
+      :confirmButtonVariant="'dark'"
+      v-if="showConfirmationModal"
+    />
+  </div>
+  <div class="profile-subscription-halt-success-message" v-if="isHalted">
+    <h3 class="h3 text-center">
+      {{ haltMode === "cancel" ? "Sad to see you go! :(" : "See you soon!" }}
+    </h3>
+
+    <img
+      :src="require(`@/assets/images/message-received.png`)"
+      class="message-received-hero"
+    />
+
+    <talkie-button :variant="'dark'" :onClick="redirectHome">
+      Home
+    </talkie-button>
   </div>
 </template>
 
 <script>
-import { TalkieButton } from "@/components/UICore";
+import { TalkieButton, TalkieModal } from "@/components/UICore";
 import { TalkieTopicCard } from "@/components/SubModules/Cards";
 
 export default {
   name: "SettingsSubscriptionHalt",
-  components: { TalkieButton, TalkieTopicCard },
+  components: { TalkieButton, TalkieModal, TalkieTopicCard },
   data() {
     return {
       copy: {
@@ -111,6 +143,8 @@ export default {
           ctaText: "Cancel plan",
         },
       },
+      showConfirmationModal: false,
+      isHalted: false,
     };
   },
   props: {
@@ -119,6 +153,15 @@ export default {
       default: "pause",
       validator: (val) => ["pause", "cancel"].includes(val),
     },
+  },
+  methods: {
+    redirectHome() {
+      this.$router.push("/");
+    },
+    setShowConfirmationModal(show) {
+      this.showConfirmationModal = show;
+    },
+    haltSubscription() {},
   },
 };
 </script>
@@ -140,6 +183,21 @@ export default {
 .ml-auto {
   margin-left: auto;
 }
+.text-center {
+  text-align: center;
+}
+.profile-subscription-halt-success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--t-space-36);
+  padding: var(--t-space-36);
+}
+.message-received-hero {
+  height: auto;
+}
+
 /* Responsive variants */
 @media (max-width: 599px) {
   .profile-subscription-halt-wrapper {
@@ -149,6 +207,13 @@ export default {
   }
   .profile-subscription-halt-topics-wrapper {
     gap: var(--t-space-12);
+    width: 100%;
+  }
+  .profile-subscription-halt-success-message {
+    gap: var(--t-space-24);
+    padding: var(--t-space-36);
+  }
+  .message-received-hero {
     width: 100%;
   }
 }
@@ -162,6 +227,13 @@ export default {
     gap: var(--t-space-16);
     width: 100%;
   }
+  .profile-subscription-halt-success-message {
+    gap: var(--t-space-24);
+    padding: var(--t-space-36);
+  }
+  .message-received-hero {
+    width: 70%;
+  }
 }
 @media (min-width: 900px) {
   .profile-subscription-halt-wrapper {
@@ -170,6 +242,12 @@ export default {
   }
   .profile-subscription-halt-topics-wrapper {
     width: 70%;
+  }
+  .profile-subscription-halt-success-message {
+    gap: var(--t-space-36);
+  }
+  .message-received-hero {
+    width: 60%;
   }
 }
 @media (min-width: 1200px) {
