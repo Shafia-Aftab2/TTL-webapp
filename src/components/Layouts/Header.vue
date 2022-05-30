@@ -145,7 +145,7 @@ export default {
         // TEMP: nav links hidden for first deployment
         {
           text: "Upgrade",
-          url: "/services/upgrade",
+          url: "/pricing",
           displayForRoles: [roles.TEACHER, roles.ADMIN],
         },
         // {
