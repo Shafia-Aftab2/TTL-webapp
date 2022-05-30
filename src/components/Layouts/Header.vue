@@ -229,7 +229,7 @@ export default {
     },
     calculateRemainingTrialDays() {
       // calculate remaining trial days
-      if (this.user) {
+      if (this.user && !this.user?.subscription) {
         const trialStartDate = new Date(this.user?.createdAt);
         const today = new Date();
 

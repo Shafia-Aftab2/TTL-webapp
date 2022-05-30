@@ -32,8 +32,8 @@ export default {
       return this.$store.state.isTrialOver;
     },
   },
-  created() {
-    this.getSubscriptionStatus();
+  async created() {
+    await this.getSubscriptionStatus();
   },
   components: {
     TalkieModal,
