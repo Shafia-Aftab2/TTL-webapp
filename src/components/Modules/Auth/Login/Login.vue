@@ -91,11 +91,12 @@ import { loginSchema } from "@/utils/validations/auth.validation";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
+import getMySubscription from "@/utils/mixins/getSubscriptionStatus";
 // import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthLogin",
-  mixins: [handleAlreadyLogginIn],
+  mixins: [handleAlreadyLogginIn, getMySubscription],
   data() {
     return {
       loginSchema: loginSchema,
@@ -168,6 +169,7 @@ export default {
       // success case
       const { user, tokens } = response?.data;
       this.handleStoreMutation("user", user);
+      this.getSubscriptionStatus();
       const expires = (date) => ({ expires: new Date(date) });
       authUser.setUser(user, expires(tokens?.refresh?.expiry));
       authUser.setAccessToken(

@@ -1,7 +1,7 @@
 <template>
   <div class="talkie-navbar-wrapper-container">
     <!-- display if there are trial days remaining -->
-    <div class="trial-bar" v-if="remainingTrialDays > 0">
+    <div class="trial-bar" v-if="remainingTrialDays > 0 && !hideTrialBar">
       Your free trial ends in {{ remainingTrialDays }}
       {{ remainingTrialDays > 1 ? "days" : "day" }}.
       <span class="trial-bar-close">
@@ -17,7 +17,9 @@
     <nav
       :class="[
         'talkie-navbar-wrapper',
-        remainingTrialDays > 0 && 'talkie-navbar-wrapper-trail-pad',
+        remainingTrialDays > 0 &&
+          !hideTrialBar &&
+          'talkie-navbar-wrapper-trail-pad',
       ]"
     >
       <!-- Left Side -->
@@ -42,12 +44,19 @@
         <template v-if="computedIsLoggedIn">
           <template v-if="!hideLinks" class="talkie-navbar">
             <template v-for="link in links" :key="link">
-              <li
-                class="talkie-navbar-link-item"
+              <template
                 v-if="link?.displayForRoles?.includes(computedUser.role)"
               >
-                <a :href="link.url">{{ link.text }}</a>
-              </li>
+                <li
+                  class="talkie-navbar-link-item"
+                  v-if="
+                    link?.text?.toLowerCase() === 'upgrade' &&
+                    !computedIsSubscribed
+                  "
+                >
+                  <a :href="link.url">{{ link.text }}</a>
+                </li>
+              </template>
             </template>
           </template>
           <li class="talkie-navbar-profile-link-item">
@@ -76,20 +85,27 @@
                     <router-link to="/profile/self">Profile</router-link>
                   </li>
                   <li class="talkie-navbar-profile-options-list-item">
-                    <router-link to="/profile/settings">Settings</router-link>
+                    <router-link to="/profile/settings">Account</router-link>
                   </li>
                   <template v-for="link in links" :key="link.text">
-                    <li
-                      :class="[
-                        'talkie-navbar-profile-options-list-item',
-                        'talkie-navbar-profile-options-list-link',
-                      ]"
+                    <template
                       v-if="link?.displayForRoles?.includes(computedUser.role)"
                     >
-                      <router-link :to="link.url">
-                        {{ link.text }}
-                      </router-link>
-                    </li>
+                      <li
+                        :class="[
+                          'talkie-navbar-profile-options-list-item',
+                          'talkie-navbar-profile-options-list-link',
+                        ]"
+                        v-if="
+                          link.text?.toLowerCase() === 'upgrade' &&
+                          !computedIsSubscribed
+                        "
+                      >
+                        <router-link :to="link.url">
+                          {{ link.text }}
+                        </router-link>
+                      </li>
+                    </template>
                   </template>
                   <li class="talkie-navbar-profile-options-list-item">
                     <router-link to="/auth/logout">Logout</router-link>
@@ -121,6 +137,7 @@ import LogoTalkie from "@/components/SVGs/LogoTalkie.vue";
 import TalkieIcon from "@/components/UICore/Icon.vue";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import roles from "@/utils/constants/roles";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "Header",
@@ -131,7 +148,7 @@ export default {
         // TEMP: nav links hidden for first deployment
         {
           text: "Upgrade",
-          url: "/services/upgrade",
+          url: "/pricing",
           displayForRoles: [roles.TEACHER, roles.ADMIN],
         },
         // {
@@ -139,7 +156,10 @@ export default {
         //   url: "#",
         // },
       ],
-      remainingTrialDays: 0, // TODO: get this from api
+      remainingTrialDays: 0,
+      hasShownTrailBarOnce: false,
+      hideTrialBar: false,
+      user: null,
     };
   },
   computed: {
@@ -159,6 +179,30 @@ export default {
     computedIsLoggedIn() {
       return Object.keys(this.$store.state.user)?.length > 0;
     },
+    computedIsSubscribed() {
+      return this.$store.state.userIsSubscribed;
+    },
+  },
+  created() {
+    const user = authUser.getUser();
+    this.user = user;
+
+    this.calculateRemainingTrialDays();
+  },
+  updated() {
+    if (
+      Object.keys(this.computedUser || {}).length > 0 &&
+      !this.computedIsSubscribed
+    ) {
+      if (!this.hasShownTrailBarOnce) {
+        this.calculateRemainingTrialDays();
+        this.hasShownTrailBarOnce = false;
+      }
+    } else {
+      this.remainingTrialDays = 0;
+      this.hideTrialBar = false;
+      this.$store.state.isTrialOver = false;
+    }
   },
   props: {
     hideLinksAndProfile: {
@@ -181,7 +225,24 @@ export default {
   },
   methods: {
     onCloseTrailBarClick() {
-      this.remainingTrialDays = null;
+      this.hideTrialBar = true;
+    },
+    calculateRemainingTrialDays() {
+      // calculate remaining trial days
+      if (this.user && !this.user?.subscription) {
+        const trialStartDate = new Date(this.user?.createdAt);
+        const today = new Date();
+
+        const remainingTrialDays =
+          14 - Math.round((today - trialStartDate) / (1000 * 60 * 60 * 24));
+
+        if (remainingTrialDays <= 0 || remainingTrialDays > 14) {
+          this.$store.state.isTrialOver = true;
+          return;
+        }
+
+        this.remainingTrialDays = remainingTrialDays;
+      }
     },
   },
 };
@@ -207,6 +268,7 @@ export default {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: var(--t-zindex-70);
 }
 .talkie-navbar-wrapper {
   display: flex;

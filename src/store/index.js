@@ -7,6 +7,8 @@ export default createStore({
       hasBackLink: true,
     },
     isTrialOver: false,
+    userIsSubscribed: false,
+    currentSubscription: {},
   },
   mutations: {},
   actions: {},

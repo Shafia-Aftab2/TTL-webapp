@@ -1,5 +1,8 @@
 <template>
-  <div class="talkie-upgrade-wrapper" v-if="!computedBackdropLoading">
+  <div
+    class="talkie-upgrade-wrapper"
+    v-if="!computedBackdropLoading && !accountUpgraded"
+  >
     <template v-if="computedPlanToSubscribe">
       <h2 class="h2 m-auto text-center lh-1.5">
         Upgrade to
@@ -149,6 +152,7 @@
       </p>
     </template>
   </div>
+  <upgrade-success v-if="accountUpgraded" />
   <talkie-back-drop-loader v-if="computedBackdropLoading" />
 </template>
 
@@ -169,10 +173,12 @@ import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
 import authUser from "@/utils/helpers/auth";
 import { TalkieBankCard } from "@/components/SubModules/Cards";
+import getMySubscriptionStatus from "@/utils/mixins/getSubscriptionStatus";
+import UpgradeSuccess from "../Success";
 
 export default {
   name: "ServicesUpgrade",
-  mixins: [isMobileScreen],
+  mixins: [isMobileScreen, getMySubscriptionStatus],
   components: {
     TalkieButton,
     TalkieLoader,
@@ -181,6 +187,7 @@ export default {
     TalkieAlert,
     TalkieBackDropLoader,
     TalkieBankCard,
+    UpgradeSuccess,
   },
   data() {
     return {
@@ -201,6 +208,8 @@ export default {
       userDefaultPaymentMethod: null,
       selectedCardId: null,
       backdropLoading: false,
+      accountUpgraded: false,
+      isChangeSubscriptionPlanMode: true,
     };
   },
   computed: {
@@ -212,13 +221,21 @@ export default {
     },
   },
   async created() {
+    // check if the subscription plan is required to be changed
+    const isChangeMode = this.$route.query.changeMode;
+    if (isChangeMode) this.isChangeSubscriptionPlanMode = true;
+
     this.backdropLoading = true;
 
     // check if user has subscription (could be canceled also)
     const subscription = await this.getMySubscription();
 
     this.backdropLoading = false;
-    if (subscription) {
+    if (
+      subscription?.status &&
+      subscription?.status !== "canceled" &&
+      !isChangeMode
+    ) {
       this.$router.push("/profile/settings/account");
       return;
     }
@@ -238,7 +255,9 @@ export default {
 
     // check if plan exists
     const foundPlan = pricingPlans?.planData?.find(
-      (x) => x?.name?.toLowerCase() === plan?.toLowerCase()
+      (x) =>
+        x?.name?.toLowerCase()?.split("-")?.join(" ") ===
+        plan?.toLowerCase()?.split("-")?.join(" ")
     );
 
     if (foundPlan) {
@@ -433,9 +452,9 @@ export default {
       })();
 
       // api call
-      const response = await SubscriptionService.CreateSubscription(
-        query
-      ).catch(() => {
+      const response = await (this.isChangeSubscriptionPlanMode
+        ? SubscriptionService.ChangeSubscriptionPlan
+        : SubscriptionService.CreateSubscription)(query).catch(() => {
         return {
           // todo: added message "user has no payment-method"
           error: "Failed to create subscription!",
@@ -451,14 +470,13 @@ export default {
 
       // success case
       await this.updateUserProfile();
+      await this.getSubscriptionStatus();
       this.subscribingToPlan = false;
+      this.accountUpgraded = true;
       notifications.show("Subscription created successfully!", {
         variant: "success",
         displayIcon: true,
       });
-      setTimeout(() => {
-        this.$router.push("/profile/settings/account");
-      }, 1500);
     },
     async getMySubscription() {
       const response = await SubscriptionService.GetMySubscription().catch(

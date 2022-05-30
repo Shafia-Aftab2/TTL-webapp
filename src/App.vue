@@ -20,15 +20,20 @@
 
 <script>
 import { TalkieModal } from "@/components/UICore";
+import getMySubscription from "@/utils/mixins/getSubscriptionStatus";
 
 import "./styles/app.css";
 
 export default {
   name: "App",
+  mixins: [getMySubscription],
   computed: {
     computedIsTrialOver() {
       return this.$store.state.isTrialOver;
     },
+  },
+  async created() {
+    await this.getSubscriptionStatus();
   },
   components: {
     TalkieModal,

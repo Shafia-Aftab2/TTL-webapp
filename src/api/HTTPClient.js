@@ -88,7 +88,7 @@ client.interceptors.response.use(
 
     // refresh token if expired
     if (
-      error.response.status === 401 &&
+      error?.response?.status === 401 &&
       originalReq.url !== "/auth/login" &&
       !originalReq.retryAttempt
     ) {
