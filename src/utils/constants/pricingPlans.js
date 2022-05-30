@@ -17,7 +17,8 @@ const planData = [
       "✔ Individual teacher, 4 classes",
       "✔ Storage for a month",
     ],
-    description: "One month free - no credit card required!",
+    description:
+      "One month free - no credit card required! Starts automatically when you signup.",
     cta: {
       text: "Start your free trial",
     },
