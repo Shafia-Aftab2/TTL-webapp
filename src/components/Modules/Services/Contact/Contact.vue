@@ -1,69 +1,91 @@
 <template>
-  <div class="talkie-contact-wrapper">
-    <talkie-form
-      class="talkie-contact-form"
-      v-slot="{ errors }"
-      :validationSchema="contactUsSchema"
-      :onSubmit="handleSubmit"
-    >
-      <h3 class="h3">How can we help you?</h3>
-      <div class="talkie-contact-form-rows-items">
-        <talkie-input
-          :name="'name'"
-          :placeholder="'Your name'"
-          :hint="{
-            type: errors.name ? 'error' : null,
-            message: errors.name ? errors.name : null,
-          }"
-        />
-        <talkie-input
-          :type="'email'"
-          :name="'email'"
-          :placeholder="'Your email address'"
-          :hint="{
-            type: errors.email ? 'error' : null,
-            message: errors.email ? errors.email : null,
-          }"
-        />
-      </div>
-      <talkie-input
-        :name="'subject'"
-        :placeholder="'Subject (I’m having technical issues - send help!)'"
-        :hint="{
-          type: errors.subject ? 'error' : null,
-          message: errors.subject ? errors.subject : null,
-        }"
-      />
-      <talkie-input
-        :name="'message'"
-        :multiline="true"
-        :rows="3"
-        :placeholder="'Leave a message'"
-        :hint="{
-          type: errors.message ? 'error' : null,
-          message: errors.message ? errors.message : null,
-        }"
-      />
-
-      <talkie-alert
-        :text="formStatus.message"
-        :variant="formStatus.type"
-        v-if="formStatus.type && formStatus.message"
-      />
-
-      <talkie-button
-        class="ml-auto"
-        :variant="'dark'"
-        :loading="loading"
-        :disabled="loading"
+  <template v-if="!messageReceived">
+    <div class="talkie-contact-wrapper">
+      <talkie-form
+        class="talkie-contact-form"
+        v-slot="{ errors }"
+        :validationSchema="contactUsSchema"
+        :onSubmit="handleSubmit"
       >
-        Send message
-      </talkie-button>
-    </talkie-form>
-    <div class="talkie-contact-hero">
-      <!-- Image Placeholder -->
+        <h3 class="h3">How can we help you?</h3>
+        <div class="talkie-contact-form-rows-items">
+          <talkie-input
+            :name="'name'"
+            :placeholder="'Your name'"
+            :hint="{
+              type: errors.name ? 'error' : null,
+              message: errors.name ? errors.name : null,
+            }"
+          />
+          <talkie-input
+            :type="'email'"
+            :name="'email'"
+            :placeholder="'Your email address'"
+            :hint="{
+              type: errors.email ? 'error' : null,
+              message: errors.email ? errors.email : null,
+            }"
+          />
+        </div>
+        <talkie-input
+          :name="'subject'"
+          :placeholder="'Subject (I’m having technical issues - send help!)'"
+          :hint="{
+            type: errors.subject ? 'error' : null,
+            message: errors.subject ? errors.subject : null,
+          }"
+        />
+        <talkie-input
+          :name="'message'"
+          :multiline="true"
+          :rows="3"
+          :placeholder="'Leave a message'"
+          :hint="{
+            type: errors.message ? 'error' : null,
+            message: errors.message ? errors.message : null,
+          }"
+        />
+
+        <talkie-alert
+          :text="formStatus.message"
+          :variant="formStatus.type"
+          v-if="formStatus.type && formStatus.message"
+        />
+
+        <talkie-button
+          class="ml-auto"
+          :variant="'dark'"
+          :loading="loading"
+          :disabled="loading"
+        >
+          Send message
+        </talkie-button>
+      </talkie-form>
+      <div class="talkie-contact-hero">
+        <!-- Image Placeholder -->
+      </div>
     </div>
-  </div>
+  </template>
+  <template v-if="messageReceived">
+    <div class="talkie-contact-message-received-wrapper">
+      <h3 class="h3">Message received!</h3>
+      <p class="p">
+        Thank you for your message. We’ll aim to get back to you in 2 working
+        days. If it’s urgent, please feel free to also reach out to us on
+        Twitter
+        <a href="https://twitter.com/talkietheapp" class="link-black"
+          >@talkietheapp</a
+        >
+      </p>
+      <img
+        class="talkie-contact-message-received-hero"
+        :src="require(`@/assets/images/message-received.png`)"
+      />
+      <talkie-button :variant="'dark'" :onClick="redirectHome">
+        Home
+      </talkie-button>
+    </div>
+  </template>
 </template>
 
 <script>
@@ -75,7 +97,6 @@ import {
 } from "@/components/UICore";
 import { contactUsSchema } from "@/utils/validations/custom.validation";
 import { ContactService } from "@/api/services";
-import { notifications } from "@/components/UIActions";
 
 export default {
   name: "ServicesContact",
@@ -93,9 +114,13 @@ export default {
         type: null,
         message: null,
       },
+      messageReceived: false,
     };
   },
   methods: {
+    redirectHome() {
+      this.$router.push("/");
+    },
     isValidEmail(email) {
       const emailTestRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailTestRegex?.test(email);
@@ -132,11 +157,7 @@ export default {
 
       // success case
       this.loading = false;
-      notifications.show("Message Received. We will contact you shortly!", {
-        variant: "error",
-        displayIcon: true,
-      });
-      this.$router.push("/profile/settings");
+      this.messageReceived = true;
     },
   },
 };
@@ -160,6 +181,23 @@ export default {
 .ml-auto {
   margin-left: auto;
 }
+.link-black {
+  color: var(--t-black);
+}
+.talkie-contact-message-received-wrapper {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.5;
+  width: 100%;
+}
+.talkie-contact-message-received-hero {
+  width: 100%;
+  height: auto;
+}
+
 /* Responsive variants */
 @media (max-width: 599px) {
   .talkie-contact-wrapper {
@@ -182,6 +220,13 @@ export default {
     aspect-ratio: 1/1;
     margin: auto;
   }
+  .talkie-contact-message-received-wrapper {
+    gap: var(--t-space-16);
+    padding: var(--t-space-32);
+  }
+  .talkie-contact-message-received-hero {
+    width: 80%;
+  }
 }
 @media (min-width: 600px) {
   .talkie-contact-wrapper {
@@ -203,6 +248,13 @@ export default {
     height: auto;
     aspect-ratio: 1/1;
     margin: auto;
+  }
+  .talkie-contact-message-received-wrapper {
+    gap: var(--t-space-16);
+    padding: var(--t-space-32);
+  }
+  .talkie-contact-message-received-hero {
+    width: 65%;
   }
 }
 @media (min-width: 900px) {
@@ -227,9 +279,21 @@ export default {
     aspect-ratio: 1/1;
     margin: auto;
   }
+  .talkie-contact-message-received-wrapper {
+    width: 90%;
+    margin: auto;
+    gap: var(--t-space-24);
+    padding: var(--t-space-44) var(--t-space-36);
+  }
+  .talkie-contact-message-received-hero {
+    width: 65%;
+  }
 }
 @media (min-width: 900px) {
   .talkie-contact-wrapper {
+    padding: var(--t-space-44) 0;
+  }
+  .talkie-contact-message-received-wrapper {
     padding: var(--t-space-44) 0;
   }
 }
