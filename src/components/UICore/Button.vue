@@ -16,7 +16,7 @@
       disabled && `talkie-button-disabled`,
       customClass.toString(),
     ]"
-    @click="onClick"
+    @click="async (e) => (!disabled ? await onClick(e) : () => {})"
   >
     <slot />
     <talkie-loader

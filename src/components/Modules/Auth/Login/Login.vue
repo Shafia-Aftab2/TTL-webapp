@@ -181,7 +181,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Login Successfull. Redirecting!",
+        message: "Login Successful. Redirecting!",
       };
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
     },

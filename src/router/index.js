@@ -25,7 +25,11 @@ import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
 import ClassStats from "../components/Modules/Class/Stats";
 import ProfileSelf from "../components/Modules/Profile/Self";
-import ServicesUpgrade from "../components/Modules/Services/Upgrade";
+import ProfileSettingsAccount from "../components/Modules/Profile/Settings/Account";
+import ProfileSubscriptionHalt from "../components/Modules/Profile/Settings/Subscription/Halt";
+import ServicesUpgrade from "../components/Modules/Services/Upgrade/Home";
+import ServicesUpgradeSuccess from "../components/Modules/Services/Upgrade/Success";
+import ServicesUpgradePlans from "../components/Modules/Services/Upgrade/Plans";
 import ServicesPrivacyPolicy from "../components/Modules/Services/PrivacyPolicy";
 import ServicesTermsOfService from "../components/Modules/Services/TermsOfService";
 import Error404 from "../components/Modules/Error404";
@@ -315,6 +319,31 @@ const routes = [
     ],
   },
   {
+    path: "/profile/settings",
+    component: Layout,
+    props: { variant: "dark" },
+    children: [
+      {
+        name: "ProfileSettingsAccount",
+        path: "/profile/settings/account",
+        alias: "/profile/settings",
+        component: ProfileSettingsAccount,
+      },
+      {
+        name: "ProfileSubscriptionPause",
+        path: "/profile/settings/pause-subscription",
+        props: { haltMode: "pause" },
+        component: ProfileSubscriptionHalt,
+      },
+      {
+        name: "ProfileSubscriptionCancel",
+        path: "/profile/settings/cancel-subscription",
+        props: { haltMode: "cancel" },
+        component: ProfileSubscriptionHalt,
+      },
+    ],
+  },
+  {
     path: "/services",
     component: Layout,
     props: { variant: "dark" },
@@ -329,6 +358,17 @@ const routes = [
             blockedRoles: [roles.STUDENT],
           },
         },
+      },
+      {
+        name: "ServicesUpgradePlans",
+        path: "/services/upgrade/plans",
+        alias: "/pricing",
+        component: ServicesUpgradePlans,
+      },
+      {
+        name: "ServicesUpgradeSuccess",
+        path: "/services/upgrade/success",
+        component: ServicesUpgradeSuccess,
       },
       {
         name: "ServicesPrivacyPolicy",

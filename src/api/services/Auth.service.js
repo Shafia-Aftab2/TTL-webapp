@@ -28,4 +28,12 @@ export default class AuthRoutes {
   static async GenerateClientSecret() {
     return HTTPClient.get(`/auth/stripe/client-secret`);
   }
+
+  static async SetDefaultPaymentMethod(id) {
+    return HTTPClient.patch(`/auth/payment-methods/${id}/set-default`);
+  }
+
+  static async RemovePaymentMethod(id) {
+    return HTTPClient.delete(`/auth/payment-methods/${id}`);
+  }
 }
