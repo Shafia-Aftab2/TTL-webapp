@@ -208,7 +208,7 @@ export default {
       userDefaultPaymentMethod: null,
       selectedCardId: null,
       backdropLoading: false,
-      accountUpgraded: true,
+      accountUpgraded: false,
     };
   },
   computed: {

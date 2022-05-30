@@ -48,10 +48,13 @@
           :features="plan.features"
           :description="plan.description"
           :ctaText="
-            computedCurrentSubscription?.plan ===
-              plan?.name?.toLowerCase()?.split('-')?.join(' ') &&
-            computedCurrentSubscription?.period === activePlanTimeline
-              ? 'Your Current Plan'
+            computedCurrentSubscription?.plan &&
+            computedCurrentSubscription?.period
+              ? computedCurrentSubscription?.plan ===
+                  plan?.name?.toLowerCase()?.split('-')?.join(' ') &&
+                computedCurrentSubscription?.period === activePlanTimeline
+                ? 'Your current plan'
+                : 'Choose plan'
               : plan.cta.text
           "
           :ctaAction="() => onPlanSelected(plan.name)"
