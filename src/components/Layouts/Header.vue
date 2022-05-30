@@ -1,7 +1,7 @@
 <template>
   <div class="talkie-navbar-wrapper-container">
     <!-- display if there are trial days remaining -->
-    <div class="trial-bar" v-if="remainingTrialDays > 0">
+    <div class="trial-bar" v-if="remainingTrialDays > 0 && !hideTrialBar">
       Your free trial ends in {{ remainingTrialDays }}
       {{ remainingTrialDays > 1 ? "days" : "day" }}.
       <span class="trial-bar-close">
@@ -17,7 +17,9 @@
     <nav
       :class="[
         'talkie-navbar-wrapper',
-        remainingTrialDays > 0 && 'talkie-navbar-wrapper-trail-pad',
+        remainingTrialDays > 0 &&
+          !hideTrialBar &&
+          'talkie-navbar-wrapper-trail-pad',
       ]"
     >
       <!-- Left Side -->
@@ -135,6 +137,7 @@ import LogoTalkie from "@/components/SVGs/LogoTalkie.vue";
 import TalkieIcon from "@/components/UICore/Icon.vue";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import roles from "@/utils/constants/roles";
+import authUser from "@/utils/helpers/auth";
 
 export default {
   name: "Header",
@@ -153,7 +156,10 @@ export default {
         //   url: "#",
         // },
       ],
-      remainingTrialDays: 0, // TODO: get this from api
+      remainingTrialDays: 0,
+      hasShownTrailBarOnce: false,
+      hideTrialBar: false,
+      user: null,
     };
   },
   computed: {
@@ -177,6 +183,27 @@ export default {
       return this.$store.state.userIsSubscribed;
     },
   },
+  created() {
+    const user = authUser.getUser();
+    this.user = user;
+
+    this.calculateRemainingTrialDays();
+  },
+  updated() {
+    if (
+      Object.keys(this.computedUser || {}).length > 0 &&
+      !this.computedIsSubscribed
+    ) {
+      if (!this.hasShownTrailBarOnce) {
+        this.calculateRemainingTrialDays();
+        this.hasShownTrailBarOnce = false;
+      }
+    } else {
+      this.remainingTrialDays = 0;
+      this.hideTrialBar = false;
+      this.$store.state.isTrialOver = false;
+    }
+  },
   props: {
     hideLinksAndProfile: {
       type: Boolean,
@@ -198,7 +225,24 @@ export default {
   },
   methods: {
     onCloseTrailBarClick() {
-      this.remainingTrialDays = null;
+      this.hideTrialBar = true;
+    },
+    calculateRemainingTrialDays() {
+      // calculate remaining trial days
+      if (this.user) {
+        const trialStartDate = new Date(this.user?.createdAt);
+        const today = new Date();
+
+        const remainingTrialDays =
+          14 - Math.round((today - trialStartDate) / (1000 * 60 * 60 * 24));
+
+        if (remainingTrialDays <= 0 || remainingTrialDays > 14) {
+          this.$store.state.isTrialOver = true;
+          return;
+        }
+
+        this.remainingTrialDays = remainingTrialDays;
+      }
     },
   },
 };

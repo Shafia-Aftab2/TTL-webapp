@@ -55,6 +55,9 @@ export default {
 
       // update global state
       this.handleStoreMutation("user", {});
+      this.handleStoreMutation("isTrialOver", false);
+      this.handleStoreMutation("userIsSubscribed", false);
+      this.handleStoreMutation("currentSubscription", {});
 
       // redirect to login
       this.handleRemoveUserCookies();
