@@ -56,7 +56,11 @@
 
     <div class="profile-account-settings-section">
       <h5 class="h5">Got a question?</h5>
-      <talkie-button :variant="'dark'" :outlined="true">
+      <talkie-button
+        :variant="'dark'"
+        :outlined="true"
+        :onClick="redirectToContactUs"
+      >
         Ask away!
       </talkie-button>
     </div>
@@ -71,6 +75,11 @@ export default {
   components: { TalkieChip, TalkieIcon, TalkieButton },
   data() {
     return {};
+  },
+  methods: {
+    redirectToContactUs() {
+      this.$router.push("/contact");
+    },
   },
 };
 </script>
