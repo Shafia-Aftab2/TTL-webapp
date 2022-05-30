@@ -1,5 +1,8 @@
 <template>
-  <div class="talkie-upgrade-wrapper" v-if="!computedBackdropLoading">
+  <div
+    class="talkie-upgrade-wrapper"
+    v-if="!computedBackdropLoading && !accountUpgraded"
+  >
     <template v-if="computedPlanToSubscribe">
       <h2 class="h2 m-auto text-center lh-1.5">
         Upgrade to
@@ -149,6 +152,7 @@
       </p>
     </template>
   </div>
+  <upgrade-success v-if="accountUpgraded" />
   <talkie-back-drop-loader v-if="computedBackdropLoading" />
 </template>
 
@@ -170,6 +174,7 @@ import { notifications } from "@/components/UIActions";
 import authUser from "@/utils/helpers/auth";
 import { TalkieBankCard } from "@/components/SubModules/Cards";
 import getMySubscriptionStatus from "@/utils/mixins/getSubscriptionStatus";
+import UpgradeSuccess from "../Success";
 
 export default {
   name: "ServicesUpgrade",
@@ -182,6 +187,7 @@ export default {
     TalkieAlert,
     TalkieBackDropLoader,
     TalkieBankCard,
+    UpgradeSuccess,
   },
   data() {
     return {
@@ -202,6 +208,7 @@ export default {
       userDefaultPaymentMethod: null,
       selectedCardId: null,
       backdropLoading: false,
+      accountUpgraded: true,
     };
   },
   computed: {
@@ -452,15 +459,13 @@ export default {
 
       // success case
       await this.updateUserProfile();
+      await this.getSubscriptionStatus();
       this.subscribingToPlan = false;
+      this.accountUpgraded = true;
       notifications.show("Subscription created successfully!", {
         variant: "success",
         displayIcon: true,
       });
-      this.getSubscriptionStatus();
-      setTimeout(() => {
-        this.$router.push("/profile/settings/account");
-      }, 1500);
     },
     async getMySubscription() {
       const response = await SubscriptionService.GetMySubscription().catch(
