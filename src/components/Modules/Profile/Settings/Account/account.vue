@@ -49,10 +49,10 @@
             >
               <li>
                 <button
-                  @click="() => redirectToResumeSubscription()"
+                  @click="() => redirectToRestartSubscription()"
                   class="color-green"
                 >
-                  Resume
+                  Restart
                 </button>
               </li>
             </template>
@@ -60,8 +60,17 @@
               v-if="userSubscription?.status?.toLowerCase() !== 'canceled'"
             >
               <li>
-                <button @click="() => redirectToHaltSubscription('pause')">
+                <button
+                  v-if="userSubscription?.status?.toLowerCase() === 'active'"
+                  @click="() => redirectToHaltSubscription('pause')"
+                >
                   Pause
+                </button>
+                <button
+                  v-if="userSubscription?.status?.toLowerCase() === 'paused'"
+                  @click="() => resumeSubscription()"
+                >
+                  Resume
                 </button>
               </li>
               <li>
@@ -104,8 +113,6 @@
         :confirmButtonVariant="'dark'"
         v-if="askConfirmationToDelCard"
       />
-
-      <talkie-back-drop-loader v-if="removingPaymentMethod" />
 
       <h5 class="h5">Payment Details</h5>
       <div
@@ -300,6 +307,10 @@
       </talkie-button>
     </div>
   </div>
+
+  <talkie-back-drop-loader
+    v-if="removingPaymentMethod || resumingSubscription"
+  />
 </template>
 
 <script>
@@ -356,6 +367,8 @@ export default {
       userSubscription: {},
 
       showStatusManageOptions: false,
+
+      resumingSubscription: false,
     };
   },
   async created() {
@@ -370,18 +383,7 @@ export default {
     this.updateUserPaymentMethodsInfo();
 
     // get user subscription
-    const periods = { monthly: "month", annually: "year" };
-    const subscription = await this.getMySubscription();
-    if (Object.keys(subscription || {}).length > 0) {
-      this.userSubscription = {
-        currentPlan: {
-          name: subscription?.priceName,
-          price: `£${subscription?.amount}`,
-          period: periods[subscription?.planName?.toLowerCase()],
-        },
-        status: subscription?.status,
-      };
-    }
+    await this.getUserSubscription();
   },
   async updated() {
     const stripeElementsForm = document.getElementById(
@@ -394,7 +396,58 @@ export default {
     }
   },
   methods: {
-    redirectToResumeSubscription() {
+    async getUserSubscription() {
+      const periods = { monthly: "month", annually: "year" };
+      const subscription = await this.getMySubscription();
+      if (Object.keys(subscription || {}).length > 0) {
+        this.userSubscription = {
+          currentPlan: {
+            name: subscription?.priceName,
+            price: `£${subscription?.amount}`,
+            period: periods[subscription?.planName?.toLowerCase()],
+          },
+          status:
+            subscription?.stripePauseCollection?.behavior === "void"
+              ? "paused"
+              : subscription?.status,
+        };
+      }
+
+      console.log("subscription => ", subscription);
+      console.log("this.userSubscription => ", this.userSubscription);
+    },
+    async resumeSubscription() {
+      // update page state
+      this.resumingSubscription = true;
+      this.showStatusManageOptions = false;
+
+      // api payload
+      const payload = { status: "resume" };
+
+      // api call
+      const response = await SubscriptionService.ChangeSubscriptionStatus(
+        payload
+      ).catch(() => null);
+
+      // failure case
+      if (!response) {
+        this.resumingSubscription = false;
+        notifications.show("Failed to resume subscription!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      await this.getUserSubscription();
+      this.resumingSubscription = false;
+      this.notifications.show("Subscription resumed successfully!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
+    redirectToRestartSubscription() {
       // redirect to upgrade page with the canceled selected plan, to renew
       const currentPlan = this.userSubscription?.currentPlan;
       this.$router.push(

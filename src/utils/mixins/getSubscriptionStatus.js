@@ -18,7 +18,7 @@ export default {
           period: periods[response?.data?.planName],
           plan: response?.data?.priceName?.toLowerCase()?.split("-")?.join(" "),
         };
-        console.log("currentSubscription => ", currentSubscription);
+
         this.handleStoreMutation("currentSubscription", currentSubscription);
       }
     },
