@@ -209,6 +209,7 @@ export default {
       selectedCardId: null,
       backdropLoading: false,
       accountUpgraded: false,
+      isChangeSubscriptionPlanMode: true,
     };
   },
   computed: {
@@ -220,13 +221,21 @@ export default {
     },
   },
   async created() {
+    // check if the subscription plan is required to be changed
+    const isChangeMode = this.$route.query.changeMode;
+    if (isChangeMode) this.isChangeSubscriptionPlanMode = true;
+
     this.backdropLoading = true;
 
     // check if user has subscription (could be canceled also)
     const subscription = await this.getMySubscription();
 
     this.backdropLoading = false;
-    if (subscription?.status && subscription?.status !== "canceled") {
+    if (
+      subscription?.status &&
+      subscription?.status !== "canceled" &&
+      !isChangeMode
+    ) {
       this.$router.push("/profile/settings/account");
       return;
     }
@@ -443,9 +452,9 @@ export default {
       })();
 
       // api call
-      const response = await SubscriptionService.CreateSubscription(
-        query
-      ).catch(() => {
+      const response = await (this.isChangeSubscriptionPlanMode
+        ? SubscriptionService.ChangeSubscriptionPlan
+        : SubscriptionService.CreateSubscription)(query).catch(() => {
         return {
           // todo: added message "user has no payment-method"
           error: "Failed to create subscription!",

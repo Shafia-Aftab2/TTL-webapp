@@ -50,7 +50,10 @@
           :ctaText="
             computedCurrentSubscription?.plan &&
             computedCurrentSubscription?.period
-              ? computedCurrentSubscription?.plan ===
+              ? computedCurrentSubscription?.plan
+                  ?.toLowerCase()
+                  ?.split('-')
+                  ?.join(' ') ===
                   plan?.name?.toLowerCase()?.split('-')?.join(' ') &&
                 computedCurrentSubscription?.period === activePlanTimeline
                 ? 'Your current plan'
@@ -59,7 +62,10 @@
           "
           :ctaAction="() => onPlanSelected(plan.name)"
           :ctaDisabled="
-            computedCurrentSubscription?.plan ===
+            computedCurrentSubscription?.plan
+              ?.toLowerCase()
+              ?.split('-')
+              ?.join(' ') ===
               plan?.name?.toLowerCase()?.split('-')?.join(' ') &&
             computedCurrentSubscription?.period === activePlanTimeline
           "
@@ -131,8 +137,12 @@ export default {
       }
 
       // redirect to upgrade page with selected plan
+      const baseRoute = `/services/upgrade?plan=${planName}&period=${this.activePlanTimeline}`;
       this.$router.push(
-        `/services/upgrade?plan=${planName}&period=${this.activePlanTimeline}`
+        this.computedCurrentSubscription?.plan &&
+          this.computedCurrentSubscription?.period
+          ? `${baseRoute}&changeMode=true`
+          : baseRoute
       );
     },
   },
