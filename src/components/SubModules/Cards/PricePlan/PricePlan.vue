@@ -37,6 +37,7 @@
         :onClick="ctaAction"
         :variant="'dark'"
         v-if="ctaText"
+        :disabled="ctaDisabled"
       >
         {{ ctaText }}
       </talkie-button>
@@ -90,6 +91,10 @@ export default {
     ctaAction: {
       type: Function,
       default: () => {},
+    },
+    ctaDisabled: {
+      type: Boolean,
+      default: false,
     },
     expandable: {
       type: Boolean,

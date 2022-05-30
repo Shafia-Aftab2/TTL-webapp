@@ -42,12 +42,19 @@
         <template v-if="computedIsLoggedIn">
           <template v-if="!hideLinks" class="talkie-navbar">
             <template v-for="link in links" :key="link">
-              <li
-                class="talkie-navbar-link-item"
+              <template
                 v-if="link?.displayForRoles?.includes(computedUser.role)"
               >
-                <a :href="link.url">{{ link.text }}</a>
-              </li>
+                <li
+                  class="talkie-navbar-link-item"
+                  v-if="
+                    link?.text?.toLowerCase() === 'upgrade' &&
+                    !computedIsSubscribed
+                  "
+                >
+                  <a :href="link.url">{{ link.text }}</a>
+                </li>
+              </template>
             </template>
           </template>
           <li class="talkie-navbar-profile-link-item">
@@ -79,17 +86,24 @@
                     <router-link to="/profile/settings">Settings</router-link>
                   </li>
                   <template v-for="link in links" :key="link.text">
-                    <li
-                      :class="[
-                        'talkie-navbar-profile-options-list-item',
-                        'talkie-navbar-profile-options-list-link',
-                      ]"
+                    <template
                       v-if="link?.displayForRoles?.includes(computedUser.role)"
                     >
-                      <router-link :to="link.url">
-                        {{ link.text }}
-                      </router-link>
-                    </li>
+                      <li
+                        :class="[
+                          'talkie-navbar-profile-options-list-item',
+                          'talkie-navbar-profile-options-list-link',
+                        ]"
+                        v-if="
+                          link.text?.toLowerCase() === 'upgrade' &&
+                          !computedIsSubscribed
+                        "
+                      >
+                        <router-link :to="link.url">
+                          {{ link.text }}
+                        </router-link>
+                      </li>
+                    </template>
                   </template>
                   <li class="talkie-navbar-profile-options-list-item">
                     <router-link to="/auth/logout">Logout</router-link>
@@ -158,6 +172,9 @@ export default {
     },
     computedIsLoggedIn() {
       return Object.keys(this.$store.state.user)?.length > 0;
+    },
+    computedIsSubscribed() {
+      return this.$store.state.userIsSubscribed;
     },
   },
   props: {

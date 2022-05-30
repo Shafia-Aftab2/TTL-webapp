@@ -49,21 +49,22 @@
           :description="plan.description"
           :ctaText="
             computedCurrentSubscription?.plan ===
-            plan?.name?.toLowerCase()?.split('-')?.join(' ')
+              plan?.name?.toLowerCase()?.split('-')?.join(' ') &&
+            computedCurrentSubscription?.period === activePlanTimeline
               ? 'Your Current Plan'
               : plan.cta.text
           "
           :ctaAction="() => onPlanSelected(plan.name)"
           :ctaDisabled="
             computedCurrentSubscription?.plan ===
-            plan?.name?.toLowerCase()?.split('-')?.join(' ')
+              plan?.name?.toLowerCase()?.split('-')?.join(' ') &&
+            computedCurrentSubscription?.period === activePlanTimeline
           "
           :variant="plan.theme"
           :expandable="isMobileScreen ? true : false"
           :defaultExpanded="false"
         />
       </template>
-      {{ computedCurrentSubscription }}
     </div>
   </div>
 </template>
