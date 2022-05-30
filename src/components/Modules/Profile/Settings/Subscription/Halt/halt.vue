@@ -15,6 +15,23 @@
         :key="reason"
         :fullWidth="true"
         :topicName="reason?.text"
+        :onTopicCheckToggle="
+          (isSelected) => handleHaltReasonToggle(reason.text, isSelected)
+        "
+      />
+      <talkie-topic-card
+        :fullWidth="true"
+        :topicName="'Other (please specify)'"
+        :onTopicCheckToggle="
+          () => setShowExtendedHaltReasonsBox(!showExtendedHaltReasonsBox)
+        "
+      />
+      <talkie-input
+        v-if="showExtendedHaltReasonsBox"
+        :customClass="'profile-subscription-halt-topics-input'"
+        :multiline="true"
+        :placeholder="'Please tell us more so we can improve our offering.'"
+        :onChange="handleCustomReasonInputChange"
       />
       <talkie-button
         class="ml-auto"
@@ -53,15 +70,29 @@
       Home
     </talkie-button>
   </div>
+  <talkie-back-drop-loader v-if="backdropLoading" />
 </template>
 
 <script>
-import { TalkieButton, TalkieModal } from "@/components/UICore";
+import {
+  TalkieButton,
+  TalkieBackDropLoader,
+  TalkieInput,
+  TalkieModal,
+} from "@/components/UICore";
 import { TalkieTopicCard } from "@/components/SubModules/Cards";
+import { SubscriptionService } from "@/api/services";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "SettingsSubscriptionHalt",
-  components: { TalkieButton, TalkieModal, TalkieTopicCard },
+  components: {
+    TalkieButton,
+    TalkieBackDropLoader,
+    TalkieInput,
+    TalkieModal,
+    TalkieTopicCard,
+  },
   data() {
     return {
       copy: {
@@ -97,10 +128,6 @@ export default {
               checked: false,
               text: "I only needed it for this term / for a short period",
             },
-            {
-              checked: false,
-              text: "Other (please specify)",
-            },
           ],
           ctaText: "Pause plan",
         },
@@ -135,16 +162,16 @@ export default {
               checked: false,
               text: "I only needed it for this term / for a short period",
             },
-            {
-              checked: false,
-              text: "Other (please specify)",
-            },
           ],
           ctaText: "Cancel plan",
         },
       },
       showConfirmationModal: false,
       isHalted: false,
+      haltReasons: [],
+      customReason: "",
+      showExtendedHaltReasonsBox: false,
+      backdropLoading: false,
     };
   },
   props: {
@@ -161,10 +188,85 @@ export default {
     setShowConfirmationModal(show) {
       this.showConfirmationModal = show;
     },
-    haltSubscription() {},
+    handleHaltReasonToggle(reason, isSelected) {
+      let haltReasons = [...this.haltReasons];
+      if (isSelected) {
+        haltReasons.push(reason);
+      } else {
+        haltReasons = haltReasons.filter((x) => x !== reason);
+      }
+      this.haltReasons = haltReasons;
+    },
+    handleCustomReasonInputChange(e) {
+      this.customReason = e.target.value?.trim();
+    },
+    setShowExtendedHaltReasonsBox(show) {
+      this.showExtendedHaltReasonsBox = show;
+    },
+    async haltSubscription() {
+      // update page state
+      this.backdropLoading = true;
+      this.showConfirmationModal = false;
+
+      // api payload
+      const payload = {
+        reason: (() => {
+          let _reason = "";
+
+          this.haltReasons?.map((x) => {
+            _reason = _reason + ` {_{ ${x} }_} `;
+          });
+
+          if (this.customReason) {
+            _reason = _reason + ` {_custom_{ ${this.customReason?.trim()} }_}`;
+          }
+
+          return _reason?.trim();
+        })(),
+        ...(this.haltMode === "pause" && { status: "pause" }),
+      };
+
+      // api call
+      const response = await (this.haltMode === "pause"
+        ? SubscriptionService.ChangeSubscriptionStatus
+        : SubscriptionService.CancelSubscription)(payload).catch(() => {
+        return {
+          error: `Could not ${this.haltMode} your subscription!`,
+        };
+      });
+
+      // failure case
+      if (response?.error) {
+        this.backdropLoading = false;
+        notifications.show(response.error, {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      this.backdropLoading = false;
+      this.isHalted = true;
+      notifications.show(
+        `Subscription ${this.haltMode}${
+          this.haltMode === "pause" ? "d" : "ed"
+        } successfully!`,
+        {
+          variant: "success",
+          displayIcon: true,
+        }
+      );
+    },
   },
 };
 </script>
+
+<style>
+.profile-subscription-halt-topics-input {
+  background: var(--t-white) !important;
+}
+</style>
 
 <style scoped>
 .profile-subscription-halt-wrapper {

@@ -6,12 +6,59 @@
       <h5 class="h5">Subscription status</h5>
       <div class="profile-account-settings-section-card">
         <div class="profile-account-settings-section-card-header">
-          <span class="profile-account-settings-section-card-circle"></span>
-          <h5 class="h5 profile-account-settings-section-card-header-text">
-            Active
-          </h5>
+          <template v-if="userSubscription?.currentPlan">
+            <span
+              :class="[
+                'profile-account-settings-section-card-circle',
+                userSubscription?.status?.toLowerCase() === 'active'
+                  ? 'success-bg'
+                  : 'error-bg',
+              ]"
+            ></span>
+            <h5
+              :class="[
+                'h5',
+                userSubscription?.status?.toLowerCase() === 'active'
+                  ? 'success-text'
+                  : 'error-text',
+                'capitalize',
+              ]"
+            >
+              {{ userSubscription?.status }}
+            </h5>
+          </template>
+          <template v-if="!userSubscription?.currentPlan">
+            <p class="p">You are not subscribed</p>
+          </template>
         </div>
-        <talkie-chip :variant="'neutral'" :label="'Change my status'" />
+        <div class="profile-account-settings-section-manage-dropdown">
+          <talkie-chip
+            v-if="userSubscription?.currentPlan"
+            :variant="'neutral'"
+            :label="'Change my status'"
+            :onClick="
+              () => setShowStatusManageOptions(!showStatusManageOptions)
+            "
+          />
+          <ul
+            class="profile-account-settings-section-manage-dropdown-list"
+            v-if="showStatusManageOptions"
+          >
+            <li>
+              <button @click="() => redirectToHaltSubscription('pause')">
+                Pause
+              </button>
+            </li>
+            <li>
+              <button
+                @click="() => redirectToHaltSubscription('cancel')"
+                class="color-red"
+              >
+                Cancel
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -252,7 +299,7 @@ import {
 import { TalkieBankCard } from "@/components/SubModules/Cards";
 import { notifications } from "@/components/UIActions";
 import { loadStripe } from "@stripe/stripe-js";
-import { AuthService, UserService } from "@/api/services";
+import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { getDomain } from "@/utils/helpers/URLModifier";
 import authUser from "@/utils/helpers/auth";
 
@@ -291,6 +338,8 @@ export default {
       stripeElementsFormListenerAdded: false,
 
       userSubscription: {},
+
+      showStatusManageOptions: false,
     };
   },
   async created() {
@@ -303,6 +352,20 @@ export default {
 
     // check if the user has a payment method or bank cards
     this.updateUserPaymentMethodsInfo();
+
+    // get user subscription
+    const periods = { monthly: "month", annually: "year" };
+    const subscription = await this.getMySubscription();
+    if (Object.keys(subscription || {}).length > 0) {
+      this.userSubscription = {
+        currentPlan: {
+          name: subscription?.priceName,
+          price: `£${subscription?.amount}`,
+          period: periods[subscription?.planName?.toLowerCase()],
+        },
+        status: subscription?.status,
+      };
+    }
   },
   async updated() {
     const stripeElementsForm = document.getElementById(
@@ -315,6 +378,12 @@ export default {
     }
   },
   methods: {
+    redirectToHaltSubscription(haltMode) {
+      this.$router.push(`/profile/settings/${haltMode}-subscription`);
+    },
+    setShowStatusManageOptions(show) {
+      this.showStatusManageOptions = show;
+    },
     redirectToContactUs() {
       this.$router.push("/contact");
     },
@@ -522,6 +591,13 @@ export default {
       });
       this.setShowAddNewPaymentMethodForm(false);
     },
+    async getMySubscription() {
+      const response = await SubscriptionService.GetMySubscription().catch(
+        () => null
+      );
+
+      return response?.data || null;
+    },
   },
 };
 </script>
@@ -571,8 +647,37 @@ export default {
 .error-text {
   color: var(--t-red);
 }
+.profile-account-settings-section-manage-dropdown {
+  position: relative;
+}
+.profile-account-settings-section-manage-dropdown-list {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--t-white);
+  list-style-type: none;
+  color: var(--t-black-100);
+  border: var(--t-space-1) solid var(--t-gray-100);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  border-radius: var(--t-br-medium);
+}
+.profile-account-settings-section-manage-dropdown-list button {
+  background-color: transparent;
+  border: 0;
+  width: 100%;
+  cursor: pointer;
+  transition: 0.2s ease;
+  border-radius: var(--t-br-medium);
+}
+.profile-account-settings-section-manage-dropdown-list button:hover {
+  background-color: var(--t-white-100);
+}
+.color-red {
+  color: var(--t-red);
+}
 
-/* todo */
+/* todo: responsiveness */
 .profile-account-settings-section-card-expand-content {
   padding: var(--t-space-24);
   display: flex;
@@ -634,6 +739,14 @@ export default {
     height: var(--t-space-12);
     width: var(--t-space-12);
   }
+
+  .profile-account-settings-section-manage-dropdown-list {
+    top: var(--t-space-28);
+  }
+  .profile-account-settings-section-manage-dropdown-list button {
+    padding: var(--t-space-5);
+    font-size: calc(var(--t-fs-small) * 0.8);
+  }
 }
 @media (min-width: 600px) {
   .profile-account-settings-wrapper {
@@ -658,12 +771,24 @@ export default {
     height: var(--t-space-16);
     width: var(--t-space-16);
   }
+
+  .profile-account-settings-section-manage-dropdown-list {
+    top: var(--t-space-30);
+  }
+  .profile-account-settings-section-manage-dropdown-list button {
+    padding: var(--t-space-8);
+    font-size: var(--t-fs-small);
+  }
 }
 @media (min-width: 900px) {
   .profile-account-settings-wrapper {
     gap: var(--t-space-44);
     padding: var(--t-space-36) var(--t-space-24);
     padding-bottom: calc(var(--t-space-50) * 2);
+  }
+
+  .profile-account-settings-section-manage-dropdown-list {
+    top: var(--t-space-36);
   }
 }
 @media (min-width: 1200px) {

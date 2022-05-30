@@ -16,4 +16,12 @@ export default class SubscriptionRoutes {
   static async GetMySubscription() {
     return HTTPClient.get(`/subscriptions`);
   }
+
+  static async CancelSubscription(payload) {
+    return HTTPClient.delete(`/subscriptions`, payload);
+  }
+
+  static async ChangeSubscriptionStatus(payload) {
+    return HTTPClient.patch(`/subscriptions/status`, payload);
+  }
 }
