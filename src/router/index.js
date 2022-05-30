@@ -32,6 +32,7 @@ import ServicesUpgradeSuccess from "../components/Modules/Services/Upgrade/Succe
 import ServicesUpgradePlans from "../components/Modules/Services/Upgrade/Plans";
 import ServicesPrivacyPolicy from "../components/Modules/Services/PrivacyPolicy";
 import ServicesTermsOfService from "../components/Modules/Services/TermsOfService";
+import ServicesContact from "../components/Modules/Services/Contact";
 import Error404 from "../components/Modules/Error404";
 import ComingSoon from "../components/Modules/ComingSoon";
 import AdminUsersHome from "../components/Modules/Admin/Users/Home";
@@ -379,6 +380,18 @@ const routes = [
         name: "ServicesTermsOfService",
         path: "/services/terms",
         component: ServicesTermsOfService,
+      },
+    ],
+  },
+  {
+    path: "/services",
+    component: Layout,
+    children: [
+      {
+        name: "ServicesContact",
+        path: "/services/contact",
+        alias: "/contact",
+        component: ServicesContact,
       },
     ],
   },

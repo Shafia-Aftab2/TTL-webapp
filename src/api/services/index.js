@@ -9,6 +9,7 @@ import FeedbackService from "./Feedback.service";
 import UserService from "./User.service";
 import SubscriptionService from "./Subscription.service";
 import AssetService from "./Asset.service";
+import ContactService from "./Contact.service";
 
 export {
   AuthService,
@@ -22,4 +23,5 @@ export {
   UserService,
   SubscriptionService,
   AssetService,
+  ContactService,
 };

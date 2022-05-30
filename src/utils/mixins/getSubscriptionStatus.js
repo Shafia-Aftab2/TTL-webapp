@@ -10,7 +10,7 @@ export default {
         () => null
       );
 
-      if (response.data) {
+      if (response?.data) {
         this.handleStoreMutation("userIsSubscribed", true);
 
         const periods = { monthly: "month", annually: "year" };
