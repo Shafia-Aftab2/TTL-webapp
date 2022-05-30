@@ -169,10 +169,11 @@ import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
 import authUser from "@/utils/helpers/auth";
 import { TalkieBankCard } from "@/components/SubModules/Cards";
+import getMySubscriptionStatus from "@/utils/mixins/getSubscriptionStatus";
 
 export default {
   name: "ServicesUpgrade",
-  mixins: [isMobileScreen],
+  mixins: [isMobileScreen, getMySubscriptionStatus],
   components: {
     TalkieButton,
     TalkieLoader,
@@ -456,6 +457,7 @@ export default {
         variant: "success",
         displayIcon: true,
       });
+      this.getSubscriptionStatus();
       setTimeout(() => {
         this.$router.push("/profile/settings/account");
       }, 1500);
