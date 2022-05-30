@@ -47,13 +47,23 @@
           "
           :features="plan.features"
           :description="plan.description"
-          :ctaText="plan.cta.text"
+          :ctaText="
+            computedCurrentSubscription?.plan ===
+            plan?.name?.toLowerCase()?.split('-')?.join(' ')
+              ? 'Your Current Plan'
+              : plan.cta.text
+          "
           :ctaAction="() => onPlanSelected(plan.name)"
+          :ctaDisabled="
+            computedCurrentSubscription?.plan ===
+            plan?.name?.toLowerCase()?.split('-')?.join(' ')
+          "
           :variant="plan.theme"
           :expandable="isMobileScreen ? true : false"
           :defaultExpanded="false"
         />
       </template>
+      {{ computedCurrentSubscription }}
     </div>
   </div>
 </template>
@@ -84,6 +94,9 @@ export default {
   computed: {
     computedUser() {
       return this.user;
+    },
+    computedCurrentSubscription() {
+      return this.$store.state.currentSubscription;
     },
   },
   async created() {

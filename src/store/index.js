@@ -8,6 +8,7 @@ export default createStore({
     },
     isTrialOver: false,
     userIsSubscribed: false,
+    currentSubscription: {},
   },
   mutations: {},
   actions: {},

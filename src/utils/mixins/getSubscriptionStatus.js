@@ -10,7 +10,17 @@ export default {
         () => null
       );
 
-      if (response.data) this.handleStoreMutation("userIsSubscribed", true);
+      if (response.data) {
+        this.handleStoreMutation("userIsSubscribed", true);
+
+        const periods = { monthly: "month", annually: "year" };
+        const currentSubscription = {
+          period: periods[response?.data?.planName],
+          plan: response?.data?.priceName?.toLowerCase()?.split("-")?.join(" "),
+        };
+        console.log("currentSubscription => ", currentSubscription);
+        this.handleStoreMutation("currentSubscription", currentSubscription);
+      }
     },
   },
 };
