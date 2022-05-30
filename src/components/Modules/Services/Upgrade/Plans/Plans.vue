@@ -110,6 +110,15 @@ export default {
       this.activePlanTimeline = newTimeline;
     },
     onPlanSelected(planName) {
+      const requiresContact =
+        planName?.toUpperCase()?.trim() === "FOR THE LONG-HAUL";
+
+      // check if the custom plan is selected
+      if (requiresContact) {
+        this.$router.push(`/contact`);
+        return;
+      }
+
       // redirect to signup if there is logged in user
       if (!this.user) {
         this.$router.push(
