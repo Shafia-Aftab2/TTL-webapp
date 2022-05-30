@@ -83,7 +83,7 @@
                     <router-link to="/profile/self">Profile</router-link>
                   </li>
                   <li class="talkie-navbar-profile-options-list-item">
-                    <router-link to="/profile/settings">Settings</router-link>
+                    <router-link to="/profile/settings">Account</router-link>
                   </li>
                   <template v-for="link in links" :key="link.text">
                     <template
