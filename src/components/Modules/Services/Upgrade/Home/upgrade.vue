@@ -226,7 +226,7 @@ export default {
     const subscription = await this.getMySubscription();
 
     this.backdropLoading = false;
-    if (subscription) {
+    if (subscription?.status && subscription?.status !== "canceled") {
       this.$router.push("/profile/settings/account");
       return;
     }
@@ -246,7 +246,9 @@ export default {
 
     // check if plan exists
     const foundPlan = pricingPlans?.planData?.find(
-      (x) => x?.name?.toLowerCase() === plan?.toLowerCase()
+      (x) =>
+        x?.name?.toLowerCase()?.split("-")?.join(" ") ===
+        plan?.toLowerCase()?.split("-")?.join(" ")
     );
 
     if (foundPlan) {

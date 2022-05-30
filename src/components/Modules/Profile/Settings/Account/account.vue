@@ -44,19 +44,35 @@
             class="profile-account-settings-section-manage-dropdown-list"
             v-if="showStatusManageOptions"
           >
-            <li>
-              <button @click="() => redirectToHaltSubscription('pause')">
-                Pause
-              </button>
-            </li>
-            <li>
-              <button
-                @click="() => redirectToHaltSubscription('cancel')"
-                class="color-red"
-              >
-                Cancel
-              </button>
-            </li>
+            <template
+              v-if="userSubscription?.status?.toLowerCase() === 'canceled'"
+            >
+              <li>
+                <button
+                  @click="() => redirectToResumeSubscription()"
+                  class="color-green"
+                >
+                  Resume
+                </button>
+              </li>
+            </template>
+            <template
+              v-if="userSubscription?.status?.toLowerCase() !== 'canceled'"
+            >
+              <li>
+                <button @click="() => redirectToHaltSubscription('pause')">
+                  Pause
+                </button>
+              </li>
+              <li>
+                <button
+                  @click="() => redirectToHaltSubscription('cancel')"
+                  class="color-red"
+                >
+                  Cancel
+                </button>
+              </li>
+            </template>
           </ul>
         </div>
       </div>
@@ -378,6 +394,13 @@ export default {
     }
   },
   methods: {
+    redirectToResumeSubscription() {
+      // redirect to upgrade page with the canceled selected plan, to renew
+      const currentPlan = this.userSubscription?.currentPlan;
+      this.$router.push(
+        `/services/upgrade?plan=${currentPlan?.name}&period=${currentPlan?.period}`
+      );
+    },
     redirectToHaltSubscription(haltMode) {
       this.$router.push(`/profile/settings/${haltMode}-subscription`);
     },
@@ -675,6 +698,9 @@ export default {
 }
 .color-red {
   color: var(--t-red);
+}
+.color-green {
+  color: var(--t-green);
 }
 
 /* todo: responsiveness */
