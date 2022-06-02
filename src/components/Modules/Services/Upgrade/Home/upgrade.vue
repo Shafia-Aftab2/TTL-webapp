@@ -453,10 +453,17 @@ export default {
       // api call
       const response = await (this.isChangeSubscriptionPlanMode
         ? SubscriptionService.ChangeSubscriptionPlan
-        : SubscriptionService.CreateSubscription)(query).catch(() => {
+        : SubscriptionService.CreateSubscription)(query).catch((e) => {
+        const errorMap = {
+          "plan is already subscribed":
+            "You are already subscribed to this plan",
+        };
+
         return {
           // todo: added message "user has no payment-method"
-          error: "Failed to create subscription!",
+          error:
+            errorMap?.[e?.response?.data?.message?.toLowerCase()] ||
+            "Failed to create subscription!",
         };
       });
 
