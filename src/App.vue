@@ -14,26 +14,23 @@
     :onConfirm="handleUpgradeMyAccount"
     :confirmButtonText="'I’m ready to upgrade!'"
     :confirmButtonVariant="'dark'"
-    v-if="computedIsTrialOver"
+    v-if="computedSubscription?.isRequired && computedSubscription?.isTrialOver"
   />
 </template>
 
 <script>
 import { TalkieModal } from "@/components/UICore";
-import getMySubscription from "@/utils/mixins/getSubscriptionStatus";
-
 import "./styles/app.css";
 
 export default {
   name: "App",
-  mixins: [getMySubscription],
   computed: {
-    computedIsTrialOver() {
-      return this.$store.state.isTrialOver;
+    computedSubscription() {
+      return this.$store.state.subscription;
     },
   },
   async created() {
-    await this.getSubscriptionStatus();
+    this.$store.dispatch("calculateSubscription");
   },
   components: {
     TalkieModal,
@@ -41,14 +38,14 @@ export default {
   methods: {
     handleUpgradeModalClose() {
       // just to hide the modal | the trial is not over
-      this.$store.state.isTrialOver = false;
+      this.$store.dispatch("hideSubscriptionTrialOverModal");
     },
     handleUpgradeMyAccount() {
       // just to hide the modal | the trial is not over
-      this.$store.state.isTrialOver = false;
+      this.$store.dispatch("hideSubscriptionTrialOverModal");
 
-      // redirect to upgrade page
-      this.$router.push(`/services/upgrade`);
+      // redirect to pricing page
+      this.$router.push(`/services/pricing`);
     },
   },
 };

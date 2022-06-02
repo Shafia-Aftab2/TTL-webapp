@@ -173,12 +173,11 @@ import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
 import authUser from "@/utils/helpers/auth";
 import { TalkieBankCard } from "@/components/SubModules/Cards";
-import getMySubscriptionStatus from "@/utils/mixins/getSubscriptionStatus";
 import UpgradeSuccess from "../Success";
 
 export default {
   name: "ServicesUpgrade",
-  mixins: [isMobileScreen, getMySubscriptionStatus],
+  mixins: [isMobileScreen],
   components: {
     TalkieButton,
     TalkieLoader,
@@ -470,7 +469,6 @@ export default {
 
       // success case
       await this.updateUserProfile();
-      await this.getSubscriptionStatus();
       this.subscribingToPlan = false;
       this.accountUpgraded = true;
       notifications.show("Subscription created successfully!", {

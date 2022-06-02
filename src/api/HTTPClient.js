@@ -144,21 +144,21 @@ client.interceptors.response.use(
         error?.response?.data?.message?.toLowerCase() ===
         "please upgrade your account"
       ) {
-        store.state.isTrialOver = true;
+        store.state.subscription.isTrialOver = true;
       }
 
       if (
         error?.response?.data?.message?.toLowerCase() ===
         "your subscription has been expired"
       ) {
-        store.state.isTrialOver = true; // TODO: show personalized message for expired subscription
+        store.state.subscription.isTrialOver = true; // TODO: show personalized message for expired subscription
       }
 
       if (
         error?.response?.data?.message?.toLowerCase() ===
         "please complete your subscription"
       ) {
-        store.state.isTrialOver = true; // TODO: show personalized message to complete subscription
+        store.state.subscription.isTrialOver = true; // TODO: show personalized message to complete subscription
       }
     }
 
