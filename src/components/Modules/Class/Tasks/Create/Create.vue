@@ -393,7 +393,7 @@ export default {
       selectedTaskType: "Q&A",
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
-        ["Caption-This"]: "Add a caption task for practice.",
+        ["Caption-This"]: "Upload a photo.",
         ["Translation"]: "Add a translation task for practice.",
         ["Emoji-Story"]: "Add a emoji story task for practice.",
       },
