@@ -208,7 +208,7 @@ export default {
       selectedCardId: null,
       backdropLoading: false,
       accountUpgraded: false,
-      isChangeSubscriptionPlanMode: true,
+      isChangeSubscriptionPlanMode: false,
     };
   },
   computed: {
