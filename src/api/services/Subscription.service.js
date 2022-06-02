@@ -17,6 +17,10 @@ export default class SubscriptionRoutes {
     return HTTPClient.get(`/subscriptions`);
   }
 
+  static async GetBillingHistory() {
+    return HTTPClient.get(`/subscriptions/billing-history`);
+  }
+
   static async CancelSubscription(payload) {
     return HTTPClient.delete(`/subscriptions`, payload);
   }
