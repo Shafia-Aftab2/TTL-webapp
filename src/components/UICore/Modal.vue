@@ -150,7 +150,7 @@ export default {
 .talkie-modal-content-wrapper {
   display: flex;
   flex-direction: column;
-  z-index: var(--t-zindex-70);
+  z-index: var(--t-zindex-90);
   max-width: var(--max-width);
   width: 100%;
 }
