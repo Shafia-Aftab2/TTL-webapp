@@ -104,38 +104,30 @@
               currentTask.translation
             "
           >
-            <div
-              class="class-practice-body-content-wrapper-translations-wrapper"
-            >
+            <div class="class-translations-wrapper">
               <h4
-                class="h4 class-practice-body-content-wrapper-translations-question-header"
+                class="h4 class-translations-question-header"
                 v-if="currentTask.translation.question"
               >
-                <span
-                  class="class-practice-body-content-wrapper-translations-question-wrapper"
-                >
+                <span class="class-translations-question-wrapper">
                   Question
                 </span>
                 {{ currentTask.translation.question }}
               </h4>
 
               <h4
-                class="h4 class-practice-body-content-wrapper-translations-answer-header"
+                class="h4 class-translations-answer-header"
                 v-if="
                   currentTask.translation.answer &&
                   currentTaskAnswered.showTranslationSelfAssessment
                 "
               >
-                <span
-                  class="class-practice-body-content-wrapper-translations-answer-wrapper"
-                >
-                  Answer
-                </span>
+                <span class="class-translations-answer-wrapper"> Answer </span>
                 {{ currentTask.translation.answer }}
               </h4>
 
               <div
-                class="class-practice-body-content-wrapper-translations-self-assessment-wrapper"
+                class="class-translations-self-assessment-wrapper"
                 v-if="currentTaskAnswered.showTranslationSelfAssessment"
               >
                 <h5 class="h5">Self-assessment:</h5>
@@ -180,15 +172,13 @@
                 {{ (this.isAudioPlaying = isPlaying) }}
                 {{ (this.handleAudioPlayerToggle = togglePlayer) }}
               </span>
-              <div
-                class="class-practice-body-footer-wrapper-options-audio-player-wrapper"
-              >
+              <div class="class-practice-body-audio-player-wrapper">
                 <talkie-audio-timeline
                   :percentage="currentAudioPercentage"
                   :onHeadChange="updateAudioPercentage"
                 />
                 <span
-                  class="class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps"
+                  class="class-practice-body-audio-player-wrapper-timestamps"
                   >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
                 </span>
               </div>
@@ -376,7 +366,7 @@
               >
                 <div class="class-practice-body-footer-wrapper-options-item">
                   <button
-                    class="class-practice-body-footer-wrapper-options-item-next-button"
+                    class="class-practice-body-next-button"
                     @click="handleTaskScoring"
                   >
                     Next
@@ -542,6 +532,47 @@ export default {
           ["Caption-This"]: "Très bien!",
         },
       },
+      instructions: {
+        ["Emoji-Story"]: `
+          <strong>Tell us a story using the emojis in front of you as prompt.</strong>
+
+          "A story?! How long should it be?"
+          There is no time limit here, don't worry. It could be a sentence or a very detailed story lasting a few minutes - entirely up to you!
+
+          "But I don't know what the emojis are saying..."
+          You're right, some of the emojis can be hard to interpret. Have a go anyway. It's your story, you're in control. Oh, and you don't have to mention and include every single one emoji but if you're up for a challenge today, go for it!
+
+          "But I don't know how to say it in Spanish/French..."
+          That's okay! That's completely normal. The best approach is to look up the word online - have something to add to your vocabulary! No time? You can also use a word you already know and tweak the story a little bit. 
+
+          Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
+         `,
+        ["Caption-This"]: `
+          <strong>What can you say about the photo?</strong>
+
+          You have several options here. You can:
+          — Describe what you see on the photo.
+          — Give your opinion on the photo. 
+          — Use the photo as prompt to talk about your own experiences or come up with your own short story in your target language.
+
+          Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class. 
+        `,
+        ["Translation"]: `
+          How many can you translate in 5 minutes? 🧐
+          Translate the phrases or sentences into your target language.
+
+          Feeling stuck? Things that might help:
+          — Break the sentence down and focus on the words you can already translate.
+
+          — Topics are provided below the phrase. Use what you know from the context to make an educated guess. Which words can you recall from the technology topic, for example?
+
+          — All else fails, feel free to check your notes from class.
+
+          Don't worry if you haven't got enough vocabulary yet - don't let that stop you! It's okay to not get it completely right. The best approach is to have a go, and if it's wrong, make a note of it for next time.
+
+          Keep going! It takes time but you'll get there!
+        `,
+      },
     };
   },
   computed: {
@@ -606,22 +637,7 @@ export default {
         canExit: true,
         canFinish: true,
         shouldRecord: true,
-        instructions: `
-        What can you say about the photo?
-
-        You have several options here. You can:
-        — Describe what you see on the photo.
-        — Give your opinion on the photo.
-        — Use the photo as prompt to talk about your own experiences or come up with your own short story in Spanish!
-
-        Don't worry if you haven't got enough vocabulary yet. Don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
-
-        Some key phrases to get you started:
-
-        En la foto se puede ver... - In the photo, one/you can see...
-        En esta foto, puedo ver... - In this photo, I can see...
-        (No) me gusta esta foto porque...  - I don't like
-        `,
+        instructions: this.instructions?.[x?.type],
         ...(x?.type === taskTypes.CAPTION_THIS && {
           captionImage: x?.captionThisImage,
         }),
@@ -905,32 +921,32 @@ export default {
   flex: none;
   user-select: none;
 }
-.class-practice-body-content-wrapper-translations-wrapper {
+.class-translations-wrapper {
   display: flex;
   flex-direction: column;
   text-align: center;
 }
-.class-practice-body-content-wrapper-translations-question-wrapper,
-.class-practice-body-content-wrapper-translations-answer-wrapper {
+.class-translations-question-wrapper,
+.class-translations-answer-wrapper {
   border-radius: var(--t-br-small);
   margin-right: var(--t-space-5);
 }
-.class-practice-body-content-wrapper-translations-question-wrapper {
+.class-translations-question-wrapper {
   color: var(--t-black);
   background: var(--t-primary);
 }
-.class-practice-body-content-wrapper-translations-question-header {
+.class-translations-question-header {
   line-height: 1.5;
 }
-.class-practice-body-content-wrapper-translations-answer-wrapper {
+.class-translations-answer-wrapper {
   color: var(--t-black-50);
   background: var(--t-secondary);
 }
-.class-practice-body-content-wrapper-translations-answer-header {
+.class-translations-answer-header {
   color: var(--t-secondary);
   line-height: 1.5;
 }
-.class-practice-body-content-wrapper-translations-self-assessment-wrapper {
+.class-translations-self-assessment-wrapper {
   background: var(--t-gray-100);
   display: flex;
   flex-direction: column;
@@ -976,7 +992,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.class-practice-body-footer-wrapper-options-item-next-button {
+.class-practice-body-next-button {
   background: transparent;
   border: transparent;
   cursor: pointer;
@@ -1024,7 +1040,7 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .class-practice-body-footer-wrapper-options-item-next-button {
+  .class-practice-body-next-button {
     font-size: var(--t-space-12);
     padding: var(--t-space-44);
     height: var(--t-space-44);
@@ -1041,11 +1057,11 @@ export default {
   .class-practice-body-footer-wrapper-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-practice-body-footer-wrapper-options-audio-player-wrapper {
+  .class-practice-body-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-12);
   }
-  .class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps {
+  .class-practice-body-audio-player-wrapper-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
   .class-practice-body-footer-wrapper-options-mike-unmuted-button-error {
@@ -1062,12 +1078,12 @@ export default {
     width: var(--t-space-58);
     height: var(--t-space-58);
   }
-  .class-practice-body-content-wrapper-translations-wrapper {
+  .class-translations-wrapper {
     max-width: 100%;
     gap: var(--t-space-12);
   }
-  .class-practice-body-content-wrapper-translations-question-wrapper,
-  .class-practice-body-content-wrapper-translations-answer-wrapper {
+  .class-translations-question-wrapper,
+  .class-translations-answer-wrapper {
     padding: var(--t-space-3) var(--t-space-5);
     font-size: 0.9em;
   }
@@ -1079,7 +1095,7 @@ export default {
   }
 }
 @media (min-width: 600px) {
-  .class-practice-body-footer-wrapper-options-item-next-button {
+  .class-practice-body-next-button {
     font-size: var(--t-space-16);
     padding: var(--t-space-50);
     height: var(--t-space-50);
@@ -1096,11 +1112,11 @@ export default {
   .class-practice-body-footer-wrapper-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-practice-body-footer-wrapper-options-audio-player-wrapper {
+  .class-practice-body-audio-player-wrapper {
     gap: var(--t-space-8);
     margin-top: var(--t-space-10);
   }
-  .class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps {
+  .class-practice-body-audio-player-wrapper-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
   .class-practice-body-footer-wrapper-options-mike-unmuted-button-error {
@@ -1116,12 +1132,12 @@ export default {
     width: var(--t-space-64);
     height: var(--t-space-64);
   }
-  .class-practice-body-content-wrapper-translations-wrapper {
+  .class-translations-wrapper {
     max-width: 80%;
     gap: var(--t-space-24);
   }
-  .class-practice-body-content-wrapper-translations-question-wrapper,
-  .class-practice-body-content-wrapper-translations-answer-wrapper {
+  .class-translations-question-wrapper,
+  .class-translations-answer-wrapper {
     padding: var(--t-space-5);
     font-size: 0.9em;
   }
@@ -1144,11 +1160,11 @@ export default {
   .class-practice-body-footer-wrapper-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-practice-body-footer-wrapper-options-audio-player-wrapper {
+  .class-practice-body-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-16);
   }
-  .class-practice-body-footer-wrapper-options-audio-player-wrapper-timestamps {
+  .class-practice-body-audio-player-wrapper-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
   .class-practice-body-content-wrapper-emojis-wrapper {
@@ -1158,7 +1174,7 @@ export default {
     width: var(--t-space-70);
     height: var(--t-space-70);
   }
-  .class-practice-body-content-wrapper-translations-wrapper {
+  .class-translations-wrapper {
     max-width: 70%;
     gap: var(--t-space-30);
   }

@@ -1,9 +1,18 @@
 <template>
   <div class="talkie-navbar-wrapper-container">
     <!-- display if there are trial days remaining -->
-    <div class="trial-bar" v-if="remainingTrialDays > 0 && !hideTrialBar">
-      Your free trial ends in {{ remainingTrialDays }}
-      {{ remainingTrialDays > 1 ? "days" : "day" }}.
+    <div
+      class="trial-bar"
+      v-if="
+        computedSubscription?.isRequired &&
+        computedSubscription?.isTrial &&
+        !computedSubscription?.isTrialOver &&
+        computedSubscription?.remainingTrialDays > 0 &&
+        !computedSubscription?.hideTrialBar
+      "
+    >
+      Your free trial ends in {{ computedSubscription?.remainingTrialDays }}
+      {{ computedSubscription?.remainingTrialDays > 1 ? "days" : "day" }}.
       <span class="trial-bar-close">
         <talkie-icon
           :size="16"
@@ -17,8 +26,8 @@
     <nav
       :class="[
         'talkie-navbar-wrapper',
-        remainingTrialDays > 0 &&
-          !hideTrialBar &&
+        computedSubscription?.remainingTrialDays > 0 &&
+          !computedSubscription?.hideTrialBar &&
           'talkie-navbar-wrapper-trail-pad',
       ]"
     >
@@ -51,7 +60,8 @@
                   class="talkie-navbar-link-item"
                   v-if="
                     link?.text?.toLowerCase() === 'upgrade' &&
-                    !computedIsSubscribed
+                    computedSubscription?.isRequired &&
+                    !computedSubscription?.isSubscribed
                   "
                 >
                   <a :href="link.url">{{ link.text }}</a>
@@ -98,7 +108,8 @@
                         ]"
                         v-if="
                           link.text?.toLowerCase() === 'upgrade' &&
-                          !computedIsSubscribed
+                          computedSubscription?.isRequired &&
+                          !computedSubscription?.isSubscribed
                         "
                       >
                         <router-link :to="link.url">
@@ -156,9 +167,6 @@ export default {
         //   url: "#",
         // },
       ],
-      remainingTrialDays: 0,
-      hasShownTrailBarOnce: false,
-      hideTrialBar: false,
       user: null,
     };
   },
@@ -179,30 +187,13 @@ export default {
     computedIsLoggedIn() {
       return Object.keys(this.$store.state.user)?.length > 0;
     },
-    computedIsSubscribed() {
-      return this.$store.state.userIsSubscribed;
+    computedSubscription() {
+      return this.$store.state.subscription;
     },
   },
   created() {
     const user = authUser.getUser();
     this.user = user;
-
-    this.calculateRemainingTrialDays();
-  },
-  updated() {
-    if (
-      Object.keys(this.computedUser || {}).length > 0 &&
-      !this.computedIsSubscribed
-    ) {
-      if (!this.hasShownTrailBarOnce) {
-        this.calculateRemainingTrialDays();
-        this.hasShownTrailBarOnce = false;
-      }
-    } else {
-      this.remainingTrialDays = 0;
-      this.hideTrialBar = false;
-      this.$store.state.isTrialOver = false;
-    }
   },
   props: {
     hideLinksAndProfile: {
@@ -225,24 +216,7 @@ export default {
   },
   methods: {
     onCloseTrailBarClick() {
-      this.hideTrialBar = true;
-    },
-    calculateRemainingTrialDays() {
-      // calculate remaining trial days
-      if (this.user && !this.user?.subscription) {
-        const trialStartDate = new Date(this.user?.createdAt);
-        const today = new Date();
-
-        const remainingTrialDays =
-          14 - Math.round((today - trialStartDate) / (1000 * 60 * 60 * 24));
-
-        if (remainingTrialDays <= 0 || remainingTrialDays > 14) {
-          this.$store.state.isTrialOver = true;
-          return;
-        }
-
-        this.remainingTrialDays = remainingTrialDays;
-      }
+      this.$store.dispatch("hideSubscriptionDaysTrialBar");
     },
   },
 };

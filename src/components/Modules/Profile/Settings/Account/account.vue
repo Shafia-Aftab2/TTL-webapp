@@ -299,16 +299,69 @@
 
     <div class="profile-account-settings-section">
       <h5 class="h5">Billing</h5>
-      <div class="profile-account-settings-section-card">
-        <div class="profile-account-settings-section-card-header">
-          <p class="p">May 13, 2022 - £10.00</p>
+      <div
+        :class="[
+          'profile-account-settings-section-card',
+          'flex-col',
+          showBillingHistory && 'profile-account-settings-section-card-active',
+        ]"
+      >
+        <div
+          :class="[
+            'profile-account-settings-section-card-header',
+            'space-between',
+            'w-full',
+          ]"
+        >
+          <p class="p" v-if="!billingHistoryError">
+            {{ billingHistory?.[0]?.paidOn || "Nothing here yet." }}
+            {{
+              billingHistory?.[0]?.amount
+                ? " -" + billingHistory?.[0]?.amount
+                : ""
+            }}
+          </p>
+          <p class="p" v-if="billingHistoryError">
+            {{ billingHistoryError }}
+          </p>
+          <talkie-icon
+            v-if="!showBillingHistory"
+            :name="'arrow-head-bottom'"
+            :variant="'secondary'"
+            :isActive="true"
+            :size="35"
+            :onClick="() => !billingHistoryError && setShowBillingHistory(true)"
+          />
+          <talkie-icon
+            v-if="showBillingHistory"
+            :name="'arrow-head-top'"
+            :variant="'secondary'"
+            :isActive="true"
+            :size="35"
+            :onClick="() => setShowBillingHistory(false)"
+          />
         </div>
-        <talkie-icon
-          :name="'arrow-head-bottom'"
-          :variant="'secondary'"
-          :isActive="true"
-          :size="35"
-        />
+        <div
+          class="profile-account-settings-section-card-expand-content w-full"
+          v-if="showBillingHistory"
+        >
+          <div class="billing-table-row billing-table-header">
+            <span>Subscription Amount</span>
+            <span>Status</span>
+            <span>Paid On</span>
+            <span>Due Date</span>
+          </div>
+          <div
+            class="billing-table-row"
+            v-for="bill in billingHistory"
+            :key="bill"
+          >
+            <span>{{ bill?.amount }}</span>
+            <span>{{ bill?.status }}</span>
+            <span>{{ bill?.paidOn }}</span>
+            <span>{{ bill?.dueDate }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -385,6 +438,24 @@ export default {
       showStatusManageOptions: false,
 
       resumingSubscription: false,
+
+      showBillingHistory: false,
+      billingHistoryError: false,
+      billingHistory: [],
+      months: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ],
     };
   },
   async created() {
@@ -400,6 +471,9 @@ export default {
 
     // get user subscription
     await this.getUserSubscription();
+
+    // get user billing history
+    await this.getBillingHistory();
   },
   async updated() {
     const stripeElementsForm = document.getElementById(
@@ -412,6 +486,38 @@ export default {
     }
   },
   methods: {
+    convertDate(isoString) {
+      const date = new Date(isoString);
+      const day = date?.getDate();
+
+      return `${this.months[date?.getMonth()]} ${
+        day?.toString()?.length > 1 ? day : "0" + day
+      }, ${date?.getFullYear()}`;
+    },
+    async getBillingHistory() {
+      const response = await SubscriptionService.GetBillingHistory().catch(
+        () => null
+      );
+
+      if (!response) {
+        this.billingHistoryError = "Failed to get billing history";
+        return;
+      }
+
+      this.billingHistory = response?.data?.map((x) => ({
+        id: x?.id,
+        status: x?.status,
+        amount: `£ ${x?.amount}`,
+        paidOn: this.convertDate(x?.createdAt),
+        dueDate: x?.dueDate ? this.convertDate(x?.dueDate) : "N/A",
+      }));
+
+      console.log("history => ", response?.data);
+      console.log("history => ", response?.data);
+    },
+    setShowBillingHistory(show) {
+      this.showBillingHistory = show;
+    },
     redirectToPricing() {
       this.$router.push(`/pricing`);
     },
@@ -776,6 +882,23 @@ export default {
 }
 .text-center {
   text-align: center;
+}
+.space-between {
+  justify-content: space-between;
+}
+.w-full {
+  width: 100%;
+}
+.flex-col {
+  flex-direction: column;
+}
+.billing-table-header {
+  font-family: var(--t-ff-bold);
+}
+.billing-table-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  text-transform: capitalize;
 }
 
 /* todo: responsiveness */

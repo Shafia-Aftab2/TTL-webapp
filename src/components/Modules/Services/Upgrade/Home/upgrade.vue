@@ -173,12 +173,11 @@ import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
 import authUser from "@/utils/helpers/auth";
 import { TalkieBankCard } from "@/components/SubModules/Cards";
-import getMySubscriptionStatus from "@/utils/mixins/getSubscriptionStatus";
 import UpgradeSuccess from "../Success";
 
 export default {
   name: "ServicesUpgrade",
-  mixins: [isMobileScreen, getMySubscriptionStatus],
+  mixins: [isMobileScreen],
   components: {
     TalkieButton,
     TalkieLoader,
@@ -209,7 +208,7 @@ export default {
       selectedCardId: null,
       backdropLoading: false,
       accountUpgraded: false,
-      isChangeSubscriptionPlanMode: true,
+      isChangeSubscriptionPlanMode: false,
     };
   },
   computed: {
@@ -454,10 +453,17 @@ export default {
       // api call
       const response = await (this.isChangeSubscriptionPlanMode
         ? SubscriptionService.ChangeSubscriptionPlan
-        : SubscriptionService.CreateSubscription)(query).catch(() => {
+        : SubscriptionService.CreateSubscription)(query).catch((e) => {
+        const errorMap = {
+          "plan is already subscribed":
+            "You are already subscribed to this plan",
+        };
+
         return {
           // todo: added message "user has no payment-method"
-          error: "Failed to create subscription!",
+          error:
+            errorMap?.[e?.response?.data?.message?.toLowerCase()] ||
+            "Failed to create subscription!",
         };
       });
 
@@ -470,7 +476,6 @@ export default {
 
       // success case
       await this.updateUserProfile();
-      await this.getSubscriptionStatus();
       this.subscribingToPlan = false;
       this.accountUpgraded = true;
       notifications.show("Subscription created successfully!", {

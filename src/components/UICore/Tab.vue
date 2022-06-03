@@ -1,14 +1,16 @@
 <template>
   <button
     type="button"
+    :disabled="disabled"
     :class="[
       'talkie-tab-wrapper',
       `talkie-tab-${variant.toString()}`,
       `talkie-tab-${size.toString()}`,
       active && `talkie-tab-${variant.toString()}-active`,
+      disabled && `talkie-tab-disabled`,
       customClass.toString(),
     ]"
-    @click="onClick"
+    @click="async (e) => (!disabled ? await onClick(e) : () => {})"
   >
     {{ label }}
   </button>
@@ -43,6 +45,10 @@ export default {
     customClass: {
       type: String,
       default: "",
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
 };
@@ -95,6 +101,19 @@ export default {
 }
 .talkie-tab-secondary-active {
   border-bottom-color: var(--t-secondary);
+}
+
+/* Disabled variant */
+.talkie-tab-disabled {
+  background: var(--t-white-300);
+  border-color: var(--t-white-300);
+  color: var(--t-gray-50);
+  cursor: not-allowed;
+}
+.talkie-tab-disabled:hover {
+  background: var(--t-white-300);
+  border-color: var(--t-white-300);
+  color: var(--t-gray-50);
 }
 
 /* Responsive variants */

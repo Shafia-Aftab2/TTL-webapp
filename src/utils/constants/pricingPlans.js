@@ -52,7 +52,7 @@ const planData = [
       "✔ Full access to talkie features: Q&A and quizzes",
       "✔ Individual teacher, 8 classes",
       "✔ Storage for 6 month",
-      "✔ Download feature",
+      "✔ Download feature (Coming Soon)",
       "✔ Technical support",
     ],
     description:
@@ -72,7 +72,7 @@ const planData = [
       "✔ Full access to talkie features: Q&A and quizzes",
       "✔ Multiple teachers and classes",
       "✔ Storage for 12 months or longer!",
-      "✔ Download feature",
+      "✔ Download feature (Coming Soon)",
       "✔ Technical support",
     ],
     description:

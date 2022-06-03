@@ -45,7 +45,7 @@
         </div>
 
         <talkie-switch
-          :checkLabel="'Showing practice mode tasks'"
+          :checkLabel="'Showing other quizzes'"
           :uncheckLabel="'Show other quizzes'"
           :onToggle="handlePracticeModeToggleChange"
         />

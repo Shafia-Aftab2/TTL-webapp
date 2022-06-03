@@ -77,8 +77,7 @@
                 :percentage="currentAudioPercentage"
                 :onHeadChange="updateAudioPercentage"
               />
-              <span
-                class="admin-create-quizzes-form-options-audio-player-timestamps"
+              <span class="admin-create-quizzes-audio-player-timestamps"
                 >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
               </span>
             </div>
@@ -395,7 +394,7 @@ export default {
       selectedTaskType: TaskTypes.CAPTION_THIS,
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
-        ["Caption-This"]: "Add a caption task for practice.",
+        ["Caption-This"]: "Upload a photo.",
         ["Translation"]: "Add a translation task for practice.",
         ["Emoji-Story"]: "Add a emoji story task for practice.",
       },
@@ -703,7 +702,7 @@ export default {
   flex-direction: column;
   width: 100%;
 }
-.admin-create-quizzes-form-options-audio-player-timestamps {
+.admin-create-quizzes-audio-player-timestamps {
   margin-left: auto;
   color: var(--t-black-100);
 }
@@ -800,7 +799,7 @@ export default {
     gap: var(--t-space-5);
     margin-top: var(--t-space-12);
   }
-  .admin-create-quizzes-form-options-audio-player-timestamps {
+  .admin-create-quizzes-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
   .admin-create-quizzes-form-options-mike-unmuted-button-error {
@@ -851,7 +850,7 @@ export default {
     gap: var(--t-space-8);
     margin-top: var(--t-space-10);
   }
-  .admin-create-quizzes-form-options-audio-player-timestamps {
+  .admin-create-quizzes-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
   .admin-create-quizzes-form-options-mike-unmuted-button-error {
@@ -905,7 +904,7 @@ export default {
     gap: var(--t-space-5);
     margin-top: var(--t-space-16);
   }
-  .admin-create-quizzes-form-options-audio-player-timestamps {
+  .admin-create-quizzes-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
   .admin-create-quizzes-footer {

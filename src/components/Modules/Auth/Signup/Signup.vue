@@ -294,6 +294,8 @@ export default {
         message: "Account Created. Redirecting!",
       };
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
+      this.$store.dispatch("unsetSubscriptionCalculatedStatus");
+      this.$store.dispatch("calculateSubscription");
     },
   },
 };

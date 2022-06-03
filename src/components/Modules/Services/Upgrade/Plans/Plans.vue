@@ -84,6 +84,7 @@ import { TalkiePricePlanCard } from "@/components/SubModules/Cards";
 import authUser from "@/utils/helpers/auth";
 import { pricingPlans } from "@/utils/constants";
 import isMobileScreen from "../_common/mixins/isMobileScreen";
+import { SubscriptionService } from "@/api/services";
 
 export default {
   name: "ServicesUpgradePlans",
@@ -99,6 +100,7 @@ export default {
         YEAR: "year",
         TRIAL: "",
       },
+      currentSubscription: {},
     };
   },
   computed: {
@@ -106,15 +108,33 @@ export default {
       return this.user;
     },
     computedCurrentSubscription() {
-      return this.$store.state.currentSubscription;
+      return this.currentSubscription;
     },
   },
   async created() {
     // get auth user data
     const user = authUser.getUser();
     this.user = user;
+
+    // get subscription status if user is logged in
+    if (user) await this.getSubscriptionStatus();
   },
   methods: {
+    async getSubscriptionStatus() {
+      const response = await SubscriptionService.GetMySubscription().catch(
+        () => null
+      );
+
+      if (response?.data) {
+        const periods = { monthly: "month", annually: "year" };
+        const currentSubscription = {
+          period: periods[response?.data?.planName],
+          plan: response?.data?.priceName?.toLowerCase()?.split("-")?.join(" "),
+        };
+
+        this.currentSubscription = currentSubscription;
+      }
+    },
     handlePlanTimelineChange(newTimeline) {
       this.activePlanTimeline = newTimeline;
     },
