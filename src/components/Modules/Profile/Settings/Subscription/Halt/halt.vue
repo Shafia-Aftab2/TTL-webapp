@@ -33,10 +33,11 @@
         :placeholder="'Please tell us more so we can improve our offering.'"
         :onChange="handleCustomReasonInputChange"
       />
+      <talkie-alert v-if="error" :text="error" :variant="'error'" />
       <talkie-button
         class="ml-auto"
         :variant="'dark'"
-        :onClick="() => setShowConfirmationModal(true)"
+        :onClick="checkIfReasonsAreSelected"
       >
         {{ this.copy?.[this.haltMode]?.ctaText }}
       </talkie-button>
@@ -79,6 +80,7 @@ import {
   TalkieBackDropLoader,
   TalkieInput,
   TalkieModal,
+  TalkieAlert,
 } from "@/components/UICore";
 import { TalkieTopicCard } from "@/components/SubModules/Cards";
 import { SubscriptionService } from "@/api/services";
@@ -91,6 +93,7 @@ export default {
     TalkieBackDropLoader,
     TalkieInput,
     TalkieModal,
+    TalkieAlert,
     TalkieTopicCard,
   },
   data() {
@@ -172,6 +175,7 @@ export default {
       customReason: "",
       showExtendedHaltReasonsBox: false,
       backdropLoading: false,
+      error: null,
     };
   },
   props: {
@@ -257,6 +261,14 @@ export default {
           displayIcon: true,
         }
       );
+    },
+    checkIfReasonsAreSelected() {
+      if (this.haltReasons?.length === 0 && !this.customReason) {
+        this.error = "Please select an option!";
+        return;
+      }
+      this.error = "";
+      this.setShowConfirmationModal(true);
     },
   },
 };
