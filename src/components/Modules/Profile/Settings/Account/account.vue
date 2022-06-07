@@ -1,5 +1,11 @@
 <template>
   <div class="profile-account-settings-wrapper">
+    <talkie-alert
+      v-if="pageLoadError"
+      :text="pageLoadError"
+      :variant="'error'"
+    />
+
     <h2 class="h2">Your Account</h2>
 
     <div class="profile-account-settings-section">
@@ -456,6 +462,7 @@ export default {
         "November",
         "December",
       ],
+      pageLoadError: null,
     };
   },
   async created() {
@@ -463,8 +470,11 @@ export default {
     await this.updateUserProfile();
 
     // get auth user data
-    const user = authUser.getUser();
+    const user = await this.getMyProfile();
     this.user = user;
+    if (!user) {
+      this.pageLoadError = "This page is not working correctly, Please reload!";
+    }
 
     // check if the user has a payment method or bank cards
     this.updateUserPaymentMethodsInfo();
@@ -486,6 +496,16 @@ export default {
     }
   },
   methods: {
+    async getMyProfile() {
+      // api call
+      const response = await UserService.GetMyProfile().catch();
+
+      // failure case
+      if (!response?.data) return false;
+
+      // success case
+      return response?.data;
+    },
     convertDate(isoString) {
       const date = new Date(isoString);
       const day = date?.getDate();
@@ -511,9 +531,6 @@ export default {
         paidOn: this.convertDate(x?.createdAt),
         dueDate: x?.dueDate ? this.convertDate(x?.dueDate) : "N/A",
       }));
-
-      console.log("history => ", response?.data);
-      console.log("history => ", response?.data);
     },
     setShowBillingHistory(show) {
       this.showBillingHistory = show;
@@ -537,9 +554,6 @@ export default {
               : subscription?.status,
         };
       }
-
-      console.log("subscription => ", subscription);
-      console.log("this.userSubscription => ", this.userSubscription);
     },
     async resumeSubscription() {
       // update page state
@@ -646,7 +660,7 @@ export default {
 
       // success case
       await this.updateUserProfile();
-      const user = authUser.getUser(); // get auth user data
+      const user = await this.getMyProfile(); // get auth user data
       this.user = user;
       this.updateUserPaymentMethodsInfo();
       this.settingDefaultPaymentMethod = false;
@@ -695,7 +709,7 @@ export default {
 
       // success case
       await this.updateUserProfile();
-      const user = authUser.getUser(); // get auth user data
+      const user = await this.getMyProfile(); // get auth user data
       this.user = user;
       this.updateUserPaymentMethodsInfo();
       this.removingPaymentMethod = false;
@@ -781,7 +795,7 @@ export default {
       // success case
       await new Promise((r) => setTimeout(r, 3500)); // stripe will take the card no, send a webhook to server, wait for that
       await this.updateUserProfile(); // update user profile cookies
-      const user = authUser.getUser(); // get auth user
+      const user = await this.getMyProfile(); // get auth user
       this.user = user;
       this.updateUserPaymentMethodsInfo();
       this.hasPaymentMethod = true;

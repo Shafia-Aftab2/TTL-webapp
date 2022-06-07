@@ -29,7 +29,6 @@ export default createStore({
 
       // only teachers are required to be subscribed
       const user = authUser.getUser();
-      console.log(user); // remove
       if (user?.role?.toLowerCase() !== roles.TEACHER) {
         subscription.isRequired = false;
         state.subscription = { ...subscription };

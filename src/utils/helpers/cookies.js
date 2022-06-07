@@ -3,6 +3,7 @@ import Cookie from "js-cookie";
 const config = {
   userCookieConfig: (userObj) => {
     const _userObj = { ...userObj };
+    if (userObj?.stripe) delete _userObj?.stripe; // to save cookies size.
     return _userObj;
   },
 };
