@@ -4,6 +4,11 @@
     v-if="!computedBackdropLoading && !accountUpgraded"
   >
     <template v-if="computedPlanToSubscribe">
+      <talkie-alert
+        v-if="pageLoadError"
+        :text="pageLoadError"
+        :variant="'error'"
+      />
       <h2 class="h2 m-auto text-center lh-1.5">
         Upgrade to
         <span>{{ computedPlanToSubscribe?.name }}</span>
@@ -209,6 +214,7 @@ export default {
       backdropLoading: false,
       accountUpgraded: false,
       isChangeSubscriptionPlanMode: false,
+      pageLoadError: null,
     };
   },
   computed: {
@@ -273,8 +279,11 @@ export default {
     await this.updateUserProfile();
 
     // get auth user data
-    const user = authUser.getUser();
+    const user = await this.getMyProfile();
     this.user = user;
+    if (!user) {
+      this.pageLoadError = "This page is not working correctly, Please reload!";
+    }
 
     // check if the user has a payment method or bank cards
     this.updateUserPaymentMethodsInfo(); // TODO: delete payment methods token issue
@@ -283,6 +292,16 @@ export default {
     await this.mountStripePaymentElementsFormToUI();
   },
   methods: {
+    async getMyProfile() {
+      // api call
+      const response = await UserService.GetMyProfile().catch();
+
+      // failure case
+      if (!response?.data) return false;
+
+      // success case
+      return response?.data;
+    },
     setSelectedCardId(id) {
       this.selectedCardId = id;
     },
@@ -362,7 +381,7 @@ export default {
       // success case
       await new Promise((r) => setTimeout(r, 3500)); // stripe will take the card no, send a webhook to server, wait for that
       await this.updateUserProfile(); // update user profile cookies
-      const user = authUser.getUser(); // get auth user
+      const user = await this.getMyProfile(); // get auth user data
       this.user = user;
       this.updateUserPaymentMethodsInfo();
       this.hasPaymentMethod = true;

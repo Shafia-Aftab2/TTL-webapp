@@ -4,6 +4,9 @@
       :class="[
         'talkie-sidebar-navigation-wrapper',
         hideSidebar && 'talkie-sidebar-navigation-wrapper-hidden',
+        computedSubscription?.remainingTrialDays > 0 &&
+          !computedSubscription?.hideTrialBar &&
+          'talkie-sidebar-navigation-wrapper-trial-pad',
       ]"
       id="talkie-sidebar-navigation-wrapper"
     >
@@ -90,6 +93,9 @@
       :class="[
         'talkie-sidebar-content-wrapper',
         hideSidebar && 'talkie-sidebar-content-wrapper-full-width',
+        computedSubscription?.remainingTrialDays > 0 &&
+          !computedSubscription?.hideTrialBar &&
+          'talkie-sidebar-content-wrapper-trial-pad',
       ]"
     >
       <router-view />
@@ -112,6 +118,9 @@ export default {
   computed: {
     computedSidebar() {
       return this.$store.state.sidebar;
+    },
+    computedSubscription() {
+      return this.$store.state.subscription;
     },
   },
   props: {
@@ -221,6 +230,9 @@ export default {
   .talkie-sidebar-navigation-wrapper-hidden {
     transform: translateX(calc(var(--sidebar-width) * -1));
   }
+  .talkie-sidebar-navigation-wrapper-trial-pad {
+    top: 25px; /* TODO: get from variables */
+  }
   .talkie-sidebar-navigation-content-back-link-wrapper {
     padding-bottom: var(--t-space-36);
   }
@@ -251,6 +263,9 @@ export default {
     max-width: var(--t-grid-small);
     padding-top: var(--t-space-50);
   }
+  .talkie-sidebar-content-wrapper-trial-pad {
+    margin-top: 25px; /* TODO: get from variables */
+  }
 }
 @media (min-width: 600px) {
   .talkie-sidebar-layout-wrapper {
@@ -261,6 +276,9 @@ export default {
     padding: var(--t-space-12);
     padding-bottom: calc(var(--t-space-70) * 3);
     margin-top: var(--t-space-58);
+  }
+  .talkie-sidebar-navigation-wrapper-trial-pad {
+    top: var(--t-space-32);
   }
   .talkie-sidebar-navigation-content-back-link-wrapper {
     padding-bottom: var(--t-space-50);
@@ -292,6 +310,9 @@ export default {
     max-width: var(--t-grid-large);
     margin-left: var(--sidebar-width) !important;
     padding-top: var(--t-space-58);
+  }
+  .talkie-sidebar-content-wrapper-trial-pad {
+    margin-top: var(--t-space-32);
   }
 }
 @media (min-width: 900px) {
