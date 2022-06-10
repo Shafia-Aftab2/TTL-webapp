@@ -393,9 +393,9 @@ export default {
       selectedTaskType: "Q&A",
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
-        ["Caption-This"]: "Upload a photo.",
-        ["Translation"]: "Add a translation task for practice.",
-        ["Emoji-Story"]: "Add a emoji story task for practice.",
+        ["Caption-This"]: "Upload a photo",
+        ["Translation"]: "Add a translation task for practice",
+        ["Emoji-Story"]: "Create your emoji set",
       },
       selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),

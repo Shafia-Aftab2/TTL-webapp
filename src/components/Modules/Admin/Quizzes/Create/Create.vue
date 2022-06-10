@@ -133,7 +133,7 @@
         <template v-if="selectedTaskType === taskTypes.EMOJI_STORY">
           <talkie-input-emojis
             :name="'emojiStory'"
-            :placeholder="'Pick emojis'"
+            :placeholder="'Select your emojis here'"
             :hint="{
               type: errors.emojiStory ? 'error' : null,
               message: errors.emojiStory ? errors.emojiStory : null,
@@ -394,9 +394,9 @@ export default {
       selectedTaskType: TaskTypes.CAPTION_THIS,
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
-        ["Caption-This"]: "Upload a photo.",
-        ["Translation"]: "Add a translation task for practice.",
-        ["Emoji-Story"]: "Add a emoji story task for practice.",
+        ["Caption-This"]: "Upload a photo",
+        ["Translation"]: "Add a translation task for practice",
+        ["Emoji-Story"]: "Create your emoji set",
       },
       selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),
