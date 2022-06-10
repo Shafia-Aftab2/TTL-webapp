@@ -119,8 +119,7 @@ export default {
       ) {
         this.formStatus = {
           type: "error",
-          message:
-            "You already have created the max no. of classes as per your subscription plan!",
+          message: `You already have created the max no. of classes (${this.maxClassCount}) as per your subscription plan!`,
         };
         return false;
       }
