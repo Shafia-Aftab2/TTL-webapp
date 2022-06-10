@@ -329,18 +329,36 @@ const routes = [
         path: "/profile/settings/account",
         alias: "/profile/settings",
         component: ProfileSettingsAccount,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ProfileSubscriptionPause",
         path: "/profile/settings/pause-subscription",
         props: { haltMode: "pause" },
         component: ProfileSubscriptionHalt,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ProfileSubscriptionCancel",
         path: "/profile/settings/cancel-subscription",
         props: { haltMode: "cancel" },
         component: ProfileSubscriptionHalt,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
     ],
   },
@@ -370,6 +388,12 @@ const routes = [
         name: "ServicesUpgradeSuccess",
         path: "/services/upgrade/success",
         component: ServicesUpgradeSuccess,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT],
+          },
+        },
       },
       {
         name: "ServicesPrivacyPolicy",
