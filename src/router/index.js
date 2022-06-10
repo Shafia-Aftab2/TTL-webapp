@@ -117,7 +117,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -128,7 +128,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -139,7 +139,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -150,7 +150,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -168,7 +168,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.TEACHER],
+            blockedRoles: [roles.TEACHER, roles.ADMIN],
           },
         },
       },
@@ -180,7 +180,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.TEACHER],
+            blockedRoles: [roles.TEACHER, roles.ADMIN],
           },
         },
       },
@@ -196,7 +196,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.TEACHER],
+            blockedRoles: [roles.TEACHER, roles.ADMIN],
           },
         },
       },
@@ -208,7 +208,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             redirectToOriginal: true,
-            blockedRoles: [roles.TEACHER],
+            blockedRoles: [roles.TEACHER, roles.ADMIN],
           },
         },
       },
@@ -219,7 +219,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -230,7 +230,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -241,7 +241,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -252,7 +252,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -263,7 +263,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -285,7 +285,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -296,7 +296,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -332,7 +332,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -344,7 +344,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -356,7 +356,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -374,7 +374,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
@@ -391,7 +391,7 @@ const routes = [
         meta: {
           middlewareConfig: {
             requiresAuth: true,
-            blockedRoles: [roles.STUDENT],
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
           },
         },
       },
