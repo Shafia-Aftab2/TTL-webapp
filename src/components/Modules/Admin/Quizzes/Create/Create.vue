@@ -606,7 +606,9 @@ export default {
       // form data
       const { title, topic: topicName, questionText } = values;
 
-      const topicId = this.topics.find((x) => x?.name === topicName).id;
+      const topicId = this.topics?.find(
+        (x) => x?.name?.toLowerCase() === topicName?.trim()?.toLowerCase()
+      )?.id;
 
       // payload
       const payload = {
@@ -629,11 +631,12 @@ export default {
           ["Caption-This"]: "Could not create caption task!",
           ["Translation"]: "Could not create translation task!",
           ["Emoji-Story"]: "Could not create emoji story task!",
+          ['"topic" is required']: "Please select a topic!",
         };
 
         return {
           error:
-            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[e?.response?.data?.message?.toLowerCase()] ||
             errorMap[this.selectedTaskType],
         };
       });

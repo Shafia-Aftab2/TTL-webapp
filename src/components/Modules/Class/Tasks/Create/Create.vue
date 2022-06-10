@@ -635,6 +635,7 @@ export default {
             ["Caption-This"]: "Could not create caption task!",
             ["Translation"]: "Could not create translation task!",
             ["Emoji-Story"]: "Could not create emoji story task!",
+            ['"topic" is required']: "Please select a topic!",
           };
 
           return {
