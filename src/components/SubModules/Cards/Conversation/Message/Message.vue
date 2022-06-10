@@ -5,6 +5,13 @@
       `talkie-conversation-card-message-${alignment}`,
     ]"
   >
+    <talkie-icon
+      :name="'download'"
+      :variant="'secondary'"
+      :onClick="onDownloadClick"
+      :iconToSizeRatio="0.75"
+      v-if="isDownloadable"
+    />
     <talkie-audio-player
       :source="messageAudio"
       v-slot="{
@@ -45,20 +52,30 @@ import {
   TalkieAudioPlayer,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
+import contentDownloadMixin from "@/utils/mixins/contentDownloadMixin";
 
 export default {
   name: "ConversationCardMessage",
+  mixins: [contentDownloadMixin],
   props: {
     alignment: {
       type: String,
       validator: (val) => ["left", "right"].includes(val),
     },
     messageAudio: { type: String },
+    isDownloadable: { type: Boolean, default: false },
   },
   components: {
     TalkieIcon,
     TalkieAudioTimeline,
     TalkieAudioPlayer,
+  },
+  methods: {
+    onDownloadClick() {
+      if (this.messageAudio) {
+        this.downloadAudio("audioFile", this.messageAudio); // TODO: add correct name
+      }
+    },
   },
 };
 </script>

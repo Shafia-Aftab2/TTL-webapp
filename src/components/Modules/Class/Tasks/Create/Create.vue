@@ -323,7 +323,12 @@ import {
   createTranslationTopicSchema,
   createEmojiStoryTopicSchema,
 } from "@/utils/validations/task.validation";
-import { FileService, TaskService, ClassService } from "@/api/services";
+import {
+  FileService,
+  TaskService,
+  ClassService,
+  TopicService,
+} from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
@@ -393,9 +398,9 @@ export default {
       selectedTaskType: "Q&A",
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
-        ["Caption-This"]: "Upload a photo.",
-        ["Translation"]: "Add a translation task for practice.",
-        ["Emoji-Story"]: "Add a emoji story task for practice.",
+        ["Caption-This"]: "Upload a photo",
+        ["Translation"]: "Add a translation task for practice",
+        ["Emoji-Story"]: "Create your emoji set",
       },
       selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),
@@ -434,23 +439,33 @@ export default {
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
 
+    // get topics list (+ failure case)
+    const topicsList = await this.getTopicsList();
+    if (!topicsList) return this.$router.push("/404");
+
+    // get topics list for class
+    const classLanguage = classDetails?.language?.toLowerCase();
+    const topicsForClass = topicsList?.filter(
+      (x) => x?.language?.toLowerCase() === classLanguage
+    );
+
     const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
     this.topicsGrouped = [
       {
         title: capitalize(topicTypes.ADVANCED),
-        items: classDetails?.topics
+        items: topicsForClass
           ?.filter((x) => x?.type === topicTypes.ADVANCED)
           ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.INTERMEDIATE),
-        items: classDetails?.topics
+        items: topicsForClass
           ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
           ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.BEGINNER),
-        items: classDetails?.topics
+        items: topicsForClass
           ?.filter((x) => x?.type === topicTypes.BEGINNER)
           ?.map((x) => x?.name),
       },
@@ -635,6 +650,7 @@ export default {
             ["Caption-This"]: "Could not create caption task!",
             ["Translation"]: "Could not create translation task!",
             ["Emoji-Story"]: "Could not create emoji story task!",
+            ['"topic" is required']: "Please select a topic!",
           };
 
           return {
@@ -684,6 +700,13 @@ export default {
       const response = await ClassService.GetDetails(id).catch(() => null);
 
       return response.data || null;
+    },
+    async getTopicsList() {
+      const query = {};
+
+      const response = await TopicService.Query(query).catch(() => null);
+
+      return !!response.data ? response.data.results : null;
     },
   },
 };

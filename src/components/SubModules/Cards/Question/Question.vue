@@ -76,6 +76,12 @@
         v-if="manageModeOptions.canDelete"
       />
       <talkie-chip
+        :label="'Download'"
+        :variant="'primary'"
+        :onClick="onDownloadClick"
+        v-if="manageModeOptions.canDownload"
+      />
+      <talkie-chip
         :label="'Practice Mode'"
         :variant="'neutral'"
         v-if="manageModeOptions.isForPractice"
@@ -94,9 +100,11 @@
 import { TalkieIcon, TalkieChip } from "@/components/UICore";
 import { TalkieAudioPlayer } from "@/components/SubModules/AudioManager";
 import QuestionCardExpandContent from "./ExpandContent";
+import contentDownloadMixin from "@/utils/mixins/contentDownloadMixin";
 
 export default {
   name: "QuestionCard",
+  mixins: [contentDownloadMixin],
   components: {
     TalkieIcon,
     TalkieChip,
@@ -153,6 +161,7 @@ export default {
       default: () => ({
         canEdit: false,
         canDelete: false,
+        canDownload: false,
         isForPractice: false,
       }),
     },
@@ -177,6 +186,11 @@ export default {
     async handleQuestionCardClick(e) {
       if (e.target === e.currentTarget) {
         this.onCardBodyClick && (await this.onCardBodyClick());
+      }
+    },
+    onDownloadClick() {
+      if (this.audioSource) {
+        this.downloadAudio(this.title, this.audioSource);
       }
     },
   },

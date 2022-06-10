@@ -21,6 +21,16 @@
 
       <div class="admin-create-quizzes-form">
         <!-- Common fields -->
+        <talkie-select
+          :name="'language'"
+          :placeholder="'Choose language'"
+          :options="supportedLanguages?.length > 0 ? supportedLanguages : []"
+          :onChange="handleTopicSelectionChange"
+          :hint="{
+            type: errors.language ? 'error' : null,
+            message: errors.language ? errors.language : null,
+          }"
+        />
         <talkie-select-group
           :name="'topic'"
           :placeholder="'Choose topic'"
@@ -133,7 +143,7 @@
         <template v-if="selectedTaskType === taskTypes.EMOJI_STORY">
           <talkie-input-emojis
             :name="'emojiStory'"
-            :placeholder="'Pick emojis'"
+            :placeholder="'Select your emojis here'"
             :hint="{
               type: errors.emojiStory ? 'error' : null,
               message: errors.emojiStory ? errors.emojiStory : null,
@@ -303,6 +313,7 @@
 <script>
 import {
   TalkieInput,
+  TalkieSelect,
   TalkieSelectGroup,
   TalkieIcon,
   TalkieAlert,
@@ -324,17 +335,20 @@ import {
   createCaptionThisTopicSchema,
   createTranslationTopicSchema,
   createEmojiStoryTopicSchema,
+  requireLanguageForTopic,
 } from "@/utils/validations/task.validation";
+import { concatValidations } from "@/utils/validations/custom.validation";
 import { FileService, TaskTemplateService, TopicService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
 import TaskTypes from "@/utils/constants/taskTypes";
 import FilePurposes from "@/utils/constants/filePurposes";
-import topicTypes from "@/utils/constants/topicTypes";
+import { supportedLanguages, topicTypes } from "@/utils/constants";
 
 export default {
   name: "AdminCreateQuizzes",
   components: {
     TalkieInput,
+    TalkieSelect,
     TalkieSelectGroup,
     TalkieIcon,
     TalkieAudioRecorder,
@@ -353,10 +367,22 @@ export default {
     return {
       topics: [],
       validationSchemas: {
-        ["Q&A"]: createQandATopicSchema,
-        ["Caption-This"]: createCaptionThisTopicSchema,
-        ["Translation"]: createTranslationTopicSchema,
-        ["Emoji-Story"]: createEmojiStoryTopicSchema,
+        ["Q&A"]: concatValidations(
+          createQandATopicSchema,
+          requireLanguageForTopic
+        ),
+        ["Caption-This"]: concatValidations(
+          createCaptionThisTopicSchema,
+          requireLanguageForTopic
+        ),
+        ["Translation"]: concatValidations(
+          createTranslationTopicSchema,
+          requireLanguageForTopic
+        ),
+        ["Emoji-Story"]: concatValidations(
+          createEmojiStoryTopicSchema,
+          requireLanguageForTopic
+        ),
       },
       pageLoading: false,
       loading: false,
@@ -394,14 +420,18 @@ export default {
       selectedTaskType: TaskTypes.CAPTION_THIS,
       selectedHeaderMessages: {
         ["Q&A"]: "Start a conversation now?",
-        ["Caption-This"]: "Upload a photo.",
-        ["Translation"]: "Add a translation task for practice.",
-        ["Emoji-Story"]: "Add a emoji story task for practice.",
+        ["Caption-This"]: "Upload a photo",
+        ["Translation"]: "Add a translation task for practice",
+        ["Emoji-Story"]: "Create your emoji set",
       },
       selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),
       taskTypes: TaskTypes,
       topicsGrouped: [],
+      supportedLanguages: Object.values(supportedLanguages)?.map((x) =>
+        x?.toLowerCase()
+      ),
+      selectedLanguage: null,
     };
   },
   computed: {
@@ -433,30 +463,45 @@ export default {
 
     // success case
     this.topics = topicsList || [];
-    const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
-    this.topicsGrouped = [
-      {
-        title: capitalize(topicTypes.ADVANCED),
-        items: topicsList
-          ?.filter((x) => x?.type === topicTypes.ADVANCED)
-          ?.map((x) => x?.name),
-      },
-      {
-        title: capitalize(topicTypes.INTERMEDIATE),
-        items: topicsList
-          ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
-          ?.map((x) => x?.name),
-      },
-      {
-        title: capitalize(topicTypes.BEGINNER),
-        items: topicsList
-          ?.filter((x) => x?.type === topicTypes.BEGINNER)
-          ?.map((x) => x?.name),
-      },
-    ];
     this.pageLoading = false;
   },
   methods: {
+    handleTopicSelectionChange(e) {
+      const language = e?.target?.value?.toLowerCase();
+      this.selectedLanguage = language;
+      this.updateTopicsList(language);
+    },
+    updateTopicsList(displayForLanguage) {
+      if (!displayForLanguage) {
+        this.topicsGrouped = [];
+        return;
+      }
+
+      const _topics = this.topics?.filter(
+        (x) => x?.language?.toLowerCase() === displayForLanguage
+      );
+      const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+      this.topicsGrouped = [
+        {
+          title: capitalize(topicTypes.ADVANCED),
+          items: _topics
+            ?.filter((x) => x?.type === topicTypes.ADVANCED)
+            ?.map((x) => x?.name),
+        },
+        {
+          title: capitalize(topicTypes.INTERMEDIATE),
+          items: _topics
+            ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+            ?.map((x) => x?.name),
+        },
+        {
+          title: capitalize(topicTypes.BEGINNER),
+          items: _topics
+            ?.filter((x) => x?.type === topicTypes.BEGINNER)
+            ?.map((x) => x?.name),
+        },
+      ];
+    },
     handleRedirection(link, timeout = 100) {
       const self = this;
       setTimeout(function () {
@@ -606,7 +651,9 @@ export default {
       // form data
       const { title, topic: topicName, questionText } = values;
 
-      const topicId = this.topics.find((x) => x?.name === topicName).id;
+      const topicId = this.topics?.find(
+        (x) => x?.name?.toLowerCase() === topicName?.trim()?.toLowerCase()
+      )?.id;
 
       // payload
       const payload = {
@@ -629,11 +676,12 @@ export default {
           ["Caption-This"]: "Could not create caption task!",
           ["Translation"]: "Could not create translation task!",
           ["Emoji-Story"]: "Could not create emoji story task!",
+          ['"topic" is required']: "Please select a topic!",
         };
 
         return {
           error:
-            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[e?.response?.data?.message?.toLowerCase()] ||
             errorMap[this.selectedTaskType],
         };
       });

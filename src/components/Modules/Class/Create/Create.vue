@@ -69,9 +69,11 @@ import { ClassService, UserService } from "@/api/services";
 import { createClassSchema } from "@/utils/validations/class.validation";
 import supportedLanguages from "@/utils/constants/supportedLanguages";
 import authUser from "@/utils/helpers/auth";
+import subscriptionPerksMixin from "@/utils/mixins/subscriptionPerksMixin";
 
 export default {
   name: "TeacherClassCreate",
+  mixins: [subscriptionPerksMixin],
   components: {
     TalkieInput,
     TalkieSelect,
@@ -109,7 +111,28 @@ export default {
     this.schoolId = schoolId;
   },
   methods: {
+    /*** NOTE: this function is to be removed, and related data has to come from api ***/
+    tempfunc_CheckIfUserCanCreateUnlimitedClasses() {
+      if (
+        !this.canCreateUnlimitedClasses &&
+        this.currentClassCount >= this.maxClassCount
+      ) {
+        this.formStatus = {
+          type: "error",
+          message: `You already have created the max no. of classes (${this.maxClassCount}) as per your subscription plan!`,
+        };
+        return false;
+      }
+      return true;
+    },
     async handleSubmit(values) {
+      /*** NOTE: this temp block is to be removed, and related data has to come from api ***/
+      /* temp block start */
+      const canCreateUnlimited =
+        this.tempfunc_CheckIfUserCanCreateUnlimitedClasses();
+      if (!canCreateUnlimited) return;
+      /* temp block end */
+
       // update page state
       this.loading = true;
       this.formStatus = { type: null, message: null };

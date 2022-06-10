@@ -174,7 +174,9 @@
       <div class="class-manage-modal-invite-students">
         <div class="class-manage-modal-invite-students-header-wrapper">
           <h3 class="h3">Invite your students</h3>
-          <p class="p">Copy and paste the url below</p>
+          <p class="p">
+            Share this url with your students to invite them to the class
+          </p>
         </div>
         <div class="class-manage-modal-invite-students-input-wrapper">
           <talkie-input :value="computedClassJoinLink" />

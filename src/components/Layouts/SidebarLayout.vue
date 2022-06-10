@@ -5,6 +5,7 @@
         'talkie-sidebar-navigation-wrapper',
         hideSidebar && 'talkie-sidebar-navigation-wrapper-hidden',
         computedSubscription?.remainingTrialDays > 0 &&
+          computedSubscription?.remainingTrialDays < 15 &&
           !computedSubscription?.hideTrialBar &&
           'talkie-sidebar-navigation-wrapper-trial-pad',
       ]"
@@ -94,6 +95,7 @@
         'talkie-sidebar-content-wrapper',
         hideSidebar && 'talkie-sidebar-content-wrapper-full-width',
         computedSubscription?.remainingTrialDays > 0 &&
+          computedSubscription?.remainingTrialDays < 15 &&
           !computedSubscription?.hideTrialBar &&
           'talkie-sidebar-content-wrapper-trial-pad',
       ]"
