@@ -1,6 +1,7 @@
 <template>
-  <span :tooltip="tooltip" :position="position">
+  <span class="tooltip-wrapper">
     <slot />
+    <span class="tooltip-content" v-html="tooltip" :position="position"> </span>
   </span>
 </template>
 
@@ -22,28 +23,14 @@ export default {
 </script>
 
 <style scoped>
-[tooltip] {
+.tooltip-wrapper {
+  width: fit-content;
   position: relative;
 }
-[tooltip]::before,
-[tooltip]::after {
-  text-transform: none;
-  line-height: 1;
-  position: absolute;
+.tooltip-content {
+  display: inherit;
   display: none;
-  opacity: 0;
-  /* user-select: none;
-  pointer-events: none; */
-  /* display: block;
-  opacity: 1; */
-}
-[tooltip]::before {
-  content: "";
-  border: var(--t-space-5) solid transparent;
-  z-index: var(--t-zindex-90);
-}
-[tooltip]::after {
-  content: attr(tooltip);
+  position: absolute;
   min-width: 21em;
   max-width: 21em;
   max-height: 21em;
@@ -59,132 +46,52 @@ export default {
   border: var(--t-space-1) solid var(--t-gray-50);
   border-radius: var(--t-br-small);
   line-height: 1.5;
-  /* text-align: center; */
-  /* white-space: wrap; */
-  /* text-overflow: ellipsis; */
 }
-[tooltip]:hover::before,
-[tooltip]:hover::after {
-  display: block;
-}
-[tooltip]::before:hover,
-[tooltip]::after:hover {
-  display: block;
+.tooltip-wrapper:hover .tooltip-content {
+  display: inherit;
 }
 
 /* Hide empty tooltips */
 [tooltip=""]::before,
-[tooltip=""]::after {
+[tooltip=""] {
   display: none !important;
 }
 
 /* Positioning */
 
 /* top */
-[tooltip]:not([position])::before,
-[tooltip][position^="top"]::before {
-  bottom: 100%;
-  border-bottom-width: 0;
-  border-top-color: var(--t-white);
-}
-[tooltip]:not([position])::after,
-[tooltip][position^="top"]::after {
+.tooltip-content:not([position]),
+.tooltip-content[position^="top"] {
   bottom: calc(100% + var(--t-space-5));
-}
-[tooltip]:not([position])::before,
-[tooltip]:not([position])::after,
-[tooltip][position^="top"]::before,
-[tooltip][position^="top"]::after {
   left: 50%;
-  transform: translate(-50%, -0.5em);
+  transform: translate(-58%, -1%);
 }
 
 /* bottom */
-[tooltip][position^="bottom"]::before {
-  top: 100%;
-  border-top-width: 0;
-  border-bottom-color: var(--t-white);
-}
-[tooltip][position^="bottom"]::after {
+.tooltip-content[position^="bottom"] {
   top: calc(100% + var(--t-space-5));
-}
-[tooltip][position^="bottom"]::before,
-[tooltip][position^="bottom"]::after {
   left: 50%;
-  transform: translate(-50%, 0.5em);
+  transform: translate(-58%, -1%);
 }
 
 /* bottom left */
-[tooltip][position^="bottom-left"]::before {
-  top: 100%;
-  border-top-width: 0;
-  border-bottom-color: var(--t-white);
-}
-[tooltip][position^="bottom-left"]::after {
+.tooltip-content[position^="bottom-left"] {
   top: calc(100% + var(--t-space-5));
-}
-[tooltip][position^="bottom-left"]::before,
-[tooltip][position^="bottom-left"]::after {
-  transform: translate(-50%, 0.5em);
   left: -50%;
+  transform: translate(-58%, -1%);
 }
 
 /* Left */
-[tooltip][position^="left"]::before {
-  top: 50%;
-  border-right-width: 0;
-  border-left-color: var(--t-white);
-  left: calc(0em - var(--t-space-5));
-  transform: translate(-0.5em, -50%);
-}
-[tooltip][position^="left"]::after {
+.tooltip-content[position^="left"] {
   top: 50%;
   right: calc(100% + var(--t-space-5));
-  transform: translate(-0.5em, -50%);
+  transform: translate(0, -50%);
 }
 
 /* Right */
-[tooltip][position^="right"]::before {
-  top: 50%;
-  border-left-width: 0;
-  border-right-color: var(--t-white);
-  right: calc(0em - var(--t-space-5));
-  transform: translate(0.5em, -50%);
-}
-[tooltip][position^="right"]::after {
+.tooltip-content[position^="right"] {
   top: 50%;
   left: calc(100% + var(--t-space-5));
-  transform: translate(0.5em, -50%);
-}
-
-/* Animation */
-@keyframes tooltips-vert {
-  to {
-    opacity: 0.9;
-    transform: translate(-58%, -1%);
-  }
-}
-@keyframes tooltips-horz {
-  to {
-    opacity: 0.9;
-    transform: translate(0, -50%);
-  }
-}
-[tooltip]:not([position]):hover::before,
-[tooltip]:not([position]):hover::after,
-[tooltip][position^="top"]:hover::before,
-[tooltip][position^="top"]:hover::after,
-[tooltip][position^="bottom"]:hover::before,
-[tooltip][position^="bottom"]:hover::after,
-[tooltip][position^="bottom-left"]:hover::before,
-[tooltip][position^="bottom-left"]:hover::after {
-  animation: tooltips-vert 300ms ease-out forwards;
-}
-
-[tooltip][position^="left"]:hover::before,
-[tooltip][position^="left"]:hover::after,
-[tooltip][position^="right"]:hover::before,
-[tooltip][position^="right"]:hover::after {
-  animation: tooltips-horz 300ms ease-out forwards;
+  transform: translate(0, -50%);
 }
 </style>
