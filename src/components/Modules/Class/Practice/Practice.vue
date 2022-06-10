@@ -535,41 +535,55 @@ export default {
       instructions: {
         ["Emoji-Story"]: `
           <strong>Tell us a story using the emojis in front of you as prompt.</strong>
-
+          <br/>
+          <br/>
           "A story?! How long should it be?"
           There is no time limit here, don't worry. It could be a sentence or a very detailed story lasting a few minutes - entirely up to you!
-
+          <br/>
+          <br/>
           "But I don't know what the emojis are saying..."
           You're right, some of the emojis can be hard to interpret. Have a go anyway. It's your story, you're in control. Oh, and you don't have to mention and include every single one emoji but if you're up for a challenge today, go for it!
-
+          <br/>
+          <br/>
           "But I don't know how to say it in Spanish/French..."
           That's okay! That's completely normal. The best approach is to look up the word online - have something to add to your vocabulary! No time? You can also use a word you already know and tweak the story a little bit. 
-
+          <br/>
+          <br/>
           Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
          `,
         ["Caption-This"]: `
           <strong>What can you say about the photo?</strong>
-
+          <br/>
+          <br/>
           You have several options here. You can:
-          — Describe what you see on the photo.
-          — Give your opinion on the photo. 
-          — Use the photo as prompt to talk about your own experiences or come up with your own short story in your target language.
-
+          <br/>
+          <ul class="p">
+            <li>— Describe what you see on the photo.</li>
+            <li>— Give your opinion on the photo.</li>
+            <li>— Use the photo as prompt to talk about your own experiences or come up with your own short story in your target language.</li>
+          </ul>
+          <br/>
           Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class. 
         `,
         ["Translation"]: `
-          How many can you translate in 5 minutes? 🧐
+          <strong>How many can you translate in 5 minutes? 🧐</strong>
+          <br/>
+          <br/>
           Translate the phrases or sentences into your target language.
-
+          <br/>
+          <br/>
           Feeling stuck? Things that might help:
-          — Break the sentence down and focus on the words you can already translate.
-
-          — Topics are provided below the phrase. Use what you know from the context to make an educated guess. Which words can you recall from the technology topic, for example?
-
-          — All else fails, feel free to check your notes from class.
-
+          <br/>
+          <ul class="p">
+            <li>— Break the sentence down and focus on the words you can already translate.</li>
+            <li>— Topics are provided below the phrase. Use what you know from the context to make an educated guess. Which words can you recall from the technology topic, for example?</li>
+            <li>— All else fails, feel free to check your notes from class.</li>
+          </ul>
+          <br/>
+          <br/>
           Don't worry if you haven't got enough vocabulary yet - don't let that stop you! It's okay to not get it completely right. The best approach is to have a go, and if it's wrong, make a note of it for next time.
-
+          <br/>
+          <br/>
           Keep going! It takes time but you'll get there!
         `,
       },
