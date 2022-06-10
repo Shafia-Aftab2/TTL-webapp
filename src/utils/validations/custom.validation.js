@@ -10,4 +10,6 @@ const contactUsSchema = yup.object({
   message: yup.string().required("Message is required."),
 });
 
-export { contactUsSchema };
+const concatValidations = (val1, val2) => val1.concat(val2);
+
+export { contactUsSchema, concatValidations };

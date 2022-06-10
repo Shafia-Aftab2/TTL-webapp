@@ -46,10 +46,15 @@ const createEmojiStoryTopicSchema = yup.object({
     .required("Emojis are required."),
 });
 
+const requireLanguageForTopic = yup.object({
+  language: yup.string().required("Language is required."),
+});
+
 export {
   createQandATopicSchema,
   updateQandATopicSchema,
   createCaptionThisTopicSchema,
   createTranslationTopicSchema,
   createEmojiStoryTopicSchema,
+  requireLanguageForTopic,
 };
