@@ -82,6 +82,9 @@
                   canEdit:
                     isTeacher && _question.type === TaskTypes.QUESTION_ANSWER,
                   canDelete: isTeacher,
+                  canDownload:
+                    canDownloadContent &&
+                    _question.type === TaskTypes.QUESTION_ANSWER,
                 }"
                 :centered="false"
                 :hoverAnimation="true"
@@ -184,10 +187,11 @@ import { notifications } from "@/components/UIActions";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import handleSidebarMutation from "@/utils/mixins/handleSidebarMutation";
 import topicTypes from "@/utils/constants/topicTypes";
+import subscriptionPerksMixin from "@/utils/mixins/subscriptionPerksMixin";
 
 export default {
   name: "ClassHome",
-  mixins: [handleSidebarMutation],
+  mixins: [handleSidebarMutation, subscriptionPerksMixin],
   components: {
     TalkieIcon,
     TalkieTab,
@@ -444,9 +448,9 @@ export default {
       if (!classTasks) {
         this.backdropLoading = false;
         notifications.show(
-          `Failed To Get ${
-            showPracticeModeTasks ? "Practice" : "Class"
-          } Mode Task!`,
+          `Failed to get ${
+            showPracticeModeTasks ? "practice" : "class"
+          } mode task!`,
           {
             variant: "error",
             displayIcon: true,

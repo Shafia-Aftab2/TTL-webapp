@@ -27,6 +27,9 @@
             :manageModeOptions="{
               canEdit: isTeacher,
               canDelete: isTeacher,
+              canDownload:
+                canDownloadContent &&
+                taskDetails?.type === taskTypes?.QUESTION_ANSWER,
             }"
             :centered="false"
             :fullWidth="true"
@@ -63,6 +66,7 @@
               :studentId="_student?.id"
               :studentName="_student?.name"
               :studentAvatar="_student?.image"
+              :isAudioDownloadable="canDownloadContent"
             />
           </template>
         </template>
@@ -118,10 +122,11 @@ import roles from "@/utils/constants/roles";
 import { notifications } from "@/components/UIActions";
 import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import handleSidebarMutation from "@/utils/mixins/handleSidebarMutation";
+import subscriptionPerksMixin from "@/utils/mixins/subscriptionPerksMixin";
 
 export default {
   name: "ClassTaskHome",
-  mixins: [handleSidebarMutation],
+  mixins: [handleSidebarMutation, subscriptionPerksMixin],
   components: {
     TalkieIcon,
     TalkieLoader,
@@ -147,6 +152,7 @@ export default {
       loading: false,
       backdropLoading: false,
       showDeleteTaskDialog: false,
+      taskTypes: TaskTypes,
     };
   },
   async created() {

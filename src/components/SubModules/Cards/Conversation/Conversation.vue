@@ -14,7 +14,10 @@
       <!-- Student Mode -->
       <template v-if="userMode === 'student'">
         <div
-          class="talkie-conversation-card-header talkie-conversation-card-header-col"
+          :class="[
+            'talkie-conversation-card-header',
+            'talkie-conversation-card-header-col',
+          ]"
           @click="handleCardBodyClick"
         >
           <p class="p" v-if="taskTitle" @click="handleCardBodyClick">
@@ -40,7 +43,11 @@
       <template v-if="userMode === 'teacher'">
         <!-- left side -->
         <div
-          class="talkie-conversation-card-header talkie-conversation-card-header-row talkie-conversation-card-header-row-center"
+          :class="[
+            'talkie-conversation-card-header',
+            'talkie-conversation-card-header-row',
+            'talkie-conversation-card-header-row-center',
+          ]"
         >
           <img
             class="talkie-conversation-card-header-image"
@@ -92,6 +99,7 @@
             :key="_response"
             :alignment="_response.from !== user?.id ? 'left' : 'right'"
             :messageAudio="_response.audio"
+            :isDownloadable="isAudioDownloadable"
           />
         </template>
 
@@ -244,6 +252,10 @@ export default {
     },
     studentAvatar: {
       type: String,
+    },
+    isAudioDownloadable: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
