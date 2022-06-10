@@ -13,18 +13,29 @@ export default {
       ),
       canDownloadContent: false,
       canCreateUnlimitedClasses: false,
-      maxClassCount: 8,
+      maxClassCount: 0,
       currentClassCount: 0 /*** NOTE: this line is to be removed, and related data has to come from api ***/,
     };
   },
+  computed: {
+    computedSubscription() {
+      return this.$store.state.subscription;
+    },
+  },
   async created() {
     // get user subscription
-    const subscription = await this.getMySubscription();
+    const planName = await (async () => {
+      let _name = null;
 
-    const planName = subscription?.priceName
-      ?.toLowerCase()
-      ?.split("-")
-      ?.join(" ");
+      if (this.computedSubscription.isTrial) {
+        _name = pricingPlans.planNames.FREE_TRIAL;
+      } else {
+        const subscription = await this.getMySubscription();
+        _name = subscription?.priceName;
+      }
+
+      return _name?.toLowerCase()?.split("-")?.join(" ");
+    })();
 
     // check if user can download content
     if (planName && this.plansAllowingDownloads?.includes(planName)) {
@@ -34,6 +45,16 @@ export default {
     // check if user can create unlimited classes
     if (planName && this.plansAllowingUnlimitedClasses?.includes(planName)) {
       this.canCreateUnlimitedClasses = true;
+    }
+
+    // set max class count for current subscription plan
+    if (
+      planName ===
+      pricingPlans.planNames.FREE_TRIAL?.toLowerCase()?.split("-")?.join(" ")
+    ) {
+      this.maxClassCount = 4;
+    } else {
+      this.maxClassCount = 8;
     }
 
     /*** NOTE: this block is to be removed, and related data has to come from api ***/
