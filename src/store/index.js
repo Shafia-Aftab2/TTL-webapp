@@ -41,7 +41,7 @@ export default createStore({
 
         // get remaining trial days
         const trialStartDate = moment(new Date(user?.createdAt));
-        const trialEndDate = moment(trialStartDate).add(14, "days");
+        const trialEndDate = moment(trialStartDate).add(30, "days");
         const remainingTrialDays = moment(trialEndDate).diff(
           moment(new Date()),
           "days"

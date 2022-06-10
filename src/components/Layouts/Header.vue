@@ -8,6 +8,7 @@
         computedSubscription?.isTrial &&
         !computedSubscription?.isTrialOver &&
         computedSubscription?.remainingTrialDays > 0 &&
+        computedSubscription?.remainingTrialDays < 15 &&
         !computedSubscription?.hideTrialBar
       "
     >
@@ -27,6 +28,7 @@
       :class="[
         'talkie-navbar-wrapper',
         computedSubscription?.remainingTrialDays > 0 &&
+          computedSubscription?.remainingTrialDays < 15 &&
           !computedSubscription?.hideTrialBar &&
           'talkie-navbar-wrapper-trail-pad',
       ]"
