@@ -96,7 +96,10 @@
                   <li class="talkie-navbar-profile-options-list-item">
                     <router-link to="/profile/self">Profile</router-link>
                   </li>
-                  <li class="talkie-navbar-profile-options-list-item">
+                  <li
+                    v-if="computedUser?.role === roles.TEACHER"
+                    class="talkie-navbar-profile-options-list-item"
+                  >
                     <router-link to="/profile/settings">Account</router-link>
                   </li>
                   <template v-for="link in links" :key="link.text">
@@ -170,6 +173,7 @@ export default {
         // },
       ],
       user: null,
+      roles: roles,
     };
   },
   computed: {
