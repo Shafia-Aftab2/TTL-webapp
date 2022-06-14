@@ -100,8 +100,16 @@ export default {
     };
     this.userStats = {
       name: user?.name,
-      points: myStats?.totalScores,
-      attemptedQuizes: myStats?.totalRespones,
+      points: (() => {
+        let total = 0;
+
+        total =
+          myStats?.quizzesTotalScoresMarkedByMePractice +
+          myStats?.QAtotalScoreMarkedByTeacher;
+
+        return total;
+      })(),
+      attemptedQuizes: myStats?.quizzesResponsesMarkedByMePractice,
       image: user?.image
         ? generateAvatar(user?.image?.split("-")[1], user?.image)
         : null,
