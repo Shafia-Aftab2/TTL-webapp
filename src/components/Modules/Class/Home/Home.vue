@@ -303,28 +303,6 @@ export default {
       const classDetails = await this.getClassDetails(classId);
       if (!classDetails) return this.$router.push("/404");
 
-      const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
-      this.classTopicsGrouped = [
-        {
-          title: capitalize(topicTypes.ADVANCED),
-          items: classDetails?.topics
-            ?.filter((x) => x?.type === topicTypes.ADVANCED)
-            ?.map((x) => x?.name),
-        },
-        {
-          title: capitalize(topicTypes.INTERMEDIATE),
-          items: classDetails?.topics
-            ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
-            ?.map((x) => x?.name),
-        },
-        {
-          title: capitalize(topicTypes.BEGINNER),
-          items: classDetails?.topics
-            ?.filter((x) => x?.type === topicTypes.BEGINNER)
-            ?.map((x) => x?.name),
-        },
-      ];
-
       // class tasks
       const classTasks = await this.getClassTasks(classId);
       if (!classTasks) return this.$router.push("/404");
@@ -334,6 +312,27 @@ export default {
       if (!classTopics) return this.$router.push("/404");
 
       // success case
+      const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+      this.classTopicsGrouped = [
+        {
+          title: capitalize(topicTypes.ADVANCED),
+          items: classTopics
+            ?.filter((x) => x?.type === topicTypes.ADVANCED)
+            ?.map((x) => x?.name),
+        },
+        {
+          title: capitalize(topicTypes.INTERMEDIATE),
+          items: classTopics
+            ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+            ?.map((x) => x?.name),
+        },
+        {
+          title: capitalize(topicTypes.BEGINNER),
+          items: classTopics
+            ?.filter((x) => x?.type === topicTypes.BEGINNER)
+            ?.map((x) => x?.name),
+        },
+      ];
       this.classDetails = {
         id: classDetails?.id,
         name: classDetails?.name,
