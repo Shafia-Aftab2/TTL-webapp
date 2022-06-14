@@ -259,6 +259,16 @@ export default {
       classTopicsGrouped: {},
     };
   },
+  computed: {
+    computedIsSubscriptionOver() {
+      const subscription = this.$store.state.subscription;
+      return (
+        subscription.isRequired &&
+        subscription.isTrialOver &&
+        subscription.isCalculated
+      );
+    },
+  },
   async created() {
     await this.handleLoadSequence(this.$route.params.id);
   },
@@ -429,6 +439,10 @@ export default {
       );
     },
     handleTopicCardDeleteClick(id) {
+      if (this.computedIsSubscriptionOver) {
+        this.handleRedirection(`/classes/${this.classId}/tasks`); // this will redirect to same page but we will get the trial-end-modal again
+        return;
+      }
       this.taskToDelete = id;
     },
     handleTopicDeleteDialogClose() {
