@@ -155,6 +155,8 @@ export default {
           ["school not found"]: "Invalid School",
           ["class already exists in school"]:
             "Class with same name already exists!",
+          ["user has no subscription"]:
+            "Please upgrade your account to continue!",
         };
 
         return {
