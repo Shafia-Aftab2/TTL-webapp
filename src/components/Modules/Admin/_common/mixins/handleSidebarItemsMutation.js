@@ -22,6 +22,7 @@ export default {
 
     this.handleSidebarMutation({
       items: sidebarItems,
+      buttons: [],
     });
   },
 };
