@@ -98,7 +98,7 @@ export default {
 .talkie-button-drop-down-wrapper {
   position: relative;
   width: fit-content;
-  z-index: var(--t-zindex-20);
+  z-index: var(--t-zindex-70);
 }
 .talkie-button-drop-down-items-wrapper {
   color: var(--t-black-100);

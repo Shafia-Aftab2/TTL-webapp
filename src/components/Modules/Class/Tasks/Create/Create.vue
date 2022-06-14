@@ -472,7 +472,7 @@ export default {
     ];
 
     // success case
-    this.topics = classDetails?.topics;
+    this.topics = topicsForClass;
     this.pageLoading = false;
   },
   methods: {

@@ -140,6 +140,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
           },
         },
       },
@@ -151,6 +152,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
           },
         },
       },
@@ -220,6 +222,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
           },
         },
       },
@@ -231,6 +234,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
           },
         },
       },
@@ -242,6 +246,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
           },
         },
       },
@@ -253,6 +258,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
           },
         },
       },
@@ -264,6 +270,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
           },
         },
       },
@@ -297,6 +304,7 @@ const routes = [
           middlewareConfig: {
             requiresAuth: true,
             blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
           },
         },
       },
@@ -530,8 +538,20 @@ router.beforeEach(async (to, from, next) => {
   const user = authUser.getUser();
   store.state.user = user || {};
 
+  // get subscription
+  const subscription = store.state.subscription;
+  const isSubscriptionOver =
+    subscription.isRequired &&
+    subscription.isTrialOver &&
+    subscription.isCalculated;
+
   // get middleware config from route
   const { middlewareConfig } = to?.meta;
+
+  // check if route is to be blocked
+  const blockRoute =
+    isSubscriptionOver && middlewareConfig?.blockedWhenTrialOver;
+  if (blockRoute) store.state.hasClosedModal = false;
 
   // check if has any middleware config
   if (!middlewareConfig || Object.keys(middlewareConfig)?.length === 0) {
@@ -556,7 +576,8 @@ router.beforeEach(async (to, from, next) => {
       successCallback: () =>
         accessControlMiddleware({
           failureCallback: () => next({ name: "NotFound" }),
-          successCallback: () => next(),
+          successCallback: () =>
+            blockRoute ? next({ name: "ClassChooseDefault" }) : next(),
           blockedRoles: middlewareConfig?.blockedRoles,
         }),
     });
@@ -575,7 +596,8 @@ router.beforeEach(async (to, from, next) => {
             }),
           },
         }),
-      successCallback: () => next(),
+      successCallback: () =>
+        blockRoute ? next({ name: "ClassChooseDefault" }) : next(),
     });
     return;
   }

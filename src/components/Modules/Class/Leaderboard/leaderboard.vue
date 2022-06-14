@@ -123,7 +123,15 @@ export default {
         image: x?.image
           ? generateAvatar(x?.image?.split("-")[1], x?.image)
           : null,
-        points: x?.totalScores.toString(),
+        points: (() => {
+          let total = 0;
+
+          total =
+            x?.quizzesTotalScoresMarkedByMePractice +
+            x?.QAtotalScoreMarkedByTeacher;
+
+          return total;
+        })(),
       }))
       ?.sort(function (a, b) {
         return b?.points - a?.points;
