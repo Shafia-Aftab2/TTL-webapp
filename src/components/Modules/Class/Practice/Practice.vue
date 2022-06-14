@@ -642,7 +642,7 @@ export default {
     };
     this.classTasks = classTasks?.results
       ?.filter((x) => !x?.isAttempted && x?.type !== taskTypes.QUESTION_ANSWER)
-      ?.filter((x) => x?.type !== taskTypes.QUESTION_ANSWER)
+      ?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))
       ?.map((x) => ({
         id: x?.id,
         type: x?.type,
