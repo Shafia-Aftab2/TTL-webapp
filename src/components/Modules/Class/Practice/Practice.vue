@@ -408,7 +408,7 @@
         />
         <p class="p class-practice-body-no-tasks-description">
           Hmm... It looks like there are no tasks for practice at this moment.
-          They will apear here once your teacher adds them in the class.
+          They will appear here once your teacher adds them in the class.
         </p>
         <talkie-button :onClick="handleHomeButtonClick">
           Back Home
