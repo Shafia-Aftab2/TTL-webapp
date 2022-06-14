@@ -14,7 +14,11 @@
     :onConfirm="handleUpgradeMyAccount"
     :confirmButtonText="'I’m ready to upgrade!'"
     :confirmButtonVariant="'dark'"
-    v-if="computedSubscription?.isRequired && computedSubscription?.isTrialOver"
+    v-if="
+      computedSubscription?.isRequired &&
+      computedSubscription?.isTrialOver &&
+      !computedHasClosedModal
+    "
   />
 </template>
 
@@ -28,6 +32,9 @@ export default {
     computedSubscription() {
       return this.$store.state.subscription;
     },
+    computedHasClosedModal() {
+      return this.$store.state.hasClosedModal;
+    },
   },
   async created() {
     this.$store.dispatch("calculateSubscription");
@@ -38,11 +45,11 @@ export default {
   methods: {
     handleUpgradeModalClose() {
       // just to hide the modal | the trial is not over
-      this.$store.dispatch("hideSubscriptionTrialOverModal");
+      this.$store.state.hasClosedModal = true;
     },
     handleUpgradeMyAccount() {
       // just to hide the modal | the trial is not over
-      this.$store.dispatch("hideSubscriptionTrialOverModal");
+      this.$store.state.hasClosedModal = true;
 
       // redirect to pricing page
       this.$router.push(`/services/pricing`);

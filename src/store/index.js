@@ -9,6 +9,7 @@ export default createStore({
     sidebar: {
       hasBackLink: true,
     },
+    hasClosedModal: false,
     subscription: {
       // isTrial: false,
       // isTrialOver: false,
