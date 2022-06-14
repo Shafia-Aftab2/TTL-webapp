@@ -641,6 +641,7 @@ export default {
       })),
     };
     this.classTasks = classTasks?.results
+      ?.filter((x) => !x?.isAttempted && x?.type !== taskTypes.QUESTION_ANSWER)
       ?.filter((x) => x?.type !== taskTypes.QUESTION_ANSWER)
       ?.map((x) => ({
         id: x?.id,
