@@ -17,6 +17,10 @@ export default class ClassRoutes {
     return HTTPClient.post(`/class/${id}/topics`, payload);
   }
 
+  static async RemoveTopics(id, payload) {
+    return HTTPClient.delete(`/class/${id}/topics`, payload);
+  }
+
   static async JoinAsStudent(id) {
     return HTTPClient.patch(`/class/${id}/join`);
   }

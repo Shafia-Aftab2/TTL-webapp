@@ -181,7 +181,7 @@
         <div class="class-manage-modal-invite-students-input-wrapper">
           <talkie-input :value="computedClassJoinLink" />
         </div>
-        <talkie-button :onClick="hanldeClassJoinLinkCopyButtonClick">
+        <talkie-button :onClick="handleClassJoinLinkCopyButtonClick">
           Copy
         </talkie-button>
       </div>
@@ -369,7 +369,7 @@ export default {
     this.pageLoading = false;
   },
   methods: {
-    async hanldeClassJoinLinkCopyButtonClick() {
+    async handleClassJoinLinkCopyButtonClick() {
       const isCopiedToClipboard = await copyToClipboard(
         this.computedClassJoinLink
       );
@@ -390,35 +390,30 @@ export default {
       });
     },
     async handleTopicSelectToggle(isSelected, topicId) {
-      if (isSelected) {
-        this.activeClassTopicIds = [...this.activeClassTopicIds, topicId];
-      } else {
-        this.activeClassTopicIds = [...this.activeClassTopicIds]?.filter(
-          (x) => x !== topicId
-        );
-      }
+      const newTopics = isSelected
+        ? [...this.activeClassTopicIds, topicId]
+        : [...this.activeClassTopicIds]?.filter((x) => x !== topicId);
 
-      await this.handleUpdateClassTopics();
+      if (await this.updateClassTopic([topicId], isSelected)) {
+        this.activeClassTopicIds = newTopics;
+      }
     },
-    async handleUpdateClassTopics() {
+    async updateClassTopic(topics, isAddMode) {
       // update page state
       this.backdropLoading = true;
-
-      // active topics data
-      const topics = this.activeClassTopicIds;
 
       // payload
       const classId = this.classId;
       const payload = { topics };
 
       // api call
-      const response = await ClassService.AddTopics(classId, payload).catch(
-        () => {
-          return {
-            error: "Could not update class topic/s!",
-          };
-        }
-      );
+      const response = await (isAddMode
+        ? ClassService.AddTopics
+        : ClassService.RemoveTopics)(classId, payload).catch(() => {
+        return {
+          error: "Could not update class topic/s!",
+        };
+      });
 
       // failure case
       if (response.error) {
@@ -427,7 +422,7 @@ export default {
           variant: "error",
           displayIcon: true,
         });
-        return;
+        return false;
       }
 
       // success case
@@ -436,6 +431,7 @@ export default {
         variant: "success",
         displayIcon: true,
       });
+      return true;
     },
     handleTabChange(x) {
       this.activeTab = x?.toLowerCase();
