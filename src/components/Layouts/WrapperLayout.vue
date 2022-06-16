@@ -1,8 +1,7 @@
 <template>
   <div
-    class="talkie-layout-wrapper"
     :class="[
-      'talkie-navbar-wrapper',
+      'talkie-layout-wrapper',
       computedSubscription?.remainingTrialDays > 0 &&
         computedSubscription?.remainingTrialDays < 15 &&
         !computedSubscription?.hideTrialBar &&
@@ -16,7 +15,7 @@
 <script>
 export default {
   name: "WrapperLayout",
-  methods: {
+  computed: {
     computedSubscription() {
       return this.$store.state.subscription;
     },
