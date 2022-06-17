@@ -1,114 +1,104 @@
 <template>
   <div class="class-quizzes-home-wrapper">
-    <!-- Contents -->
-    <template v-if="!loading">
-      <div class="class-quizzes-home-header-wrapper">
-        <h2 class="h2">Quizzes</h2>
-      </div>
+    <div class="class-quizzes-home-header-wrapper">
+      <h2 class="h2">Quizzes</h2>
+    </div>
 
-      <!-- Questions tab -->
-      <div class="class-quizzes-home-options-wrapper">
-        <talkie-button-drop-down
-          :size="'small'"
-          :variant="'primary'"
-          :dropDownItems="newTaskOptions"
-        >
-          + New Task
-        </talkie-button-drop-down>
-      </div>
-
-      <talkie-switch
-        :checkLabel="`Showing ${
-          !showActiveTasks ? 'Active' : 'Inactive'
-        } Tasks`"
-        :uncheckLabel="`Showing ${
-          showActiveTasks ? 'Active' : 'Inactive'
-        } Tasks`"
-        :onToggle="handleActiveTasksToggleChange"
-      />
-
-      <div
-        :class="[
-          'class-quizzes-home-content-wrapper',
-          'class-quizzes-home-content-wrapper-multi-col',
-        ]"
+    <!-- Questions tab -->
+    <div class="class-quizzes-home-options-wrapper">
+      <talkie-button-drop-down
+        :size="'small'"
+        :variant="'primary'"
+        :dropDownItems="newTaskOptions"
       >
-        <talkie-modal
-          :type="'confirm'"
-          :contentPadded="true"
-          :closeButton="true"
-          :centered="true"
-          :title="'Are You Sure'"
-          :description="'Are you sure? Your student\'s responses and feedback will also be deleted.'"
-          :onClose="handleTopicDeleteDialogClose"
-          :onConfirm="handleTaskDeletion"
-          v-if="taskToDelete"
-        />
-        <template v-if="classTasks && classTasks.length > 0">
-          <template v-for="_question in classTasks" :key="_question">
-            <talkie-question-card
-              v-if="
-                currentTopicFilter
-                  ? _question.topic === currentTopicFilter
-                  : true
-              "
-              :title="_question.title"
-              :topic="_question.topic"
-              :description="_question.description"
-              :manageModeOptions="{
-                canEdit: false,
-                canDelete: false,
-              }"
-              :centered="false"
-              :hoverAnimation="true"
-              :audioSource="
-                _question.type === TaskTypes.QUESTION_ANSWER &&
-                _question.audioSource
-              "
-              :image="
-                _question.type === TaskTypes.CAPTION_THIS && _question.image
-              "
-              :expandContent="
-                _question.type === TaskTypes.TRANSLATION
-                  ? { translation: _question.translation }
-                  : _question.type === TaskTypes.EMOJI_STORY
-                  ? { emojis: _question.emojiStory }
-                  : {}
-              "
-              :onCardBodyClick="
-                () =>
-                  _question.type === TaskTypes.QUESTION_ANSWER
-                    ? handleTopicCardBodyClick(_question.id)
-                    : {}
-              "
-              :onEditClick="() => handleTopicCardEditClick(_question.id)"
-              :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
-            >
-              <template v-slot:action-buttons>
-                <talkie-chip
-                  :label="_question.isActive ? 'Make Inactive' : 'Make Active'"
-                  :variant="'danger'"
-                  :onClick="
-                    async () =>
-                      await handleTaskTemplateStatusChange(
-                        _question.id,
-                        !_question.isActive
-                      )
-                  "
-                />
-              </template>
-            </talkie-question-card>
-          </template>
-        </template>
-      </div>
-    </template>
+        + New Task
+      </talkie-button-drop-down>
+    </div>
+
+    <talkie-switch
+      :checkLabel="'Show inactive quizzes'"
+      :uncheckLabel="'Showing active quizzes'"
+      :onToggle="handleActiveTasksToggleChange"
+    />
 
     <!-- Load wrapper -->
-    <template v-if="loading">
-      <div class="class-quizzes-home-loading-wrapper">
-        <talkie-loader :size="'large'" />
-      </div>
-    </template>
+    <div class="class-quizzes-home-loading-wrapper" v-if="loading">
+      <talkie-loader :size="'large'" />
+    </div>
+
+    <div
+      :class="[
+        'class-quizzes-home-content-wrapper',
+        'class-quizzes-home-content-wrapper-multi-col',
+      ]"
+      v-if="!loading"
+    >
+      <talkie-modal
+        :type="'confirm'"
+        :contentPadded="true"
+        :closeButton="true"
+        :centered="true"
+        :title="'Are You Sure'"
+        :description="'Are you sure? Your student\'s responses and feedback will also be deleted.'"
+        :onClose="handleTopicDeleteDialogClose"
+        :onConfirm="handleTaskDeletion"
+        v-if="taskToDelete"
+      />
+      <template v-if="classTasks && classTasks.length > 0">
+        <template v-for="_question in classTasks" :key="_question">
+          <talkie-question-card
+            v-if="
+              currentTopicFilter ? _question.topic === currentTopicFilter : true
+            "
+            :title="_question.title"
+            :topic="_question.topic"
+            :description="_question.description"
+            :manageModeOptions="{
+              canEdit: false,
+              canDelete: false,
+            }"
+            :centered="false"
+            :hoverAnimation="true"
+            :audioSource="
+              _question.type === TaskTypes.QUESTION_ANSWER &&
+              _question.audioSource
+            "
+            :image="
+              _question.type === TaskTypes.CAPTION_THIS && _question.image
+            "
+            :expandContent="
+              _question.type === TaskTypes.TRANSLATION
+                ? { translation: _question.translation }
+                : _question.type === TaskTypes.EMOJI_STORY
+                ? { emojis: _question.emojiStory }
+                : {}
+            "
+            :onCardBodyClick="
+              () =>
+                _question.type === TaskTypes.QUESTION_ANSWER
+                  ? handleTopicCardBodyClick(_question.id)
+                  : {}
+            "
+            :onEditClick="() => handleTopicCardEditClick(_question.id)"
+            :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
+          >
+            <template v-slot:action-buttons>
+              <talkie-chip
+                :label="_question.isActive ? 'Make Inactive' : 'Make Active'"
+                :variant="'danger'"
+                :onClick="
+                  async () =>
+                    await handleTaskTemplateStatusChange(
+                      _question.id,
+                      !_question.isActive
+                    )
+                "
+              />
+            </template>
+          </talkie-question-card>
+        </template>
+      </template>
+    </div>
 
     <!-- Backdrop load wrapper -->
     <talkie-back-drop-loader v-if="backdropLoading" />
