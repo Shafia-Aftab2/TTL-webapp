@@ -990,6 +990,7 @@ export default {
   position: relative;
   filter: blur(0);
   z-index: var(--t-zindex-50);
+  padding-bottom: var(--t-space-44);
 }
 .class-practice-body-footer-wrapper-audio-player {
   margin: auto;
