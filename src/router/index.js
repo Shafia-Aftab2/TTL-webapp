@@ -76,14 +76,14 @@ const routes = [
         component: AuthLogin,
       },
       {
-        name: "AuthLoginStudent",
+        name: "AuthSignupStudent",
         alias: "/auth/signup",
         path: "/auth/signup/student",
         component: AuthSignup,
         props: { signupMode: "student" },
       },
       {
-        name: "AuthLoginTeacher",
+        name: "AuthSignupTeacher",
         path: "/auth/signup/teacher",
         component: AuthSignup,
         props: { signupMode: "teacher" },
