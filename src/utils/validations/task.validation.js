@@ -50,6 +50,11 @@ const requireLanguageForTopic = yup.object({
   language: yup.string().required("Language is required."),
 });
 
+const createBulkTaskSchema = yup.object({
+  topic: yup.string().required("Topic is required."),
+  csvFile: yup.mixed().required("CSV file is required."),
+});
+
 export {
   createQandATopicSchema,
   updateQandATopicSchema,
@@ -57,4 +62,5 @@ export {
   createTranslationTopicSchema,
   createEmojiStoryTopicSchema,
   requireLanguageForTopic,
+  createBulkTaskSchema,
 };
