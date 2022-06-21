@@ -160,6 +160,11 @@ export default {
               100
             ),
         },
+        {
+          name: "Bulk Upload",
+          onClick: () =>
+            this.handleRedirection(`/admin/quizzes/create/bulk`, 100),
+        },
       ],
       classTasks: [],
       loading: false,
