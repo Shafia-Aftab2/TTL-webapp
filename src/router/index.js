@@ -39,6 +39,7 @@ import AdminUsersHome from "../components/Modules/Admin/Users/Home";
 import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
 import AdminQuizzesHome from "../components/Modules/Admin/Quizzes/Home";
 import AdminQuizzesCreate from "../components/Modules/Admin/Quizzes/Create";
+import AdminQuizzesCreateBulk from "../components/Modules/Admin/Quizzes/Create/Bulk";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -76,14 +77,14 @@ const routes = [
         component: AuthLogin,
       },
       {
-        name: "AuthLoginStudent",
+        name: "AuthSignupStudent",
         alias: "/auth/signup",
         path: "/auth/signup/student",
         component: AuthSignup,
         props: { signupMode: "student" },
       },
       {
-        name: "AuthLoginTeacher",
+        name: "AuthSignupTeacher",
         path: "/auth/signup/teacher",
         component: AuthSignup,
         props: { signupMode: "teacher" },
@@ -477,6 +478,17 @@ const routes = [
         name: "AdminQuizzesCreate",
         path: "/admin/quizzes/create",
         component: AdminQuizzesCreate,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT, roles.TEACHER],
+          },
+        },
+      },
+      {
+        name: "AdminQuizzesCreateBulk",
+        path: "/admin/quizzes/create/bulk",
+        component: AdminQuizzesCreateBulk,
         meta: {
           middlewareConfig: {
             requiresAuth: true,

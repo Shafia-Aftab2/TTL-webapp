@@ -54,7 +54,15 @@
       </template>
 
       <!-- if there is a media item -->
-      <template v-if="mediaPicked?.src">
+      <template
+        v-if="
+          mediaPicked?.src &&
+          !(
+            this.allowedMediaTypes?.includes('text/csv') &&
+            this.allowedMediaTypes?.length === 1
+          )
+        "
+      >
         <img
           :src="mediaPicked?.src"
           v-if="mediaPicked?.src?.includes('image')"
@@ -85,6 +93,47 @@
           />
         </span>
       </template>
+
+      <!-- if there is a file item picked -->
+      <template
+        v-if="
+          mediaPicked?.src &&
+          this.allowedMediaTypes?.includes('text/csv') &&
+          this.allowedMediaTypes?.length === 1
+        "
+      >
+        <span
+          class="talkie-csv-file-uploaded"
+          v-if="
+            this.allowedMediaTypes?.includes('text/csv') &&
+            this.allowedMediaTypes?.length === 1
+          "
+        >
+          <talkie-icon
+            :name="'file'"
+            :variant="'secondary'"
+            :size="50"
+            :noHighlights="true"
+          />
+          {{ mediaPicked.file.name }}
+          <talkie-button
+            :type="'button'"
+            :variant="'secondary'"
+            :size="'small'"
+            :onClick="showCSVPreview"
+          >
+            Preview
+          </talkie-button>
+        </span>
+        <span class="talkie-media-picked-remove-icon">
+          <talkie-icon
+            :name="'x-mark'"
+            :variant="'secondary'"
+            :isActive="true"
+            :onClick="handleMediaRemove"
+          />
+        </span>
+      </template>
     </talkie-drag-drop>
     <p
       v-if="hint && hint.type && hint.message"
@@ -95,18 +144,52 @@
     >
       {{ hint.message }}
     </p>
+    <div
+      class="csv-data-preview"
+      v-if="csvDataPreview.length > 0"
+      @click="handleCSVPreviewContainerClick"
+    >
+      <div class="csv-data-preview-container">
+        <table class="csv-data-preview-table">
+          <tr>
+            <th
+              v-for="headerData in Object.keys(csvDataPreview[0])"
+              :key="headerData"
+            >
+              {{ headerData }}
+            </th>
+          </tr>
+          <tr v-for="row in Object.values(csvDataPreview)" :key="row">
+            <td v-for="cellValue in Object.values(row)" :key="cellValue">
+              {{ cellValue }}
+            </td>
+          </tr>
+        </table>
+        <talkie-button
+          :type="'button'"
+          :variant="'secondary'"
+          :size="'small'"
+          :onClick="closeCSVPreview"
+          class="ml-auto mt-8"
+        >
+          Close
+        </talkie-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { useField } from "vee-validate";
 import TalkieIcon from "./Icon";
+import TalkieButton from "./Button";
 import TalkieDragDrop from "./DragDrop";
 import { notifications } from "@/components/UIActions";
+import csvParser from "papaparse";
 
 export default {
   name: "MediaPicker",
-  components: { TalkieIcon, TalkieDragDrop },
+  components: { TalkieIcon, TalkieButton, TalkieDragDrop },
   data() {
     const {
       value: t_value,
@@ -126,11 +209,15 @@ export default {
       setValue,
       getDroppedFiles: () => {},
       isMediaOnHover: false,
+      csvDataPreview: [],
     };
   },
   computed: {
     computedAllowedMediaTypes() {
-      return this.allowedMediaTypes?.map((x) => `${x}/*`).join(",");
+      return this.allowedMediaTypes?.includes("text/csv") &&
+        this.allowedMediaTypes?.length === 1
+        ? this.allowedMediaTypes
+        : this.allowedMediaTypes?.map((x) => `${x}/*`).join(",");
     },
   },
   props: {
@@ -141,6 +228,7 @@ export default {
     allowedMediaTypes: {
       type: Array,
       default: () => ["image", "video"],
+      // , "text/csv"
     },
     placeholder: {
       type: [String, Boolean],
@@ -160,7 +248,12 @@ export default {
   },
   methods: {
     isValidMedia(mediaType) {
-      return this.allowedMediaTypes?.includes(mediaType?.split("/")[0]);
+      return this.allowedMediaTypes?.includes(
+        this.allowedMediaTypes?.includes("text/csv") &&
+          this.allowedMediaTypes?.length === 1
+          ? mediaType
+          : mediaType?.split("/")[0]
+      );
     },
     handleFileProcessing(file) {
       const reader = new FileReader();
@@ -206,6 +299,43 @@ export default {
     handleMediaDragLeave(e) {
       e.preventDefault();
       this.isMediaOnHover = false;
+    },
+    async readCSV(file) {
+      return new Promise((resolve, reject) => {
+        try {
+          csvParser.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+              resolve(results.data);
+            },
+          });
+        } catch {
+          reject();
+        }
+      });
+    },
+    async showCSVPreview() {
+      const csvData = await this.readCSV(this.mediaPicked.file).catch(
+        () => null
+      );
+
+      if (!csvData || csvData?.length === 0) {
+        notifications.show("CSV file broken or no records found!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+      this.csvDataPreview = csvData;
+    },
+    handleCSVPreviewContainerClick(e) {
+      if (e.target === e.currentTarget) {
+        this.closeCSVPreview();
+      }
+    },
+    closeCSVPreview() {
+      this.csvDataPreview = [];
     },
   },
 };
@@ -266,6 +396,56 @@ export default {
   border-top: var(--t-space-2) solid transparent;
   border-bottom: var(--t-space-2) solid transparent;
 }
+.talkie-csv-file-uploaded {
+  padding: var(--t-space-8) var(--t-space-12);
+  border-radius: var(--t-br-medium);
+  gap: var(--t-space-12);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+}
+.csv-data-preview {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  z-index: var(--t-zindex-100);
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.csv-data-preview-container {
+  padding: var(--t-space-16);
+  background: var(--t-white);
+  color: var(--t-black);
+  border-radius: var(--t-br-small);
+}
+.csv-data-preview-table,
+th,
+td {
+  border: var(--t-space-1) solid var(--t-black);
+  border-collapse: collapse;
+}
+.csv-data-preview-table th {
+  text-transform: capitalize;
+  font-family: var(--t-ff-bold);
+}
+.csv-data-preview-table th,
+.csv-data-preview-table td {
+  padding: var(--t-space-5);
+  text-align: left;
+}
+.ml-auto {
+  margin-left: auto !important;
+}
+.mt-8 {
+  margin-top: var(--t-space-8);
+}
+
 .talkie-media-picked-remove-icon {
   position: absolute;
 }

@@ -277,7 +277,12 @@
         "
       >
         <div class="class-create-task-form-submit-button">
-          <talkie-button :loading="formStatus?.loading"> Create </talkie-button>
+          <talkie-button
+            :loading="formStatus?.loading"
+            :disabled="formStatus?.loading"
+          >
+            Create
+          </talkie-button>
         </div>
       </template>
     </talkie-form>
@@ -534,7 +539,7 @@ export default {
         type: null,
         message: null,
         animateEllipse: false,
-        loading: false,
+        loading: true,
       };
 
       // process task specific fields

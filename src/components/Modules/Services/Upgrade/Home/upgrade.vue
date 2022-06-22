@@ -172,7 +172,6 @@ import {
 import { pricingPlans } from "@/utils/constants";
 import { TalkiePricePlanCard } from "@/components/SubModules/Cards";
 import isMobileScreen from "../_common/mixins/isMobileScreen";
-import { loadStripe } from "@stripe/stripe-js";
 import { getDomain } from "@/utils/helpers/URLModifier";
 import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { notifications } from "@/components/UIActions";
@@ -316,6 +315,9 @@ export default {
     async mountStripePaymentElementsFormToUI() {
       //  get stripe key from env
       const stripeKey = process.env.VUE_APP_TALKIE_MONO_API_STRIPE_PK;
+
+      const stripePkg = async () => await import("@stripe/stripe-js");
+      const { loadStripe } = await stripePkg();
 
       // init stripe
       const stripe = await loadStripe(stripeKey);

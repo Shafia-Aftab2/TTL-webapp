@@ -18,6 +18,7 @@ import IconUpload from "./IconUpload.vue";
 import IconArrowHeadBottom from "./IconArrowHeadBottom.vue";
 import IconArrowBottom from "./IconArrowBottom.vue";
 import IconArrowHeadTop from "./IconArrowHeadTop.vue";
+import IconFile from "./IconFile.vue";
 
 // Logos
 import LogoTalkie from "./LogoTalkie.vue";
@@ -44,6 +45,7 @@ export {
   IconArrowBottom,
   IconArrowHeadBottom,
   IconArrowHeadTop,
+  IconFile,
   // Logos
   LogoTalkie,
   LogoAuthSignup,

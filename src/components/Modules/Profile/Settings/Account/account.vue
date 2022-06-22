@@ -400,7 +400,6 @@ import {
 } from "@/components/UICore";
 import { TalkieBankCard } from "@/components/SubModules/Cards";
 import { notifications } from "@/components/UIActions";
-import { loadStripe } from "@stripe/stripe-js";
 import { AuthService, UserService, SubscriptionService } from "@/api/services";
 import { getDomain } from "@/utils/helpers/URLModifier";
 import authUser from "@/utils/helpers/auth";
@@ -728,6 +727,9 @@ export default {
 
       //  get stripe key from env
       const stripeKey = process.env.VUE_APP_TALKIE_MONO_API_STRIPE_PK;
+
+      const stripePkg = async () => await import("@stripe/stripe-js");
+      const { loadStripe } = await stripePkg();
 
       // init stripe
       const stripe = await loadStripe(stripeKey);

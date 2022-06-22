@@ -5,15 +5,16 @@
       v-slot="{ errors }"
       :validationSchema="computedSignupSchema"
       :onSubmit="handleSubmit"
+      :key="this.$route.fullPath"
     >
       <h3 class="h3">
         {{
-          signupMode === "teacher"
+          computedSignupMode === "teacher"
             ? "Create A Teacher Account"
             : "Create A Student Account"
         }}
       </h3>
-      <template v-if="signupMode === 'teacher'">
+      <template v-if="computedSignupMode === 'teacher'">
         <talkie-input
           :name="'name'"
           :size="'medium'"
@@ -51,7 +52,7 @@
           }"
         />
       </template>
-      <template v-if="signupMode === 'student'">
+      <template v-if="computedSignupMode === 'student'">
         <talkie-input
           :name="'firstName'"
           :size="'medium'"
@@ -120,11 +121,12 @@
           </p>
         </div>
         <p class="auth-split-form-options-info">
-          Are you a {{ signupMode === "teacher" ? "student" : "teacher" }}?
+          Are you a
+          {{ computedSignupMode === "teacher" ? "student" : "teacher" }}?
           <router-link
             class="auth-split-form-options-info-link"
             :to="`/auth/signup/${
-              signupMode === 'teacher' ? 'student' : 'teacher'
+              computedSignupMode === 'teacher' ? 'student' : 'teacher'
             }`"
           >
             Signup here
@@ -182,6 +184,9 @@ export default {
       return this.signupMode === "teacher"
         ? teacherSignupSchema
         : studentSignupSchema;
+    },
+    computedSignupMode() {
+      return this.signupMode;
     },
   },
   components: {

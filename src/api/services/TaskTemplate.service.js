@@ -5,6 +5,10 @@ export default class TaskTemplateRoutes {
     return HTTPClient.post(`/task-templates/`, payload);
   }
 
+  static async CreateBulk(payload) {
+    return HTTPClient.post(`/task-templates/create-bulk`, payload);
+  }
+
   static async QueryTaskTemplates(query) {
     return HTTPClient.get(
       `/task-templates/?${Object.entries(query)

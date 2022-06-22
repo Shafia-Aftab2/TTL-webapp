@@ -21,6 +21,7 @@
     "js-cookie": "^3.0.1",
     "lamejs": "1.2.0",
     "moment": "^2.29.3",
+    "papaparse": "^5.3.2",
     "postcss-import": "11.1.0",
     "postcss-preset-env": "6.0.5",
     "vee-validate": "4.5.6",
