@@ -11,8 +11,10 @@
       >
         <h2 class="admin-create-quizzes-header h2">Upload CSV file (Excel)</h2>
         <p class="p text-center">
-          Download a template
-          <a @click="downloadCSVTemplate"> here </a>
+          <a @click="downloadCSVTemplate">Download</a>
+          or
+          <a @click="previewCSVTemplate">preview</a>
+          a csv template
         </p>
         <talkie-select
           :name="'language'"
@@ -72,6 +74,39 @@
       <talkie-loader :size="'large'" />
     </div>
   </template>
+
+  <div
+    class="csv-data-preview"
+    v-if="csvDataPreview.length > 0"
+    @click="handleCSVPreviewContainerClick"
+  >
+    <div class="csv-data-preview-container">
+      <table class="csv-data-preview-table">
+        <tr>
+          <th
+            v-for="headerData in Object.keys(csvDataPreview[0])"
+            :key="headerData"
+          >
+            {{ headerData }}
+          </th>
+        </tr>
+        <tr v-for="row in Object.values(csvDataPreview)" :key="row">
+          <td v-for="cellValue in Object.values(row)" :key="cellValue">
+            {{ cellValue }}
+          </td>
+        </tr>
+      </table>
+      <talkie-button
+        :type="'button'"
+        :variant="'secondary'"
+        :size="'small'"
+        :onClick="closeCSVPreview"
+        class="ml-auto mt-8"
+      >
+        Close
+      </talkie-button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -94,6 +129,7 @@ import TaskTypes from "@/utils/constants/taskTypes";
 import { supportedLanguages, topicTypes } from "@/utils/constants";
 import csvParser from "papaparse";
 import contentDownloadMixin from "@/utils/mixins/contentDownloadMixin";
+import { notifications } from "@/components/UIActions";
 
 export default {
   name: "AdminCreateQuizzesBulk",
@@ -129,6 +165,7 @@ export default {
         x?.toLowerCase()
       ),
       selectedLanguage: null,
+      csvDataPreview: [],
     };
   },
   computed: {
@@ -293,6 +330,46 @@ export default {
         `${window.location.origin}/assets/documents/Translation CSV (required format).csv`
       );
     },
+    async previewCSVTemplate() {
+      const csvTemplateURL = `${window.location.origin}/assets/documents/Translation CSV (required format).csv`;
+
+      const blob = await fetch(csvTemplateURL)
+        .then((res) => res.blob())
+        .catch(() => null);
+
+      const csvTemplateFile = new File(
+        [blob],
+        "Required CSV Template for bulk upload",
+        { type: "text/csv" }
+      );
+
+      if (!blob) {
+        notifications.show("CSV file broken or no records found!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      const csvData = await this.readCSV(csvTemplateFile).catch(() => null);
+
+      if (!csvData || csvData?.length === 0) {
+        notifications.show("CSV file broken or no records found!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+      this.csvDataPreview = csvData;
+    },
+    handleCSVPreviewContainerClick(e) {
+      if (e.target === e.currentTarget) {
+        this.closeCSVPreview();
+      }
+    },
+    closeCSVPreview() {
+      this.csvDataPreview = [];
+    },
   },
 };
 </script>
@@ -404,6 +481,46 @@ export default {
 }
 .text-center {
   text-align: center;
+}
+
+.csv-data-preview {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  z-index: var(--t-zindex-100);
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.csv-data-preview-container {
+  padding: var(--t-space-16);
+  background: var(--t-white);
+  color: var(--t-black);
+  border-radius: var(--t-br-small);
+}
+.csv-data-preview-table,
+th,
+td {
+  border: var(--t-space-1) solid var(--t-black);
+  border-collapse: collapse;
+}
+.csv-data-preview-table th {
+  text-transform: capitalize;
+  font-family: var(--t-ff-bold);
+}
+.csv-data-preview-table th,
+.csv-data-preview-table td {
+  padding: var(--t-space-5);
+  text-align: left;
+}
+.ml-auto {
+  margin-left: auto !important;
+}
+.mt-8 {
+  margin-top: var(--t-space-8);
 }
 
 /* Responsive variants */
