@@ -10,6 +10,10 @@
         :key="$route.fullPath"
       >
         <h2 class="admin-create-quizzes-header h2">Upload CSV file (Excel)</h2>
+        <p class="p text-center">
+          Download a template
+          <a @click="downloadCSVTemplate"> here </a>
+        </p>
         <talkie-select
           :name="'language'"
           :placeholder="'Choose language'"
@@ -89,9 +93,11 @@ import { TaskTemplateService, TopicService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import { supportedLanguages, topicTypes } from "@/utils/constants";
 import csvParser from "papaparse";
+import contentDownloadMixin from "@/utils/mixins/contentDownloadMixin";
 
 export default {
   name: "AdminCreateQuizzesBulk",
+  mixins: [contentDownloadMixin],
   components: {
     TalkieAlert,
     TalkieLoader,
@@ -281,6 +287,12 @@ export default {
 
       return !!response.data ? response.data.results : null;
     },
+    downloadCSVTemplate() {
+      this.downloadDocument(
+        "Required CSV Template for bulk upload",
+        `${window.location.origin}/assets/documents/Translation CSV (required format).csv`
+      );
+    },
   },
 };
 </script>
@@ -389,6 +401,9 @@ export default {
   justify-content: center;
   align-items: center;
   margin: auto;
+}
+.text-center {
+  text-align: center;
 }
 
 /* Responsive variants */

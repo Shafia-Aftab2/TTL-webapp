@@ -190,7 +190,7 @@ export default {
     },
     onDownloadClick() {
       if (this.audioSource) {
-        this.downloadAudio(this.title, this.audioSource);
+        this.downloadDocument(this.title, this.audioSource);
       }
     },
   },

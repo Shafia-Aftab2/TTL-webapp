@@ -73,7 +73,7 @@ export default {
   methods: {
     onDownloadClick() {
       if (this.messageAudio) {
-        this.downloadAudio("audioFile", this.messageAudio); // TODO: add correct name
+        this.downloadDocument("audioFile", this.messageAudio); // TODO: add correct name
       }
     },
   },
