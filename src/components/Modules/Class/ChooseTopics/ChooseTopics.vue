@@ -16,23 +16,17 @@
       :customClass="'class-choose-topics-form'"
       :onSubmit="handleCustomFormValidation"
     >
-      <div
-        class="class-choose-topics-sub-form"
-        v-if="topicsList?.advanced?.length > 0"
-      >
+      <div class="class-choose-topics-sub-form">
         <h3 class="h3">
           Topics are based on your class language
           {{ classDetails?.language && `(${classDetails?.language})` }}.
         </h3>
       </div>
-      <div
-        class="class-choose-topics-sub-form"
-        v-if="topicsList?.advanced?.length > 0"
-      >
+      <div class="class-choose-topics-sub-form">
         <h4 class="h4">Intermediate/Advanced</h4>
         <p class="p" style="margin-bottom: 0 !important">A Level</p>
         <!-- <p class="p" style="margin-bottom: 0 !important">GCSE Level</p> -->
-        <template v-if="!pageLoading">
+        <template v-if="!computedPageLoading">
           <template v-for="topic in topicsList.advanced" :key="topic.id">
             <talkie-check-box
               :name="topic.id"
@@ -41,17 +35,14 @@
             />
           </template>
         </template>
-        <template v-if="pageLoading">
+        <template v-if="computedPageLoading">
           <talkie-loader :size="'large'" />
         </template>
       </div>
-      <div
-        class="class-choose-topics-sub-form"
-        v-if="topicsList?.intermediate?.length > 0"
-      >
+      <div class="class-choose-topics-sub-form">
         <h4 class="h4">Beginners/Intermediate</h4>
         <p class="p" style="margin-bottom: 0 !important">GCSE Level</p>
-        <template v-if="!pageLoading">
+        <template v-if="!computedPageLoading">
           <template v-for="topic in topicsList.intermediate" :key="topic.id">
             <talkie-check-box
               :name="topic.id"
@@ -60,17 +51,14 @@
             />
           </template>
         </template>
-        <template v-if="pageLoading">
+        <template v-if="computedPageLoading">
           <talkie-loader :size="'large'" />
         </template>
       </div>
-      <div
-        class="class-choose-topics-sub-form"
-        v-if="topicsList?.beginner?.length > 0"
-      >
+      <div class="class-choose-topics-sub-form">
         <h4 class="h4">Beginners</h4>
         <p class="p" style="margin-bottom: 0 !important">KS3 Level</p>
-        <template v-if="!pageLoading">
+        <template v-if="!computedPageLoading">
           <template v-for="topic in topicsList.beginner" :key="topic.id">
             <talkie-check-box
               :name="topic.id"
@@ -79,7 +67,7 @@
             />
           </template>
         </template>
-        <template v-if="pageLoading">
+        <template v-if="computedPageLoading">
           <talkie-loader :size="'large'" />
         </template>
       </div>
@@ -139,9 +127,16 @@ export default {
       classDetails: {},
     };
   },
+  computed: {
+    computedPageLoading() {
+      return this.pageLoading;
+    },
+  },
   async created() {
     // update page state
     this.pageLoading = true;
+
+    await new Promise((r) => setTimeout(r, 2000));
 
     // class id from params
     const classId = this.$route.params.id;
