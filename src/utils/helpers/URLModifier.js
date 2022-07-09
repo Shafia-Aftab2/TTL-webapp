@@ -8,7 +8,7 @@ const _updateURL = (newParams) => {
 
   const newRelativePathQuery = getPathname() + _sanitizedNewParams;
 
-  history.pushState(null, "", newRelativePathQuery);
+  history.replaceState(null, "", newRelativePathQuery); // pushState will effect vue router internal navigation
 };
 
 const addToURL = (queryParamName, queryParamValue) => {
