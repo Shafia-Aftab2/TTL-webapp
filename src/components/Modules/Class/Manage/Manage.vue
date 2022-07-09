@@ -1,4 +1,9 @@
 <template>
+  <!-- Back button -->
+  <div class="loading-wrapper">
+    <talkie-icon :name="'arrow-left'" :size="30" :onClick="redirectBack" />
+  </div>
+
   <!-- Content Wrapper -->
   <div class="class-manage-wrapper" v-if="!computedPageLoading">
     <div class="class-manage-header-wrapper">
@@ -369,6 +374,9 @@ export default {
     this.pageLoading = false;
   },
   methods: {
+    redirectBack() {
+      this.$router.go(-1);
+    },
     async handleClassJoinLinkCopyButtonClick() {
       const isCopiedToClipboard = await copyToClipboard(
         this.computedClassJoinLink
@@ -673,11 +681,15 @@ export default {
 </script>
 
 <style>
+.loading-wrapper {
+  margin: auto;
+  margin-top: var(--t-space-36);
+}
 .class-manage-wrapper {
   display: flex;
   flex-direction: column;
   margin: auto;
-  margin-top: var(--t-space-36);
+  margin-top: var(--t-space-24);
   margin-bottom: var(--t-space-36);
   background-color: var(--t-white);
 }
@@ -751,6 +763,9 @@ export default {
 
 /* Responsive variants */
 @media (max-width: 599px) {
+  .loading-wrapper {
+    max-width: 100%;
+  }
   .class-manage-wrapper {
     max-width: 100%;
     padding: var(--t-space-32);
@@ -774,6 +789,9 @@ export default {
   }
 }
 @media (min-width: 600px) {
+  .loading-wrapper {
+    max-width: 80%;
+  }
   .class-manage-wrapper {
     max-width: 80%;
     padding: var(--t-space-48);
@@ -797,6 +815,9 @@ export default {
   }
 }
 @media (min-width: 1200px) {
+  .loading-wrapper {
+    max-width: 90%;
+  }
   .class-manage-wrapper {
     max-width: 90%;
     padding: var(--t-space-48);

@@ -522,6 +522,8 @@ export default {
       return uploadedFile;
     },
     async handleMessageCreation(recording) {
+      if (!recording) return;
+
       // if teacher has no response to give feedback for
       if (!this.computedResponseId && this.userMode === rolesList.TEACHER) {
         notifications.show("No Student Responses To Give Feedback For!", {
