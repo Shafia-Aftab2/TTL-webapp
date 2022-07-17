@@ -5,15 +5,27 @@
       v-slot="{ errors }"
       :validationSchema="computedSignupSchema"
       :onSubmit="handleSubmit"
-      :key="this.$route.fullPath"
+      :key="computedSignupMode"
     >
-      <h3 class="h3">
-        {{
-          computedSignupMode === "teacher"
-            ? "Create A Teacher Account"
-            : "Create A Student Account"
-        }}
-      </h3>
+      <h3 class="h3">Create an account</h3>
+      <div class="signup-option-wrapper">
+        <talkie-button
+          :type="'button'"
+          :size="'medium'"
+          :outlined="signupMode === 'teacher'"
+          :onClick="() => setSignupMode('student')"
+        >
+          I'm a student
+        </talkie-button>
+        <talkie-button
+          :type="'button'"
+          :size="'medium'"
+          :outlined="signupMode === 'student'"
+          :onClick="() => setSignupMode('teacher')"
+        >
+          I'm a teacher
+        </talkie-button>
+      </div>
       <template v-if="computedSignupMode === 'teacher'">
         <talkie-input
           :name="'name'"
@@ -177,6 +189,7 @@ export default {
         message: null,
       },
       redirectRoute: null,
+      signupMode: "student",
     };
   },
   computed: {
@@ -196,18 +209,15 @@ export default {
     TalkieAlert,
     TalkieAuthSplitWrapper,
   },
-  props: {
-    signupMode: {
-      type: String,
-      validator: (val) => ["student", "teacher"].includes(val),
-    },
-  },
   created() {
     // get redirect url from params
     const redirectRoute = this?.$route?.query?.redirect_route;
     this.redirectRoute = redirectRoute;
   },
   methods: {
+    setSignupMode(mode) {
+      this.signupMode = mode;
+    },
     async handleSubmit(values) {
       // update page state
       this.loading = true;
@@ -314,6 +324,11 @@ export default {
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+.signup-option-wrapper {
+  display: flex;
+  gap: var(--t-space-8);
+  margin: auto;
 }
 .auth-split-form-options {
   display: flex;
