@@ -151,7 +151,7 @@ export default {
       // redirect to signup if there is logged in user
       if (!this.user) {
         this.$router.push(
-          `/auth/signup/teacher?redirect_route=${window.location.pathname}`
+          `/auth/signup/?redirect_route=${window.location.pathname}`
         );
         return;
       }
