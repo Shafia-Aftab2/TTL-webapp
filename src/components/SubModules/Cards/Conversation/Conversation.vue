@@ -98,6 +98,9 @@
             v-for="_response in computedMessages"
             :key="_response"
             :alignment="_response.from !== user?.id ? 'left' : 'right'"
+            :messagePhoto="_response.photo"
+            :messageText="_response.text"
+            :messageEmojis="_response.emojis"
             :messageAudio="_response.audio"
             :isDownloadable="isAudioDownloadable"
           />
