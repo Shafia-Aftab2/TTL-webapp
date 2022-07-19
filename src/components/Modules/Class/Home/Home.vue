@@ -102,12 +102,7 @@
                     ? { emojis: _question.emojiStory }
                     : {}
                 "
-                :onCardBodyClick="
-                  () =>
-                    _question.type === TaskTypes.QUESTION_ANSWER
-                      ? handleTopicCardBodyClick(_question.id)
-                      : {}
-                "
+                :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
                 :onEditClick="() => handleTopicCardEditClick(_question.id)"
                 :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
               />
