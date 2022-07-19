@@ -44,11 +44,11 @@
           </talkie-button-drop-down>
         </div>
 
-        <talkie-switch
+        <!-- <talkie-switch
           :checkLabel="'Showing other quizzes'"
           :uncheckLabel="'Show other quizzes'"
           :onToggle="handlePracticeModeToggleChange"
-        />
+        /> -->
 
         <div
           :class="[
@@ -170,7 +170,7 @@ import {
   TalkieSelectGroup,
   TalkieModal,
   TalkieLoader,
-  TalkieSwitch,
+  // TalkieSwitch,
   TalkieButtonDropDown,
   TalkieBackDropLoader,
 } from "@/components/UICore";
@@ -199,7 +199,7 @@ export default {
     TalkieModal,
     TalkieButtonDropDown,
     TalkieLoader,
-    TalkieSwitch,
+    // TalkieSwitch,
     TalkieBackDropLoader,
     TalkieQuestionCard,
     TalkieStudentCard,
