@@ -77,10 +77,10 @@
           <talkie-icon
             :name="'star'"
             :isActive="true"
-            :variant="'primary'"
+            :variant="!feedbackGiven ? 'neutral' : 'primary'"
             :size="40"
             :iconToSizeRatio="1.1"
-            :onClick="handleRatingStarClick"
+            :onClick="!feedBackGiven ? handleRateStudentResponse : () => {}"
             v-if="cardExpanded"
           />
         </div>
@@ -155,7 +155,7 @@
   </div>
 
   <!-- Modal Content -->
-  <talkie-modal
+  <!-- <talkie-modal
     :contentPadded="true"
     :closeButton="true"
     :onClose="handleModalClose"
@@ -178,7 +178,7 @@
         Continue
       </talkie-button>
     </div>
-  </talkie-modal>
+  </talkie-modal> -->
 
   <!-- Backdrop load wrapper -->
   <talkie-back-drop-loader v-if="backdropLoading" />
@@ -189,9 +189,9 @@ import {
   TalkieLoader,
   TalkieAlert,
   TalkieIcon,
-  TalkieModal,
-  TalkieStarRating,
-  TalkieButton,
+  // TalkieModal,
+  // TalkieStarRating,
+  // TalkieButton,
   TalkieChip,
   TalkieBackDropLoader,
 } from "@/components/UICore";
@@ -209,10 +209,10 @@ export default {
     TalkieLoader,
     TalkieAlert,
     TalkieIcon,
-    TalkieModal,
-    TalkieButton,
+    // TalkieModal,
+    // TalkieButton,
+    // TalkieStarRating,
     TalkieChip,
-    TalkieStarRating,
     TalkieBackDropLoader,
     ConversationMessage,
     ConversationRecorder,
@@ -280,7 +280,9 @@ export default {
       },
       messagesFetched: [],
       showRatingStarModal: false,
-      responseRating: 0,
+      // responseRating: 0,
+      responseRating: 5, // give fix feedback value = 5 stars
+      feedbackGiven: false,
       backdropLoading: false,
     };
   },
@@ -324,6 +326,8 @@ export default {
       this.responseRating = rating;
     },
     async handleRateStudentResponse() {
+      if (this.feedbackGiven) return;
+
       // form data
       const score = this.responseRating;
       const responseId = (() => {
@@ -377,6 +381,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
+      this.feedbackGiven = true;
       notifications.show("Rating response added successfully!", {
         variant: "success",
         displayIcon: true,
@@ -452,6 +457,10 @@ export default {
       }
 
       // success case
+      const scoredByTeacher = taskResponses
+        ?.filter((x) => x?.student?.id === this?.studentId)
+        ?.find((x) => x?.scoreByTeacher);
+      if (scoredByTeacher) this.feedbackGiven = true;
       const messagesFetched = (() => {
         let _temp = [];
 
