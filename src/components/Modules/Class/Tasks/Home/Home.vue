@@ -25,15 +25,34 @@
             :topic="taskDetails?.topic"
             :description="taskDetails?.description"
             :manageModeOptions="{
-              canEdit: isTeacher,
+              canEdit:
+                isTeacher && taskDetails.type === taskTypes.QUESTION_ANSWER,
               canDelete: isTeacher,
               canDownload:
                 canDownloadContent &&
                 taskDetails?.type === taskTypes?.QUESTION_ANSWER,
             }"
             :centered="false"
-            :fullWidth="true"
-            :audioSource="taskDetails?.audioSource"
+            :fullWidth="false"
+            :audioSource="
+              taskDetails?.type === taskTypes.QUESTION_ANSWER &&
+              taskDetails?.audio
+            "
+            :image="
+              taskDetails?.type === taskTypes.CAPTION_THIS && taskDetails?.photo
+            "
+            :expandContent="
+              taskDetails?.type === taskTypes.TRANSLATION
+                ? {
+                    translation: {
+                      textToTranslate: taskDetails?.text,
+                      translatedText: taskDetails?.answerToText,
+                    },
+                  }
+                : taskDetails?.type === taskTypes.EMOJI_STORY
+                ? { emojis: taskDetails?.emojis }
+                : {}
+            "
             :onEditClick="handleTaskEditClick"
             :onDeleteClick="handleTaskDeleteClick"
           />
@@ -55,18 +74,12 @@
             <talkie-conversation-card
               v-if="studentWithTaskResponses?.includes(_student?.id)"
               :taskId="taskId"
-              :messages="[
-                {
-                  id: taskDetails?.id,
-                  from: user?.id,
-                  audio: taskDetails?.audioSource,
-                },
-              ]"
               :userMode="'teacher'"
               :studentId="_student?.id"
               :studentName="_student?.name"
               :studentAvatar="_student?.image"
-              :isAudioDownloadable="canDownloadContent"
+              :messages="_student?.messages"
+              :isAudioDownloadable="_student?.audio && canDownloadContent"
             />
           </template>
         </template>
@@ -138,6 +151,7 @@ export default {
   },
   data() {
     return {
+      user: {},
       classId: null,
       taskId: null,
       classDetails: {},
@@ -192,8 +206,7 @@ export default {
 
       // get task details
       const taskDetails = await this.getTaskDetails(taskId);
-      if (!taskDetails || taskDetails?.type !== TaskTypes.QUESTION_ANSWER)
-        return this.$router.push("/404");
+      if (!taskDetails) return this.$router.push("/404");
 
       // get task responses
       const taskResponses = await this.getTaskResponses(taskId);
@@ -237,7 +250,19 @@ export default {
         title: taskDetails?.title,
         topic: taskDetails?.topic.name,
         description: taskDetails?.questionText,
-        audioSource: taskDetails?.voiceForQnA,
+        ...(taskDetails?.type === TaskTypes.QUESTION_ANSWER && {
+          audio: taskDetails?.voiceForQnA,
+        }),
+        ...(taskDetails?.type === TaskTypes.CAPTION_THIS && {
+          photo: taskDetails?.captionThisImage,
+        }),
+        ...(taskDetails?.type === TaskTypes.TRANSLATION && {
+          text: taskDetails?.textToTranslate,
+          answerToText: taskDetails?.answer,
+        }),
+        ...(taskDetails?.type === TaskTypes.EMOJI_STORY && {
+          emojis: taskDetails?.emojiStory,
+        }),
       };
 
       this.taskResponses = taskResponses.map((x) => ({
@@ -261,6 +286,22 @@ export default {
           image: x?.image
             ? generateAvatar(x?.image?.split("-")[1], x?.image)
             : null,
+          messages: [
+            {
+              id: this.taskDetails?.id || this.taskDetails?._id,
+              from: this.user?.id,
+              ...(this.taskDetails?.audio && {
+                audio: this.taskDetails?.audio,
+              }),
+              ...(this.taskDetails?.photo && {
+                photo: this.taskDetails?.photo,
+              }),
+              ...(this.taskDetails?.emojis && {
+                emojis: this.taskDetails?.emojis,
+              }),
+              ...(this.taskDetails?.text && { text: this.taskDetails?.text }),
+            },
+          ],
         })) || [];
 
       const studentWithTaskResponses = (() => {
