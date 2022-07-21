@@ -1,7 +1,7 @@
 <template>
   <!-- Back button -->
   <div class="loading-wrapper">
-    <talkie-icon :name="'arrow-left'" :size="30" :onClick="redirectBack" />
+    <talkie-icon :name="'arrow-left'" :size="25" :onClick="redirectBack" />
   </div>
 
   <!-- Content Wrapper -->

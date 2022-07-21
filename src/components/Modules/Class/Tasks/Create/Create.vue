@@ -603,14 +603,14 @@ export default {
           }
 
           // success case
-          return { captionThisImage, isPracticeMode: true };
+          return { captionThisImage, isPracticeMode: false }; // all tasks should go to class, only admin will be able to create quizzes
         }
         // translation task
         if (this.selectedTaskType === TaskTypes.TRANSLATION) {
           return {
             textToTranslate: values.textToTranslate,
             answer: values.translatedText,
-            isPracticeMode: true,
+            isPracticeMode: false, // all tasks should go to class, only admin will be able to create quizzes
           };
         }
         // emoji-story task
@@ -620,7 +620,7 @@ export default {
           };
           return {
             emojiStory: values.emojiStory,
-            isPracticeMode: true,
+            isPracticeMode: false, // all tasks should go to class, only admin will be able to create quizzes
           };
         }
         return null;

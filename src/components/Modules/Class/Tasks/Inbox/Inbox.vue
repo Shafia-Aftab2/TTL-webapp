@@ -50,6 +50,7 @@ import { TalkieConversationCard } from "@/components/SubModules/Cards";
 import { ClassService, TaskService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
 import topicTypes from "@/utils/constants/topicTypes";
+import taskTypes from "@/utils/constants/taskTypes";
 
 export default {
   name: "TasksInbox",
@@ -131,14 +132,25 @@ export default {
       title: x?.title,
       description: x?.questionText,
       topic: {
-        id: x?.topic?.id,
+        id: x?.topic?.id || x?.topic?._id,
         name: x?.topic?.name,
       },
       responses: [
         {
           id: x?.id,
           from: x?.teacher,
-          audio: x?.voiceForQnA,
+          ...(x?.type === taskTypes.QUESTION_ANSWER && {
+            audio: x?.voiceForQnA,
+          }),
+          ...(x?.type === taskTypes.CAPTION_THIS && {
+            photo: x?.captionThisImage,
+          }),
+          ...(x?.type === taskTypes.TRANSLATION && {
+            text: x?.textToTranslate,
+          }),
+          ...(x?.type === taskTypes.EMOJI_STORY && {
+            emojis: x?.emojiStory,
+          }),
           dateTime: x?.createdAt,
         },
       ],

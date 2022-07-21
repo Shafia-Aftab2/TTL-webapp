@@ -44,11 +44,11 @@
           </talkie-button-drop-down>
         </div>
 
-        <talkie-switch
+        <!-- <talkie-switch
           :checkLabel="'Showing other quizzes'"
           :uncheckLabel="'Show other quizzes'"
           :onToggle="handlePracticeModeToggleChange"
-        />
+        /> -->
 
         <div
           :class="[
@@ -102,12 +102,7 @@
                     ? { emojis: _question.emojiStory }
                     : {}
                 "
-                :onCardBodyClick="
-                  () =>
-                    _question.type === TaskTypes.QUESTION_ANSWER
-                      ? handleTopicCardBodyClick(_question.id)
-                      : {}
-                "
+                :onCardBodyClick="() => handleTopicCardBodyClick(_question.id)"
                 :onEditClick="() => handleTopicCardEditClick(_question.id)"
                 :onDeleteClick="() => handleTopicCardDeleteClick(_question.id)"
               />
@@ -170,7 +165,7 @@ import {
   TalkieSelectGroup,
   TalkieModal,
   TalkieLoader,
-  TalkieSwitch,
+  // TalkieSwitch,
   TalkieButtonDropDown,
   TalkieBackDropLoader,
 } from "@/components/UICore";
@@ -199,7 +194,7 @@ export default {
     TalkieModal,
     TalkieButtonDropDown,
     TalkieLoader,
-    TalkieSwitch,
+    // TalkieSwitch,
     TalkieBackDropLoader,
     TalkieQuestionCard,
     TalkieStudentCard,

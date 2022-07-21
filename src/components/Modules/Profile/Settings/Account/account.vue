@@ -908,6 +908,11 @@ export default {
 .flex-col {
   flex-direction: column;
 }
+
+.profile-account-settings-section-card-expand-content {
+  display: flex;
+  flex-direction: column;
+}
 .billing-table-header {
   font-family: var(--t-ff-bold);
 }
@@ -915,14 +920,6 @@ export default {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
   text-transform: capitalize;
-}
-
-/* todo: responsiveness */
-.profile-account-settings-section-card-expand-content {
-  padding: var(--t-space-24);
-  display: flex;
-  flex-direction: column;
-  gap: var(--t-space-24);
 }
 .profile-account-settings-section-card-bankcards {
   display: grid;
@@ -987,6 +984,13 @@ export default {
     padding: var(--t-space-5);
     font-size: calc(var(--t-fs-small) * 0.8);
   }
+  .profile-account-settings-section-card-expand-content {
+    padding: var(--t-space-8);
+    gap: var(--t-space-12);
+  }
+  .billing-table-row {
+    font-size: calc(var(--t-fs-base) * 0.8);
+  }
 }
 @media (min-width: 600px) {
   .profile-account-settings-wrapper {
@@ -1019,6 +1023,13 @@ export default {
     padding: var(--t-space-8);
     font-size: var(--t-fs-small);
   }
+  .profile-account-settings-section-card-expand-content {
+    padding: var(--t-space-16);
+    gap: var(--t-space-16);
+  }
+  .billing-table-row {
+    font-size: calc(var(--t-fs-base) * 0.9);
+  }
 }
 @media (min-width: 900px) {
   .profile-account-settings-wrapper {
@@ -1029,6 +1040,14 @@ export default {
 
   .profile-account-settings-section-manage-dropdown-list {
     top: var(--t-space-36);
+  }
+
+  .profile-account-settings-section-card-expand-content {
+    padding: var(--t-space-24);
+    gap: var(--t-space-24);
+  }
+  .billing-table-row {
+    font-size: var(--t-fs-base);
   }
 }
 @media (min-width: 1200px) {
