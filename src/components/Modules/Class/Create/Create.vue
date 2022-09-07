@@ -10,7 +10,7 @@
       :validationSchema="createClassSchema"
       :onSubmit="handleSubmit"
     >
-      <h3 class="h3">¡Hola, {{ user?.name }}!</h3>
+      <h3 class="h3">Welcome, {{ user?.name }}!</h3>
       <h5 class="create-class-form-header h5">
         Let’s create your first class...
       </h5>
