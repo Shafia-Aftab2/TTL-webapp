@@ -5,7 +5,7 @@
       <template v-if="noMoreTasks">
         <span> </span>
         <h4 class="h4">
-          Practice Mode <br />
+          Quiz Mode <br />
           (All done!)
         </h4>
         <a
@@ -21,7 +21,7 @@
         <router-link class="class-practice-header-wrapper-link" to="/">
           &#8592; Exit
         </router-link>
-        <h4 class="h4">Practice Mode</h4>
+        <h4 class="h4">Quiz Mode</h4>
       </template>
 
       <!-- If there are class tasks for practice -->
@@ -407,8 +407,7 @@
           class="class-practice-body-no-tasks-image"
         />
         <p class="p class-practice-body-no-tasks-description">
-          Hmm... It looks like there are no tasks for practice at this moment.
-          They will appear here once your teacher adds them in the class.
+          Nothing to see here yet but we're working on it. Check back soon!
         </p>
         <talkie-button :onClick="handleHomeButtonClick">
           Back Home
@@ -426,8 +425,8 @@
           class="class-practice-body-no-tasks-image"
         />
         <p class="p class-practice-body-no-tasks-description">
-          Congrats! You got through all the quizzes! Check back tomorrow for
-          more.
+          Well done! You’ve completed all the quizzes! Check back soon for new
+          ones!
         </p>
         <talkie-button :onClick="handleHomeButtonClick">
           Back Home
