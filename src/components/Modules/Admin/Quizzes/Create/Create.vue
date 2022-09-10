@@ -42,7 +42,7 @@
         />
         <talkie-input
           :name="'title'"
-          :placeholder="'Title (required)'"
+          :placeholder="'Title (optional)'"
           :hint="{
             type: errors.title ? 'error' : null,
             message: errors.title ? errors.title : null,
@@ -332,9 +332,9 @@ import {
 } from "@/components/SubModules/AudioManager";
 import {
   createQandATopicSchema,
-  createCaptionThisTopicSchema,
-  createTranslationTopicSchema,
-  createEmojiStoryTopicSchema,
+  createCaptionThisQuizScehma,
+  createTranslationQuizSchema,
+  createEmojiStoryQuizSchema,
   requireLanguageForTopic,
 } from "@/utils/validations/task.validation";
 import { concatValidations } from "@/utils/validations/custom.validation";
@@ -372,15 +372,15 @@ export default {
           requireLanguageForTopic
         ),
         ["Caption-This"]: concatValidations(
-          createCaptionThisTopicSchema,
+          createCaptionThisQuizScehma,
           requireLanguageForTopic
         ),
         ["Translation"]: concatValidations(
-          createTranslationTopicSchema,
+          createTranslationQuizSchema,
           requireLanguageForTopic
         ),
         ["Emoji-Story"]: concatValidations(
-          createEmojiStoryTopicSchema,
+          createEmojiStoryQuizSchema,
           requireLanguageForTopic
         ),
       },
@@ -657,7 +657,7 @@ export default {
 
       // payload
       const payload = {
-        title,
+        title: title || ".",
         topic: topicId,
         type: this.selectedTaskType,
         ...taskSpecificFields,
