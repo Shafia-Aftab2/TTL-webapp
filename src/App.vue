@@ -52,7 +52,7 @@ export default {
       this.$store.state.hasClosedModal = true;
 
       // redirect to pricing page
-      this.$router.push(`/services/pricing`);
+      this.$router.push(`/services/upgrade/plans`);
     },
   },
 };

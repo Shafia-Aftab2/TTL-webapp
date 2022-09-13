@@ -25,8 +25,7 @@
             :topic="taskDetails?.topic"
             :description="taskDetails?.description"
             :manageModeOptions="{
-              canEdit:
-                isTeacher && taskDetails.type === taskTypes.QUESTION_ANSWER,
+              canEdit: isTeacher,
               canDelete: isTeacher,
               canDownload:
                 canDownloadContent &&

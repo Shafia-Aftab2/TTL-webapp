@@ -1,7 +1,6 @@
 import { createStore } from "vuex";
 import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
-import moment from "moment";
 
 export default createStore({
   state: {
@@ -36,33 +35,26 @@ export default createStore({
         return;
       }
 
-      // if user is not subscribed calculate trial period
-      if (!user?.subscription) {
-        subscription.isTrial = true;
-
-        // get remaining trial days
-        const trialStartDate = moment(new Date(user?.createdAt));
-        const trialEndDate = moment(trialStartDate).add(30, "days");
-        const remainingTrialDays = moment(trialEndDate).diff(
-          moment(new Date()),
-          "days"
-        );
-
-        // set trial over status
-        if (remainingTrialDays <= 0) {
-          subscription.isTrialOver = true;
-          state.subscription = { ...subscription };
-          return;
-        }
-
-        // set remaining trial days
-        subscription.remainingTrialDays = remainingTrialDays;
+      // if teacher does not require subscription
+      subscription.isRequired = user?.accessMode?.isSubscriptionRequired;
+      if (!subscription.isRequired) {
         state.subscription = { ...subscription };
         return;
       }
 
-      // user is a subscriber
-      subscription.isSubscribed = true;
+      // if teacher is already subscribed
+      if (user?.accessMode?.isSubscribed) {
+        subscription.isSubscribed = true;
+        state.subscription = { ...subscription };
+        return;
+      }
+
+      // if teacher is not subscribed
+      subscription.isTrial = user?.accessMode?.isTrial;
+      subscription.remainingTrialDays = user?.accessMode?.remainingTrialDays;
+      subscription.isTrialOver = user?.accessMode?.isTrialOver;
+
+      // return subscription status
       state.subscription = { ...subscription };
     },
     unsetSubscriptionCalculatedStatus(state) {
