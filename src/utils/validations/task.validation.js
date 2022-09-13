@@ -18,7 +18,7 @@ const updateQandATopicSchema = yup.object({
 
 const createCaptionThisTopicSchema = yup.object({
   topic: yup.string().required("Topic is required."),
-  title: yup.string().required("Title is required."),
+  title: yup.string().optional(),
   type: yup.string().default(taskTypes.CAPTION_THIS).required(),
   questionText: yup.string().optional(),
   captionImage: yup.mixed().required("Caption image is required."),
@@ -34,7 +34,16 @@ const createCaptionThisQuizScehma = yup.object({
 
 const createTranslationTopicSchema = yup.object({
   topic: yup.string().required("Topic is required."),
-  title: yup.string().required("Title is required."),
+  title: yup.string().optional(),
+  type: yup.string().default(taskTypes.TRANSLATION).required(),
+  questionText: yup.string().optional(),
+  textToTranslate: yup.string().required("Text to translate is required."),
+  translatedText: yup.string().required("Translated Text is required."),
+});
+
+const updateTranslationTopicSchema = yup.object({
+  topic: yup.string().required("Topic is required."),
+  title: yup.string().optional(),
   type: yup.string().default(taskTypes.TRANSLATION).required(),
   questionText: yup.string().optional(),
   textToTranslate: yup.string().required("Text to translate is required."),
@@ -52,7 +61,7 @@ const createTranslationQuizSchema = yup.object({
 
 const createEmojiStoryTopicSchema = yup.object({
   topic: yup.string().required("Topic is required."),
-  title: yup.string().required("Title is required."),
+  title: yup.string().optional(),
   type: yup.string().default(taskTypes.EMOJI_STORY).required(),
   questionText: yup.string().optional(),
   emojiStory: yup
@@ -91,6 +100,7 @@ export {
   createCaptionThisTopicSchema,
   createCaptionThisQuizScehma,
   createTranslationTopicSchema,
+  updateTranslationTopicSchema,
   createTranslationQuizSchema,
   createEmojiStoryTopicSchema,
   createEmojiStoryQuizSchema,

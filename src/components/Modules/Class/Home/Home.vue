@@ -79,8 +79,7 @@
                 :topic="_question.topic"
                 :description="_question.description"
                 :manageModeOptions="{
-                  canEdit:
-                    isTeacher && _question.type === TaskTypes.QUESTION_ANSWER,
+                  canEdit: isTeacher,
                   canDelete: isTeacher,
                   canDownload:
                     canDownloadContent &&

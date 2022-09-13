@@ -657,7 +657,7 @@ export default {
 
       // payload
       const payload = {
-        title: title || ".",
+        title: title || "",
         topic: topicId,
         type: this.selectedTaskType,
         ...taskSpecificFields,

@@ -2,13 +2,17 @@
   <!-- content -->
   <template v-if="!computedPageLoading">
     <talkie-form
-      v-slot="{ errors, setValue, values, triggerFormSubmit }"
+      v-slot="{ errors, setValue, triggerFormSubmit, values }"
       :initialValues="{
         topic: taskDetails?.topic,
         title: taskDetails?.title,
         questionText: taskDetails?.questionText,
+        captionImage: taskDetails?.captionThisImage,
+        textToTranslate: taskDetails?.textToTranslate,
+        translatedText: taskDetails?.answer,
+        emojiStory: taskDetails?.emojiStory,
       }"
-      :validationSchema="updateQandATopicSchema"
+      :validationSchema="computedValidationSchema"
       :onSubmit="handleSubmit"
       :customClass="'class-update-convo-wrapper'"
     >
@@ -17,8 +21,15 @@
         {{ (this.setFormValue = setValue) }}
         {{ (this.triggerFormSubmission = triggerFormSubmit) }}
       </span>
-      <h2 class="class-update-convo-header h2">Edit task</h2>
+      <h2
+        class="class-update-convo-header h2"
+        v-if="computedSelectedTaskHeader"
+      >
+        {{ computedSelectedTaskHeader }}
+      </h2>
+
       <div class="class-update-convo-form">
+        <!-- Common fields -->
         <talkie-select-group
           :name="'topic'"
           :placeholder="'Choose topic'"
@@ -30,81 +41,148 @@
         />
         <talkie-input
           :name="'title'"
-          :placeholder="'Title (required)'"
+          :placeholder="`Title (${
+            computedSelectedTaskType === taskTypes.QUESTION_ANSWER
+              ? 'required'
+              : 'optional'
+          })`"
           :hint="{
             type: errors.title ? 'error' : null,
             message: errors.title ? errors.title : null,
           }"
         />
-        <talkie-input
-          :multiline="true"
-          :name="'questionText'"
-          :placeholder="'Anything else you want to say? (optional)'"
-        />
+        <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
+          <talkie-input
+            :multiline="true"
+            :name="'questionText'"
+            :placeholder="'Anything else you want to say? (optional)'"
+          />
+        </template>
+
+        <!-- Fields for qna task -->
+        <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
+          <!-- TODO: hide this filed via a class -->
+          <talkie-input
+            :name="'voiceForQnA'"
+            :placeholder="'Audio Recording Url/Blob'"
+            hidden
+          />
+          <!-- Audio player -->
+          <talkie-audio-player
+            v-slot="{
+              isPlaying,
+              togglePlayer,
+              currentAudioPercentage,
+              updateAudioPercentage,
+              totalAudioPlaybackTime,
+              currentAudioPlaybackTime,
+            }"
+            :source="currentRecordingIsFromSource && currentRecording"
+            :recording="currentRecording"
+            v-if="currentRecording"
+          >
+            <span hidden>
+              <!-- TODO: updated these states via a handler -->
+              {{ (this.isAudioPlaying = isPlaying) }}
+              {{ (this.handleAudioPlayerToggle = togglePlayer) }}
+            </span>
+            <div class="class-update-convo-form-options-audio-player-wrapper">
+              <talkie-audio-timeline
+                :percentage="currentAudioPercentage"
+                :onHeadChange="updateAudioPercentage"
+              />
+              <span
+                class="class-update-convo-form-options-audio-player-timestamps"
+                >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
+              </span>
+            </div>
+          </talkie-audio-player>
+          <!-- Preview modal -->
+          <talkie-modal
+            v-if="modalPreview"
+            :contentPadded="true"
+            :buttonsOutSideModal="modalPreviewButtons"
+          >
+            <talkie-question-card
+              :title="values.title"
+              :topic="values.topic"
+              :description="values.questionText"
+              :audioRecording="currentRecording || taskDetails.voiceForQnA"
+              :fullWidth="false"
+            />
+          </talkie-modal>
+        </template>
+
+        <!-- Fields for caption-this task -->
+        <template v-if="selectedTaskType === taskTypes.CAPTION_THIS">
+          <talkie-media-picker
+            :name="'captionImage'"
+            :hint="{
+              type: errors.captionImage ? 'error' : null,
+              message: errors.captionImage ? errors.captionImage : null,
+            }"
+          />
+        </template>
+
+        <!-- Fields for translation task -->
+        <template v-if="selectedTaskType === taskTypes.TRANSLATION">
+          <talkie-input
+            :name="'textToTranslate'"
+            :placeholder="'What do students need to translate?'"
+            :hint="{
+              type: errors.textToTranslate ? 'error' : null,
+              message: errors.textToTranslate ? errors.textToTranslate : null,
+            }"
+          />
+          <talkie-input
+            :name="'translatedText'"
+            :placeholder="'What\'s the correct translation?'"
+            :hint="{
+              type: errors.translatedText ? 'error' : null,
+              message: errors.translatedText ? errors.translatedText : null,
+            }"
+          />
+        </template>
+
+        <!-- Fields for emoji-story task -->
+        <template v-if="selectedTaskType === taskTypes.EMOJI_STORY">
+          <talkie-input-emojis
+            :name="'emojiStory'"
+            :placeholder="'Select your emojis here'"
+            :hint="{
+              type: errors.emojiStory ? 'error' : null,
+              message: errors.emojiStory ? errors.emojiStory : null,
+            }"
+          />
+        </template>
+
+        <!-- Common Fields -->
+        <template v-if="selectedTaskType !== taskTypes.QUESTION_ANSWER">
+          <talkie-input
+            :multiline="true"
+            :name="'questionText'"
+            :placeholder="'Anything else you want to say?'"
+          />
+        </template>
+
+        <!-- Form status updates -->
         <talkie-alert
           :text="formStatus.message"
           :variant="formStatus.type"
           :animateEllipse="formStatus.animateEllipse"
           v-if="formStatus.type && formStatus.message"
         />
+      </div>
 
-        <!-- TODO: hide this filed via a class -->
-        <talkie-input
-          :name="'voiceForQnA'"
-          :placeholder="'Audio Recording Url/Blob'"
-          hidden
-        />
-        <!-- Audio player -->
-        <talkie-audio-player
-          v-slot="{
-            isPlaying,
-            togglePlayer,
-            currentAudioPercentage,
-            updateAudioPercentage,
-            totalAudioPlaybackTime,
-            currentAudioPlaybackTime,
-          }"
-          :source="currentRecordingIsFromSource && currentRecording"
-          :recording="currentRecording"
-          v-if="currentRecording"
-        >
-          <span hidden>
-            <!-- TODO: updated these states via a handler -->
-            {{ (this.isAudioPlaying = isPlaying) }}
-            {{ (this.handleAudioPlayerToggle = togglePlayer) }}
-          </span>
-          <div class="class-update-task-form-options-audio-player-wrapper">
-            <talkie-audio-timeline
-              :percentage="currentAudioPercentage"
-              :onHeadChange="updateAudioPercentage"
-            />
-            <span class="class-update-task-form-options-audio-player-timestamps"
-              >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
-            </span>
-          </div>
-        </talkie-audio-player>
-        <!-- Preview modal -->
-        <talkie-modal
-          v-if="modalPreview"
-          :contentPadded="true"
-          :buttonsOutSideModal="modalPreviewButtons"
-        >
-          <talkie-question-card
-            :title="values.title"
-            :topic="values.topic"
-            :description="values.questionText"
-            :audioRecording="currentRecording || taskDetails.voiceForQnA"
-            :fullWidth="false"
-          />
-        </talkie-modal>
-
+      <!-- Fields for qna task -->
+      <template v-if="selectedTaskType === taskTypes.QUESTION_ANSWER">
         <talkie-audio-recorder
           v-slot="{ startRecording, stopRecording, isRecording }"
           :onRecordingStopped="handleRecordedItem"
         >
-          <div class="class-update-task-form-options-wrapper">
-            <div class="class-update-task-form-options">
-              <div class="class-update-task-form-options-item">
+          <div class="class-update-convo-form-options-wrapper">
+            <div class="class-update-convo-form-options">
+              <div class="class-update-convo-form-options-item">
                 <talkie-icon
                   :name="'arrow-rounded-left'"
                   :isActive="true"
@@ -114,15 +192,15 @@
                 />
                 <p
                   :class="[
-                    'class-update-task-form-options-item-label',
+                    'class-update-convo-form-options-item-label',
                     !currentRecording &&
-                      'class-update-task-form-options-item-label-non-visiable',
+                      'class-update-convo-form-options-item-label-non-visiable',
                   ]"
                 >
                   Redo
                 </p>
               </div>
-              <div class="class-update-task-form-options-item">
+              <div class="class-update-convo-form-options-item">
                 <talkie-icon
                   :name="'mike-unmuted'"
                   :isActive="true"
@@ -131,7 +209,7 @@
                   :onClick="startRecording"
                   :customClass="
                     errors.voiceForQnA &&
-                    'class-update-task-form-options-mike-unmuted-button-error'
+                    'class-update-convo-form-options-mike-unmuted-button-error'
                   "
                   v-if="!isRecording && !currentRecording"
                 />
@@ -141,7 +219,7 @@
                   :variant="'success'"
                   :size="50"
                   :iconToSizeRatio="1.5"
-                  :customClass="'class-update-task-form-options-stop-recording-button'"
+                  :customClass="'class-update-convo-form-options-stop-recording-button'"
                   :onClick="stopRecording"
                   v-if="isRecording && !currentRecording"
                 />
@@ -163,11 +241,11 @@
                 />
                 <p
                   :class="[
-                    'class-update-task-form-options-item-label',
+                    'class-update-convo-form-options-item-label',
                     isRecording
-                      ? 'class-update-task-form-options-item-label-success'
+                      ? 'class-update-convo-form-options-item-label-success'
                       : errors.voiceForQnA
-                      ? 'class-update-task-form-options-item-label-error'
+                      ? 'class-update-convo-form-options-item-label-error'
                       : '',
                   ]"
                 >
@@ -184,7 +262,7 @@
                   }}
                 </p>
               </div>
-              <div class="class-update-task-form-options-item">
+              <div class="class-update-convo-form-options-item">
                 <talkie-icon
                   :type="'submit'"
                   :name="'send'"
@@ -194,9 +272,9 @@
                 />
                 <p
                   :class="[
-                    'class-update-task-form-options-item-label',
+                    'class-update-convo-form-options-item-label',
                     !currentRecording &&
-                      'class-update-task-form-options-item-label-non-visiable',
+                      'class-update-convo-form-options-item-label-non-visiable',
                   ]"
                 >
                   Preview send
@@ -205,7 +283,25 @@
             </div>
           </div>
         </talkie-audio-recorder>
-      </div>
+      </template>
+
+      <!-- Fields for caption-this/translation/emoji-story task -->
+      <template
+        v-if="
+          selectedTaskType === taskTypes.CAPTION_THIS ||
+          selectedTaskType === taskTypes.TRANSLATION ||
+          selectedTaskType === taskTypes.EMOJI_STORY
+        "
+      >
+        <div class="class-update-convo-form-submit-button">
+          <talkie-button
+            :loading="formStatus?.loading"
+            :disabled="formStatus?.loading"
+          >
+            Update
+          </talkie-button>
+        </div>
+      </template>
     </talkie-form>
     <div class="class-update-convo-footer">
       <router-link
@@ -227,47 +323,66 @@
 
 <script>
 import {
-  TalkieInput,
-  // TalkieButton,
-  TalkieSelectGroup,
-  TalkieAlert,
-  TalkieForm,
-  TalkieLoader,
-  TalkieIcon,
-  TalkieModal,
-} from "@/components/UICore";
-import { TalkieQuestionCard } from "@/components/SubModules/Cards";
+  ClassService,
+  FileService,
+  TaskService,
+  TopicService,
+} from "@/api/services";
 import {
-  TalkieAudioRecorder,
   TalkieAudioPlayer,
+  TalkieAudioRecorder,
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
-import { updateQandATopicSchema } from "@/utils/validations/task.validation";
-import { FileService, TaskService, ClassService } from "@/api/services";
-import TaskTypes from "@/utils/constants/taskTypes";
+import { TalkieQuestionCard } from "@/components/SubModules/Cards";
+import {
+  TalkieAlert,
+  TalkieButton,
+  TalkieForm,
+  TalkieIcon,
+  TalkieInput,
+  TalkieInputEmojis,
+  TalkieLoader,
+  TalkieMediaPicker,
+  TalkieModal,
+  TalkieSelectGroup,
+} from "@/components/UICore";
 import FilePurposes from "@/utils/constants/filePurposes";
+import TaskTypes from "@/utils/constants/taskTypes";
 import topicTypes from "@/utils/constants/topicTypes";
+import {
+  updateCaptionThisTopicSchema,
+  createEmojiStoryTopicSchema,
+  updateQandATopicSchema,
+  updateTranslationTopicSchema,
+} from "@/utils/validations/task.validation";
 
 export default {
   name: "ClassTaskUpdate",
   components: {
     TalkieInput,
-    // TalkieButton,
     TalkieSelectGroup,
-    TalkieAlert,
-    TalkieForm,
-    TalkieLoader,
     TalkieIcon,
-    TalkieModal,
     TalkieAudioRecorder,
     TalkieAudioPlayer,
     TalkieAudioTimeline,
+    TalkieAlert,
+    TalkieForm,
+    TalkieModal,
+    TalkieLoader,
+    TalkieButton,
+    TalkieMediaPicker,
+    TalkieInputEmojis,
     TalkieQuestionCard,
   },
   data() {
     return {
       topics: [],
-      updateQandATopicSchema: updateQandATopicSchema,
+      validationSchemas: {
+        ["Q&A"]: updateQandATopicSchema,
+        ["Caption-This"]: updateCaptionThisTopicSchema,
+        ["Translation"]: updateTranslationTopicSchema,
+        ["Emoji-Story"]: createEmojiStoryTopicSchema,
+      },
       pageLoading: false,
       loading: false,
       formStatus: {
@@ -306,6 +421,14 @@ export default {
       taskId: null,
       classDetails: {},
       taskDetails: {},
+      selectedTaskType: "Q&A",
+      selectedHeaderMessages: {
+        ["Q&A"]: "Update conversation",
+        ["Caption-This"]: "Update photo",
+        ["Translation"]: "Update translation task",
+        ["Emoji-Story"]: "Update emoji set",
+      },
+      selectedTaskHeader: null,
       allowedTaskTypes: Object.values(TaskTypes),
       taskTypes: TaskTypes,
       topicsGrouped: [],
@@ -314,6 +437,15 @@ export default {
   computed: {
     computedPageLoading() {
       return this.pageLoading;
+    },
+    computedValidationSchema() {
+      return this.validationSchemas[this.selectedTaskType];
+    },
+    computedSelectedTaskHeader() {
+      return this.selectedHeaderMessages[this.selectedTaskType];
+    },
+    computedSelectedTaskType() {
+      return this.selectedTaskType;
     },
   },
   async created() {
@@ -332,23 +464,33 @@ export default {
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
 
+    // get topics list (+ failure case)
+    const topicsList = await this.getTopicsList();
+    if (!topicsList) return this.$router.push("/404");
+
+    // get topics list for class
+    const classLanguage = classDetails?.language?.toLowerCase();
+    const topicsForClass = topicsList?.filter(
+      (x) => x?.language?.toLowerCase() === classLanguage
+    );
+
     const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
     this.topicsGrouped = [
       {
         title: capitalize(topicTypes.ADVANCED),
-        items: classDetails?.topics
+        items: topicsForClass
           ?.filter((x) => x?.type === topicTypes.ADVANCED)
           ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.INTERMEDIATE),
-        items: classDetails?.topics
+        items: topicsForClass
           ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
           ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.BEGINNER),
-        items: classDetails?.topics
+        items: topicsForClass
           ?.filter((x) => x?.type === topicTypes.BEGINNER)
           ?.map((x) => x?.name),
       },
@@ -356,16 +498,27 @@ export default {
 
     // task details (+ failure case)
     const taskDetails = await this.getTaskDetails(taskId);
-    if (!taskDetails || taskDetails?.type !== TaskTypes.QUESTION_ANSWER)
-      return this.$router.push("/404");
+    this.selectedTaskType = taskDetails.type;
 
     // success case
-    this.topics = classDetails?.topics;
+    this.topics = topicsForClass;
     this.taskDetails = {
       topic: taskDetails?.topic?.name,
       title: taskDetails?.title,
       questionText: taskDetails?.questionText,
-      voiceForQnA: taskDetails?.voiceForQnA,
+      ...(taskDetails?.type === TaskTypes.QUESTION_ANSWER && {
+        voiceForQnA: taskDetails?.voiceForQnA,
+      }),
+      ...(taskDetails?.type === TaskTypes.TRANSLATION && {
+        textToTranslate: taskDetails?.textToTranslate,
+        answer: taskDetails?.answer,
+      }),
+      ...(taskDetails?.type === TaskTypes.EMOJI_STORY && {
+        emojiStory: taskDetails?.emojiStory?.map((x) => ({
+          name: x?.split("/")?.at(-1),
+          url: x,
+        })),
+      }),
     };
     this.currentRecording = taskDetails?.voiceForQnA;
     this.currentRecordingIsFromSource = true;
@@ -373,6 +526,12 @@ export default {
     this.pageLoading = false;
   },
   methods: {
+    handleRedirection(link, timeout = 100) {
+      const self = this;
+      setTimeout(function () {
+        self.$router.push(link);
+      }, timeout);
+    },
     handleRecordedItem(recording) {
       this.currentRecording = recording;
       this.setFormValue("voiceForQnA", recording.blob);
@@ -421,7 +580,10 @@ export default {
       return uploadedFile;
     },
     async handleSubmit(values) {
-      if (!this.shouldSubmit) {
+      if (
+        !this.shouldSubmit &&
+        this.selectedTaskType === TaskTypes.QUESTION_ANSWER
+      ) {
         this.handleModalToggle();
         this.handleModalValidationReset();
         return;
@@ -429,35 +591,99 @@ export default {
 
       // update page state
       this.loading = true;
-      this.formStatus = { type: null, message: null, animateEllipse: false };
+      this.formStatus = {
+        type: null,
+        message: null,
+        animateEllipse: false,
+        loading: true,
+      };
 
-      // upload audio file if any
-      let voiceForQnA = this.taskDetails?.voiceForQnA;
-      if (this.currentRecording?.blob) {
-        this.formStatus = {
-          type: "info",
-          message: `Uploading Audio`,
-          animateEllipse: true,
-          loading: true,
-        };
+      // process task specific fields
+      const taskSpecificFields = await (async () => {
+        // qna task
+        if (this.selectedTaskType === TaskTypes.QUESTION_ANSWER) {
+          if (!this.currentRecording?.blob) {
+            return { voiceForQnA: this.taskDetails?.voiceForQnA };
+          }
 
-        voiceForQnA = await this.handleFileUpload(
-          this.currentRecording.blob,
-          FilePurposes.TASK_VOICE,
-          `talkie-${FilePurposes.TASK_VOICE}-${Math.random() * 123456789}.mp3`
-        );
-
-        // failure case
-        if (!voiceForQnA) {
-          this.loading = false;
+          // update page status
           this.formStatus = {
-            type: "error",
-            message: "Could not upload audio file!",
-            loading: false,
+            type: "info",
+            message: `Uploading Audio`,
+            animateEllipse: true,
+            loading: true,
           };
-          return;
+
+          // upload file
+          const voiceForQnA = await this.handleFileUpload(
+            this.currentRecording.blob,
+            FilePurposes.TASK_VOICE,
+            `talkie-${FilePurposes.TASK_VOICE}-${Math.random() * 123456789}.mp3`
+          );
+
+          // failure case
+          if (!voiceForQnA) {
+            this.loading = false;
+            this.formStatus = {
+              type: "error",
+              message: "Could not upload audio file!",
+              loading: false,
+            };
+            return;
+          }
+
+          // success case
+          return { voiceForQnA };
         }
-      }
+        // caption-this task
+        if (this.selectedTaskType === TaskTypes.CAPTION_THIS) {
+          // update page status
+          this.formStatus = {
+            type: "info",
+            message: `Uploading Image`,
+            animateEllipse: true,
+            loading: true,
+          };
+
+          // upload file
+          const captionThisImage = await this.handleFileUpload(
+            values?.captionImage,
+            FilePurposes.TASK_IMAGE
+          );
+
+          // failure case
+          if (!captionThisImage) {
+            this.loading = false;
+            this.formStatus = {
+              type: "error",
+              message: "Could not upload image file!",
+              loading: false,
+            };
+            return;
+          }
+
+          // success case
+          return { captionThisImage };
+        }
+        // translation task
+        if (this.selectedTaskType === TaskTypes.TRANSLATION) {
+          return {
+            textToTranslate: values.textToTranslate,
+            answer: values.translatedText,
+          };
+        }
+        // emoji-story task
+        if (this.selectedTaskType === TaskTypes.EMOJI_STORY) {
+          this.formStatus = {
+            loading: true,
+          };
+          return {
+            emojiStory: values.emojiStory,
+          };
+        }
+        return null;
+      })();
+      if (!taskSpecificFields) return;
 
       // form data
       const { title, topic: topicName, questionText } = values;
@@ -467,9 +693,9 @@ export default {
 
       // payload
       const payload = {
-        title,
+        title: title || "",
         topic: topicId,
-        voiceForQnA,
+        ...taskSpecificFields,
       };
       if (questionText) payload.questionText = questionText;
 
@@ -481,12 +707,17 @@ export default {
             ['"questiontext" contains bad word']:
               "Question text should not be unethical!",
             ['"topic" must be a valid mongo id']: "Invalid Topic",
+            ["Q&A"]: "Could not update conversation!",
+            ["Caption-This"]: "Could not update caption task!",
+            ["Translation"]: "Could not update translation task!",
+            ["Emoji-Story"]: "Could not update emoji story task!",
+            ['"topic" is required']: "Please select a topic!",
           };
 
           return {
             error:
               errorMap[e.response.data.message.toLowerCase()] ||
-              "Could not update task!",
+              errorMap[this.selectedTaskType],
           };
         }
       );
@@ -498,19 +729,32 @@ export default {
           type: "error",
           message: response.error,
           animateEllipse: false,
+          loading: false,
         };
         return;
       }
 
       // success case
       this.loading = false;
-      this.formStatus = {
-        type: "success",
-        message: "Task Updated. Redirecting!",
-        animateEllipse: false,
-      };
-      this.$router.push(
-        `/classes/${this.classId}/tasks/${this.taskId}/status?status=edited`
+      // this.formStatus = {
+      //   type: "success",
+      //   message:
+      //     this.selectedTaskType === TaskTypes.QUESTION_ANSWER
+      //       ? "Conversation Created. Redirecting!"
+      //       : this.selectedTaskType === TaskTypes.CAPTION_THIS
+      //       ? "Caption Task Created. Redirecting!"
+      //       : this.selectedTaskType === TaskTypes.TRANSLATION
+      //       ? "Translation Task Created. Redirecting!"
+      //       : this.selectedTaskType === TaskTypes.EMOJI_STORY
+      //       ? "Emoji Story Task Created. Redirecting!"
+      //       : "",
+      //   animateEllipse: false,
+      //   loading: false,
+      // };
+      const taskId = response?.data?.id;
+      this.handleRedirection(
+        `/classes/${this.classId}/tasks/${taskId}/status?status=edited`,
+        200
       );
     },
     async getClassDetails(id) {
@@ -518,10 +762,21 @@ export default {
 
       return response.data || null;
     },
+    async getTopicsList() {
+      const query = {};
+
+      const response = await TopicService.Query(query).catch(() => null);
+
+      return !!response.data ? response.data.results : null;
+    },
+
     async getTaskDetails(id) {
       const response = await TaskService.GetDetails(id).catch(() => null);
 
       return response.data || null;
+    },
+    log(msg) {
+      console.log(msg);
     },
   },
 };
@@ -535,84 +790,97 @@ export default {
   background: var(--t-white);
   gap: var(--t-space-36);
 }
+
 .class-update-convo-header {
   text-align: center;
   --font-size: var(--t-fs-h2);
 }
+
 .class-update-convo-form {
   display: flex;
   flex-direction: column;
   margin: auto;
 }
-.class-update-convo-form-options {
-  display: flex;
-  margin: auto;
-}
 
-.class-update-task-form-options-audio-player-wrapper {
+.class-update-convo-form-options-audio-player-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-.class-update-task-form-options-audio-player-timestamps {
+
+.class-update-convo-form-options-audio-player-timestamps {
   margin-left: auto;
   color: var(--t-black-100);
 }
-.class-update-task-form-options-wrapper {
+
+.class-update-convo-form-options-wrapper {
   position: relative;
 }
-.class-update-task-form-options {
+
+.class-update-convo-form-options {
   display: flex;
   align-items: center;
   position: absolute;
   left: 50%;
 }
-.class-update-task-form-options-item {
+
+.class-update-convo-form-options-item {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
-.class-update-task-form-options-item-label {
+
+.class-update-convo-form-options-item-label {
   text-align: center;
   line-height: 1.1;
 }
-.class-update-task-form-options-item-label-non-visiable {
+
+.class-update-convo-form-options-item-label-non-visiable {
   color: transparent;
   user-select: none;
 }
-.class-update-task-form-options-item-label-success {
+
+.class-update-convo-form-options-item-label-success {
   color: var(--t-green);
 }
-.class-update-task-form-options-item-label-error {
+
+.class-update-convo-form-options-item-label-error {
   color: var(--t-red);
 }
-.class-update-task-form-options-mike-unmuted-button-error {
+
+.class-update-convo-form-options-mike-unmuted-button-error {
   border-color: var(--t-red) !important;
   border-style: solid !important;
 }
-.class-update-task-form-options-stop-recording-button {
+
+.class-update-convo-form-options-stop-recording-button {
   border-color: var(--t-green) !important;
   border-style: solid !important;
 }
-.class-update-task-form-submit-button {
+
+.class-update-convo-form-submit-button {
   margin: auto;
 }
+
 .class-update-convo-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: auto;
 }
+
 .class-update-convo-footer-link {
   text-decoration: underline;
 }
+
 .class-update-convo-footer-link,
 .class-update-convo-footer-link:hover,
 .class-update-convo-footer-link:visited {
   text-decoration: underline;
   color: var(--t-black);
 }
+
 .class-update-convo-loading-wrapper {
   display: flex;
   justify-content: center;
@@ -629,60 +897,62 @@ export default {
     border-radius: var(--t-br-small);
     min-width: 80%;
   }
+
   .class-update-convo-header {
     font-size: calc(var(--font-size) * 0.7);
   }
+
   .class-update-convo-form {
     gap: var(--t-space-12);
     width: 100%;
   }
-  .class-update-task-form-options {
+
+  .class-update-convo-form-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-36);
   }
-  .class-update-task-form-options-item {
+
+  .class-update-convo-form-options-item {
     gap: var(--t-space-8);
     min-width: var(--t-space-64);
   }
-  .class-update-task-form-options-item-label {
+
+  .class-update-convo-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-update-task-form-options-audio-player-wrapper {
+
+  .class-update-convo-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-12);
   }
-  .class-update-task-form-options-audio-player-timestamps {
+
+  .class-update-convo-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-update-task-form-options-mike-unmuted-button-error {
+
+  .class-update-convo-form-options-mike-unmuted-button-error {
     border-width: var(--t-space-2) !important;
   }
-  .class-update-task-form-options-stop-recording-button {
+
+  .class-update-convo-form-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
   }
-  .class-create-task-footer {
-    margin-top: var(--t-space-70);
-    padding: var(--t-space-64);
-  }
-  .class-create-task-footer-link {
-    font-size: calc(var(--t-fs-small) * 0.9);
-  }
-  .class-create-task-loading-wrapper {
-    padding: var(--t-space-32);
-    margin-top: var(--t-space-24);
-  }
+
   .class-update-convo-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-64);
   }
+
   .class-update-convo-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
+
   .class-update-convo-loading-wrapper {
     padding: var(--t-space-32);
     margin-top: var(--t-space-24);
   }
 }
+
 @media (min-width: 600px) {
   .class-update-convo-wrapper {
     padding: var(--t-space-32);
@@ -691,114 +961,116 @@ export default {
     border-radius: var(--t-br-large);
     max-width: 80%;
   }
+
   .class-update-convo-header {
     font-size: calc(var(--font-size) * 0.75);
   }
+
   .class-update-convo-form {
     gap: var(--t-space-16);
     width: 65%;
   }
-  .class-update-task-form-options {
+
+  .class-update-convo-form-options {
     transform: translate(-50%, -5%);
     gap: var(--t-space-40);
   }
-  .class-update-task-form-options-item {
+
+  .class-update-convo-form-options-item {
     gap: var(--t-space-10);
     min-width: calc(var(--t-space-64) * 1.5);
   }
-  .class-update-task-form-options-item-label {
+
+  .class-update-convo-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-update-task-form-options-audio-player-wrapper {
+
+  .class-update-convo-form-options-audio-player-wrapper {
     gap: var(--t-space-8);
     margin-top: var(--t-space-10);
   }
-  .class-update-task-form-options-audio-player-timestamps {
+
+  .class-update-convo-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-update-task-form-options-mike-unmuted-button-error {
+
+  .class-update-convo-form-options-mike-unmuted-button-error {
     border-width: var(--t-space-3) !important;
   }
-  .class-update-task-form-options-stop-recording-button {
+
+  .class-update-convo-form-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
   }
-  .class-create-task-footer {
-    margin-top: var(--t-space-70);
-    padding: var(--t-space-64);
-  }
-  .class-create-task-footer-link {
-    font-size: calc(var(--t-fs-small) * 0.9);
-  }
-  .class-create-task-loading-wrapper {
-    padding: var(--t-space-32);
-    margin-top: var(--t-space-24);
-  }
+
   .class-update-convo-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-64);
   }
+
   .class-update-convo-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
+
   .class-update-convo-loading-wrapper {
     padding: var(--t-space-32);
     margin-top: var(--t-space-24);
   }
 }
+
 @media (min-width: 900px) {
   .class-update-convo-header {
     font-size: calc(var(--font-size) * 0.85);
   }
 }
+
 @media (min-width: 1200px) {
   .class-update-convo-wrapper {
     padding: var(--t-space-48);
     padding-bottom: var(--t-space-58);
     margin-top: var(--t-space-48);
   }
+
   .class-update-convo-header {
     font-size: var(--font-size);
   }
+
   .class-update-convo-form {
     gap: var(--t-space-24);
     width: 70%;
   }
-  .class-update-task-form-options {
+
+  .class-update-convo-form-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-48);
   }
-  .class-update-task-form-options-item {
+
+  .class-update-convo-form-options-item {
     gap: var(--t-space-12);
     min-width: calc(var(--t-space-48) * 2);
   }
-  .class-update-task-form-options-item-label {
+
+  .class-update-convo-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-update-task-form-options-audio-player-wrapper {
+
+  .class-update-convo-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-16);
   }
-  .class-update-task-form-options-audio-player-timestamps {
+
+  .class-update-convo-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-create-task-footer {
-    margin-top: var(--t-space-70);
-    padding: var(--t-space-50);
-  }
-  .class-create-task-footer-link {
-    font-size: var(--t-fs-small);
-  }
-  .class-create-task-loading-wrapper {
-    padding: var(--t-space-48);
-    margin-top: var(--t-space-48);
-  }
+
   .class-update-convo-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-50);
   }
+
   .class-update-convo-footer-link {
     font-size: var(--t-fs-small);
   }
+
   .class-update-convo-loading-wrapper {
     padding: var(--t-space-48);
     margin-top: var(--t-space-48);
