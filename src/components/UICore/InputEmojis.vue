@@ -59,12 +59,23 @@ export default {
   data() {
     const { value: t_value, handleBlur, setValue } = useField(this.name);
 
+    let emojis = [];
+    if (t_value.value) {
+      emojis = t_value.value;
+      setValue([...emojis]);
+    }
+
     return {
       t_value,
       handleBlur,
       setValue,
-      emojis: [],
+      emojis: emojis,
     };
+  },
+  mounted() {
+    if (this.emojis?.length > 0) {
+      this.emojis.map((x) => this.addEmojiToInput(x?.split("/")?.at(-1), x));
+    }
   },
   props: {
     name: {

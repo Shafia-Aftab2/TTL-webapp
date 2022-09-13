@@ -514,10 +514,10 @@ export default {
         answer: taskDetails?.answer,
       }),
       ...(taskDetails?.type === TaskTypes.EMOJI_STORY && {
-        emojiStory: taskDetails?.emojiStory?.map((x) => ({
-          name: x?.split("/")?.at(-1),
-          url: x,
-        })),
+        emojiStory: taskDetails?.emojiStory,
+      }),
+      ...(taskDetails?.type === TaskTypes.CAPTION_THIS && {
+        captionThisImage: taskDetails?.captionThisImage,
       }),
     };
     this.currentRecording = taskDetails?.voiceForQnA;
@@ -637,6 +637,9 @@ export default {
         }
         // caption-this task
         if (this.selectedTaskType === TaskTypes.CAPTION_THIS) {
+          if (!values?.captionImage?.name)
+            return { captionThisImage: values?.captionImage };
+
           // update page status
           this.formStatus = {
             type: "info",
