@@ -29,7 +29,11 @@
         />
         <talkie-input
           :name="'title'"
-          :placeholder="'Title (required)'"
+          :placeholder="`Title (${
+            computedSelectedTaskType === taskTypes.QUESTION_ANSWER
+              ? 'required'
+              : 'optional'
+          })`"
           :hint="{
             type: errors.title ? 'error' : null,
             message: errors.title ? errors.title : null,
@@ -423,6 +427,9 @@ export default {
     computedSelectedTaskHeader() {
       return this.selectedHeaderMessages[this.selectedTaskType];
     },
+    computedSelectedTaskType() {
+      return this.selectedTaskType;
+    },
   },
   async created() {
     // update page state
@@ -636,7 +643,7 @@ export default {
 
       // payload
       const payload = {
-        title,
+        title: title || "",
         topic: topicId,
         type: this.selectedTaskType,
         ...taskSpecificFields,
@@ -725,79 +732,97 @@ export default {
   background: var(--t-white);
   gap: var(--t-space-36);
 }
+
 .class-create-task-header {
   text-align: center;
   --font-size: var(--t-fs-h2);
 }
+
 .class-create-task-form {
   display: flex;
   flex-direction: column;
   margin: auto;
 }
+
 .class-create-task-form-options-audio-player-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
+
 .class-create-task-form-options-audio-player-timestamps {
   margin-left: auto;
   color: var(--t-black-100);
 }
+
 .class-create-task-form-options-wrapper {
   position: relative;
 }
+
 .class-create-task-form-options {
   display: flex;
   align-items: center;
   position: absolute;
   left: 50%;
 }
+
 .class-create-task-form-options-item {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
+
 .class-create-task-form-options-item-label {
   text-align: center;
   line-height: 1.1;
 }
+
 .class-create-task-form-options-item-label-non-visiable {
   color: transparent;
   user-select: none;
 }
+
 .class-create-task-form-options-item-label-success {
   color: var(--t-green);
 }
+
 .class-create-task-form-options-item-label-error {
   color: var(--t-red);
 }
+
 .class-create-task-form-options-mike-unmuted-button-error {
   border-color: var(--t-red) !important;
   border-style: solid !important;
 }
+
 .class-create-task-form-options-stop-recording-button {
   border-color: var(--t-green) !important;
   border-style: solid !important;
 }
+
 .class-create-task-form-submit-button {
   margin: auto;
 }
+
 .class-create-task-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: auto;
 }
+
 .class-create-task-footer-link {
   text-decoration: underline;
 }
+
 .class-create-task-footer-link,
 .class-create-task-footer-link:hover,
 .class-create-task-footer-link:visited {
   text-decoration: underline;
   color: var(--t-black);
 }
+
 .class-create-task-loading-wrapper {
   display: flex;
   justify-content: center;
@@ -814,49 +839,62 @@ export default {
     border-radius: var(--t-br-small);
     min-width: 80%;
   }
+
   .class-create-task-header {
     font-size: calc(var(--font-size) * 0.7);
   }
+
   .class-create-task-form {
     gap: var(--t-space-12);
     width: 100%;
   }
+
   .class-create-task-form-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-36);
   }
+
   .class-create-task-form-options-item {
     gap: var(--t-space-8);
     min-width: var(--t-space-64);
   }
+
   .class-create-task-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
+
   .class-create-task-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-12);
   }
+
   .class-create-task-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
+
   .class-create-task-form-options-mike-unmuted-button-error {
     border-width: var(--t-space-2) !important;
   }
+
   .class-create-task-form-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
   }
+
   .class-create-task-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-64);
   }
+
   .class-create-task-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
+
   .class-create-task-loading-wrapper {
     padding: var(--t-space-32);
     margin-top: var(--t-space-24);
   }
 }
+
 @media (min-width: 600px) {
   .class-create-task-wrapper {
     padding: var(--t-space-32);
@@ -865,92 +903,116 @@ export default {
     border-radius: var(--t-br-large);
     max-width: 80%;
   }
+
   .class-create-task-header {
     font-size: calc(var(--font-size) * 0.75);
   }
+
   .class-create-task-form {
     gap: var(--t-space-16);
     width: 65%;
   }
+
   .class-create-task-form-options {
     transform: translate(-50%, -5%);
     gap: var(--t-space-40);
   }
+
   .class-create-task-form-options-item {
     gap: var(--t-space-10);
     min-width: calc(var(--t-space-64) * 1.5);
   }
+
   .class-create-task-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
+
   .class-create-task-form-options-audio-player-wrapper {
     gap: var(--t-space-8);
     margin-top: var(--t-space-10);
   }
+
   .class-create-task-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
+
   .class-create-task-form-options-mike-unmuted-button-error {
     border-width: var(--t-space-3) !important;
   }
+
   .class-create-task-form-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
   }
+
   .class-create-task-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-64);
   }
+
   .class-create-task-footer-link {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
+
   .class-create-task-loading-wrapper {
     padding: var(--t-space-32);
     margin-top: var(--t-space-24);
   }
 }
+
 @media (min-width: 900px) {
   .class-create-task-header {
     font-size: calc(var(--font-size) * 0.85);
   }
 }
+
 @media (min-width: 1200px) {
   .class-create-task-wrapper {
     padding: var(--t-space-48);
     padding-bottom: var(--t-space-58);
     margin-top: var(--t-space-48);
   }
+
   .class-create-task-header {
     font-size: var(--font-size);
   }
+
   .class-create-task-form {
     gap: var(--t-space-24);
     width: 70%;
   }
+
   .class-create-task-form-options {
     transform: translate(-50%, 5%);
     gap: var(--t-space-48);
   }
+
   .class-create-task-form-options-item {
     gap: var(--t-space-12);
     min-width: calc(var(--t-space-48) * 2);
   }
+
   .class-create-task-form-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
+
   .class-create-task-form-options-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-16);
   }
+
   .class-create-task-form-options-audio-player-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
+
   .class-create-task-footer {
     margin-top: var(--t-space-70);
     padding: var(--t-space-50);
   }
+
   .class-create-task-footer-link {
     font-size: var(--t-fs-small);
   }
+
   .class-create-task-loading-wrapper {
     padding: var(--t-space-48);
     margin-top: var(--t-space-48);
