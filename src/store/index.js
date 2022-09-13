@@ -1,7 +1,6 @@
 import { createStore } from "vuex";
 import authUser from "@/utils/helpers/auth";
 import roles from "@/utils/constants/roles";
-import moment from "moment";
 
 export default createStore({
   state: {
