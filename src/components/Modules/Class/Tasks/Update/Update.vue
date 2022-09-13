@@ -514,12 +514,10 @@ export default {
         answer: taskDetails?.answer,
       }),
       ...(taskDetails?.type === TaskTypes.EMOJI_STORY && {
-        emojiStory: taskDetails?.emojiStory?.map((x) => ({
-          name: x?.split("/")?.at(-1),
-          url: x,
-        })),
+        emojiStory: taskDetails?.emojiStory,
       }),
     };
+    console.log("this.taskDetaisl => ", this.taskDetails);
     this.currentRecording = taskDetails?.voiceForQnA;
     this.currentRecordingIsFromSource = true;
     // this.setFormValue("voiceForQnA", taskDetails?.voiceForQnA);
