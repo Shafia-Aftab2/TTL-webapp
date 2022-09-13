@@ -516,8 +516,10 @@ export default {
       ...(taskDetails?.type === TaskTypes.EMOJI_STORY && {
         emojiStory: taskDetails?.emojiStory,
       }),
+      ...(taskDetails?.type === TaskTypes.CAPTION_THIS && {
+        captionThisImage: taskDetails?.captionThisImage,
+      }),
     };
-    console.log("this.taskDetaisl => ", this.taskDetails);
     this.currentRecording = taskDetails?.voiceForQnA;
     this.currentRecordingIsFromSource = true;
     // this.setFormValue("voiceForQnA", taskDetails?.voiceForQnA);
@@ -635,6 +637,9 @@ export default {
         }
         // caption-this task
         if (this.selectedTaskType === TaskTypes.CAPTION_THIS) {
+          if (!values?.captionImage?.name)
+            return { captionThisImage: values?.captionImage };
+
           // update page status
           this.formStatus = {
             type: "info",

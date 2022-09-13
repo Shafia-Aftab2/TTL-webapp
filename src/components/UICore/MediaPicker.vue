@@ -200,9 +200,17 @@ export default {
 
     if (this.value) setValue(this.value);
 
+    let mediaPicked = null;
+    if (t_value.value) {
+      mediaPicked = {
+        src: t_value.value,
+      };
+      setValue(t_value.value);
+    }
+
     return {
       id: `talkie-media-picker`,
-      mediaPicked: null,
+      mediaPicked: mediaPicked,
       t_value,
       handleChange,
       handleBlur,
