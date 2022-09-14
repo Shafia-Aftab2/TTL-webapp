@@ -33,7 +33,7 @@
 
     <div class="auth-forgot-password-options-wrapper">
       <talkie-button :size="'medium'" :type="'submit'" :loading="loading">
-        Reset my Password
+        Reset my password
       </talkie-button>
     </div>
 
@@ -125,8 +125,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message:
-          "Password Reset Link Sent To Your Email! Please check your inbox for more details.",
+        message: "Sent! Please check your email to reset your password.",
       };
     },
   },
