@@ -456,35 +456,35 @@ export default {
     if (!topicsList) return this.$router.push("/404");
 
     // get topics list for class
-    const classLanguage = classDetails?.language?.toLowerCase();
-    const topicsForClass = topicsList?.filter(
-      (x) => x?.language?.toLowerCase() === classLanguage
-    );
+    // const classLanguage = classDetails?.language?.toLowerCase();
+    // const topicsForClass = topicsList?.filter(
+    //   (x) => x?.language?.toLowerCase() === classLanguage
+    // );
 
     const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
     this.topicsGrouped = [
       {
         title: capitalize(topicTypes.ADVANCED),
-        items: topicsForClass
+        items: classDetails?.topics
           ?.filter((x) => x?.type === topicTypes.ADVANCED)
           ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.INTERMEDIATE),
-        items: topicsForClass
+        items: classDetails?.topics
           ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
           ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.BEGINNER),
-        items: topicsForClass
+        items: classDetails?.topics
           ?.filter((x) => x?.type === topicTypes.BEGINNER)
           ?.map((x) => x?.name),
       },
     ];
 
     // success case
-    this.topics = topicsForClass;
+    // this.topics = topicsForClass;
     this.pageLoading = false;
   },
   methods: {
