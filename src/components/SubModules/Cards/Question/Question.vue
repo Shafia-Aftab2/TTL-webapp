@@ -28,30 +28,38 @@
           :name="'play'"
           :variant="'primary'"
           :isActive="true"
-          :size="40"
+          :size="50"
           :iconToSizeRatio="1.2"
           v-if="!isPlaying"
           :onClick="startPlayer"
+          :noHighlights="true"
         />
         <talkie-icon
           :name="'pause'"
           :variant="'primary'"
           :isActive="true"
-          :size="40"
+          :size="50"
           :iconToSizeRatio="1.2"
           v-if="isPlaying"
           :onClick="stopPlayer"
+          :noHighlights="true"
         />
       </talkie-audio-player>
       <div
         class="talkie-question-card-details-header-wrapper"
         @click="handleQuestionCardClick"
       >
-        <h5 class="h5" v-if="title">{{ title }}</h5>
-        <p class="p" v-if="topic">Topic: {{ topic }}</p>
+        <p
+          class="p"
+          :style="'--paragraph-font-size: var(--t-fs-small)'"
+          v-if="topic"
+        >
+          {{ topic }}
+        </p>
+        <h3 class="h3" v-if="title">{{ title }}</h3>
       </div>
     </div>
-    <p class="p" v-if="description">{{ description }}</p>
+    <!-- <p class="p" v-if="description">{{ description }}</p> -->
     <question-card-expand-content
       :translation="expandContent.translation"
       :emojis="expandContent.emojis"
@@ -246,49 +254,7 @@ export default {
 @media (max-width: 599px) {
   .talkie-question-card-wrapper {
     border-radius: var(--t-br-small);
-    padding: var(--t-space-12);
-    gap: var(--t-space-12);
-  }
-  .talkie-question-card-details-wrapper {
-    gap: var(--t-space-8);
-  }
-  .talkie-question-card-image {
-    --image-size: var(--t-space-56);
-  }
-  .talkie-question-card-details-header-wrapper {
-    gap: var(--t-space-8);
-  }
-  .talkie-question-card-footer-wrapper {
-    gap: var(--t-space-8);
-  }
-}
-@media (min-width: 600px) {
-  .talkie-question-card-wrapper {
-    border-radius: var(--t-br-medium);
-    padding: var(--t-space-16);
-    gap: var(--t-space-16);
-  }
-  .talkie-question-card-details-wrapper {
-    gap: var(--t-space-10);
-  }
-  .talkie-question-card-image {
-    --image-size: var(--t-space-63);
-  }
-  .talkie-question-card-details-header-wrapper {
-    gap: var(--t-space-10);
-  }
-  .talkie-question-card-footer-wrapper {
-    gap: var(--t-space-10);
-  }
-}
-@media (min-width: 900px) {
-  .talkie-question-card-wrapper {
-    border-radius: var(--t-br-large);
-  }
-}
-@media (min-width: 1200px) {
-  .talkie-question-card-wrapper {
-    padding: var(--t-space-16);
+    padding: var(--t-space-16) var(--t-space-20);
     gap: var(--t-space-16);
   }
   .talkie-question-card-details-wrapper {
@@ -298,10 +264,55 @@ export default {
     --image-size: var(--t-space-70);
   }
   .talkie-question-card-details-header-wrapper {
-    gap: var(--t-space-16);
+    gap: var(--t-space-5);
+  }
+  .talkie-question-card-footer-wrapper {
+    gap: var(--t-space-12);
+    margin-top: var(--t-space-5);
+  }
+}
+@media (min-width: 600px) {
+  .talkie-question-card-wrapper {
+    border-radius: var(--t-br-medium);
+    padding: var(--t-space-20) var(--t-space-32);
+    gap: var(--t-space-20);
+  }
+  .talkie-question-card-details-wrapper {
+    gap: var(--t-space-20);
+  }
+  .talkie-question-card-image {
+    --image-size: 78.75px;
+  }
+  .talkie-question-card-details-header-wrapper {
+    gap: var(--t-space-5);
   }
   .talkie-question-card-footer-wrapper {
     gap: var(--t-space-16);
+    margin-top: var(--t-space-5);
+  }
+}
+@media (min-width: 900px) {
+  .talkie-question-card-wrapper {
+    border-radius: var(--t-br-large);
+  }
+}
+@media (min-width: 1200px) {
+  .talkie-question-card-wrapper {
+    padding: var(--t-space-24) var(--t-space-36);
+    gap: var(--t-space-20);
+  }
+  .talkie-question-card-details-wrapper {
+    gap: var(--t-space-24);
+  }
+  .talkie-question-card-image {
+    --image-size: calc(var(--t-space-70) * 1.25);
+  }
+  .talkie-question-card-details-header-wrapper {
+    gap: var(--t-space-5);
+  }
+  .talkie-question-card-footer-wrapper {
+    gap: var(--t-space-24);
+    margin-top: var(--t-space-8);
   }
 }
 
