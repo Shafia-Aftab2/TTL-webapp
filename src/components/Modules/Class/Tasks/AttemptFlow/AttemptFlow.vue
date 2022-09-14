@@ -71,7 +71,10 @@
           </talkie-tool-tip>
         </div>
 
-        <div class="class-tasks-attempt-flow-body-content-wrapper">
+        <div
+          class="class-tasks-attempt-flow-body-content-wrapper"
+          v-if="currentTask.type !== taskTypes.QUESTION_ANSWER"
+        >
           <!-- Caption this -->
           <template
             v-if="
@@ -517,6 +520,7 @@ export default {
       },
       taskTypes: taskTypes,
       taskScores: {
+        ["Q&A"]: "0",
         ["Emoji-Story"]: "10",
         ["Translation"]: {
           correctAnswer: "5",
@@ -526,6 +530,7 @@ export default {
       },
       appericiationMessages: {
         [supportedLanguages.SPANISH?.toLowerCase()]: {
+          ["Q&A"]: "Done!",
           ["Emoji-Story"]: "¡Excelente!",
           ["Translation"]: {
             correctAnswer: "¡Bien hecho!",
@@ -534,6 +539,7 @@ export default {
           ["Caption-This"]: "¡Muy bien!",
         },
         [supportedLanguages.FRENCH?.toLowerCase()]: {
+          ["Q&A"]: "Done!",
           ["Emoji-Story"]: "Génial!",
           ["Translation"]: {
             correctAnswer: "Bien fait!",
@@ -651,7 +657,7 @@ export default {
       })),
     };
     this.classTasks = classTasks?.results
-      ?.filter((x) => !x?.isAttempted && x?.type !== taskTypes.QUESTION_ANSWER)
+      ?.filter((x) => !x?.isAttempted)
       ?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))
       ?.map((x) => ({
         id: x?.id,
@@ -808,30 +814,32 @@ export default {
       // update page state
       this.backdropLoading = true;
 
-      // form data
-      const responseId = this.currentTaskAnswered.responseId;
-      const score = this.currentTaskAnswered.scores;
+      // api call (only if non q/a task)
+      if (this.currentTask.type !== taskTypes.QUESTION_ANSWER) {
+        // form data
+        const responseId = this.currentTaskAnswered.responseId;
+        const score = this.currentTaskAnswered.scores;
 
-      // payload
-      const payload = { score };
+        // payload
+        const payload = { score };
 
-      // api call
-      const response = await ResponseService.AddResponseScore(
-        responseId,
-        payload
-      ).catch(() => null);
+        const response = await ResponseService.AddResponseScore(
+          responseId,
+          payload
+        ).catch(() => null);
 
-      // failure case
-      if (!response) {
-        this.backdropLoading = false;
-        notifications.show("Could not add scores to your answer!", {
-          variant: "error",
-          displayIcon: true,
-        });
-        return;
+        // failure case
+        if (!response) {
+          this.backdropLoading = false;
+          notifications.show("Could not add scores to your answer!", {
+            variant: "error",
+            displayIcon: true,
+          });
+          return;
+        }
       }
 
-      // success case
+      // success case (for all tasks)
       this.backdropLoading = false;
       this.currentRecording = null;
       this.currentTaskAnswered = {};
@@ -1073,7 +1081,7 @@ export default {
     width: var(--t-space-44);
   }
   .class-tasks-attempt-flow-body-footer-wrapper-options {
-    transform: translate(-50%, 5%);
+    transform: translate(-50%, 70%);
     gap: var(--t-space-36);
   }
   .class-tasks-attempt-flow-body-footer-wrapper-options-item {
@@ -1128,7 +1136,7 @@ export default {
     width: var(--t-space-50);
   }
   .class-tasks-attempt-flow-body-footer-wrapper-options {
-    transform: translate(-50%, -5%);
+    transform: translate(-50%, 55%);
     gap: var(--t-space-40);
   }
   .class-tasks-attempt-flow-body-footer-wrapper-options-item {
@@ -1176,7 +1184,7 @@ export default {
 }
 @media (min-width: 1200px) {
   .class-tasks-attempt-flow-body-footer-wrapper-options {
-    transform: translate(-50%, 5%);
+    transform: translate(-50%, 45%);
     gap: var(--t-space-48);
   }
   .class-tasks-attempt-flow-body-footer-wrapper-options-item {
