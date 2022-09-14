@@ -16,7 +16,7 @@
           :iconToSizeRatio="0.8"
           :onClick="handleClassModeButtonClick"
         />
-        <p class="student-home-content-item-header">Your Inbox</p>
+        <p class="student-home-content-item-header">Tasks</p>
         <p class="student-home-content-item-description">
           You can find the main tasks set<br />
           by your teacher here.
@@ -106,7 +106,7 @@ export default {
       this.$router.push(`/coming-soon`);
     },
     handleClassModeButtonClick() {
-      this.$router.push(`/classes/tasks/inbox`);
+      this.$router.push(`/classes/tasks/attempt-flow`);
     },
     handlePracticeModeButtonClick() {
       this.$router.push(`/classes/practice`);
