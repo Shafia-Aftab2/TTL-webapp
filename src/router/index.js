@@ -20,6 +20,7 @@ import ClassTaskEdit from "../components/Modules/Class/Tasks/Update";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
+import ClassTasksAttemptFlow from "../components/Modules/Class/Tasks/AttemptFlow";
 import ClassPractice from "../components/Modules/Class/Practice";
 import ClassManage from "../components/Modules/Class/Manage";
 import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
@@ -172,6 +173,17 @@ const routes = [
         path: "/classes/tasks/inbox",
         alias: "/inbox",
         component: ClassTasksInbox,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.TEACHER, roles.ADMIN],
+          },
+        },
+      },
+      {
+        name: "ClassTasksAttemptFlow",
+        path: "/classes/tasks/attempt-flow",
+        component: ClassTasksAttemptFlow,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
