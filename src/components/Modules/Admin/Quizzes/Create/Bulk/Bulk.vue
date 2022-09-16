@@ -166,6 +166,11 @@ export default {
       ),
       selectedLanguage: null,
       csvDataPreview: [],
+      csvFileKeysMap: {
+        ["english-translation"]: "question",
+        ["spanish-translation"]: "answer",
+        ["other-possible-answers"]: "comments",
+      },
     };
   },
   computed: {
@@ -259,7 +264,18 @@ export default {
       )?.id;
 
       // get tasks from csv
-      const tasksFromCSV = await this.readCSV(values.csvFile).catch(() => null);
+      const rawtasksFromCSV = await this.readCSV(values.csvFile).catch(
+        () => null
+      );
+      const tasksFromCSV = rawtasksFromCSV?.map((x) => {
+        const _temp = {};
+
+        Object.entries(x).map(([k, v]) => {
+          _temp[this.csvFileKeysMap[k.split(" ").join("-").toLowerCase()]] = v;
+        });
+
+        return _temp;
+      });
 
       // check if there are tasks from csv file
       if (!tasksFromCSV || tasksFromCSV?.length === 0) {
@@ -276,7 +292,7 @@ export default {
 
       const tasks = tasksFromCSV?.map((x) => ({
         answer: x?.answer,
-        questionText: x?.comments,
+        ...(x.comments && { questionText: x?.comments }),
         textToTranslate: x?.question,
         title: x?.title,
         isPracticeMode: true,

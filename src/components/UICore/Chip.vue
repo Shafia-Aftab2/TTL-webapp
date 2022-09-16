@@ -116,14 +116,14 @@ export default {
 }
 @media (min-width: 600px) {
   .talkie-chip {
-    padding: calc(var(--size) * 0.8) calc(((var(--size) * 0.8) * 1.5));
+    padding: calc(var(--size) * 0.7) calc(((var(--size) * 0.8) * 2));
     font-size: calc(var(--font-size) / 1.2);
     border-radius: var(--t-br-large);
   }
 }
 @media (min-width: 1200px) {
   .talkie-chip {
-    padding: calc(var(--size) * 0.9) calc(((var(--size) * 0.9) * 1.5));
+    padding: calc(var(--size) * 0.8) calc(((var(--size) * 0.9) * 2.4));
     font-size: calc(var(--font-size) / 1.1);
   }
 }

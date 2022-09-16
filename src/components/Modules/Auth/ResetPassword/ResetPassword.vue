@@ -7,7 +7,7 @@
       :onSubmit="handleSubmit"
     >
       <div class="auth-reset-password-info-wrapper">
-        <h2 class="h2">Reset your password?</h2>
+        <h2 class="h2">Reset your password</h2>
         <p class="p" style="margin-bottom: 0 !important">
           Please enter your new password below
         </p>
@@ -45,7 +45,7 @@
 
       <div class="auth-reset-password-options-wrapper">
         <talkie-button :size="'medium'" :type="'submit'" :loading="loading">
-          Reset Password
+          Reset my password
         </talkie-button>
       </div>
 
@@ -54,7 +54,7 @@
           class="auth-reset-password-footer-link"
           to="/auth/forgot-password"
         >
-          Request Password Change
+          Request password change
         </router-link>
       </div>
     </talkie-form>
@@ -146,7 +146,7 @@ export default {
         payload
       ).catch((e) => {
         const errorMap = {
-          ["token not found"]: "Invalid Reset Link!",
+          ["token not found"]: "Invalid reset link!",
           ["password must be at least 8 characters"]:
             "Password must contain at least 8 characters!",
           ["password must contain at least 1 letter and 1 number"]:

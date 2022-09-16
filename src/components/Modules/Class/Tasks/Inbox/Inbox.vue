@@ -126,35 +126,37 @@ export default {
       id: x?.id,
       name: x?.name,
     }));
-    this.tasksList = tasksList?.map((x) => ({
-      id: x?.id,
-      type: x?.type,
-      title: x?.title,
-      description: x?.questionText,
-      topic: {
-        id: x?.topic?.id || x?.topic?._id,
-        name: x?.topic?.name,
-      },
-      responses: [
-        {
-          id: x?.id,
-          from: x?.teacher,
-          ...(x?.type === taskTypes.QUESTION_ANSWER && {
-            audio: x?.voiceForQnA,
-          }),
-          ...(x?.type === taskTypes.CAPTION_THIS && {
-            photo: x?.captionThisImage,
-          }),
-          ...(x?.type === taskTypes.TRANSLATION && {
-            text: x?.textToTranslate,
-          }),
-          ...(x?.type === taskTypes.EMOJI_STORY && {
-            emojis: x?.emojiStory,
-          }),
-          dateTime: x?.createdAt,
+    this.tasksList = tasksList
+      ?.filter((x) => x?.type === taskTypes.QUESTION_ANSWER)
+      ?.map((x) => ({
+        id: x?.id,
+        type: x?.type,
+        title: x?.title,
+        description: x?.questionText,
+        topic: {
+          id: x?.topic?.id || x?.topic?._id,
+          name: x?.topic?.name,
         },
-      ],
-    }));
+        responses: [
+          {
+            id: x?.id,
+            from: x?.teacher,
+            ...(x?.type === taskTypes.QUESTION_ANSWER && {
+              audio: x?.voiceForQnA,
+            }),
+            ...(x?.type === taskTypes.CAPTION_THIS && {
+              photo: x?.captionThisImage,
+            }),
+            ...(x?.type === taskTypes.TRANSLATION && {
+              text: x?.textToTranslate,
+            }),
+            ...(x?.type === taskTypes.EMOJI_STORY && {
+              emojis: x?.emojiStory,
+            }),
+            dateTime: x?.createdAt,
+          },
+        ],
+      }));
     this.loading = false;
   },
   methods: {

@@ -1,15 +1,15 @@
 <template>
-  <div class="class-practice-wrapper" v-if="!computedPageLoading">
-    <div class="class-practice-header-wrapper">
+  <div class="class-tasks-attempt-flow-wrapper" v-if="!computedPageLoading">
+    <div class="class-tasks-attempt-flow-header-wrapper">
       <!-- If there are no more class tasks for practice -->
       <template v-if="noMoreTasks">
         <span> </span>
         <h4 class="h4">
-          Quiz Mode <br />
+          Task Mode <br />
           (All done!)
         </h4>
         <a
-          class="class-practice-header-wrapper-link"
+          class="class-tasks-attempt-flow-header-wrapper-link"
           @click="handleFinishLinkClick"
         >
           Finish &#8594;
@@ -18,16 +18,19 @@
 
       <!-- If there are no class tasks for practice -->
       <template v-if="classTasks.length === 0 && !noMoreTasks">
-        <router-link class="class-practice-header-wrapper-link" to="/">
+        <router-link
+          class="class-tasks-attempt-flow-header-wrapper-link"
+          to="/"
+        >
           &#8592; Exit
         </router-link>
-        <h4 class="h4">Quiz Mode</h4>
+        <h4 class="h4">Task Mode</h4>
       </template>
 
       <!-- If there are class tasks for practice -->
       <template v-if="classTasks.length > 0 && !noMoreTasks">
         <router-link
-          class="class-practice-header-wrapper-link"
+          class="class-tasks-attempt-flow-header-wrapper-link"
           to="/"
           v-if="currentTask.canExit"
         >
@@ -35,7 +38,7 @@
         </router-link>
         <h4 class="h4" v-if="currentTask.title">{{ currentTask.title }}</h4>
         <a
-          class="class-practice-header-wrapper-link"
+          class="class-tasks-attempt-flow-header-wrapper-link"
           v-if="currentTask.canFinish"
           @click="handleFinishLinkClick"
         >
@@ -48,26 +51,31 @@
     <template v-if="classTasks.length > 0 && !noMoreTasks">
       <div
         :class="[
-          'class-practice-body-wrapper',
+          'class-tasks-attempt-flow-body-wrapper',
           currentTaskAnswered.scores &&
             currentTaskAnswered.appericiationMessage &&
-            'class-practice-body-wrapper-blured',
+            'class-tasks-attempt-flow-body-wrapper-blured',
         ]"
       >
-        <div class="class-practice-body-head-wrapper">
+        <div class="class-tasks-attempt-flow-body-head-wrapper">
           <p class="p" v-if="currentTask.topic">{{ currentTask.topic }}</p>
           <talkie-tool-tip
             :class="[currentTask.type === taskTypes.TRANSLATION && 'z-50']"
             :tooltip="currentTask.instructions"
             v-if="currentTask.instructions"
           >
-            <h5 class="h5 class-practice-body-head-wrapper-instructions">
+            <h5
+              class="h5 class-tasks-attempt-flow-body-head-wrapper-instructions"
+            >
               <p class="p">Instructions</p>
             </h5>
           </talkie-tool-tip>
         </div>
 
-        <div class="class-practice-body-content-wrapper">
+        <div
+          class="class-tasks-attempt-flow-body-content-wrapper"
+          v-if="currentTask.type !== taskTypes.QUESTION_ANSWER"
+        >
           <!-- Caption this -->
           <template
             v-if="
@@ -77,7 +85,7 @@
           >
             <img
               :src="currentTask.captionImage"
-              class="class-practice-body-content-wrapper-caption-image"
+              class="class-tasks-attempt-flow-body-content-wrapper-caption-image"
             />
           </template>
 
@@ -87,12 +95,14 @@
               currentTask.type === taskTypes.EMOJI_STORY && currentTask.emojis
             "
           >
-            <div class="class-practice-body-content-wrapper-emojis-wrapper">
+            <div
+              class="class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper"
+            >
               <template v-for="emojiURL in currentTask.emojis" :key="emojiURL">
                 <img
                   :draggable="false"
                   :src="emojiURL"
-                  class="class-practice-body-content-wrapper-emojis-image-item"
+                  class="class-tasks-attempt-flow-body-content-wrapper-emojis-image-item"
                 />
               </template>
             </div>
@@ -107,7 +117,7 @@
           >
             <div class="class-translations-wrapper">
               <div
-                class="h4 class-translations-question-header"
+                class="class-translations-question-header"
                 v-if="currentTask.translation.question"
               >
                 <div class="translation-task-left">
@@ -143,16 +153,20 @@
                       {{ (this.isAudioPlaying = isPlaying) }}
                       {{ (this.handleAudioPlayerToggle = togglePlayer) }}
                     </span>
-                    <div class="class-practice-body-audio-player-wrapper">
+                    <div
+                      class="class-tasks-attempt-flow-body-audio-player-wrapper translation-audio"
+                    >
                       <talkie-audio-timeline
                         :percentage="currentAudioPercentage"
                         :onHeadChange="updateAudioPercentage"
                       />
-                      <span
-                        class="class-practice-body-audio-player-wrapper-timestamps"
-                        >{{ currentAudioPlaybackTime }} /
+                      <div
+                        class="class-tasks-attempt-flow-body-audio-player-wrapper-timestamps translation-audio-timestamps"
+                        style="text-align: end"
+                      >
+                        {{ currentAudioPlaybackTime }} /
                         {{ totalAudioPlaybackTime }}
-                      </span>
+                      </div>
                     </div>
                   </talkie-audio-player>
 
@@ -189,6 +203,9 @@
                     </p>
                   </div>
                 </div>
+                <!-- <span class="class-translations-question-wrapper">
+                  Question
+                </span> -->
               </div>
 
               <!-- <h4
@@ -218,12 +235,12 @@
 
         <!-- Recorder -->
         <div
-          class="class-practice-body-footer-wrapper"
+          class="class-tasks-attempt-flow-body-footer-wrapper"
           v-if="currentTask.shouldRecord"
         >
           <!-- Player -->
           <div
-            class="class-practice-body-footer-wrapper-audio-player"
+            class="class-tasks-attempt-flow-body-footer-wrapper-audio-player"
             v-if="
               currentTask.type !== taskTypes.TRANSLATION &&
               currentRecording &&
@@ -249,13 +266,13 @@
                 {{ (this.isAudioPlaying = isPlaying) }}
                 {{ (this.handleAudioPlayerToggle = togglePlayer) }}
               </span>
-              <div class="class-practice-body-audio-player-wrapper">
+              <div class="class-tasks-attempt-flow-body-audio-player-wrapper">
                 <talkie-audio-timeline
                   :percentage="currentAudioPercentage"
                   :onHeadChange="updateAudioPercentage"
                 />
                 <span
-                  class="class-practice-body-audio-player-wrapper-timestamps"
+                  class="class-tasks-attempt-flow-body-audio-player-wrapper-timestamps"
                   >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
                 </span>
               </div>
@@ -270,7 +287,7 @@
             <span hidden>
               {{ (this.errors = /{voiceForQnA: null}/) }}
             </span>
-            <div class="class-practice-body-footer-wrapper-options">
+            <div class="class-tasks-attempt-flow-body-footer-wrapper-options">
               <!-- Not answered options -->
               <template
                 v-if="
@@ -282,7 +299,7 @@
               >
                 <!-- if there is self assessment for current(translation for now) task -->
                 <div
-                  class="class-practice-body-footer-wrapper-options-item"
+                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
                   v-if="
                     currentRecording &&
                     currentTaskAnswered.showTranslationSelfAssessment
@@ -301,7 +318,7 @@
                 </div>
                 <!-- if there is no self assessment for current(translation for now) task -->
                 <div
-                  class="class-practice-body-footer-wrapper-options-item"
+                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
                   v-if="
                     currentRecording &&
                     !currentTaskAnswered.showTranslationSelfAssessment
@@ -316,16 +333,18 @@
                   />
                   <p
                     :class="[
-                      'class-practice-body-footer-wrapper-options-item-label',
+                      'class-tasks-attempt-flow-body-footer-wrapper-options-item-label',
                       !currentRecording &&
-                        'class-practice-body-footer-wrapper-options-item-label-non-visiable',
+                        'class-tasks-attempt-flow-body-footer-wrapper-options-item-label-non-visiable',
                     ]"
                   >
                     Redo
                   </p>
                 </div>
                 <!-- pause/play/record/stop toggle -->
-                <div class="class-practice-body-footer-wrapper-options-item">
+                <div
+                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
+                >
                   <talkie-icon
                     :name="'mike-unmuted'"
                     :isActive="true"
@@ -334,7 +353,7 @@
                     :onClick="startRecording"
                     :customClass="
                       errors.voiceForQnA &&
-                      'class-practice-body-footer-wrapper-options-mike-unmuted-button-error'
+                      'class-tasks-attempt-flow-body-footer-wrapper-options-mike-unmuted-button-error'
                     "
                     v-if="!isRecording && !currentRecording"
                   />
@@ -344,7 +363,7 @@
                     :variant="'secondary'"
                     :size="50"
                     :iconToSizeRatio="1.5"
-                    :customClass="'class-practice-body-footer-wrapper-options-stop-recording-button'"
+                    :customClass="'class-tasks-attempt-flow-body-footer-wrapper-options-stop-recording-button'"
                     :onClick="stopRecording"
                     v-if="isRecording && !currentRecording"
                   />
@@ -366,9 +385,9 @@
                   />
                   <p
                     :class="[
-                      'class-practice-body-footer-wrapper-options-item-label',
+                      'class-tasks-attempt-flow-body-footer-wrapper-options-item-label',
                       errors.voiceForQnA &&
-                        'class-practice-body-footer-wrapper-options-item-label-error',
+                        'class-tasks-attempt-flow-body-footer-wrapper-options-item-label-error',
                     ]"
                   >
                     {{
@@ -384,7 +403,7 @@
                 </div>
                 <!-- if there is self assessment for current(translation for now) task -->
                 <div
-                  class="class-practice-body-footer-wrapper-options-item"
+                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
                   v-if="
                     currentRecording &&
                     currentTaskAnswered.showTranslationSelfAssessment
@@ -403,7 +422,7 @@
                 </div>
                 <!-- if there is no self assessment for current(translation for now) task -->
                 <div
-                  class="class-practice-body-footer-wrapper-options-item"
+                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
                   v-if="
                     currentRecording &&
                     !currentTaskAnswered.showTranslationSelfAssessment
@@ -424,9 +443,9 @@
                   />
                   <p
                     :class="[
-                      'class-practice-body-footer-wrapper-options-item-label',
+                      'class-tasks-attempt-flow-body-footer-wrapper-options-item-label',
                       !currentRecording &&
-                        'class-practice-body-footer-wrapper-options-item-label-non-visiable',
+                        'class-tasks-attempt-flow-body-footer-wrapper-options-item-label-non-visiable',
                     ]"
                   >
                     Answer
@@ -441,9 +460,11 @@
                   currentTaskAnswered.appericiationMessage
                 "
               >
-                <div class="class-practice-body-footer-wrapper-options-item">
+                <div
+                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
+                >
                   <button
-                    class="class-practice-body-next-button"
+                    class="class-tasks-attempt-flow-body-next-button"
                     @click="handleTaskScoring"
                   >
                     Next
@@ -456,7 +477,7 @@
 
         <!-- After task attempted (Answered options) -->
         <div
-          class="class-practice-body-task-attempted-wrapper"
+          class="class-tasks-attempt-flow-body-task-attempted-wrapper"
           v-if="
             currentTaskAnswered.scores &&
             currentTaskAnswered.appericiationMessage
@@ -477,13 +498,13 @@
     <!-- If there are no class tasks for practice -->
     <template v-if="classTasks.length === 0 && !noMoreTasks">
       <div
-        class="class-practice-body-wrapper class-practice-body-centered-wrapper"
+        class="class-tasks-attempt-flow-body-wrapper class-tasks-attempt-flow-body-centered-wrapper"
       >
         <img
           :src="require(`@/assets/images/warning-logo.png`)"
-          class="class-practice-body-no-tasks-image"
+          class="class-tasks-attempt-flow-body-no-tasks-image"
         />
-        <p class="p class-practice-body-no-tasks-description">
+        <p class="p class-tasks-attempt-flow-body-no-tasks-description">
           Nothing to see here yet but we're working on it. Check back soon!
         </p>
         <talkie-button :onClick="handleHomeButtonClick">
@@ -495,14 +516,14 @@
     <!-- If there are no more class tasks for practice -->
     <template v-if="noMoreTasks">
       <div
-        class="class-practice-body-wrapper class-practice-body-centered-wrapper"
+        class="class-tasks-attempt-flow-body-wrapper class-tasks-attempt-flow-body-centered-wrapper"
       >
         <img
           :src="require(`@/assets/images/party-popper.png`)"
-          class="class-practice-body-no-tasks-image"
+          class="class-tasks-attempt-flow-body-no-tasks-image"
         />
-        <p class="p class-practice-body-no-tasks-description">
-          Well done! You’ve completed all the quizzes! Check back soon for new
+        <p class="p class-tasks-attempt-flow-body-no-tasks-description">
+          Well done! You’ve completed all the tasks! Check back soon for new
           ones!
         </p>
         <talkie-button :onClick="handleHomeButtonClick">
@@ -520,7 +541,7 @@
   <!-- Backdrop Loader -->
   <talkie-back-drop-loader
     v-if="backdropLoading"
-    :customClass="'class-practice-backdrop-load-wrapper'"
+    :customClass="'class-tasks-attempt-flow-backdrop-load-wrapper'"
   />
 </template>
 
@@ -570,7 +591,9 @@ export default {
       classId: null,
       classDetails: {},
       classTasks: [],
-      currentTask: { index: null },
+      currentTask: {
+        index: 0,
+      },
       noMoreTasks: false,
       currentTaskAnswered: {
         responseId: null,
@@ -583,6 +606,7 @@ export default {
       },
       taskTypes: taskTypes,
       taskScores: {
+        ["Q&A"]: "0",
         ["Emoji-Story"]: "10",
         ["Translation"]: {
           correctAnswer: "5",
@@ -592,6 +616,7 @@ export default {
       },
       appericiationMessages: {
         [supportedLanguages.SPANISH?.toLowerCase()]: {
+          ["Q&A"]: "Done!",
           ["Emoji-Story"]: "¡Excelente!",
           ["Translation"]: {
             correctAnswer: "¡Bien hecho!",
@@ -600,6 +625,7 @@ export default {
           ["Caption-This"]: "¡Muy bien!",
         },
         [supportedLanguages.FRENCH?.toLowerCase()]: {
+          ["Q&A"]: "Done!",
           ["Emoji-Story"]: "Génial!",
           ["Translation"]: {
             correctAnswer: "Bien fait!",
@@ -622,7 +648,7 @@ export default {
           <br/>
           <br/>
           "But I don't know how to say it in Spanish/French..."
-          That's okay! That's completely normal. The best approach is to look up the word online - have something to add to your vocabulary! No time? You can also use a word you already know and tweak the story a little bit. 
+          That's okay! That's completely normal. The best approach is to look up the word online - have something to add to your vocabulary! No time? You can also use a word you already know and tweak the story a little bit.
           <br/>
           <br/>
           Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
@@ -639,7 +665,7 @@ export default {
             <li>— Use the photo as prompt to talk about your own experiences or come up with your own short story in your target language.</li>
           </ul>
           <br/>
-          Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class. 
+          Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
         `,
         ["Translation"]: `
           <strong>How many can you translate in 5 minutes? 🧐</strong>
@@ -696,7 +722,7 @@ export default {
     if (!classDetails) return this.$router.push("/404");
 
     // class tasks
-    const classTasks = await this.getClassTasksForPractice(classId);
+    const classTasks = await this.getClassTasks(classId);
     if (!classTasks) return this.$router.push("/404");
 
     // success case
@@ -717,7 +743,7 @@ export default {
       })),
     };
     this.classTasks = classTasks?.results
-      ?.filter((x) => !x?.isAttempted && x?.type !== taskTypes.QUESTION_ANSWER)
+      ?.filter((x) => !x?.isAttempted)
       ?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))
       ?.map((x) => ({
         id: x?.id,
@@ -874,30 +900,32 @@ export default {
       // update page state
       this.backdropLoading = true;
 
-      // form data
-      const responseId = this.currentTaskAnswered.responseId;
-      const score = this.currentTaskAnswered.scores;
+      // api call (only if non q/a task)
+      if (this.currentTask.type !== taskTypes.QUESTION_ANSWER) {
+        // form data
+        const responseId = this.currentTaskAnswered.responseId;
+        const score = this.currentTaskAnswered.scores;
 
-      // payload
-      const payload = { score };
+        // payload
+        const payload = { score };
 
-      // api call
-      const response = await ResponseService.AddResponseScore(
-        responseId,
-        payload
-      ).catch(() => null);
+        const response = await ResponseService.AddResponseScore(
+          responseId,
+          payload
+        ).catch(() => null);
 
-      // failure case
-      if (!response) {
-        this.backdropLoading = false;
-        notifications.show("Could not add scores to your answer!", {
-          variant: "error",
-          displayIcon: true,
-        });
-        return;
+        // failure case
+        if (!response) {
+          this.backdropLoading = false;
+          notifications.show("Could not add scores to your answer!", {
+            variant: "error",
+            displayIcon: true,
+          });
+          return;
+        }
       }
 
-      // success case
+      // success case (for all tasks)
       this.backdropLoading = false;
       this.currentRecording = null;
       this.currentTaskAnswered = {};
@@ -919,8 +947,8 @@ export default {
 
       return response.data || null;
     },
-    async getClassTasksForPractice(id) {
-      const query = { isPracticeMode: true };
+    async getClassTasks(id) {
+      const query = { isPracticeMode: false };
 
       const response = await TaskService.QueryClassTasks(id, query).catch(
         () => null
@@ -968,7 +996,7 @@ export default {
 .z-50 {
   z-index: 50;
 }
-.class-practice-wrapper {
+.class-tasks-attempt-flow-wrapper {
   width: 100%;
   margin-top: var(--t-space-50);
   margin-bottom: calc(var(--t-space-70) * 2);
@@ -976,19 +1004,19 @@ export default {
   flex-direction: column;
   gap: var(--t-space-16);
 }
-.class-practice-header-wrapper {
+.class-tasks-attempt-flow-header-wrapper {
   width: 100%;
   align-items: baseline;
   text-align: center;
   display: grid;
   grid-template-columns: 100px 1fr 100px;
 }
-.class-practice-header-wrapper-link,
-.class-practice-header-wrapper-link:visited {
+.class-tasks-attempt-flow-header-wrapper-link,
+.class-tasks-attempt-flow-header-wrapper-link:visited {
   text-decoration: none;
   color: var(--t-black);
 }
-.class-practice-body-wrapper {
+.class-tasks-attempt-flow-body-wrapper {
   background: var(--t-white);
   border-radius: var(--t-br-large);
   padding: var(--t-space-64);
@@ -997,11 +1025,11 @@ export default {
   gap: var(--t-space-36);
   position: relative;
 }
-.class-practice-body-centered-wrapper {
+.class-tasks-attempt-flow-body-centered-wrapper {
   align-items: center;
   justify-content: center;
 }
-.class-practice-body-wrapper-blured {
+.class-tasks-attempt-flow-body-wrapper-blured {
   border-style: solid;
   border-top-width: var(--t-space-1);
   border-left-width: var(--t-space-1);
@@ -1009,20 +1037,20 @@ export default {
   border-bottom-width: var(--t-space-1);
   border-color: var(--t-gray-75);
 }
-.class-practice-body-wrapper-blured > * {
+.class-tasks-attempt-flow-body-wrapper-blured > * {
   filter: blur(var(--t-space-4));
 }
-.class-practice-body-head-wrapper {
+.class-tasks-attempt-flow-body-head-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.class-practice-body-head-wrapper-instructions {
+.class-tasks-attempt-flow-body-head-wrapper-instructions {
   text-decoration: underline;
   text-underline-offset: var(--t-space-3);
   cursor: pointer;
 }
-.class-practice-body-content-wrapper {
+.class-tasks-attempt-flow-body-content-wrapper {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -1030,20 +1058,20 @@ export default {
   min-height: 200px;
   max-height: 500px;
 }
-.class-practice-body-content-wrapper-caption-image {
+.class-tasks-attempt-flow-body-content-wrapper-caption-image {
   flex: none;
   width: 100%;
   height: 100%;
   max-height: 500px;
 }
-.class-practice-body-content-wrapper-emojis-wrapper {
+.class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper {
   display: flex;
   user-select: none;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
 }
-.class-practice-body-content-wrapper-emojis-image-item {
+.class-tasks-attempt-flow-body-content-wrapper-emojis-image-item {
   flex: none;
   user-select: none;
 }
@@ -1082,7 +1110,7 @@ export default {
   border-radius: var(--t-br-small);
   line-height: 1.2;
 }
-.class-practice-body-task-attempted-wrapper {
+.class-tasks-attempt-flow-body-task-attempted-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1097,29 +1125,29 @@ export default {
   border-radius: var(--t-br-large);
   background-color: rgba(247, 241, 241, 0.5);
 }
-.class-practice-body-footer-wrapper {
+.class-tasks-attempt-flow-body-footer-wrapper {
   position: relative;
   filter: blur(0);
   z-index: var(--t-zindex-50);
   padding-bottom: var(--t-space-44);
 }
-.class-practice-body-footer-wrapper-audio-player {
+.class-tasks-attempt-flow-body-footer-wrapper-audio-player {
   margin: auto;
   padding-bottom: var(--t-space-36);
 }
-.class-practice-body-footer-wrapper-options {
+.class-tasks-attempt-flow-body-footer-wrapper-options {
   display: flex;
   align-items: center;
   position: absolute;
   left: 50%;
 }
-.class-practice-body-footer-wrapper-options-item {
+.class-tasks-attempt-flow-body-footer-wrapper-options-item {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
-.class-practice-body-next-button {
+.class-tasks-attempt-flow-body-next-button {
   background: transparent;
   border: transparent;
   cursor: pointer;
@@ -1133,75 +1161,75 @@ export default {
   background-color: var(--t-orange);
   border-radius: 50%;
 }
-.class-practice-body-footer-wrapper-options-item-label {
+.class-tasks-attempt-flow-body-footer-wrapper-options-item-label {
   text-align: center;
   line-height: 1.1;
 }
-.class-practice-body-footer-wrapper-options-item-label-non-visiable {
+.class-tasks-attempt-flow-body-footer-wrapper-options-item-label-non-visiable {
   color: transparent;
   user-select: none;
 }
-.class-practice-body-footer-wrapper-options-item-label-error {
+.class-tasks-attempt-flow-body-footer-wrapper-options-item-label-error {
   color: var(--t-red);
 }
-.class-practice-body-footer-wrapper-options-mike-unmuted-button-error {
+.class-tasks-attempt-flow-body-footer-wrapper-options-mike-unmuted-button-error {
   border-color: var(--t-red) !important;
   border-style: solid !important;
 }
-.class-practice-body-footer-wrapper-options-stop-recording-button {
+.class-tasks-attempt-flow-body-footer-wrapper-options-stop-recording-button {
   border-color: var(--t-secondary) !important;
   border-style: solid !important;
 }
-.class-practice-body-no-tasks-image {
+.class-tasks-attempt-flow-body-no-tasks-image {
   height: var(--no-tasks-image);
   width: var(--no-tasks-image);
   margin: auto;
 }
-.class-practice-body-no-tasks-description {
+.class-tasks-attempt-flow-body-no-tasks-description {
   line-height: 1.2;
   text-align: center;
 }
-.class-practice-backdrop-load-wrapper {
+.class-tasks-attempt-flow-backdrop-load-wrapper {
   z-index: var(--t-zindex-60);
 }
 
 /* Responsive variants */
 @media (max-width: 599px) {
-  .class-practice-body-next-button {
+  .class-tasks-attempt-flow-body-next-button {
     font-size: var(--t-space-12);
     padding: var(--t-space-44);
     height: var(--t-space-44);
     width: var(--t-space-44);
   }
-  .class-practice-body-footer-wrapper-options {
+  .class-tasks-attempt-flow-body-footer-wrapper-options {
     transform: translate(-50%, 70%);
     gap: var(--t-space-36);
   }
-  .class-practice-body-footer-wrapper-options-item {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-item {
     gap: var(--t-space-8);
     min-width: var(--t-space-64);
   }
-  .class-practice-body-footer-wrapper-options-item-label {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-practice-body-audio-player-wrapper {
+  .class-tasks-attempt-flow-body-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-12);
   }
-  .class-practice-body-audio-player-wrapper-timestamps {
+  .class-tasks-attempt-flow-body-audio-player-wrapper-timestamps {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-practice-body-footer-wrapper-options-mike-unmuted-button-error {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-mike-unmuted-button-error {
     border-width: var(--t-space-2) !important;
   }
-  .class-practice-body-footer-wrapper-options-stop-recording-button {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-stop-recording-button {
     border-width: var(--t-space-2) !important;
   }
-  .class-practice-body-content-wrapper-emojis-wrapper {
+  .class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper {
     gap: var(--t-space-12);
     max-width: 100%;
   }
-  .class-practice-body-content-wrapper-emojis-image-item {
+  .class-tasks-attempt-flow-body-content-wrapper-emojis-image-item {
     width: var(--t-space-58);
     height: var(--t-space-58);
   }
@@ -1214,48 +1242,48 @@ export default {
     padding: var(--t-space-3) var(--t-space-5);
     font-size: 0.9em;
   }
-  .class-practice-body-footer-wrapper-audio-player {
+  .class-tasks-attempt-flow-body-footer-wrapper-audio-player {
     max-width: 100%;
   }
-  .class-practice-body-no-tasks-image {
+  .class-tasks-attempt-flow-body-no-tasks-image {
     --no-tasks-image: calc(var(--t-space-70) * 1.2);
   }
 }
 @media (min-width: 600px) {
-  .class-practice-body-next-button {
+  .class-tasks-attempt-flow-body-next-button {
     font-size: var(--t-space-16);
     padding: var(--t-space-50);
     height: var(--t-space-50);
     width: var(--t-space-50);
   }
-  .class-practice-body-footer-wrapper-options {
+  .class-tasks-attempt-flow-body-footer-wrapper-options {
     transform: translate(-50%, 55%);
     gap: var(--t-space-40);
   }
-  .class-practice-body-footer-wrapper-options-item {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-item {
     gap: var(--t-space-10);
     min-width: calc(var(--t-space-64) * 1.5);
   }
-  .class-practice-body-footer-wrapper-options-item-label {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-practice-body-audio-player-wrapper {
+  .class-tasks-attempt-flow-body-audio-player-wrapper {
     gap: var(--t-space-8);
     margin-top: var(--t-space-10);
   }
-  .class-practice-body-audio-player-wrapper-timestamps {
+  .class-tasks-attempt-flow-body-audio-player-wrapper-timestamps {
     font-size: calc(var(--t-fs-small) * 0.85);
   }
-  .class-practice-body-footer-wrapper-options-mike-unmuted-button-error {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-mike-unmuted-button-error {
     border-width: var(--t-space-3) !important;
   }
-  .class-practice-body-footer-wrapper-options-stop-recording-button {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-stop-recording-button {
     border-width: var(--t-space-3) !important;
   }
-  .class-practice-body-content-wrapper-emojis-wrapper {
+  .class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper {
     gap: var(--t-space-16);
   }
-  .class-practice-body-content-wrapper-emojis-image-item {
+  .class-tasks-attempt-flow-body-content-wrapper-emojis-image-item {
     width: var(--t-space-64);
     height: var(--t-space-64);
   }
@@ -1268,36 +1296,36 @@ export default {
     padding: var(--t-space-5);
     font-size: 0.9em;
   }
-  .class-practice-body-footer-wrapper-audio-player {
+  .class-tasks-attempt-flow-body-footer-wrapper-audio-player {
     max-width: 80%;
   }
-  .class-practice-body-no-tasks-image {
+  .class-tasks-attempt-flow-body-no-tasks-image {
     --no-tasks-image: calc(var(--t-space-70) * 1.2);
   }
 }
 @media (min-width: 1200px) {
-  .class-practice-body-footer-wrapper-options {
+  .class-tasks-attempt-flow-body-footer-wrapper-options {
     transform: translate(-50%, 45%);
     gap: var(--t-space-48);
   }
-  .class-practice-body-footer-wrapper-options-item {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-item {
     gap: var(--t-space-12);
     min-width: calc(var(--t-space-48) * 2);
   }
-  .class-practice-body-footer-wrapper-options-item-label {
+  .class-tasks-attempt-flow-body-footer-wrapper-options-item-label {
     font-size: calc(var(--t-fs-small) * 0.8);
   }
-  .class-practice-body-audio-player-wrapper {
+  .class-tasks-attempt-flow-body-audio-player-wrapper {
     gap: var(--t-space-5);
     margin-top: var(--t-space-16);
   }
-  .class-practice-body-audio-player-wrapper-timestamps {
+  .class-tasks-attempt-flow-body-audio-player-wrapper-timestamps {
     font-size: calc(var(--t-fs-small) * 0.9);
   }
-  .class-practice-body-content-wrapper-emojis-wrapper {
+  .class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper {
     gap: var(--t-space-16);
   }
-  .class-practice-body-content-wrapper-emojis-image-item {
+  .class-tasks-attempt-flow-body-content-wrapper-emojis-image-item {
     width: var(--t-space-70);
     height: var(--t-space-70);
   }
@@ -1305,10 +1333,10 @@ export default {
     max-width: 70%;
     gap: var(--t-space-30);
   }
-  .class-practice-body-footer-wrapper-audio-player {
+  .class-tasks-attempt-flow-body-footer-wrapper-audio-player {
     max-width: 70%;
   }
-  .class-practice-body-no-tasks-image {
+  .class-tasks-attempt-flow-body-no-tasks-image {
     --no-tasks-image: calc(var(--t-space-70) * 1.2);
   }
 }

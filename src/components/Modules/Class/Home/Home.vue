@@ -236,6 +236,14 @@ export default {
               100
             ),
         },
+        {
+          name: "Bulk Upload",
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create/bulk`,
+              100
+            ),
+        },
       ],
       classId: null,
       classDetails: {},
@@ -302,27 +310,27 @@ export default {
       if (!classTasks) return this.$router.push("/404");
 
       // class topics
-      const classTopics = await this.getClassTopics(classDetails?.language);
-      if (!classTopics) return this.$router.push("/404");
+      // const classTopics = await this.getClassTopics(classDetails?.language);
+      // if (!classTopics) return this.$router.push("/404");
 
       // success case
       const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
       this.classTopicsGrouped = [
         {
           title: capitalize(topicTypes.ADVANCED),
-          items: classTopics
+          items: classDetails?.topics
             ?.filter((x) => x?.type === topicTypes.ADVANCED)
             ?.map((x) => x?.name),
         },
         {
           title: capitalize(topicTypes.INTERMEDIATE),
-          items: classTopics
+          items: classDetails?.topics
             ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
             ?.map((x) => x?.name),
         },
         {
           title: capitalize(topicTypes.BEGINNER),
-          items: classTopics
+          items: classDetails?.topics
             ?.filter((x) => x?.type === topicTypes.BEGINNER)
             ?.map((x) => x?.name),
         },
@@ -406,7 +414,7 @@ export default {
           : null,
       }));
 
-      this.classTopics = classTopics;
+      // this.classTopics = classTopics;
 
       this.loading = false;
     },
