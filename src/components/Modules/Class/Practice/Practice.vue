@@ -57,6 +57,7 @@
         <div class="class-practice-body-head-wrapper">
           <p class="p" v-if="currentTask.topic">{{ currentTask.topic }}</p>
           <talkie-tool-tip
+            :class="[currentTask.type === taskTypes.TRANSLATION && 'z-50']"
             :tooltip="currentTask.instructions"
             v-if="currentTask.instructions"
           >
@@ -105,17 +106,92 @@
             "
           >
             <div class="class-translations-wrapper">
-              <h4
+              <div
                 class="h4 class-translations-question-header"
                 v-if="currentTask.translation.question"
               >
-                <span class="class-translations-question-wrapper">
-                  Question
-                </span>
-                {{ currentTask.translation.question }}
-              </h4>
+                <div class="translation-task-left">
+                  <p class="p" v-if="currentTask.topic">
+                    {{ currentTask.topic }}
+                  </p>
+                  <h4 class="h4">
+                    {{ currentTask.translation.question }}
+                  </h4>
+                </div>
+                <div class="translation-task-right">
+                  <!-- Player -->
+                  <talkie-audio-player
+                    v-if="
+                      currentRecording &&
+                      !(
+                        currentTaskAnswered.scores &&
+                        currentTaskAnswered.appericiationMessage
+                      )
+                    "
+                    v-slot="{
+                      isPlaying,
+                      togglePlayer,
+                      currentAudioPercentage,
+                      updateAudioPercentage,
+                      totalAudioPlaybackTime,
+                      currentAudioPlaybackTime,
+                    }"
+                    :recording="currentRecording"
+                  >
+                    <span hidden>
+                      <!-- TODO: updated these states via a handler -->
+                      {{ (this.isAudioPlaying = isPlaying) }}
+                      {{ (this.handleAudioPlayerToggle = togglePlayer) }}
+                    </span>
+                    <div class="class-practice-body-audio-player-wrapper">
+                      <talkie-audio-timeline
+                        :percentage="currentAudioPercentage"
+                        :onHeadChange="updateAudioPercentage"
+                      />
+                      <span
+                        class="class-practice-body-audio-player-wrapper-timestamps"
+                        >{{ currentAudioPlaybackTime }} /
+                        {{ totalAudioPlaybackTime }}
+                      </span>
+                    </div>
+                  </talkie-audio-player>
 
-              <h4
+                  <p
+                    class="h6 p"
+                    v-if="
+                      currentTask.translation.answer &&
+                      currentTaskAnswered.showTranslationSelfAssessment
+                    "
+                  >
+                    Answer
+                  </p>
+
+                  <h4
+                    class="h4"
+                    v-if="
+                      currentTask.translation.answer &&
+                      currentTaskAnswered.showTranslationSelfAssessment
+                    "
+                  >
+                    <!-- <span class="class-translations-answer-wrapper">
+                    </span> -->
+                    {{ currentTask.translation.answer }}
+                  </h4>
+
+                  <div
+                    class="class-translations-self-assessment-wrapper"
+                    v-if="currentTaskAnswered.showTranslationSelfAssessment"
+                  >
+                    <h5 class="h5">Self-assessment:</h5>
+                    <p class="p">
+                      Now, listen back to your recording and compare! How did
+                      you get on?
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <h4
                 class="h4 class-translations-answer-header"
                 v-if="
                   currentTask.translation.answer &&
@@ -135,7 +211,7 @@
                   Now, listen back to your recording and compare! How did you
                   get on?
                 </p>
-              </div>
+              </div> -->
             </div>
           </template>
         </div>
@@ -149,6 +225,7 @@
           <div
             class="class-practice-body-footer-wrapper-audio-player"
             v-if="
+              currentTask.type !== taskTypes.TRANSLATION &&
               currentRecording &&
               !(
                 currentTaskAnswered.scores &&
@@ -856,6 +933,41 @@ export default {
 </script>
 
 <style scoped>
+.translation-task-left,
+.translation-task-right {
+  position: absolute;
+  min-width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--t-space-64);
+  gap: var(--t-space-8);
+  align-items: flex-start;
+  justify-content: center;
+  top: 0;
+}
+.translation-task-left {
+  background: var(--t-white-300);
+  left: 0;
+  border-top-left-radius: var(--t-br-large);
+  border-bottom-left-radius: var(--t-br-large);
+}
+.translation-task-right {
+  left: 50%;
+  border-top-right-radius: var(--t-br-large);
+  border-bottom-right-radius: var(--t-br-large);
+}
+.translation-audio {
+  width: 100%;
+}
+.translation-audio-timestamps {
+  width: 100%;
+  font-family: var(--t-ff-regular);
+  text-align: end !important;
+}
+.z-50 {
+  z-index: 50;
+}
 .class-practice-wrapper {
   width: 100%;
   margin-top: var(--t-space-50);
@@ -1062,7 +1174,7 @@ export default {
     width: var(--t-space-44);
   }
   .class-practice-body-footer-wrapper-options {
-    transform: translate(-50%, 5%);
+    transform: translate(-50%, 70%);
     gap: var(--t-space-36);
   }
   .class-practice-body-footer-wrapper-options-item {
@@ -1117,7 +1229,7 @@ export default {
     width: var(--t-space-50);
   }
   .class-practice-body-footer-wrapper-options {
-    transform: translate(-50%, -5%);
+    transform: translate(-50%, 55%);
     gap: var(--t-space-40);
   }
   .class-practice-body-footer-wrapper-options-item {
@@ -1165,7 +1277,7 @@ export default {
 }
 @media (min-width: 1200px) {
   .class-practice-body-footer-wrapper-options {
-    transform: translate(-50%, 5%);
+    transform: translate(-50%, 45%);
     gap: var(--t-space-48);
   }
   .class-practice-body-footer-wrapper-options-item {

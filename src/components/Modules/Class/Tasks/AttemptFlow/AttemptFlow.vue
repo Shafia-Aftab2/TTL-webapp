@@ -60,6 +60,7 @@
         <div class="class-tasks-attempt-flow-body-head-wrapper">
           <p class="p" v-if="currentTask.topic">{{ currentTask.topic }}</p>
           <talkie-tool-tip
+            :class="[currentTask.type === taskTypes.TRANSLATION && 'z-50']"
             :tooltip="currentTask.instructions"
             v-if="currentTask.instructions"
           >
@@ -115,17 +116,99 @@
             "
           >
             <div class="class-translations-wrapper">
-              <h4
-                class="h4 class-translations-question-header"
+              <div
+                class="class-translations-question-header"
                 v-if="currentTask.translation.question"
               >
-                <span class="class-translations-question-wrapper">
-                  Question
-                </span>
-                {{ currentTask.translation.question }}
-              </h4>
+                <div class="translation-task-left">
+                  <p class="p" v-if="currentTask.topic">
+                    {{ currentTask.topic }}
+                  </p>
+                  <h4 class="h4">
+                    {{ currentTask.translation.question }}
+                  </h4>
+                </div>
+                <div class="translation-task-right">
+                  <!-- Player -->
+                  <talkie-audio-player
+                    v-if="
+                      currentRecording &&
+                      !(
+                        currentTaskAnswered.scores &&
+                        currentTaskAnswered.appericiationMessage
+                      )
+                    "
+                    v-slot="{
+                      isPlaying,
+                      togglePlayer,
+                      currentAudioPercentage,
+                      updateAudioPercentage,
+                      totalAudioPlaybackTime,
+                      currentAudioPlaybackTime,
+                    }"
+                    :recording="currentRecording"
+                  >
+                    <span hidden>
+                      <!-- TODO: updated these states via a handler -->
+                      {{ (this.isAudioPlaying = isPlaying) }}
+                      {{ (this.handleAudioPlayerToggle = togglePlayer) }}
+                    </span>
+                    <div
+                      class="class-tasks-attempt-flow-body-audio-player-wrapper translation-audio"
+                    >
+                      <talkie-audio-timeline
+                        :percentage="currentAudioPercentage"
+                        :onHeadChange="updateAudioPercentage"
+                      />
+                      <div
+                        class="class-tasks-attempt-flow-body-audio-player-wrapper-timestamps translation-audio-timestamps"
+                        style="text-align: end"
+                      >
+                        {{ currentAudioPlaybackTime }} /
+                        {{ totalAudioPlaybackTime }}
+                      </div>
+                    </div>
+                  </talkie-audio-player>
 
-              <h4
+                  <p
+                    class="h6 p"
+                    v-if="
+                      currentTask.translation.answer &&
+                      currentTaskAnswered.showTranslationSelfAssessment
+                    "
+                  >
+                    Answer
+                  </p>
+
+                  <h4
+                    class="h4"
+                    v-if="
+                      currentTask.translation.answer &&
+                      currentTaskAnswered.showTranslationSelfAssessment
+                    "
+                  >
+                    <!-- <span class="class-translations-answer-wrapper">
+                    </span> -->
+                    {{ currentTask.translation.answer }}
+                  </h4>
+
+                  <div
+                    class="class-translations-self-assessment-wrapper"
+                    v-if="currentTaskAnswered.showTranslationSelfAssessment"
+                  >
+                    <h5 class="h5">Self-assessment:</h5>
+                    <p class="p">
+                      Now, listen back to your recording and compare! How did
+                      you get on?
+                    </p>
+                  </div>
+                </div>
+                <!-- <span class="class-translations-question-wrapper">
+                  Question
+                </span> -->
+              </div>
+
+              <!-- <h4
                 class="h4 class-translations-answer-header"
                 v-if="
                   currentTask.translation.answer &&
@@ -145,7 +228,7 @@
                   Now, listen back to your recording and compare! How did you
                   get on?
                 </p>
-              </div>
+              </div> -->
             </div>
           </template>
         </div>
@@ -159,6 +242,7 @@
           <div
             class="class-tasks-attempt-flow-body-footer-wrapper-audio-player"
             v-if="
+              currentTask.type !== taskTypes.TRANSLATION &&
               currentRecording &&
               !(
                 currentTaskAnswered.scores &&
@@ -507,7 +591,9 @@ export default {
       classId: null,
       classDetails: {},
       classTasks: [],
-      currentTask: { index: null },
+      currentTask: {
+        index: 0,
+      },
       noMoreTasks: false,
       currentTaskAnswered: {
         responseId: null,
@@ -562,7 +648,7 @@ export default {
           <br/>
           <br/>
           "But I don't know how to say it in Spanish/French..."
-          That's okay! That's completely normal. The best approach is to look up the word online - have something to add to your vocabulary! No time? You can also use a word you already know and tweak the story a little bit. 
+          That's okay! That's completely normal. The best approach is to look up the word online - have something to add to your vocabulary! No time? You can also use a word you already know and tweak the story a little bit.
           <br/>
           <br/>
           Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
@@ -579,7 +665,7 @@ export default {
             <li>— Use the photo as prompt to talk about your own experiences or come up with your own short story in your target language.</li>
           </ul>
           <br/>
-          Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class. 
+          Don't worry if you haven't got enough vocabulary yet - don't let that stop you! Express yourself by using words you already know, experiment with the words you've just learnt in class. There's no right or wrong answer here. Have a go with or without your notes from class.
         `,
         ["Translation"]: `
           <strong>How many can you translate in 5 minutes? 🧐</strong>
@@ -875,6 +961,41 @@ export default {
 </script>
 
 <style scoped>
+.translation-task-left,
+.translation-task-right {
+  position: absolute;
+  min-width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--t-space-64);
+  gap: var(--t-space-8);
+  align-items: flex-start;
+  justify-content: center;
+  top: 0;
+}
+.translation-task-left {
+  background: var(--t-white-300);
+  left: 0;
+  border-top-left-radius: var(--t-br-large);
+  border-bottom-left-radius: var(--t-br-large);
+}
+.translation-task-right {
+  left: 50%;
+  border-top-right-radius: var(--t-br-large);
+  border-bottom-right-radius: var(--t-br-large);
+}
+.translation-audio {
+  width: 100%;
+}
+.translation-audio-timestamps {
+  width: 100%;
+  font-family: var(--t-ff-regular);
+  text-align: end !important;
+}
+.z-50 {
+  z-index: 50;
+}
 .class-tasks-attempt-flow-wrapper {
   width: 100%;
   margin-top: var(--t-space-50);
