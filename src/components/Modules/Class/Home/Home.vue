@@ -236,6 +236,14 @@ export default {
               100
             ),
         },
+        {
+          name: "Bulk Upload",
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create/bulk`,
+              100
+            ),
+        },
       ],
       classId: null,
       classDetails: {},

@@ -40,7 +40,7 @@ import AdminUsersHome from "../components/Modules/Admin/Users/Home";
 import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
 import AdminQuizzesHome from "../components/Modules/Admin/Quizzes/Home";
 import AdminQuizzesCreate from "../components/Modules/Admin/Quizzes/Create";
-import AdminQuizzesCreateBulk from "../components/Modules/Admin/Quizzes/Create/Bulk";
+import QuizzesCreateBulk from "../components/Modules/Admin/Quizzes/Create/Bulk";
 // route middlware
 import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
@@ -55,6 +55,7 @@ const routes = [
   {
     path: "/",
     component: Layout,
+    props: { variant: "dark" },
     children: [
       {
         name: "Home",
@@ -235,6 +236,18 @@ const routes = [
         name: "ClassTaskCreate",
         path: "/classes/:id/tasks/create",
         component: ClassTaskCreate,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
+          },
+        },
+      },
+      {
+        name: "ClassTaskCreateBulk",
+        path: "/classes/:id/tasks/create/bulk",
+        component: QuizzesCreateBulk,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
@@ -492,7 +505,7 @@ const routes = [
       {
         name: "AdminQuizzesCreateBulk",
         path: "/admin/quizzes/create/bulk",
-        component: AdminQuizzesCreateBulk,
+        component: QuizzesCreateBulk,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
