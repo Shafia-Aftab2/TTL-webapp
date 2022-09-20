@@ -208,7 +208,12 @@ import {
 import ConversationMessage from "./Message";
 import ConversationRecorder from "./Recorder";
 import authUser from "@/utils/helpers/auth";
-import { ResponseService, FileService, FeedbackService } from "@/api/services";
+import {
+  ResponseService,
+  FileService,
+  FeedbackService,
+  TaskService,
+} from "@/api/services";
 import FilePurposes from "@/utils/constants/filePurposes";
 import rolesList from "@/utils/constants/roles";
 import { notifications } from "@/components/UIActions";
@@ -420,45 +425,8 @@ export default {
       // get responses for current task
       const taskResponses = await this.getTaskResponses(this.taskId);
 
-      // get feedbacks (whole class) for current task
-      const taskFeedbacksWholeClass = await this.getTaskFeedbacks({
-        taskId: this.taskId,
-      });
-
-      // get feedbacks (individual response) for current task
-      const taskFeedbacksIndividualResponse = await (async () => {
-        // get responses of current student
-        const studentResponseIds = [
-          ...taskResponses
-            ?.filter((x) => x?.student?.id === this?.studentId)
-            ?.map((x) => x?.id),
-        ];
-
-        // storage
-        let _temp = [];
-
-        // get feedbacks of individual responses
-        await Promise.all(
-          studentResponseIds?.map(async (x) => {
-            const _feedbackForResponse = await this.getTaskFeedbacks({
-              taskId: this.taskId,
-              responseId: x,
-            });
-
-            _temp = [..._temp, ..._feedbackForResponse];
-          })
-        );
-
-        // return list of individual response feedbacks
-        return _temp;
-      })();
-
       // failure case
-      if (
-        !taskResponses ||
-        !taskFeedbacksWholeClass ||
-        !taskFeedbacksIndividualResponse
-      ) {
+      if (!taskResponses) {
         this.state.messagesFetch = {
           loading: false,
           message: {
@@ -469,50 +437,41 @@ export default {
         return;
       }
 
+      // api call to get inbox messages
+      const response =
+        this.userMode === rolesList.TEACHER
+          ? await TaskService.GetTeacherInbox(
+              this.taskId,
+              this.studentId
+            ).catch(() => null)
+          : await TaskService.GetStudentInbox(this.taskId).catch(() => null);
+
+      // failure case
+      if (!response?.data) {
+        this.state.messagesFetch = {
+          loading: false,
+          message: {
+            type: "error",
+            text: "Failed to load latest inbox messages!",
+          },
+        };
+        return;
+      }
+
       // success case
+      const transformedMessages = response.data.messages.map((x) => ({
+        id: x?.id,
+        from: x?.student || x?.teacher,
+        dateTime: x?.createdAt,
+        audio: x?.voiceRecording,
+      }));
+      this.messagesFetched = transformedMessages;
+
       const scoredByTeacher = taskResponses
         ?.filter((x) => x?.student?.id === this?.studentId)
         ?.find((x) => x?.scoreByTeacher);
       if (scoredByTeacher) this.feedbackGiven = true;
-      const messagesFetched = (() => {
-        let _temp = [];
 
-        // add responses of auth user + transform obj
-        _temp = [
-          ...taskResponses
-            ?.filter((x) => x?.student?.id === this?.studentId)
-            ?.map((x) => ({
-              id: x?.id,
-              from: x?.student?.id,
-              audio: x?.voiceRecording,
-              dateTime: x?.createdAt,
-            })),
-        ];
-
-        // add feedbacks for auth user + transform obj
-        _temp = [
-          ..._temp,
-          ...[
-            ...taskFeedbacksWholeClass,
-            ...taskFeedbacksIndividualResponse,
-          ]?.map((x) => ({
-            id: x?.id,
-            from: x?.teacher,
-            audio: x?.voiceRecording,
-            dateTime: x?.createdAt,
-          })),
-        ];
-
-        // sort responses/feedbacks with dateTime
-        _temp = [..._temp]?.sort(function (a, b) {
-          const aDate = new Date(a?.dateTime);
-          const bDate = new Date(b?.dateTime);
-          return aDate < bDate ? -1 : aDate > bDate ? 1 : 0;
-        });
-
-        return _temp;
-      })();
-      this.messagesFetched = messagesFetched;
       this.state.messagesFetch = {
         loading: false,
         message: {
