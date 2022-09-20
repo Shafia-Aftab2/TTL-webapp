@@ -422,21 +422,6 @@ export default {
         },
       };
 
-      // get responses for current task
-      const taskResponses = await this.getTaskResponses(this.taskId);
-
-      // failure case
-      if (!taskResponses) {
-        this.state.messagesFetch = {
-          loading: false,
-          message: {
-            type: "error",
-            text: "Failed to load latest responses!",
-          },
-        };
-        return;
-      }
-
       // api call to get inbox messages
       const response =
         this.userMode === rolesList.TEACHER
@@ -459,7 +444,7 @@ export default {
       }
 
       // success case
-      const transformedMessages = response.data.messages.map((x) => ({
+      const transformedMessages = response?.data?.messages?.map((x) => ({
         id: x?.id,
         from: x?.student || x?.teacher,
         dateTime: x?.createdAt,
@@ -467,9 +452,10 @@ export default {
       }));
       this.messagesFetched = transformedMessages;
 
-      const scoredByTeacher = taskResponses
-        ?.filter((x) => x?.student?.id === this?.studentId)
-        ?.find((x) => x?.scoreByTeacher);
+      const scoredByTeacher = response?.data?.messages?.find(
+        (x) => x?.scoreByTeacher
+      );
+
       if (scoredByTeacher) this.feedbackGiven = true;
 
       this.state.messagesFetch = {
