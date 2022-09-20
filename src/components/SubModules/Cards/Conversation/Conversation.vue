@@ -49,20 +49,27 @@
             'talkie-conversation-card-header-row-center',
           ]"
         >
-          <img
-            class="talkie-conversation-card-header-image"
-            :src="require(`@/assets/images/person-placeholder-image.png`)"
-            v-if="!isValidAvatar(studentAvatar)"
-          />
-          <span
-            class="talkie-conversation-card-header-image"
-            v-if="isValidAvatar(studentAvatar)"
-            v-html="studentAvatar"
-          >
-          </span>
-          <p class="p" style="margin-bottom: 0 !important" v-if="studentName">
-            {{ studentName }}
-          </p>
+          <template v-if="topicName">
+            <p class="p" style="margin-bottom: 0 !important">
+              {{ topicName }}
+            </p>
+          </template>
+          <template v-if="!topicName">
+            <img
+              class="talkie-conversation-card-header-image"
+              :src="require(`@/assets/images/person-placeholder-image.png`)"
+              v-if="!isValidAvatar(studentAvatar)"
+            />
+            <span
+              class="talkie-conversation-card-header-image"
+              v-if="isValidAvatar(studentAvatar)"
+              v-html="studentAvatar"
+            >
+            </span>
+            <p class="p" style="margin-bottom: 0 !important" v-if="studentName">
+              {{ studentName }}
+            </p>
+          </template>
         </div>
 
         <!-- right side -->
@@ -250,6 +257,9 @@ export default {
       default: false,
     },
     // teacher mode
+    topicName: {
+      type: String,
+    },
     studentName: {
       type: String,
     },
