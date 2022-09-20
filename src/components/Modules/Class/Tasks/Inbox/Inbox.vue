@@ -126,9 +126,7 @@ export default {
       id: x?.id,
       name: x?.name,
     }));
-    this.tasksList = tasksList
-      ?.filter((x) => x?.type === taskTypes.QUESTION_ANSWER)
-      ?.map((x) => ({
+    this.tasksList = tasksList?.map((x) => ({
         id: x?.id,
         type: x?.type,
         title: x?.title,
