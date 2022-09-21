@@ -27,7 +27,7 @@
               :taskTitle="_task?.title"
               :taskDescription="_task?.description"
               :taskTopic="_task?.topic?.name"
-              :taskIsRead="false"
+              :taskIsRead="_task?.isRead"
               :messages="_task?.responses"
               :showReadReceipts="true"
             />
@@ -122,24 +122,32 @@ export default {
     const tasksList = await this.getClassTasks(classId);
     if (!tasksList) return this.$router.push("/404");
 
+    // get inbox items
+    const inboxItems = await this.getMyInbox();
+    if (!inboxItems) return this.$router.push("/404");
+
     // update state
     this.classTopics = classDetails?.topics?.map((x) => ({
       id: x?.id,
       name: x?.name,
     }));
-    this.tasksList = tasksList?.map((x) => ({
+    const transformedInboxItems = inboxItems
+      ?.filter((x) => !x.isPracticeMode)
+      .map((x) => ({
         id: x?.id,
-        type: x?.type,
         title: x?.title,
         description: x?.questionText,
         topic: {
           id: x?.topic?.id || x?.topic?._id,
           name: x?.topic?.name,
         },
+        type: x?.type,
+        isRead: !x?.hasUnreadFeedbacks,
         responses: [
           {
             id: x?.id,
-            from: x?.teacher,
+            from: x.teacher,
+            dateTime: x?.createdAt,
             ...(x?.type === taskTypes.QUESTION_ANSWER && {
               audio: x?.voiceForQnA,
             }),
@@ -152,10 +160,11 @@ export default {
             ...(x?.type === taskTypes.EMOJI_STORY && {
               emojis: x?.emojiStory,
             }),
-            dateTime: x?.createdAt,
           },
         ],
       }));
+    this.tasksList = transformedInboxItems;
+
     this.loading = false;
   },
   methods: {
@@ -177,6 +186,11 @@ export default {
       ).catch();
 
       return response?.data?.results || null;
+    },
+    async getMyInbox() {
+      const response = await TaskService.GetStudentInbox().catch(() => null);
+
+      return response?.data || null;
     },
   },
 };
