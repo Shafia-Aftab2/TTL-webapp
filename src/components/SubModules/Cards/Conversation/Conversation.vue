@@ -110,6 +110,9 @@
             :messageEmojis="_response.emojis"
             :messageAudio="_response.audio"
             :isDownloadable="isAudioDownloadable"
+            :showReadReceipt="_response.showReadReceipt"
+            :isRead="_response.isRead"
+            :onAudioPlay="async () => await markMessageRead(_response.id)"
           />
         </template>
 
@@ -261,6 +264,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    showReadReceipts: {
+      type: Boolean,
+      default: false,
+    },
     // teacher mode
     topicName: {
       type: String,
@@ -405,6 +412,24 @@ export default {
         displayIcon: true,
       });
     },
+    async markMessageRead(messageId) {
+      const messages = [...this.messagesFetched];
+      const message = messages.find((x) => x.id === messageId);
+
+      // return if message is already marked
+      if (message?.isRead) return;
+
+      // mark feedback as read
+      if (this.userMode === "student") {
+        await FeedbackService.MarkFeedbackReadByStudent(messageId).catch(
+          () => null
+        );
+      }
+
+      // update messages
+      message.isRead = true;
+      this.messagesFetched = messages;
+    },
     async handleCardBodyClick(e) {
       if (e.target !== e.currentTarget) return;
 
@@ -425,11 +450,13 @@ export default {
       // api call to get inbox messages
       const response =
         this.userMode === rolesList.TEACHER
-          ? await TaskService.GetTeacherInbox(
+          ? await TaskService.GetTeacherInboxItemDetails(
               this.taskId,
               this.studentId
             ).catch(() => null)
-          : await TaskService.GetStudentInbox(this.taskId).catch(() => null);
+          : await TaskService.GetStudentInboxItemDetails(this.taskId).catch(
+              () => null
+            );
 
       // failure case
       if (!response?.data) {
@@ -449,6 +476,13 @@ export default {
         from: x?.student || x?.teacher,
         dateTime: x?.createdAt,
         audio: x?.voiceRecording,
+        // read receipts for students
+        ...(x.object === "feedback" &&
+          this.showReadReceipts &&
+          this.userMode === "student" && {
+            isRead: x?.readByStudents?.includes(this.studentId),
+            showReadReceipt: true,
+          }),
       }));
       this.messagesFetched = transformedMessages;
 

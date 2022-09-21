@@ -29,6 +29,7 @@
               :taskTopic="_task?.topic?.name"
               :taskIsRead="false"
               :messages="_task?.responses"
+              :showReadReceipts="true"
             />
           </template>
         </template>

@@ -60,7 +60,12 @@
       <talkie-icon
         :name="'play'"
         :variant="'primary'"
-        :onClick="startPlayer"
+        :onClick="
+          async () => {
+            await startPlayer();
+            onAudioPlay() && (await onAudioPlay());
+          }
+        "
         v-if="!isPlaying"
       />
       <talkie-icon
@@ -77,6 +82,14 @@
         {{ totalAudioPlaybackTime }}
       </span>
     </talkie-audio-player>
+
+    <template v-if="showReadReceipt">
+      <!-- single check -->
+      <IconCheckMark v-if="isRead" />
+
+      <!-- double check -->
+      <!-- <IconDoubleCheckMark v-if="isRead" /> -->
+    </template>
   </div>
 </template>
 
@@ -87,6 +100,8 @@ import {
   TalkieAudioTimeline,
 } from "@/components/SubModules/AudioManager";
 import contentDownloadMixin from "@/utils/mixins/contentDownloadMixin";
+import IconCheckMark from "@/components/SVGs/IconCheckMark.vue";
+// import IconDoubleCheckMark from "@/components/SVGs/IconDoubleCheckMark.vue";
 
 export default {
   name: "ConversationCardMessage",
@@ -101,12 +116,17 @@ export default {
     messageText: { type: String },
     messageEmojis: { type: String },
     isDownloadable: { type: Boolean, default: false },
+    showReadReceipt: { type: Boolean, default: false },
+    isRead: { type: Boolean, default: false },
+    onAudioPlay: { type: Function, default: () => {} },
   },
   components: {
     TalkieIcon,
     TalkieChip,
     TalkieAudioTimeline,
     TalkieAudioPlayer,
+    IconCheckMark,
+    // IconDoubleCheckMark,
   },
   methods: {
     onDownloadClick() {

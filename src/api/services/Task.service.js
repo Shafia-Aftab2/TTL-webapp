@@ -33,11 +33,15 @@ export default class TaskRoutes {
     return HTTPClient.delete(`/tasks/${id}`);
   }
 
-  static async GetStudentInbox(taskId) {
+  static async GetStudentInbox() {
+    return HTTPClient.get(`/tasks/student-inbox/list`);
+  }
+
+  static async GetStudentInboxItemDetails(taskId) {
     return HTTPClient.get(`/tasks/student-inbox/${taskId}`);
   }
 
-  static async GetTeacherInbox(taskId, studentId) {
+  static async GetTeacherInboxItemDetails(taskId, studentId) {
     return HTTPClient.get(`/tasks/teacher-inbox/${taskId}/${studentId}`);
   }
 }
