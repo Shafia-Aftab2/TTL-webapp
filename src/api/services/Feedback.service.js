@@ -16,4 +16,8 @@ export default class FeedbackRoutes {
   static async CreateWholeClassFeedback(responseId, payload) {
     return HTTPClient.post(`/feedbacks/all/${responseId}`, payload);
   }
+
+  static async MarkFeedbackReadByStudent(id) {
+    return HTTPClient.patch(`/feedbacks/${id}/student-read`);
+  }
 }

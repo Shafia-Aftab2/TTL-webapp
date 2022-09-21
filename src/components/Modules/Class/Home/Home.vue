@@ -125,7 +125,8 @@
               :mode="'info'"
               :studentName="_student.name"
               :studentAvatar="_student.image"
-              :actionButton="false"
+              :actionButton="true"
+              :onInfoClick="() => redirectToStudentInfo(_student.id)"
             />
           </template>
           <template v-if="classStudents?.length === 0">
@@ -278,6 +279,9 @@ export default {
     await this.handleLoadSequence(to.params.id);
   },
   methods: {
+    redirectToStudentInfo(studentId) {
+      this.$router.push(`/classes/${this.classId}/students/${studentId}`);
+    },
     async handleLoadSequence(classId) {
       // update page state
       this.loading = true;

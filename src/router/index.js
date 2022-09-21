@@ -14,6 +14,7 @@ import ClassJoinLink from "../components/Modules/Class/Join/Link";
 import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
 import ClassStudentsInvite from "../components/Modules/Class/Students/Invite";
+import ClassStudentsInfo from "../components/Modules/Class/Students/Info";
 import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefault";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassTaskEdit from "../components/Modules/Class/Tasks/Update";
@@ -296,6 +297,25 @@ const routes = [
         name: "ClassStats",
         path: "/classes/stats",
         component: ClassStats,
+      },
+    ],
+  },
+  {
+    path: "/classes",
+    component: Layout,
+    props: { type: "sidebar", variant: "dark" },
+    children: [
+      {
+        name: "ClassStudentsInfo",
+        path: "/classes/:classId/students/:studentId",
+        component: ClassStudentsInfo,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT, roles.ADMIN],
+            blockedWhenTrialOver: true,
+          },
+        },
       },
     ],
   },

@@ -27,8 +27,9 @@
               :taskTitle="_task?.title"
               :taskDescription="_task?.description"
               :taskTopic="_task?.topic?.name"
-              :taskIsRead="false"
+              :taskIsRead="_task?.isRead"
               :messages="_task?.responses"
+              :showReadReceipts="true"
             />
           </template>
         </template>
@@ -121,42 +122,47 @@ export default {
     const tasksList = await this.getClassTasks(classId);
     if (!tasksList) return this.$router.push("/404");
 
+    // get inbox items
+    const inboxItems = await this.getMyInbox();
+    if (!inboxItems) return this.$router.push("/404");
+
     // update state
     this.classTopics = classDetails?.topics?.map((x) => ({
       id: x?.id,
       name: x?.name,
     }));
-    this.tasksList = tasksList
-      ?.filter((x) => x?.type === taskTypes.QUESTION_ANSWER)
-      ?.map((x) => ({
-        id: x?.id,
-        type: x?.type,
-        title: x?.title,
-        description: x?.questionText,
-        topic: {
-          id: x?.topic?.id || x?.topic?._id,
-          name: x?.topic?.name,
+    const transformedInboxItems = inboxItems.map((x) => ({
+      id: x?.id,
+      title: x?.title,
+      description: x?.questionText,
+      topic: {
+        id: x?.topic?.id || x?.topic?._id,
+        name: x?.topic?.name,
+      },
+      type: x?.type,
+      isRead: !x?.hasUnreadFeedbacks,
+      responses: [
+        {
+          id: x?.id,
+          from: x.teacher,
+          dateTime: x?.createdAt,
+          ...(x?.type === taskTypes.QUESTION_ANSWER && {
+            audio: x?.voiceForQnA,
+          }),
+          ...(x?.type === taskTypes.CAPTION_THIS && {
+            photo: x?.captionThisImage,
+          }),
+          ...(x?.type === taskTypes.TRANSLATION && {
+            text: x?.textToTranslate,
+          }),
+          ...(x?.type === taskTypes.EMOJI_STORY && {
+            emojis: x?.emojiStory,
+          }),
         },
-        responses: [
-          {
-            id: x?.id,
-            from: x?.teacher,
-            ...(x?.type === taskTypes.QUESTION_ANSWER && {
-              audio: x?.voiceForQnA,
-            }),
-            ...(x?.type === taskTypes.CAPTION_THIS && {
-              photo: x?.captionThisImage,
-            }),
-            ...(x?.type === taskTypes.TRANSLATION && {
-              text: x?.textToTranslate,
-            }),
-            ...(x?.type === taskTypes.EMOJI_STORY && {
-              emojis: x?.emojiStory,
-            }),
-            dateTime: x?.createdAt,
-          },
-        ],
-      }));
+      ],
+    }));
+    this.tasksList = transformedInboxItems;
+
     this.loading = false;
   },
   methods: {
@@ -178,6 +184,11 @@ export default {
       ).catch();
 
       return response?.data?.results || null;
+    },
+    async getMyInbox() {
+      const response = await TaskService.GetStudentInbox().catch(() => null);
+
+      return response?.data || null;
     },
   },
 };
