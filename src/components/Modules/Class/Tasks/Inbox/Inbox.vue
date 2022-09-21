@@ -131,38 +131,36 @@ export default {
       id: x?.id,
       name: x?.name,
     }));
-    const transformedInboxItems = inboxItems
-      ?.filter((x) => !x.isPracticeMode)
-      .map((x) => ({
-        id: x?.id,
-        title: x?.title,
-        description: x?.questionText,
-        topic: {
-          id: x?.topic?.id || x?.topic?._id,
-          name: x?.topic?.name,
+    const transformedInboxItems = inboxItems.map((x) => ({
+      id: x?.id,
+      title: x?.title,
+      description: x?.questionText,
+      topic: {
+        id: x?.topic?.id || x?.topic?._id,
+        name: x?.topic?.name,
+      },
+      type: x?.type,
+      isRead: !x?.hasUnreadFeedbacks,
+      responses: [
+        {
+          id: x?.id,
+          from: x.teacher,
+          dateTime: x?.createdAt,
+          ...(x?.type === taskTypes.QUESTION_ANSWER && {
+            audio: x?.voiceForQnA,
+          }),
+          ...(x?.type === taskTypes.CAPTION_THIS && {
+            photo: x?.captionThisImage,
+          }),
+          ...(x?.type === taskTypes.TRANSLATION && {
+            text: x?.textToTranslate,
+          }),
+          ...(x?.type === taskTypes.EMOJI_STORY && {
+            emojis: x?.emojiStory,
+          }),
         },
-        type: x?.type,
-        isRead: !x?.hasUnreadFeedbacks,
-        responses: [
-          {
-            id: x?.id,
-            from: x.teacher,
-            dateTime: x?.createdAt,
-            ...(x?.type === taskTypes.QUESTION_ANSWER && {
-              audio: x?.voiceForQnA,
-            }),
-            ...(x?.type === taskTypes.CAPTION_THIS && {
-              photo: x?.captionThisImage,
-            }),
-            ...(x?.type === taskTypes.TRANSLATION && {
-              text: x?.textToTranslate,
-            }),
-            ...(x?.type === taskTypes.EMOJI_STORY && {
-              emojis: x?.emojiStory,
-            }),
-          },
-        ],
-      }));
+      ],
+    }));
     this.tasksList = transformedInboxItems;
 
     this.loading = false;
