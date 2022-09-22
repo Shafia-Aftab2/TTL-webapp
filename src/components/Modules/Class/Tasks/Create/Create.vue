@@ -484,7 +484,7 @@ export default {
     ];
 
     // success case
-    // this.topics = topicsForClass;
+    this.topics = classDetails.topics || [];
     this.pageLoading = false;
   },
   methods: {

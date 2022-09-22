@@ -5,6 +5,10 @@ export default class TaskRoutes {
     return HTTPClient.post(`/tasks/${classId}`, payload);
   }
 
+  static async CreateBulk(classId, payload) {
+    return HTTPClient.post(`/tasks/${classId}/create-bulk`, payload);
+  }
+
   static async Update(taskId, payload) {
     return HTTPClient.put(`/tasks/${taskId}`, payload);
   }
