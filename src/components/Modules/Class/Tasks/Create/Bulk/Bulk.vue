@@ -16,16 +16,6 @@
           <a @click="previewCSVTemplate">preview</a>
           a csv template
         </p>
-        <talkie-select
-          :name="'language'"
-          :placeholder="'Choose language'"
-          :options="supportedLanguages?.length > 0 ? supportedLanguages : []"
-          :onChange="handleTopicSelectionChange"
-          :hint="{
-            type: errors.language ? 'error' : null,
-            message: errors.language ? errors.language : null,
-          }"
-        />
         <talkie-select-group
           :name="'topic'"
           :placeholder="'Choose topic'"
@@ -116,23 +106,18 @@ import {
   TalkieButton,
   TalkieMediaPicker,
   TalkieForm,
-  TalkieSelect,
   TalkieSelectGroup,
 } from "@/components/UICore";
-import {
-  createBulkTaskSchema,
-  requireLanguageForTopic,
-} from "@/utils/validations/task.validation";
-import { concatValidations } from "@/utils/validations/custom.validation";
-import { TaskTemplateService, TopicService } from "@/api/services";
+import { createBulkTaskSchema } from "@/utils/validations/task.validation";
+import { TopicService, TaskService, ClassService } from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
-import { supportedLanguages, topicTypes } from "@/utils/constants";
+import { topicTypes } from "@/utils/constants";
 import csvParser from "papaparse";
 import contentDownloadMixin from "@/utils/mixins/contentDownloadMixin";
 import { notifications } from "@/components/UIActions";
 
 export default {
-  name: "AdminCreateQuizzesBulk",
+  name: "ClassTaskCreateBulk",
   mixins: [contentDownloadMixin],
   components: {
     TalkieAlert,
@@ -140,16 +125,13 @@ export default {
     TalkieButton,
     TalkieMediaPicker,
     TalkieForm,
-    TalkieSelect,
     TalkieSelectGroup,
   },
   data() {
     return {
+      classId: null,
       topics: [],
-      validationSchema: concatValidations(
-        createBulkTaskSchema,
-        requireLanguageForTopic
-      ),
+      validationSchema: createBulkTaskSchema,
       pageLoading: false,
       loading: false,
       formStatus: {
@@ -157,14 +139,8 @@ export default {
         message: null,
         animateEllipse: false,
       },
-      isAudioPlaying: null,
-      allowedTaskTypes: Object.values(TaskTypes),
       taskTypes: TaskTypes,
       topicsGrouped: [],
-      supportedLanguages: Object.values(supportedLanguages)?.map((x) =>
-        x?.toLowerCase()
-      ),
-      selectedLanguage: null,
       csvDataPreview: [],
       csvFileKeysMap: {
         ["english-translation"]: "question",
@@ -182,51 +158,42 @@ export default {
     // update page state
     this.pageLoading = true;
 
-    // get topics list (+ failure case)
-    const topicsList = await this.getTopicsList();
-    if (!topicsList) return this.$router.push("/404");
+    // class id from params
+    const classId = this.$route.params.id;
+    this.classId = classId;
+
+    // class details (+ failure case)
+    const classDetails = await this.getClassDetails(classId);
+    if (!classDetails) return this.$router.push("/404");
 
     // success case
-    this.topics = topicsList || [];
+    const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+    this.topics = classDetails?.topics || [];
+    this.topicsGrouped = [
+      {
+        title: capitalize(topicTypes.ADVANCED),
+        items: classDetails?.topics
+          ?.filter((x) => x?.type === topicTypes.ADVANCED)
+          ?.map((x) => x?.name),
+      },
+      {
+        title: capitalize(topicTypes.INTERMEDIATE),
+        items: classDetails?.topics
+          ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x?.name),
+      },
+      {
+        title: capitalize(topicTypes.BEGINNER),
+        items: classDetails?.topics
+          ?.filter((x) => x?.type === topicTypes.BEGINNER)
+          ?.map((x) => x?.name),
+      },
+    ];
+
+    // success case
     this.pageLoading = false;
   },
   methods: {
-    handleTopicSelectionChange(e) {
-      const language = e?.target?.value?.toLowerCase();
-      this.selectedLanguage = language;
-      this.updateTopicsList(language);
-    },
-    updateTopicsList(displayForLanguage) {
-      if (!displayForLanguage) {
-        this.topicsGrouped = [];
-        return;
-      }
-
-      const _topics = this.topics?.filter(
-        (x) => x?.language?.toLowerCase() === displayForLanguage
-      );
-      const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
-      this.topicsGrouped = [
-        {
-          title: capitalize(topicTypes.ADVANCED),
-          items: _topics
-            ?.filter((x) => x?.type === topicTypes.ADVANCED)
-            ?.map((x) => x?.name),
-        },
-        {
-          title: capitalize(topicTypes.INTERMEDIATE),
-          items: _topics
-            ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
-            ?.map((x) => x?.name),
-        },
-        {
-          title: capitalize(topicTypes.BEGINNER),
-          items: _topics
-            ?.filter((x) => x?.type === topicTypes.BEGINNER)
-            ?.map((x) => x?.name),
-        },
-      ];
-    },
     handleRedirection(link, timeout = 100) {
       const self = this;
       setTimeout(function () {
@@ -293,21 +260,22 @@ export default {
         ...(x.comments && { questionText: x?.comments }),
         textToTranslate: x?.question,
         title: x?.title,
-        isPracticeMode: true,
+        isPracticeMode: false,
         topic: topicId,
         type: TaskTypes.TRANSLATION,
       }));
 
-      const payload = { tasks };
+      const payload = tasks;
 
       // api call
-      const response = await TaskTemplateService.CreateBulk(payload).catch(
-        () => {
-          return {
-            error: "Invalid CSV file",
-          };
-        }
-      );
+      const response = await TaskService.CreateBulk(
+        this.classId,
+        payload
+      ).catch(() => {
+        return {
+          error: "Invalid CSV file",
+        };
+      });
 
       // failure case
       if (response.error) {
@@ -325,11 +293,11 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Quizzes created in bulk!",
+        message: "Tasks created in bulk!",
         animateEllipse: false,
         loading: false,
       };
-      this.handleRedirection(`/admin/quizzes`, 200);
+      this.handleRedirection(`/classes/${this.classId}`, 200);
     },
     async getTopicsList() {
       const query = {};
@@ -383,6 +351,11 @@ export default {
     },
     closeCSVPreview() {
       this.csvDataPreview = [];
+    },
+    async getClassDetails(id) {
+      const response = await ClassService.GetDetails(id).catch(() => null);
+
+      return response.data || null;
     },
   },
 };

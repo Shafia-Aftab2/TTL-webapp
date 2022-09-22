@@ -17,6 +17,7 @@ import ClassStudentsInvite from "../components/Modules/Class/Students/Invite";
 import ClassStudentsInfo from "../components/Modules/Class/Students/Info";
 import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefault";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
+import ClassCreateBulkTask from "../components/Modules/Class/Tasks/Create/Bulk";
 import ClassTaskEdit from "../components/Modules/Class/Tasks/Update";
 import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
@@ -248,7 +249,7 @@ const routes = [
       {
         name: "ClassTaskCreateBulk",
         path: "/classes/:id/tasks/create/bulk",
-        component: QuizzesCreateBulk,
+        component: ClassCreateBulkTask,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
