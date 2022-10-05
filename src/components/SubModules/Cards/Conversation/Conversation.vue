@@ -87,7 +87,7 @@
             :variant="!feedbackGiven ? 'neutral' : 'primary'"
             :size="40"
             :iconToSizeRatio="1.1"
-            :onClick="!feedBackGiven ? handleRateStudentResponse : () => {}"
+            :onClick="handleRateStudentResponse"
             v-if="cardExpanded"
           />
         </div>
@@ -351,7 +351,13 @@ export default {
       this.responseRating = rating;
     },
     async handleRateStudentResponse() {
-      if (this.feedbackGiven) return;
+      if (this.feedbackGiven) {
+        notifications.show("You've already given a star!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
 
       // form data
       const score = this.responseRating;
@@ -407,7 +413,7 @@ export default {
       // success case
       this.backdropLoading = false;
       this.feedbackGiven = true;
-      notifications.show("Rating response added successfully!", {
+      notifications.show("⭐ sent!", {
         variant: "success",
         displayIcon: true,
       });
