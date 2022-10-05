@@ -51,7 +51,8 @@
 
     <!-- On Right of Screen -->
     <div class="create-class-avatar">
-      <logo-class-create />
+      <!-- <logo-class-create /> -->
+      <img src="/assets/media/pngs/class-unlimited-free-trial.png" />
     </div>
   </div>
 </template>
@@ -64,7 +65,7 @@ import {
   TalkieForm,
   TalkieAlert,
 } from "@/components/UICore";
-import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
+// import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
 import { ClassService, UserService } from "@/api/services";
 import { createClassSchema } from "@/utils/validations/class.validation";
 import supportedLanguages from "@/utils/constants/supportedLanguages";
@@ -80,7 +81,7 @@ export default {
     TalkieButton,
     TalkieForm,
     TalkieAlert,
-    LogoClassCreate,
+    // LogoClassCreate,
   },
   data() {
     return {
@@ -214,6 +215,7 @@ export default {
   align-items: center;
   width: 100%;
   margin: auto;
+  min-height: 80vh;
 }
 .create-class-form {
   display: flex;
