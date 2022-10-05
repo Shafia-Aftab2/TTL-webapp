@@ -51,8 +51,19 @@
 
     <!-- On Right of Screen -->
     <div class="create-class-avatar">
-      <!-- <logo-class-create /> -->
-      <img src="/assets/media/pngs/class-unlimited-free-trial.png" />
+      <logo-class-create
+        v-if="
+          !computedSubscription?.isFromFirstNthTeachers &&
+          computedSubscription?.isCalculated
+        "
+      />
+      <img
+        src="/assets/media/pngs/class-unlimited-free-trial.png"
+        v-if="
+          computedSubscription?.isFromFirstNthTeachers &&
+          computedSubscription?.isCalculated
+        "
+      />
     </div>
   </div>
 </template>
@@ -65,7 +76,7 @@ import {
   TalkieForm,
   TalkieAlert,
 } from "@/components/UICore";
-// import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
+import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
 import { ClassService, UserService } from "@/api/services";
 import { createClassSchema } from "@/utils/validations/class.validation";
 import supportedLanguages from "@/utils/constants/supportedLanguages";
@@ -81,7 +92,7 @@ export default {
     TalkieButton,
     TalkieForm,
     TalkieAlert,
-    // LogoClassCreate,
+    LogoClassCreate,
   },
   data() {
     return {
@@ -95,6 +106,11 @@ export default {
       },
       user: {},
     };
+  },
+  computed: {
+    computedSubscription() {
+      return this.$store.state.subscription;
+    },
   },
   created() {
     // get auth user
