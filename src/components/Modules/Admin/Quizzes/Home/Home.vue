@@ -54,7 +54,7 @@
             :topic="_question.topic"
             :description="_question.description"
             :manageModeOptions="{
-              canEdit: false,
+              canEdit: true,
               canDelete: false,
             }"
             :centered="false"
@@ -177,6 +177,9 @@ export default {
     await this.handleLoadSequence();
   },
   methods: {
+    handleTopicCardEditClick(taskId) {
+      this.handleRedirection(`/admin/quizzes/${taskId}/edit`, 1);
+    },
     async handleLoadSequence() {
       // update page state
       this.loading = true;

@@ -41,6 +41,7 @@ import ComingSoon from "../components/Modules/ComingSoon";
 import AdminUsersHome from "../components/Modules/Admin/Users/Home";
 import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
 import AdminQuizzesHome from "../components/Modules/Admin/Quizzes/Home";
+import AdminQuizzesUpdate from "../components/Modules/Admin/Quizzes/Update";
 import AdminQuizzesCreate from "../components/Modules/Admin/Quizzes/Create";
 import QuizzesCreateBulk from "../components/Modules/Admin/Quizzes/Create/Bulk";
 // route middlware
@@ -527,6 +528,17 @@ const routes = [
         name: "AdminQuizzesCreateBulk",
         path: "/admin/quizzes/create/bulk",
         component: QuizzesCreateBulk,
+        meta: {
+          middlewareConfig: {
+            requiresAuth: true,
+            blockedRoles: [roles.STUDENT, roles.TEACHER],
+          },
+        },
+      },
+      {
+        name: "AdminQuizzesUpdate",
+        path: "/admin/quizzes/:taskId/edit",
+        component: AdminQuizzesUpdate,
         meta: {
           middlewareConfig: {
             requiresAuth: true,
