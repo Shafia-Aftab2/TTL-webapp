@@ -83,10 +83,18 @@
               currentTask.captionImage
             "
           >
-            <img
-              :src="currentTask.captionImage"
-              class="class-tasks-attempt-flow-body-content-wrapper-caption-image"
-            />
+            <div class="class-task-content-wrapper">
+              <img
+                :src="currentTask.captionImage"
+                class="class-tasks-attempt-flow-body-content-wrapper-caption-image"
+              />
+              <h4 class="h4" v-if="currentTask.title">
+                {{ currentTask.title }}
+              </h4>
+              <p class="p" v-if="currentTask.description">
+                {{ currentTask.description }}
+              </p>
+            </div>
           </template>
 
           <!-- Emoji story -->
@@ -95,16 +103,30 @@
               currentTask.type === taskTypes.EMOJI_STORY && currentTask.emojis
             "
           >
-            <div
-              class="class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper"
-            >
-              <template v-for="emojiURL in currentTask.emojis" :key="emojiURL">
-                <img
-                  :draggable="false"
-                  :src="emojiURL"
-                  class="class-tasks-attempt-flow-body-content-wrapper-emojis-image-item"
-                />
-              </template>
+            <div class="class-task-content-wrapper">
+              <div
+                class="class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper"
+              >
+                <template
+                  v-for="emojiURL in currentTask.emojis"
+                  :key="emojiURL"
+                >
+                  <img
+                    :draggable="false"
+                    :src="emojiURL"
+                    class="class-tasks-attempt-flow-body-content-wrapper-emojis-image-item"
+                  />
+                </template>
+              </div>
+              <h4
+                class="h4 class-task-content-wrapper-mt"
+                v-if="currentTask.title"
+              >
+                {{ currentTask.title }}
+              </h4>
+              <p class="p" v-if="currentTask.description">
+                {{ currentTask.description }}
+              </p>
             </div>
           </template>
 
@@ -961,6 +983,12 @@ export default {
 </script>
 
 <style scoped>
+.class-task-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
 .translation-task-left,
 .translation-task-right {
   position: absolute;

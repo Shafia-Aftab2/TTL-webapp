@@ -11,116 +11,152 @@
     <div class="profile-account-settings-section">
       <h5 class="h5">Subscription status</h5>
       <div class="profile-account-settings-section-card">
-        <div class="profile-account-settings-section-card-header">
-          <template v-if="userSubscription?.currentPlan">
-            <span
-              :class="[
-                'profile-account-settings-section-card-circle',
-                userSubscription?.status?.toLowerCase() === 'active'
-                  ? 'success-bg'
-                  : 'error-bg',
-              ]"
-            ></span>
-            <h5
-              :class="[
-                'h5',
-                userSubscription?.status?.toLowerCase() === 'active'
-                  ? 'success-text'
-                  : 'error-text',
-                'capitalize',
-              ]"
-            >
-              {{ userSubscription?.status }}
-            </h5>
-          </template>
-          <template v-if="!userSubscription?.currentPlan">
-            <p class="p">You are not subscribed</p>
-          </template>
-        </div>
-        <div class="profile-account-settings-section-manage-dropdown">
-          <talkie-chip
-            v-if="userSubscription?.currentPlan"
-            :variant="'neutral'"
-            :label="'Change my status'"
-            :onClick="
-              () => setShowStatusManageOptions(!showStatusManageOptions)
-            "
-          />
-          <ul
-            class="profile-account-settings-section-manage-dropdown-list"
-            v-if="showStatusManageOptions"
-          >
-            <template
-              v-if="userSubscription?.status?.toLowerCase() === 'canceled'"
-            >
-              <li>
-                <button
-                  @click="() => redirectToRestartSubscription()"
-                  class="color-green"
-                >
-                  Restart
-                </button>
-              </li>
+        <template
+          v-if="
+            computedSubscription?.isFromFirstNthTeachers &&
+            computedSubscription?.isCalculated
+          "
+        >
+          <p class="p">You're on an unlimited free trial! 🥳</p>
+        </template>
+        <template
+          v-if="
+            !computedSubscription?.isFromFirstNthTeachers &&
+            computedSubscription?.isCalculated
+          "
+        >
+          <div class="profile-account-settings-section-card-header">
+            <template v-if="userSubscription?.currentPlan">
+              <span
+                :class="[
+                  'profile-account-settings-section-card-circle',
+                  userSubscription?.status?.toLowerCase() === 'active'
+                    ? 'success-bg'
+                    : 'error-bg',
+                ]"
+              ></span>
+              <h5
+                :class="[
+                  'h5',
+                  userSubscription?.status?.toLowerCase() === 'active'
+                    ? 'success-text'
+                    : 'error-text',
+                  'capitalize',
+                ]"
+              >
+                {{ userSubscription?.status }}
+              </h5>
             </template>
-            <template
-              v-if="userSubscription?.status?.toLowerCase() !== 'canceled'"
-            >
-              <li>
-                <button
-                  v-if="userSubscription?.status?.toLowerCase() === 'active'"
-                  @click="() => redirectToHaltSubscription('pause')"
-                >
-                  Pause
-                </button>
-                <button
-                  v-if="userSubscription?.status?.toLowerCase() === 'paused'"
-                  @click="() => resumeSubscription()"
-                >
-                  Resume
-                </button>
-              </li>
-              <li>
-                <button
-                  @click="() => redirectToHaltSubscription('cancel')"
-                  class="color-red"
-                >
-                  Cancel
-                </button>
-              </li>
+            <template v-if="!userSubscription?.currentPlan">
+              <p class="p">You are not subscribed</p>
             </template>
-          </ul>
-        </div>
+          </div>
+          <div class="profile-account-settings-section-manage-dropdown">
+            <talkie-chip
+              v-if="userSubscription?.currentPlan"
+              :variant="'neutral'"
+              :label="'Change my status'"
+              :onClick="
+                () => setShowStatusManageOptions(!showStatusManageOptions)
+              "
+            />
+            <ul
+              class="profile-account-settings-section-manage-dropdown-list"
+              v-if="showStatusManageOptions"
+            >
+              <template
+                v-if="userSubscription?.status?.toLowerCase() === 'canceled'"
+              >
+                <li>
+                  <button
+                    @click="() => redirectToRestartSubscription()"
+                    class="color-green"
+                  >
+                    Restart
+                  </button>
+                </li>
+              </template>
+              <template
+                v-if="userSubscription?.status?.toLowerCase() !== 'canceled'"
+              >
+                <li>
+                  <button
+                    v-if="userSubscription?.status?.toLowerCase() === 'active'"
+                    @click="() => redirectToHaltSubscription('pause')"
+                  >
+                    Pause
+                  </button>
+                  <button
+                    v-if="userSubscription?.status?.toLowerCase() === 'paused'"
+                    @click="() => resumeSubscription()"
+                  >
+                    Resume
+                  </button>
+                </li>
+                <li>
+                  <button
+                    @click="() => redirectToHaltSubscription('cancel')"
+                    class="color-red"
+                  >
+                    Cancel
+                  </button>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </template>
       </div>
     </div>
 
     <div class="profile-account-settings-section">
       <h5 class="h5">Current Plan</h5>
       <div class="profile-account-settings-section-card">
-        <div class="profile-account-settings-section-card-header">
-          <template v-if="userSubscription?.currentPlan">
-            <h5 class="h5 capitalize">
-              {{ userSubscription?.currentPlan?.name }}
-            </h5>
-            <p class="p">
-              {{ userSubscription?.currentPlan?.price }}/{{
-                userSubscription?.currentPlan?.period
-              }}
-            </p>
-          </template>
-          <template v-if="!userSubscription?.currentPlan">
-            <p class="p">You are not subscribed</p>
-          </template>
-        </div>
-        <talkie-chip
-          v-if="userSubscription?.currentPlan"
-          :variant="'neutral'"
-          :label="'Change my plan'"
-          :onClick="redirectToPricing"
-        />
+        <template
+          v-if="
+            computedSubscription?.isFromFirstNthTeachers &&
+            computedSubscription?.isCalculated
+          "
+        >
+          <p class="p">Unlimited free trial!</p>
+        </template>
+        <template
+          v-if="
+            !computedSubscription?.isFromFirstNthTeachers &&
+            computedSubscription?.isCalculated
+          "
+        >
+          <div class="profile-account-settings-section-card-header">
+            <template v-if="userSubscription?.currentPlan">
+              <h5 class="h5 capitalize">
+                {{ userSubscription?.currentPlan?.name }}
+              </h5>
+              <p class="p">
+                {{ userSubscription?.currentPlan?.price }}/{{
+                  userSubscription?.currentPlan?.period
+                }}
+              </p>
+            </template>
+            <template v-if="!userSubscription?.currentPlan">
+              <p class="p">You are not subscribed</p>
+            </template>
+          </div>
+          <talkie-chip
+            v-if="userSubscription?.currentPlan"
+            :variant="'neutral'"
+            :label="'Change my plan'"
+            :onClick="redirectToPricing"
+          />
+        </template>
       </div>
     </div>
 
-    <div class="profile-account-settings-section">
+    <div
+      class="profile-account-settings-section"
+      v-if="
+        !computedSubscription?.isFromFirstNthTeachers &&
+        computedSubscription?.isCalculated
+      "
+    >
       <talkie-modal
         :type="'confirm'"
         :contentPadded="true"
@@ -303,7 +339,13 @@
       </div>
     </div>
 
-    <div class="profile-account-settings-section">
+    <div
+      class="profile-account-settings-section"
+      v-if="
+        !computedSubscription?.isFromFirstNthTeachers &&
+        computedSubscription?.isCalculated
+      "
+    >
       <h5 class="h5">Billing</h5>
       <div
         :class="[
@@ -463,6 +505,11 @@ export default {
       ],
       pageLoadError: null,
     };
+  },
+  computed: {
+    computedSubscription() {
+      return this.$store.state.subscription;
+    },
   },
   async created() {
     // update user profile cookies

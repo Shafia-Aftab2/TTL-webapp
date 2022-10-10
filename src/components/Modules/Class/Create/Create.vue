@@ -51,7 +51,19 @@
 
     <!-- On Right of Screen -->
     <div class="create-class-avatar">
-      <logo-class-create />
+      <logo-class-create
+        v-if="
+          !computedSubscription?.isFromFirstNthTeachers &&
+          computedSubscription?.isCalculated
+        "
+      />
+      <img
+        src="/assets/media/pngs/class-unlimited-free-trial.png"
+        v-if="
+          computedSubscription?.isFromFirstNthTeachers &&
+          computedSubscription?.isCalculated
+        "
+      />
     </div>
   </div>
 </template>
@@ -94,6 +106,11 @@ export default {
       },
       user: {},
     };
+  },
+  computed: {
+    computedSubscription() {
+      return this.$store.state.subscription;
+    },
   },
   created() {
     // get auth user
@@ -214,6 +231,7 @@ export default {
   align-items: center;
   width: 100%;
   margin: auto;
+  min-height: 80vh;
 }
 .create-class-form {
   display: flex;
