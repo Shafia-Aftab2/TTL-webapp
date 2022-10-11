@@ -56,7 +56,9 @@
                     : true)
                 "
                 :mode="'info'"
-                :studentName="_user.name"
+                :studentName="`${_user.name} ${
+                  _user.email ? `(${_user.email})` : ''
+                }`"
                 :studentAvatar="_user.image"
                 :studentSchoolName="_user.schoolName"
                 :onInfoClick="() => handleUserInfoRedirect(_user?.id)"
@@ -133,6 +135,7 @@ export default {
     this.usersList = usersList?.map((x) => ({
       id: x?.id,
       name: x?.name,
+      email: x?.email,
       schoolName: x?.schools?.[0]?.name,
       role: x?.role,
       image: x?.image
