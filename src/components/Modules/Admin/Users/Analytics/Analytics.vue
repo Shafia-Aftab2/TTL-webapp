@@ -132,19 +132,23 @@ export default {
       // success case
 
       // sidebar data
-      const sidebarItems = usersList?.map((x) => ({
-        name: x?.name,
-        hasRightIcon: true,
-        link: `/admin/users/${x?.id}`,
-        onClick: () => this.$router.push(`/admin/users/${x?.id}`),
-        isActive: userId === x?.id,
-      }));
+      const sidebarItems = usersList
+        ?.filter((x) => !x?.isTestUser)
+        ?.map((x) => ({
+          name: x?.name,
+          hasRightIcon: true,
+          link: `/admin/users/${x?.id}`,
+          onClick: () => this.$router.push(`/admin/users/${x?.id}`),
+          isActive: userId === x?.id,
+        }));
       this.handleSidebarMutation({ items: sidebarItems });
 
-      this.usersList = usersList?.map((x) => ({
-        id: x?.id,
-        name: x?.name,
-      }));
+      this.usersList = usersList
+        ?.filter((x) => !x?.isTestUser)
+        ?.map((x) => ({
+          id: x?.id,
+          name: x?.name,
+        }));
 
       this.userDetails = {
         name: userDetails.name,
