@@ -25,8 +25,9 @@
         <div class="admin-users-home-options-selector">
           <talkie-select
             :placeholder="'Select Users By Role'"
-            :options="Object.values(roles)?.map((x) => `${x}s`)"
+            :options="Object.values(roles)"
             :onChange="handleUserRoleChange"
+            :value="selectedUserRole"
           />
         </div>
       </div>
@@ -116,7 +117,7 @@ export default {
       tabs: ["Free", "Paid"],
       currentFilter: "",
       roles: rolesList,
-      selectedUserRole: "",
+      selectedUserRole: rolesList.TEACHER,
     };
   },
   async created() {
