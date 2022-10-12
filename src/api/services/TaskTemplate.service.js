@@ -17,6 +17,14 @@ export default class TaskTemplateRoutes {
     );
   }
 
+  static async GetTaskTemplate(taskId) {
+    return HTTPClient.get(`/task-templates/${taskId}`);
+  }
+
+  static async UpdateTaskTemplate(taskId, payload) {
+    return HTTPClient.put(`/task-templates/${taskId}`, payload);
+  }
+
   static async UpdateStatus(taskId, payload) {
     return HTTPClient.patch(`/task-templates/${taskId}/status`, payload);
   }

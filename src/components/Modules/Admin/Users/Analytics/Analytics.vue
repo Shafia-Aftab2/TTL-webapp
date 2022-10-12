@@ -18,6 +18,9 @@
           <h2 class="h2" v-if="userDetails.name">
             {{ userDetails.name }}
           </h2>
+          <p class="p" v-if="userDetails.email">
+            {{ userDetails.email }}
+          </p>
           <p class="p" v-if="userDetails.schoolName">
             {{ "Role: " + userDetails.role }}
           </p>
@@ -145,6 +148,7 @@ export default {
 
       this.userDetails = {
         name: userDetails.name,
+        email: userDetails.email,
         schoolName: userDetails?.schools?.[0]?.name || "",
         role:
           userDetails?.role?.charAt(0)?.toUpperCase() +

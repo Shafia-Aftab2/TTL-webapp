@@ -4,7 +4,7 @@
     <talkie-form
       v-slot="{ errors, setValue, triggerFormSubmit, values }"
       :initialValues="{
-        topic: taskDetails?.topic,
+        topic: '.',
         title: taskDetails?.title,
         questionText: taskDetails?.questionText,
         captionImage: taskDetails?.captionThisImage,
@@ -29,16 +29,6 @@
       </h2>
 
       <div class="class-update-convo-form">
-        <!-- Common fields -->
-        <talkie-select-group
-          :name="'topic'"
-          :placeholder="'Choose topic'"
-          :options="topicsGrouped?.length > 0 ? topicsGrouped : []"
-          :hint="{
-            type: errors.topic ? 'error' : null,
-            message: errors.topic ? errors.topic : null,
-          }"
-        />
         <talkie-input
           :name="'title'"
           :placeholder="`Title (${
@@ -325,7 +315,7 @@
 import {
   ClassService,
   FileService,
-  TaskService,
+  TaskTemplateService,
   TopicService,
 } from "@/api/services";
 import {
@@ -344,7 +334,6 @@ import {
   TalkieLoader,
   TalkieMediaPicker,
   TalkieModal,
-  TalkieSelectGroup,
 } from "@/components/UICore";
 import FilePurposes from "@/utils/constants/filePurposes";
 import TaskTypes from "@/utils/constants/taskTypes";
@@ -360,7 +349,6 @@ export default {
   name: "ClassTaskUpdate",
   components: {
     TalkieInput,
-    TalkieSelectGroup,
     TalkieIcon,
     TalkieAudioRecorder,
     TalkieAudioPlayer,
@@ -452,45 +440,31 @@ export default {
     // update page state
     this.pageLoading = true;
 
-    // class id from params
-    const classId = this.$route.params.id;
-    this.classId = classId;
-
     // task id from params
     const taskId = this.$route.params.taskId;
     this.taskId = taskId;
-
-    // class details (+ failure case)
-    const classDetails = await this.getClassDetails(classId);
-    if (!classDetails) return this.$router.push("/404");
 
     // get topics list (+ failure case)
     const topicsList = await this.getTopicsList();
     if (!topicsList) return this.$router.push("/404");
 
-    // get topics list for class
-    // const classLanguage = classDetails?.language?.toLowerCase();
-    // const topicsForClass = topicsList?.filter(
-    //   (x) => x?.language?.toLowerCase() === classLanguage
-    // );
-
     const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
     this.topicsGrouped = [
       {
         title: capitalize(topicTypes.ADVANCED),
-        items: classDetails?.topics
+        items: topicsList
           ?.filter((x) => x?.type === topicTypes.ADVANCED)
           ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.INTERMEDIATE),
-        items: classDetails?.topics
+        items: topicsList
           ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
           ?.map((x) => x?.name),
       },
       {
         title: capitalize(topicTypes.BEGINNER),
-        items: classDetails?.topics
+        items: topicsList
           ?.filter((x) => x?.type === topicTypes.BEGINNER)
           ?.map((x) => x?.name),
       },
@@ -501,7 +475,7 @@ export default {
     this.selectedTaskType = taskDetails.type;
 
     // success case
-    // this.topics = topicsForClass;
+    this.topics = topicsList;
     this.taskDetails = {
       topic: taskDetails?.topic?.name,
       title: taskDetails?.title,
@@ -520,9 +494,10 @@ export default {
         captionThisImage: taskDetails?.captionThisImage,
       }),
     };
+
     this.currentRecording = taskDetails?.voiceForQnA;
     this.currentRecordingIsFromSource = true;
-    // this.setFormValue("voiceForQnA", taskDetails?.voiceForQnA);
+    this.setFormValue("voiceForQnA", taskDetails?.voiceForQnA);
     this.pageLoading = false;
   },
   methods: {
@@ -689,41 +664,38 @@ export default {
       if (!taskSpecificFields) return;
 
       // form data
-      const { title, topic: topicName, questionText } = values;
-      const topicId = this?.topics?.find(
-        (x) => x?.name?.trim() === topicName?.trim()
-      )?.id;
+      const { title, questionText } = values;
 
       // payload
       const payload = {
         title: title || "",
-        topic: topicId,
         ...taskSpecificFields,
       };
       if (questionText) payload.questionText = questionText;
 
       // api call
-      const response = await TaskService.Update(this.taskId, payload).catch(
-        (e) => {
-          const errorMap = {
-            ['"title" contains bad word']: "Title should not be unethical!",
-            ['"questiontext" contains bad word']:
-              "Question text should not be unethical!",
-            ['"topic" must be a valid mongo id']: "Invalid Topic",
-            ["Q&A"]: "Could not update conversation!",
-            ["Caption-This"]: "Could not update caption task!",
-            ["Translation"]: "Could not update translation task!",
-            ["Emoji-Story"]: "Could not update emoji story task!",
-            ['"topic" is required']: "Please select a topic!",
-          };
+      const response = await TaskTemplateService.UpdateTaskTemplate(
+        this.taskId,
+        payload
+      ).catch((e) => {
+        const errorMap = {
+          ['"title" contains bad word']: "Title should not be unethical!",
+          ['"questiontext" contains bad word']:
+            "Question text should not be unethical!",
+          ['"topic" must be a valid mongo id']: "Invalid Topic",
+          ["Q&A"]: "Could not update conversation!",
+          ["Caption-This"]: "Could not update caption task!",
+          ["Translation"]: "Could not update translation task!",
+          ["Emoji-Story"]: "Could not update emoji story task!",
+          ['"topic" is required']: "Please select a topic!",
+        };
 
-          return {
-            error:
-              errorMap[e.response.data.message.toLowerCase()] ||
-              errorMap[this.selectedTaskType],
-          };
-        }
-      );
+        return {
+          error:
+            errorMap[e.response.data.message.toLowerCase()] ||
+            errorMap[this.selectedTaskType],
+        };
+      });
 
       // failure case
       if (response.error) {
@@ -739,26 +711,7 @@ export default {
 
       // success case
       this.loading = false;
-      // this.formStatus = {
-      //   type: "success",
-      //   message:
-      //     this.selectedTaskType === TaskTypes.QUESTION_ANSWER
-      //       ? "Conversation Created. Redirecting!"
-      //       : this.selectedTaskType === TaskTypes.CAPTION_THIS
-      //       ? "Caption Task Created. Redirecting!"
-      //       : this.selectedTaskType === TaskTypes.TRANSLATION
-      //       ? "Translation Task Created. Redirecting!"
-      //       : this.selectedTaskType === TaskTypes.EMOJI_STORY
-      //       ? "Emoji Story Task Created. Redirecting!"
-      //       : "",
-      //   animateEllipse: false,
-      //   loading: false,
-      // };
-      const taskId = response?.data?.id;
-      this.handleRedirection(
-        `/classes/${this.classId}/tasks/${taskId}/status?status=edited`,
-        200
-      );
+      this.handleRedirection(`/admin/quizzes`, 200);
     },
     async getClassDetails(id) {
       const response = await ClassService.GetDetails(id).catch(() => null);
@@ -772,11 +725,12 @@ export default {
 
       return !!response.data ? response.data.results : null;
     },
-
     async getTaskDetails(id) {
-      const response = await TaskService.GetDetails(id).catch(() => null);
+      const response = await TaskTemplateService.GetTaskTemplate(id).catch(
+        () => null
+      );
 
-      return response.data || null;
+      return response?.data || null;
     },
   },
 };

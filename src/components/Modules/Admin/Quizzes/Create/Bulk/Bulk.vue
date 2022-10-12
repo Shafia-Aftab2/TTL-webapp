@@ -238,6 +238,14 @@ export default {
         try {
           csvParser.parse(file, {
             header: true,
+            transformHeader: (header, index) => {
+              const cols = [
+                "English translation",
+                "Spanish translation",
+                "Other possible answers",
+              ];
+              return cols[index];
+            },
             skipEmptyLines: true,
             complete: function (results) {
               resolve(results.data);
