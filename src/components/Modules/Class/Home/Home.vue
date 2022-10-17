@@ -551,6 +551,7 @@ export default {
     async getClassTasks(id, isPracticeMode = false) {
       const query = {
         ...(isPracticeMode && { isPracticeMode }),
+        sortBy: "createdAt:desc",
       };
 
       const response = await TaskService.QueryClassTasks(id, query).catch(
