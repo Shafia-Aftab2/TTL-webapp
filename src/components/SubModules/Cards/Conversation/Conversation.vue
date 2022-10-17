@@ -366,11 +366,10 @@ export default {
           (x) => x?.from !== this?.user?.id
         );
 
-        const lastStudentResponse =
-          studentResponses.length > 0 &&
-          studentResponses[studentResponses.length - 1];
+        // only the first response can be scored
+        const firstStudentResponse = studentResponses?.[0];
 
-        return lastStudentResponse?.id;
+        return firstStudentResponse?.id;
       })();
 
       // validate form data
@@ -492,9 +491,10 @@ export default {
       }));
       this.messagesFetched = transformedMessages;
 
-      const scoredByTeacher = response?.data?.messages?.find(
-        (x) => x?.scoreByTeacher
-      );
+      // only allow the teacher to score the first response
+      const scoredByTeacher = response?.data?.messages?.filter(
+        (x) => x?.object === "response" && x.scoreByTeacher
+      )?.[0];
 
       if (scoredByTeacher) this.feedbackGiven = true;
 
