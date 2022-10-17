@@ -109,12 +109,18 @@ import {
   TalkieSelectGroup,
 } from "@/components/UICore";
 import { createBulkTaskSchema } from "@/utils/validations/task.validation";
-import { TopicService, TaskService, ClassService } from "@/api/services";
+import {
+  TopicService,
+  TaskService,
+  ClassService,
+  FileService,
+} from "@/api/services";
 import TaskTypes from "@/utils/constants/taskTypes";
 import { topicTypes } from "@/utils/constants";
 import csvParser from "papaparse";
 import contentDownloadMixin from "@/utils/mixins/contentDownloadMixin";
 import { notifications } from "@/components/UIActions";
+import FilePurposes from "@/utils/constants/filePurposes";
 
 export default {
   name: "ClassTaskCreateBulk",
@@ -223,6 +229,25 @@ export default {
         }
       });
     },
+    async handleFileUpload(file, filePurpose, fileName) {
+      // payload
+      const payload = new FormData();
+      if (fileName) payload.append("files", file, fileName);
+      else payload.append("files", file);
+
+      // api call
+      const response = await FileService.Upload(
+        { purpose: filePurpose },
+        payload
+      ).catch(() => null);
+
+      // error case
+      if (!response) return null;
+
+      // success case
+      const uploadedFile = response.data[0].s3Url;
+      return uploadedFile;
+    },
     async handleSubmit(values) {
       // update page state
       this.loading = true;
@@ -233,55 +258,53 @@ export default {
         loading: true,
       };
 
-      // calculate payload
+      // get topic id
       const topicId = this.topics?.find(
         (x) => x?.name?.toLowerCase() === values?.topic?.trim()?.toLowerCase()
       )?.id;
 
-      // get tasks from csv
-      const rawtasksFromCSV = await this.readCSV(values.csvFile).catch(
-        () => null
+      // upload csv file
+      const csvUrl = await this.handleFileUpload(
+        values.csvFile,
+        FilePurposes.BULK_CSV,
+        `talkie-${FilePurposes.BULK_CSV}-${Math.random() * 123456789}.csv`
       );
-      const tasksFromCSV = rawtasksFromCSV?.map((x) => {
-        const _temp = {};
-
-        Object.entries(x).map(([k, v]) => {
-          _temp[this.csvFileKeysMap[k.split(" ").join("-").toLowerCase()]] = v;
-        });
-
-        return _temp;
-      });
-
-      // check if there are tasks from csv file
-      if (!tasksFromCSV || tasksFromCSV?.length === 0) {
+      if (!csvUrl) {
+        this.loading = false;
         this.formStatus = {
           type: "error",
-          message: "Invalid CSV file!",
+          message: "Failed to upload csv file!",
           animateEllipse: false,
           loading: false,
         };
         return;
       }
 
-      const tasks = tasksFromCSV?.map((x) => ({
-        answer: x?.answer,
-        ...(x.comments && { questionText: x?.comments }),
-        textToTranslate: x?.question,
-        title: x?.title,
-        isPracticeMode: false,
+      const payload = {
         topic: topicId,
-        type: TaskTypes.TRANSLATION,
-      }));
-
-      const payload = tasks;
+        csvUrl,
+      };
 
       // api call
       const response = await TaskService.CreateBulk(
         this.classId,
         payload
-      ).catch(() => {
+      ).catch((e) => {
+        const errorMap = {
+          ['"topic" must be a valid mongo id']: "Invalid Topic",
+          ["first column is missing in a row"]:
+            "Invalid CSV, a cell in first column is missing data!",
+          ["second column is missing in a row"]:
+            "Invalid CSV, a cell in second column is missing data!",
+          ["badwords found in first column"]:
+            "Invalid CSV, a cell in first column has bad words!",
+          ["no data found in csv file"]: "Invalid CSV file",
+        };
+
         return {
-          error: "Invalid CSV file",
+          error:
+            errorMap[e?.response?.data?.message?.toLowerCase()] ||
+            "Failed to create bulk tasks",
         };
       });
 
