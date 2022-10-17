@@ -13,6 +13,7 @@
     >
       <!-- Student Mode -->
       <template v-if="userMode === 'student'">
+        <!-- left side -->
         <div
           :class="[
             'talkie-conversation-card-header',
@@ -34,10 +35,20 @@
             {{ taskDescription }}
           </p>
         </div>
-        <div
-          class="talkie-conversation-card-header-status"
-          v-if="!taskIsRead"
-        ></div>
+
+        <!-- right side -->
+        <div class="talkie-conversation-card-header-options">
+          <div
+            class="talkie-conversation-card-header-status"
+            v-if="!taskIsRead"
+          ></div>
+
+          <talkie-chip
+            :label="`${pointsScored}  star${pointsScored > 0 ? 's' : ''}`"
+            :variant="'success'"
+            v-if="pointsScored != null && pointsScored >= 0"
+          />
+        </div>
       </template>
       <!-- Teacher Mode -->
       <template v-if="userMode === 'teacher'">
@@ -309,6 +320,7 @@ export default {
       responseRating: 5, // give fix feedback value = 5 stars
       feedbackGiven: false,
       backdropLoading: false,
+      pointsScored: null,
     };
   },
   computed: {
@@ -496,7 +508,10 @@ export default {
         (x) => x?.object === "response" && x.scoreByTeacher
       )?.[0];
 
-      if (scoredByTeacher) this.feedbackGiven = true;
+      if (scoredByTeacher) {
+        this.feedbackGiven = true;
+        this.pointsScored = scoredByTeacher?.scoreByTeacher;
+      }
 
       this.state.messagesFetch = {
         loading: false,
