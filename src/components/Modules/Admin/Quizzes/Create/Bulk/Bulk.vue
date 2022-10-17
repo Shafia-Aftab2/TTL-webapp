@@ -212,18 +212,45 @@ export default {
           title: capitalize(topicTypes.ADVANCED),
           items: _topics
             ?.filter((x) => x?.type === topicTypes.ADVANCED)
+            ?.sort((x, y) =>
+              x.order === -1 || y.order === -1
+                ? 1
+                : x.order < y.order
+                ? -1
+                : x.order > y.order
+                ? 1
+                : 0
+            )
             ?.map((x) => x?.name),
         },
         {
           title: capitalize(topicTypes.INTERMEDIATE),
           items: _topics
             ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+            ?.sort((x, y) =>
+              x.order === -1 || y.order === -1
+                ? 1
+                : x.order < y.order
+                ? -1
+                : x.order > y.order
+                ? 1
+                : 0
+            )
             ?.map((x) => x?.name),
         },
         {
           title: capitalize(topicTypes.BEGINNER),
           items: _topics
             ?.filter((x) => x?.type === topicTypes.BEGINNER)
+            ?.sort((x, y) =>
+              x.order === -1 || y.order === -1
+                ? 1
+                : x.order < y.order
+                ? -1
+                : x.order > y.order
+                ? 1
+                : 0
+            )
             ?.map((x) => x?.name),
         },
       ];

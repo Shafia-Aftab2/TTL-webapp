@@ -153,11 +153,39 @@ export default {
 
     // success case
     this.topicsList = {
-      beginner: topicsList.filter((x) => x?.type === topicTypes.BEGINNER),
-      intermediate: topicsList.filter(
-        (x) => x?.type === topicTypes.INTERMEDIATE
-      ),
-      advanced: topicsList.filter((x) => x?.type === topicTypes.ADVANCED),
+      beginner: topicsList
+        .filter((x) => x?.type === topicTypes.BEGINNER)
+        ?.sort((x, y) =>
+          x.order === -1 || y.order === -1
+            ? 1
+            : x.order < y.order
+            ? -1
+            : x.order > y.order
+            ? 1
+            : 0
+        ),
+      intermediate: topicsList
+        .filter((x) => x?.type === topicTypes.INTERMEDIATE)
+        ?.sort((x, y) =>
+          x.order === -1 || y.order === -1
+            ? 1
+            : x.order < y.order
+            ? -1
+            : x.order > y.order
+            ? 1
+            : 0
+        ),
+      advanced: topicsList
+        .filter((x) => x?.type === topicTypes.ADVANCED)
+        ?.sort((x, y) =>
+          x.order === -1 || y.order === -1
+            ? 1
+            : x.order < y.order
+            ? -1
+            : x.order > y.order
+            ? 1
+            : 0
+        ),
     };
     this.classTopics = (classDetails?.topics || [])?.map((x) => x?.id);
     this.pageLoading = false;
