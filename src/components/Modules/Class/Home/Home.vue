@@ -112,6 +112,45 @@
 
       <!-- Students tab -->
       <template v-if="activeTab === 'students'">
+        <!-- Add new student -->
+        <div class="class-home-add-student-wrapper">
+          <div>
+            <talkie-button
+              :size="'small'"
+              :onClick="handleAddStudentButtonClick"
+              v-if="isTeacher && classStudents?.length !== 0"
+            >
+              + Add student
+            </talkie-button>
+          </div>
+          <!-- Modal Content -->
+          <talkie-modal
+            :contentPadded="true"
+            :closeButton="true"
+            :onClose="handleModalClose"
+            :maxWidth="750"
+            v-if="modalMode"
+          >
+            <!-- Invite Students -->
+            <template v-if="modalMode === 'invite-students'">
+              <div class="class-manage-modal-invite-students">
+                <div class="class-manage-modal-invite-students-header-wrapper">
+                  <h3 class="h3">Invite your students</h3>
+                  <p class="p">
+                    Share this url with your students to invite them to the
+                    class
+                  </p>
+                </div>
+                <div class="class-manage-modal-invite-students-input-wrapper">
+                  <talkie-input :value="computedClassJoinLink" />
+                </div>
+                <talkie-button :onClick="handleClassJoinLinkCopyButtonClick">
+                  Copy
+                </talkie-button>
+              </div>
+            </template>
+          </talkie-modal>
+        </div>
         <div
           :class="[
             'class-home-content-wrapper',
@@ -168,6 +207,8 @@ import {
   // TalkieSwitch,
   TalkieButtonDropDown,
   TalkieBackDropLoader,
+  TalkieButton,
+  TalkieInput,
 } from "@/components/UICore";
 import {
   TalkieQuestionCard,
@@ -183,6 +224,7 @@ import { generateAvatar } from "@/utils/helpers/avatarGenerator";
 import handleSidebarMutation from "@/utils/mixins/handleSidebarMutation";
 import topicTypes from "@/utils/constants/topicTypes";
 import subscriptionPerksMixin from "@/utils/mixins/subscriptionPerksMixin";
+import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
 
 export default {
   name: "ClassHome",
@@ -198,6 +240,8 @@ export default {
     TalkieBackDropLoader,
     TalkieQuestionCard,
     TalkieStudentCard,
+    TalkieButton,
+    TalkieInput,
   },
   data() {
     return {
@@ -260,6 +304,7 @@ export default {
       currentTopicFilter: null,
       TaskTypes: TaskTypes,
       classTopicsGrouped: {},
+      modalMode: null,
     };
   },
   computed: {
@@ -270,6 +315,10 @@ export default {
         subscription.isTrialOver &&
         subscription.isCalculated
       );
+    },
+    computedClassJoinLink() {
+      console.log(this.classId);
+      return `${URLModifier.getDomain()}/classes/${this.classId}/join`;
     },
   },
   async created() {
@@ -566,6 +615,32 @@ export default {
 
       return !!response?.data ? response?.data?.results : null;
     },
+    async handleClassJoinLinkCopyButtonClick() {
+      const isCopiedToClipboard = await copyToClipboard(
+        this.computedClassJoinLink
+      );
+
+      // error case
+      if (!isCopiedToClipboard) {
+        notifications.show("Failed to copy to clipboard!", {
+          variant: "error",
+          displayIcon: true,
+        });
+        return;
+      }
+
+      // success case
+      notifications.show("Copied to clipboard!", {
+        variant: "success",
+        displayIcon: true,
+      });
+    },
+    handleAddStudentButtonClick() {
+      this.modalMode = "invite-students";
+    },
+    handleModalClose() {
+      this.modalMode = null;
+    },
   },
 };
 </script>
@@ -615,6 +690,12 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
+}
+.class-home-add-student-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
   align-items: center;
 }
 .class-home-options-selector > div {
