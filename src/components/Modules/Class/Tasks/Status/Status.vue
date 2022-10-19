@@ -26,9 +26,13 @@
         />
       </div>
       <div class="class-convo-status-options-wrapper">
-        <talkie-button :onClick="hanldeCreateNewTaskClick">
+        <talkie-button-drop-down
+          :size="'small'"
+          :variant="'primary'"
+          :dropDownItems="newTaskOptions"
+        >
           Create New
-        </talkie-button>
+        </talkie-button-drop-down>
         <talkie-button :outlined="true" :onClick="handleClassHomeClick">
           Home
         </talkie-button>
@@ -44,7 +48,11 @@
 </template>
 
 <script>
-import { TalkieButton, TalkieLoader } from "@/components/UICore";
+import {
+  TalkieButton,
+  TalkieLoader,
+  TalkieButtonDropDown,
+} from "@/components/UICore";
 import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import { TaskService } from "@/api/services";
 import URLModifier from "@/utils/helpers/URLModifier";
@@ -56,6 +64,7 @@ export default {
     TalkieButton,
     TalkieLoader,
     TalkieQuestionCard,
+    TalkieButtonDropDown,
   },
   data() {
     return {
@@ -64,6 +73,50 @@ export default {
         EDITED: "Saved!",
         DELETED: "Deleted!",
       },
+      newTaskOptions: [
+        {
+          name: "Question",
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${encodeURIComponent(
+                TaskTypes.QUESTION_ANSWER
+              )}`,
+              100
+            ),
+        },
+        {
+          name: "Photo",
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.CAPTION_THIS}`,
+              100
+            ),
+        },
+        {
+          name: "Emoji Story",
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.EMOJI_STORY}`,
+              100
+            ),
+        },
+        {
+          name: "Translation",
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create?type=${TaskTypes.TRANSLATION}`,
+              100
+            ),
+        },
+        {
+          name: "Bulk Upload",
+          onClick: () =>
+            this.handleRedirection(
+              `/classes/${this.classId}/tasks/create/bulk`,
+              100
+            ),
+        },
+      ],
       taskStatusQueryParam: null,
       taskDetails: {},
       taskTypes: TaskTypes,
@@ -130,8 +183,11 @@ export default {
     this.pageLoading = false;
   },
   methods: {
-    hanldeCreateNewTaskClick() {
-      this.$router.push(`/classes/${this.classId}/tasks/create`);
+    handleRedirection(link, timeout = 100) {
+      const self = this;
+      setTimeout(function () {
+        self.$router.push(link);
+      }, timeout);
     },
     handleClassHomeClick() {
       this.$router.push(`/classes/${this.classId}`);
