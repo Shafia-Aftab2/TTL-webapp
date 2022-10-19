@@ -25,8 +25,9 @@
         <div class="admin-users-home-options-selector">
           <talkie-select
             :placeholder="'Select Users By Role'"
-            :options="Object.values(roles)?.map((x) => `${x}s`)"
+            :options="Object.values(roles)"
             :onChange="handleUserRoleChange"
+            :value="selectedUserRole"
           />
         </div>
       </div>
@@ -116,7 +117,7 @@ export default {
       tabs: ["Free", "Paid"],
       currentFilter: "",
       roles: rolesList,
-      selectedUserRole: "",
+      selectedUserRole: rolesList.TEACHER,
     };
   },
   async created() {
@@ -132,17 +133,19 @@ export default {
     const usersList = await this.getUsersList();
     if (!usersList) return this.$router.push("/404");
 
-    this.usersList = usersList?.map((x) => ({
-      id: x?.id,
-      name: x?.name,
-      email: x?.email,
-      schoolName: x?.schools?.[0]?.name,
-      role: x?.role,
-      image: x?.image
-        ? generateAvatar(x?.image?.split("-")[1], x?.image)
-        : null,
-      isSubscriber: !!x?.subscription,
-    }));
+    this.usersList = usersList
+      ?.filter((x) => !x?.isTestUser)
+      ?.map((x) => ({
+        id: x?.id,
+        name: x?.name,
+        email: x?.email,
+        schoolName: x?.schools?.[0]?.name,
+        role: x?.role,
+        image: x?.image
+          ? generateAvatar(x?.image?.split("-")[1], x?.image)
+          : null,
+        isSubscriber: !!x?.subscription,
+      }));
 
     this.loading = false;
   },

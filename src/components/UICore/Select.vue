@@ -16,12 +16,16 @@
         customClass.toString(),
       ]"
     >
-      <option class="talkie-select-option" value="">
+      <option
+        class="talkie-select-option"
+        value=""
+        :selected="value && !name && value === ''"
+      >
         {{ placeholder || "Choose an option" }}
       </option>
       <template v-if="options && options.length > 0">
         <option
-          :selected="option === t_value"
+          :selected="option === t_value || (value && !name && value === option)"
           v-for="option in options"
           :key="option"
           class="talkie-select-option"
@@ -55,7 +59,7 @@ export default {
       setValue,
     } = useField(this.name);
 
-    if (this.value) setValue(this.value);
+    if (this.value && this.name) setValue(this.value);
 
     return {
       setValue,
@@ -67,6 +71,9 @@ export default {
   components: {},
   props: {
     name: {
+      type: String,
+    },
+    value: {
       type: String,
     },
     placeholder: {
