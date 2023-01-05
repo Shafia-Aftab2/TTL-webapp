@@ -740,7 +740,6 @@ export default {
     };
     this.classTasks = classTasks?.results
       ?.filter((x) => !x?.isAttempted && x?.type !== taskTypes.QUESTION_ANSWER)
-      ?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt))
       ?.map((x) => ({
         id: x?.id,
         type: x?.type,
@@ -761,6 +760,9 @@ export default {
           emojis: x?.emojiStory || [],
         }),
       }));
+    // Shuffle the un-attempted tasks
+    this.shuffleList(this.classTasks);
+    // Set current task
     this.currentTask =
       this.classTasks.length > 0 ? { ...this.classTasks[0], index: 0 } : {};
     this.loading = false;
@@ -949,6 +951,15 @@ export default {
       );
 
       return response.data || null;
+    },
+    shuffleList(array) {
+      /* Fisher Yates Shuffle Algorithm */
+      for (let i = array.length - 1; i > 0; i--) {
+        // take a random index
+        let j = Math.floor(Math.random() * (i + 1));
+        // swap current item with random item
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     },
   },
 };
