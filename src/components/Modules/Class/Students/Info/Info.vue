@@ -212,9 +212,11 @@ export default {
       // class tasks
       const practiceTask = await this.getClassTasks(classId, true);
       if (!practiceTask) return this.$router.push("/404");
-
-      const allTasks = [...classTasks.results, ...practiceTask.results];
-
+      // Filter those tasks that are attempted by student
+      const allTasks = [
+        ...classTasks.results.filter((x) => x.isAttempted),
+        ...practiceTask.results.filter((x) => x.isAttempted),
+      ];
       // class students
       this.classStudents = classDetails?.students?.map((x) => ({
         id: x?.id,
@@ -290,6 +292,7 @@ export default {
     async getClassTasks(id, isPracticeMode = false) {
       const query = {
         ...(isPracticeMode && { isPracticeMode }),
+        forStudent: this.studentId,
       };
 
       const response = await TaskService.QueryClassTasks(id, query).catch(
