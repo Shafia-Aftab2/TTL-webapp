@@ -29,6 +29,34 @@
       </h2>
 
       <div class="class-update-convo-form">
+        <!--  -->
+        <talkie-select
+          :name="'language'"
+          :options="[taskDetails.topic?.language]"
+          :value="taskDetails.topic?.language"
+          :disabled="true"
+          :hint="{
+            type: errors.language ? 'error' : null,
+            message: errors.language ? errors.language : null,
+          }"
+        />
+        <talkie-select
+          :name="'topicname'"
+          :options="[
+            `${taskDetails.topic?.type?.toUpperCase()}: ${
+              taskDetails.topic?.name
+            }`,
+          ]"
+          :value="`${taskDetails.topic?.type?.toUpperCase()}: ${
+            taskDetails.topic?.name
+          }`"
+          :disabled="true"
+          :hint="{
+            type: errors.language ? 'error' : null,
+            message: errors.language ? errors.language : null,
+          }"
+        />
+        <!--  -->
         <talkie-input
           :name="'title'"
           :placeholder="`Title (${
@@ -327,6 +355,7 @@ import { TalkieQuestionCard } from "@/components/SubModules/Cards";
 import {
   TalkieAlert,
   TalkieButton,
+  TalkieSelect,
   TalkieForm,
   TalkieIcon,
   TalkieInput,
@@ -350,6 +379,7 @@ export default {
   components: {
     TalkieInput,
     TalkieIcon,
+    TalkieSelect,
     TalkieAudioRecorder,
     TalkieAudioPlayer,
     TalkieAudioTimeline,
@@ -504,7 +534,7 @@ export default {
     // success case
     this.topics = topicsList;
     this.taskDetails = {
-      topic: taskDetails?.topic?.name,
+      topic: taskDetails?.topic, // .name,
       title: taskDetails?.title,
       questionText: taskDetails?.questionText,
       ...(taskDetails?.type === TaskTypes.QUESTION_ANSWER && {
@@ -526,6 +556,7 @@ export default {
     this.currentRecordingIsFromSource = true;
     this.setFormValue("voiceForQnA", taskDetails?.voiceForQnA);
     this.pageLoading = false;
+    console.log(this.taskDetails);
   },
   methods: {
     handleRedirection(link, timeout = 100) {
@@ -582,6 +613,7 @@ export default {
       return uploadedFile;
     },
     async handleSubmit(values) {
+      console.log(this.shouldSubmit);
       if (
         !this.shouldSubmit &&
         this.selectedTaskType === TaskTypes.QUESTION_ANSWER
