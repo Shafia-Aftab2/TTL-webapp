@@ -58,11 +58,12 @@
         >
           <talkie-modal
             :type="'confirm'"
+            :confirmButtonText="'Got it, don\'t show this again'"
             :contentPadded="true"
             :closeButton="true"
             :centered="true"
-            :title="'Are You Sure'"
-            :description="'Are you sure? Your student\'s responses and feedback will also be deleted.'"
+            :title="'Delete task'"
+            :description="'Are you sure? Your students\' responses and feedback will also be deleted.'"
             :onClose="handleTopicDeleteDialogClose"
             :onConfirm="handleTaskDeletion"
             v-if="taskToDelete"
@@ -225,6 +226,7 @@ import handleSidebarMutation from "@/utils/mixins/handleSidebarMutation";
 import topicTypes from "@/utils/constants/topicTypes";
 import subscriptionPerksMixin from "@/utils/mixins/subscriptionPerksMixin";
 import { copy as copyToClipboard } from "@/utils/helpers/clipboard";
+import cookies from "@/utils/helpers/cookies";
 
 export default {
   name: "ClassHome",
@@ -246,6 +248,7 @@ export default {
   data() {
     return {
       taskToDelete: null,
+      dontShowDeleteModal: cookies.getCookie("dont-show-delete-modal"),
       newTaskOptions: [
         {
           name: "Question",
@@ -322,6 +325,7 @@ export default {
     },
   },
   async created() {
+    console.log("-----------------------------:", this.dontShowDeleteModal);
     await this.handleLoadSequence(this.$route.params.id);
   },
   async beforeRouteUpdate(to) {
@@ -519,12 +523,17 @@ export default {
         1
       );
     },
-    handleTopicCardDeleteClick(id) {
+    async handleTopicCardDeleteClick(id) {
       if (this.computedIsSubscriptionOver) {
         this.handleRedirection(`/classes/${this.classId}/tasks`); // this will redirect to same page but we will get the trial-end-modal again
         return;
       }
-      this.taskToDelete = id;
+      // check if it is not the first visit of user then delete task directly
+      if (this.dontShowDeleteModal) {
+        await this.handleTaskDeletion(id);
+      } else {
+        this.taskToDelete = id;
+      }
     },
     handleTopicDeleteDialogClose() {
       this.taskToDelete = null;
@@ -580,8 +589,15 @@ export default {
         }),
       }));
     },
-    async handleTaskDeletion() {
-      const taskId = this.taskToDelete;
+    async handleTaskDeletion(id = null) {
+      // don't show the delete dialog further
+      if (!this.dontShowDeleteModal) {
+        cookies.setCookie("dont-show-delete-modal", true, {
+          expires: 1,
+        });
+        this.dontShowDeleteModal = true;
+      }
+      const taskId = this.taskToDelete || id;
       this.taskToDelete = null;
       this.backdropLoading = true;
 
