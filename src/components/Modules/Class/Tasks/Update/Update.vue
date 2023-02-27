@@ -474,6 +474,9 @@ export default {
     //   (x) => x?.language?.toLowerCase() === classLanguage
     // );
 
+    // set all class topics
+    this.topics = classDetails.topics.slice();
+
     const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
     this.topicsGrouped = [
       {
