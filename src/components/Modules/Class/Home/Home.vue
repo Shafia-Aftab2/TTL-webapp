@@ -325,7 +325,6 @@ export default {
     },
   },
   async created() {
-    console.log("-----------------------------:", this.dontShowDeleteModal);
     await this.handleLoadSequence(this.$route.params.id);
   },
   async beforeRouteUpdate(to) {
