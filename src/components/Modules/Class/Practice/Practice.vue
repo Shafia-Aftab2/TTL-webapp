@@ -33,7 +33,9 @@
         >
           &#8592; Exit
         </router-link>
-        <h4 class="h4" v-if="currentTask.title">{{ currentTask.title }}</h4>
+        <h4 class="h4" v-if="currentTask.type">
+          {{ currentTask.type?.split("-").join(" ") }}
+        </h4>
         <a
           class="class-practice-header-wrapper-link"
           v-if="currentTask.canFinish"
@@ -743,7 +745,7 @@ export default {
       ?.map((x) => ({
         id: x?.id,
         type: x?.type,
-        title: x?.type?.split("-").join(" "),
+        title: x?.title, // type?.split("-").join(" "),
         topic: x?.topic?.name,
         description: x?.questionText,
         canExit: true,

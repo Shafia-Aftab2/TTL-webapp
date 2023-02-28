@@ -152,7 +152,12 @@
         </template>
 
         <!-- Common Fields -->
-        <template v-if="selectedTaskType !== taskTypes.QUESTION_ANSWER">
+        <template
+          v-if="
+            selectedTaskType !== taskTypes.QUESTION_ANSWER &&
+            selectedTaskType !== taskTypes.TRANSLATION
+          "
+        >
           <talkie-input
             :multiline="true"
             :name="'questionText'"
