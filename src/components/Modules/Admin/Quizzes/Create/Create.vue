@@ -682,11 +682,12 @@ export default {
 
       // form data
       const { title, topic: topicName, questionText } = values;
-
       const topicId = this.topics?.find(
-        (x) => x?.name?.toLowerCase() === topicName?.trim()?.toLowerCase()
+        (x) =>
+          x?.name?.toLowerCase() === topicName?.trim()?.toLowerCase() &&
+          x?.language?.toLowerCase() ===
+            this.selectedLanguage?.toLowerCase()?.trim()
       )?.id;
-
       // payload
       const payload = {
         title: title || "",
