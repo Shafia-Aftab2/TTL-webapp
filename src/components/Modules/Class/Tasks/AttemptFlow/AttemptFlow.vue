@@ -73,11 +73,77 @@
             </h5>
           </talkie-tool-tip>
         </div>
+        <!-- All class tasks -->
+        <div class="class-tasks-attempt-flow-body-content-wrapper">
+          <!-- Question Answer  -->
+          <template
+            v-if="
+              currentTask.type === taskTypes.QUESTION_ANSWER &&
+              currentTask?.voiceForQnA
+            "
+          >
+            <div class="class-task-content-wrapper">
+              <div class="class-task-question-answer-audio-player-wrapper">
+                <talkie-icon
+                  :name="'play'"
+                  :isActive="true"
+                  :variant="'primary'"
+                  :size="25"
+                  :onClick="handleVoiceForQnAPlayerToggle"
+                  v-if="!isVoiceForQnAPlaying && currentTask?.voiceForQnA"
+                />
+                <talkie-icon
+                  :name="'pause'"
+                  :isActive="true"
+                  :variant="'primary'"
+                  :size="25"
+                  :onClick="handleVoiceForQnAPlayerToggle"
+                  v-if="isVoiceForQnAPlaying && currentTask?.voiceForQnA"
+                />
+                &nbsp;
+                <talkie-audio-player
+                  v-if="currentTask?.voiceForQnA"
+                  v-slot="{
+                    isPlaying,
+                    togglePlayer,
+                    currentAudioPercentage,
+                    updateAudioPercentage,
+                    totalAudioPlaybackTime,
+                    currentAudioPlaybackTime,
+                  }"
+                  :source="currentTask?.voiceForQnA"
+                >
+                  <span hidden>
+                    <!-- TODO: updated these states via a handler -->
+                    {{ (this.isVoiceForQnAPlaying = isPlaying) }}
+                    {{ (this.handleVoiceForQnAPlayerToggle = togglePlayer) }}
+                  </span>
+                  <div
+                    class="class-tasks-attempt-flow-body-audio-player-wrapper translation-audio"
+                  >
+                    <talkie-audio-timeline
+                      :percentage="currentAudioPercentage"
+                      :onHeadChange="updateAudioPercentage"
+                    />
+                    <div
+                      class="class-tasks-attempt-flow-body-audio-player-wrapper-timestamps translation-audio-timestamps"
+                      style="text-align: end"
+                    >
+                      {{ currentAudioPlaybackTime }} /
+                      {{ totalAudioPlaybackTime }}
+                    </div>
+                  </div>
+                </talkie-audio-player>
+              </div>
+              <h4 class="h4" v-if="currentTask.title">
+                {{ currentTask.title }}
+              </h4>
+              <p class="p" v-if="currentTask.description">
+                {{ currentTask.description }}
+              </p>
+            </div>
+          </template>
 
-        <div
-          class="class-tasks-attempt-flow-body-content-wrapper"
-          v-if="currentTask.type !== taskTypes.QUESTION_ANSWER"
-        >
           <!-- Caption this -->
           <template
             v-if="
@@ -609,6 +675,8 @@ export default {
       currentRecording: null,
       isAudioPlaying: false,
       handleAudioPlayerToggle: () => {},
+      isVoiceForQnAPlaying: false,
+      handleVoiceForQnAPlayerToggle: () => {},
       user: {},
       loading: false,
       backdropLoading: false,
@@ -787,6 +855,9 @@ export default {
         }),
         ...(x?.type === taskTypes.EMOJI_STORY && {
           emojis: x?.emojiStory || [],
+        }),
+        ...(x?.type === taskTypes.QUESTION_ANSWER && {
+          voiceForQnA: x?.voiceForQnA,
         }),
       }));
     this.currentTask =
@@ -1109,6 +1180,10 @@ export default {
   display: flex;
   flex-direction: column;
   text-align: center;
+}
+.class-task-question-answer-audio-player-wrapper {
+  display: flex;
+  flex-direction: row;
 }
 .class-translations-question-wrapper,
 .class-translations-answer-wrapper {
