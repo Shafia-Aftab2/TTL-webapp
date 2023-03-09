@@ -6,7 +6,7 @@
       (translation && translation.textToTranslate && translation.translatedText)
     "
   >
-    <span class="talkie-question-card-expand-content-toggle-button">
+    <!-- <span class="talkie-question-card-expand-content-toggle-button">
       <talkie-icon
         :name="'arrow-head-top'"
         :variant="'success'"
@@ -25,7 +25,7 @@
         :onClick="() => handleQuestionCardExpand(true)"
         v-if="!cardExpanded"
       />
-    </span>
+    </span> -->
   </div>
   <div
     class="talkie-question-card-expand-content-wrapper"
@@ -67,17 +67,20 @@
 </template>
 
 <script>
-import { TalkieIcon, TalkieChip } from "@/components/UICore";
+import {
+  // TalkieIcon,
+  TalkieChip,
+} from "@/components/UICore";
 
 export default {
   name: "QuestionCardExpandContent",
   components: {
-    TalkieIcon,
+    // TalkieIcon,
     TalkieChip,
   },
   data() {
     return {
-      cardExpanded: false,
+      cardExpanded: true,
     };
   },
   props: {
