@@ -85,22 +85,102 @@
 
         <!-- right side -->
         <div class="talkie-conversation-card-header-options">
-          <talkie-chip
+          <!-- <talkie-chip
             :label="'Click To Expand'"
             :variant="'neutral'"
             v-if="!cardExpanded"
             :onClick="handleCardBodyClick"
-          />
+          /> -->
+
+          <!-- Audio Message without expand -->
+          <talkie-audio-player
+            v-if="latestStudResponse && latestStudResponse.voiceRecording"
+            :source="latestStudResponse.voiceRecording"
+            v-slot="{
+              // totalAudioPlaybackTime,
+              startPlayer,
+              stopPlayer,
+              isPlaying,
+              // updateAudioPercentage,
+              // currentAudioPercentage,
+            }"
+          >
+            <talkie-icon
+              :name="'play'"
+              :variant="'primary'"
+              :size="35"
+              :onClick="
+                async () => {
+                  await startPlayer();
+                  // onAudioPlay() && (await onAudioPlay());
+                }
+              "
+              v-if="!isPlaying"
+            />
+            <talkie-icon
+              :name="'pause'"
+              :variant="'primary'"
+              :size="35"
+              :onClick="stopPlayer"
+              v-if="isPlaying"
+            />
+            <!-- <talkie-audio-timeline
+              :percentage="currentAudioPercentage"
+              :onHeadChange="updateAudioPercentage"
+            />
+            <span class="talkie-conversation-card-message-timestamps">
+              {{ totalAudioPlaybackTime }}
+            </span> -->
+          </talkie-audio-player>
+          &nbsp;
+          <!-- Record Buttons Without expand -->
+          <talkie-audio-recorder
+            v-slot="{ startRecording, stopRecording, isRecording }"
+            :onRecordingStopped="handleRecordedItem"
+          >
+            <talkie-icon
+              :name="'mike-unmuted'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="33"
+              :onClick="startRecording"
+              v-if="!isRecording && !currentRecording"
+            />
+            <talkie-icon
+              :name="'square'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="33"
+              :iconToSizeRatio="1.5"
+              :customClass="'talkie-conversation-card-options-stop-recording-button'"
+              :onClick="stopRecording"
+              v-if="isRecording && !currentRecording"
+            />
+            <talkie-icon
+              :name="'send'"
+              :isActive="true"
+              :variant="'secondary'"
+              :size="33"
+              :onClick="handleRecordingSendClick"
+              v-if="currentRecording && !isSendingRecording"
+            />
+            <talkie-loader
+              :name="'sendLoader'"
+              :size="'large'"
+              v-if="isSendingRecording"
+            />
+          </talkie-audio-recorder>
+          &nbsp;
           <!-- Feedback Stars -->
           <talkie-icon
             :name="'star'"
             :isActive="true"
             :variant="!feedbackGiven ? 'neutral' : 'primary'"
-            :size="40"
+            :size="33"
             :iconToSizeRatio="1.1"
             :onClick="handleRateStudentResponse"
-            v-if="cardExpanded"
           />
+          <!-- v-if="cardExpanded" -->
         </div>
       </template>
     </div>
@@ -219,6 +299,11 @@ import {
   TalkieChip,
   TalkieBackDropLoader,
 } from "@/components/UICore";
+import {
+  TalkieAudioPlayer,
+  TalkieAudioRecorder,
+  // TalkieAudioTimeline,
+} from "@/components/SubModules/AudioManager";
 import ConversationMessage from "./Message";
 import ConversationRecorder from "./Recorder";
 import authUser from "@/utils/helpers/auth";
@@ -245,6 +330,9 @@ export default {
     TalkieBackDropLoader,
     ConversationMessage,
     ConversationRecorder,
+    TalkieAudioPlayer,
+    TalkieAudioRecorder,
+    // TalkieAudioTimeline,
   },
   props: {
     userMode: {
@@ -321,6 +409,9 @@ export default {
       feedbackGiven: false,
       backdropLoading: false,
       pointsScored: null,
+      latestStudResponse: null,
+      currentRecording: null,
+      isSendingRecording: false,
     };
   },
   computed: {
@@ -346,8 +437,18 @@ export default {
     // get auth user
     const user = authUser.getUser();
     this.user = user;
+    this.getConversationMessages();
   },
   methods: {
+    handleRecordedItem(recording) {
+      this.currentRecording = recording;
+    },
+    async handleRecordingSendClick() {
+      this.isSendingRecording = true;
+      await this.handleMessageCreation(this.currentRecording);
+      this.isSendingRecording = false;
+      this.currentRecording = null;
+    },
     isValidAvatar(avatar) {
       return avatar?.toString()?.includes("svg");
     },
@@ -501,6 +602,10 @@ export default {
             showReadReceipt: true,
           }),
       }));
+      this.latestStudResponse = response.data.messages
+        .filter((x) => x.object === "response")
+        .reduce((a, b) => (a.createdAt > b.createdAt ? a : b));
+
       this.messagesFetched = transformedMessages;
 
       // only allow the teacher to score the first response
