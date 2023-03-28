@@ -643,7 +643,7 @@ export default {
             this.loading = false;
             this.formStatus = {
               type: "error",
-              message: "Could not upload audio file!",
+              message: "Uh oh, upload failed. Please try again.",
               loading: false,
             };
             return;
@@ -724,15 +724,20 @@ export default {
       const response = await TaskService.Create(this.classId, payload).catch(
         (e) => {
           const errorMap = {
-            ['"title" contains bad word']: "Title should not be unethical!",
+            ['"title" contains bad word']:
+              "Please make sure title is appropriate.",
             ['"questiontext" contains bad word']:
-              "Question text should not be unethical!",
+              "Please make sure question is appropriate.",
             ['"topic" must be a valid mongo id']: "Invalid Topic",
-            ["Q&A"]: "Could not create conversation!",
-            ["Caption-This"]: "Could not create caption task!",
-            ["Translation"]: "Could not create translation task!",
-            ["Emoji-Story"]: "Could not create emoji story task!",
-            ['"topic" is required']: "Please select a topic!",
+            ["Q&A"]:
+              "Oops! Something has gone wrong... Please try again later.",
+            ["Caption-This"]:
+              "Oops! Something has gone wrong... Please try again later.",
+            ["Translation"]:
+              "Oops! Something has gone wrong... Please try again later.",
+            ["Emoji-Story"]:
+              "Oops! Something has gone wrong... Please try again later.",
+            ['"topic" is required']: "Please select a topic to continue",
           };
 
           return {
