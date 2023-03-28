@@ -634,7 +634,7 @@ export default {
         payload
       ).catch(() => {
         return {
-          error: "Could not update student password!",
+          error: "Password update failed. Please try again later.",
         };
       });
 
@@ -650,7 +650,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Student password updated successfully!", {
+      notifications.show("Password updated successfully.", {
         variant: "success",
         displayIcon: true,
       });
@@ -666,7 +666,7 @@ export default {
       if (name === this.classDetails?.name) {
         this.backdropLoading = false;
         this.editClassMode = false;
-        notifications.show("Class updated successfully!", {
+        notifications.show("Class updated successfully.", {
           variant: "success",
           displayIcon: true,
         });
@@ -707,7 +707,7 @@ export default {
       this.classDetails.name = name; // update class name in state
       this.backdropLoading = false;
       this.editClassMode = false;
-      notifications.show("Class updated successfully!", {
+      notifications.show("Class updated successfully.", {
         variant: "success",
         displayIcon: true,
       });

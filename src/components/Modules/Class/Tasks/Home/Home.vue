@@ -358,7 +358,7 @@ export default {
       );
 
       if (!taskFeedback) {
-        notifications.show("Could not create feedback!", {
+        notifications.show("Feedback not sent. Please try again. ", {
           variant: "error",
           displayIcon: true,
         });
@@ -381,7 +381,7 @@ export default {
     },
     async handleTaskWholeClassFeedbackSend() {
       if (!this.taskResponsesWholeClassFeedbackRecording) {
-        notifications.show("Could not create feedback!", {
+        notifications.show("Feedback not sent. Please try again. ", {
           variant: "error",
           displayIcon: true,
         });
@@ -460,7 +460,7 @@ export default {
 
       // file upload failure
       if (!voiceRecording) {
-        notifications.show("Could not create feedback!", {
+        notifications.show("Feedback not sent. Please try again. ", {
           variant: "error",
           displayIcon: true,
         });
@@ -483,7 +483,7 @@ export default {
 
       // failure case
       if (!response) {
-        notifications.show("Could not create feedback!", {
+        notifications.show("Feedback not sent. Please try again. ", {
           variant: "error",
           displayIcon: true,
         });
@@ -492,7 +492,7 @@ export default {
       }
 
       // success case
-      notifications.show("Feedback Created!", {
+      notifications.show("Feedback sent!", {
         variant: "success",
         displayIcon: true,
       });
