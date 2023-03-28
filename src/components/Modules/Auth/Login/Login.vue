@@ -144,14 +144,15 @@ export default {
       const response = await AuthService.Login(payload).catch((e) => {
         const errorMap = {
           ["incorrect email or password"]:
-            "Incorrect email/username or password!",
-          ['"email" must be a valid email']: "Email must be valid!",
+            "Sorry, your email or password is incorrect. Please try again.",
+          ['"email" must be a valid email']:
+            "Invalid email. Please try another.",
         };
 
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Could not login!",
+            "Sorry, we couldn't seem to log you in at the mo. Please check back later.",
         };
       });
 

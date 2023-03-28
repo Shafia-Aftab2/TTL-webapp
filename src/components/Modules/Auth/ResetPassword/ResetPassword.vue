@@ -146,17 +146,18 @@ export default {
         payload
       ).catch((e) => {
         const errorMap = {
-          ["token not found"]: "Invalid reset link!",
+          ["token not found"]:
+            "Sorry, we can't recognise the reset link. Please try again.",
           ["password must be at least 8 characters"]:
-            "Password must contain at least 8 characters!",
+            "Password must contain at least 8 characters",
           ["password must contain at least 1 letter and 1 number"]:
-            "Password must contain at least 1 letter and 1 number!",
+            "Password must contain at least 1 letter and 1 number",
         };
 
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Failed to change password!",
+            "Sorry, we can't seem to change your password. Please try again later.",
         };
       });
 

@@ -672,7 +672,7 @@ export default {
       const response = await ClassService.Update(this.classId, payload).catch(
         (e) => {
           const errorMap = {
-            ['"name" contains bad word']: "Name should not be unethical!",
+            ['"name" contains bad word']: "Please enter an appropriate name",
             ["class already exists in school"]:
               "Class with same name already exists!",
           };

@@ -167,7 +167,7 @@ export default {
       // api call
       const response = await ClassService.Create(payload).catch((e) => {
         const errorMap = {
-          ['"name" contains bad word']: "Name should not be unethical!",
+          ['"name" contains bad word']: "Please enter an appropriate name",
           ['"schoolid" must be a valid mongo id']: "Invalid School",
           ["school not found"]: "Invalid School",
           ["class already exists in school"]:

@@ -468,9 +468,9 @@ export default {
       const response = await UserService.UpdateProfile(payload).catch((e) => {
         const errorMap = {
           ["email already exists"]: "Email Already Exists!",
-          ['"name" contains bad word']: "Name should not be unethical!",
+          ['"name" contains bad word']: "Please enter an appropriate name",
           ['"displayname" contains bad word']:
-            "Display name should not be unethical!",
+            "Please enter an appropriate display name",
           ["username already exists"]: "Username already exists!",
         };
 

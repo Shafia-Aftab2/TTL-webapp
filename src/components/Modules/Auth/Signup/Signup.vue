@@ -260,18 +260,19 @@ export default {
       // api call
       const response = await AuthService.Signup(payload).catch((e) => {
         const errorMap = {
-          ['"name" contains bad word']: "Name should not be unethical!",
-          ['"username" contains bad word']: "Username should not be unethical!",
+          ['"name" contains bad word']: "Please enter an appropriate name",
+          ['"username" contains bad word']:
+            "Please enter an appropriate username",
           ['"displayname" contains bad word']:
-            "Display name should not be unethical!",
+            "Please enter an appropriate display name",
           ['"schoolname" contains bad word']:
-            "School name should not be unethical!",
+            "Please enter an appropriate school name",
           ["email already exists"]: "Email already exists!",
           ["username already exists"]: "Username already exists!",
           ["password must be at least 8 characters"]:
-            "Password must contain at least 8 characters!",
+            "Password must contain at least 8 characters",
           ["password must contain at least 1 letter and 1 number"]:
-            "Password must contain at least 1 letter and 1 number!",
+            "Password must contain at least 1 letter and 1 number",
         };
 
         return {
