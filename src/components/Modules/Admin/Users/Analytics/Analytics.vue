@@ -213,7 +213,7 @@ export default {
 
       // success case
       this.isRemovingUser = false;
-      notifications.show("User Removed. Redirecting!", {
+      notifications.show("User removed", {
         variant: "success",
         displayIcon: true,
       });

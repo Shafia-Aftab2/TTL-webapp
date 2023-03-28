@@ -412,15 +412,18 @@ export default {
 
       // error case
       if (!isCopiedToClipboard) {
-        notifications.show("Failed to copy to clipboard!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Oops, we can't copy that. Please try again later.",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
-      notifications.show("Copied to clipboard!", {
+      notifications.show("Copied!", {
         variant: "success",
         displayIcon: true,
       });
@@ -447,7 +450,8 @@ export default {
         ? ClassService.AddTopics
         : ClassService.RemoveTopics)(classId, payload).catch(() => {
         return {
-          error: "Could not update class topic/s!",
+          error:
+            "Sorry, we can't update class topics for now. Please try again later.",
         };
       });
 
@@ -529,16 +533,19 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Delete Class!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Sorry, we can't delete this class at the moment. ",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Class Deleted Successfully!", {
+      notifications.show("Class deleted successfully.", {
         variant: "success",
         displayIcon: true,
       });
@@ -582,7 +589,8 @@ export default {
         payload
       ).catch(() => {
         return {
-          error: "Could not remove student!",
+          error:
+            "Sorry, we can't remove student for now. Please try again later.",
         };
       });
 
@@ -601,7 +609,7 @@ export default {
       this.classStudents = [
         ...this.classStudents.filter((x) => x?.id !== studentId),
       ];
-      notifications.show("Student removed successfully!", {
+      notifications.show("Student removed successfully.", {
         variant: "success",
         displayIcon: true,
       });

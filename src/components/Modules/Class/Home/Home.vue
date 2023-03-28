@@ -668,15 +668,18 @@ export default {
 
       // error case
       if (!isCopiedToClipboard) {
-        notifications.show("Failed to copy to clipboard!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Oops, we can't copy that. Please try again later.",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
-      notifications.show("Copied to clipboard!", {
+      notifications.show("Copied!", {
         variant: "success",
         displayIcon: true,
       });
