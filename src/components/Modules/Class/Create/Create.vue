@@ -171,15 +171,15 @@ export default {
           ['"schoolid" must be a valid mongo id']: "Invalid School",
           ["school not found"]: "Invalid School",
           ["class already exists in school"]:
-            "Class with same name already exists!",
+            "Oops, this class name already exists. Try another one?",
           ["user has no subscription"]:
-            "Please upgrade your account to continue!",
+            "Please upgrade your account to continue",
         };
 
         return {
           error:
             errorMap[e.response.data.message.toLowerCase()] ||
-            "Could not create class!",
+            "Sorry, we can't create your class at the mo. Please try again later.",
         };
       });
 

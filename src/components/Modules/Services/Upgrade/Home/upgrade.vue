@@ -477,14 +477,14 @@ export default {
         : SubscriptionService.CreateSubscription)(query).catch((e) => {
         const errorMap = {
           "plan is already subscribed":
-            "You are already subscribed to this plan",
+            "You're already subscribed to this plan :)",
         };
 
         return {
           // todo: added message "user has no payment-method"
           error:
             errorMap?.[e?.response?.data?.message?.toLowerCase()] ||
-            "Failed to create subscription!",
+            "Sorry. we can't subscribe you at the moment. Please try again later.",
         };
       });
 

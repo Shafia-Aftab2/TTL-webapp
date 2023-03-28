@@ -412,7 +412,7 @@ export default {
       );
 
       if (!blob) {
-        notifications.show("CSV file broken or no records found!", {
+        notifications.show("CSV file broken or no records found", {
           variant: "error",
           displayIcon: true,
         });
@@ -422,7 +422,7 @@ export default {
       const csvData = await this.readCSV(csvTemplateFile).catch(() => null);
 
       if (!csvData || csvData?.length === 0) {
-        notifications.show("CSV file broken or no records found!", {
+        notifications.show("CSV file broken or no records found", {
           variant: "error",
           displayIcon: true,
         });

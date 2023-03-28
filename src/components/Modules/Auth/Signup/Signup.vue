@@ -267,8 +267,10 @@ export default {
             "Please enter an appropriate display name",
           ['"schoolname" contains bad word']:
             "Please enter an appropriate school name",
-          ["email already exists"]: "Email already exists!",
-          ["username already exists"]: "Username already exists!",
+          ["email already exists"]:
+            "Oops, this email already exists. Try another one?",
+          ["username already exists"]:
+            "Oops, this username already exists. Try another one?",
           ["password must be at least 8 characters"]:
             "Password must contain at least 8 characters",
           ["password must contain at least 1 letter and 1 number"]:
@@ -278,7 +280,7 @@ export default {
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Could not create account!",
+            "Sorry, we can't create your account at the mo. Please try again later.",
         };
       });
 

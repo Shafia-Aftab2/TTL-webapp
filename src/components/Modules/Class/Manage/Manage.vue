@@ -674,13 +674,13 @@ export default {
           const errorMap = {
             ['"name" contains bad word']: "Please enter an appropriate name",
             ["class already exists in school"]:
-              "Class with same name already exists!",
+              "Oops, this class name already exists. Try another one?",
           };
 
           return {
             error:
               errorMap[e.response.data.message.toLowerCase()] ||
-              "Could not update class!",
+              "Sorry, we can't update your class at the mo. Please try again later.",
           };
         }
       );
