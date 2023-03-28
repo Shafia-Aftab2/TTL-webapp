@@ -465,7 +465,7 @@ export default {
     },
     async handleRateStudentResponse() {
       if (this.feedbackGiven) {
-        notifications.show("You've already given a star!", {
+        notifications.show("You've already given this student a star!", {
           variant: "error",
           displayIcon: true,
         });

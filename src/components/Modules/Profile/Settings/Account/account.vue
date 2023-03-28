@@ -617,17 +617,20 @@ export default {
       // failure case
       if (!response) {
         this.resumingSubscription = false;
-        notifications.show("Failed to resume subscription!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Failed to resume subscription. Please check back later.",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
       await this.getUserSubscription();
       this.resumingSubscription = false;
-      this.notifications.show("Subscription resumed successfully!", {
+      this.notifications.show("Your subscription is now active.", {
         variant: "success",
         displayIcon: true,
       });
@@ -697,7 +700,7 @@ export default {
       // failure case
       if (!response.data) {
         this.settingDefaultPaymentMethod = false;
-        notifications.show("Failed to set card as default! Please try again!", {
+        notifications.show("Default card not saved. Please try again.", {
           variant: "error",
           displayIcon: true,
         });
@@ -710,7 +713,7 @@ export default {
       this.user = user;
       this.updateUserPaymentMethodsInfo();
       this.settingDefaultPaymentMethod = false;
-      notifications.show("Card set as default!", {
+      notifications.show("Default card saved.", {
         variant: "success",
         displayIcon: true,
       });
@@ -739,7 +742,7 @@ export default {
         this.selectedCardId
       ).catch(() => {
         return {
-          error: "Failed to remove payment method! Please try again!",
+          error: "Remove payment method failed. Please try again later.",
         };
       });
 
@@ -759,7 +762,7 @@ export default {
       this.user = user;
       this.updateUserPaymentMethodsInfo();
       this.removingPaymentMethod = false;
-      notifications.show("Payment method removed!", {
+      notifications.show("Payment method removed.", {
         variant: "success",
         displayIcon: true,
       });
@@ -849,7 +852,7 @@ export default {
       this.updateUserPaymentMethodsInfo();
       this.hasPaymentMethod = true;
       this.addingPaymentMethod = false;
-      notifications.show("Your bank card was added successfully!", {
+      notifications.show("Success!", {
         variant: "success",
         displayIcon: true,
       });

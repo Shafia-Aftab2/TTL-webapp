@@ -499,7 +499,7 @@ export default {
         type: null,
         message: null,
       };
-      notifications.show("Profile updated successfully!", {
+      notifications.show("Profile updated successfully.", {
         variant: "success",
         displayIcon: true,
       });

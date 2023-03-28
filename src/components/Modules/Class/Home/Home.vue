@@ -551,9 +551,10 @@ export default {
       if (!classTasks) {
         this.backdropLoading = false;
         notifications.show(
-          `Failed to get ${
-            showPracticeModeTasks ? "practice" : "class"
-          } mode task!`,
+          `Oops, something went wrong. We're on it! Please check back later.`,
+          // `Failed to get ${
+          //   showPracticeModeTasks ? "practice" : "class"
+          // } mode task!`,
           {
             variant: "error",
             displayIcon: true,

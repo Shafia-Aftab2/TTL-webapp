@@ -235,7 +235,7 @@ export default {
         ? SubscriptionService.ChangeSubscriptionStatus
         : SubscriptionService.CancelSubscription)(payload).catch(() => {
         return {
-          error: `Could not ${this.haltMode} your subscription!`,
+          error: `Oops, we can't seem to ${this.haltMode} your subscription. Please try again later.`,
         };
       });
 
@@ -255,7 +255,7 @@ export default {
       notifications.show(
         `Subscription ${this.haltMode}${
           this.haltMode === "pause" ? "d" : "ed"
-        } successfully!`,
+        } successfully.`,
         {
           variant: "success",
           displayIcon: true,

@@ -388,7 +388,7 @@ export default {
       this.updateUserPaymentMethodsInfo();
       this.hasPaymentMethod = true;
       this.addingPaymentMethod = false;
-      notifications.show("Your bank card was added successfully!", {
+      notifications.show("Success!", {
         variant: "success",
         displayIcon: true,
       });
@@ -499,7 +499,7 @@ export default {
       await this.updateUserProfile();
       this.subscribingToPlan = false;
       this.accountUpgraded = true;
-      notifications.show("Subscription created successfully!", {
+      notifications.show("Your subscription is now active.", {
         variant: "success",
         displayIcon: true,
       });
