@@ -412,15 +412,18 @@ export default {
 
       // error case
       if (!isCopiedToClipboard) {
-        notifications.show("Failed to copy to clipboard!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Oops, we can't copy that. Please try again later.",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
-      notifications.show("Copied to clipboard!", {
+      notifications.show("Copied!", {
         variant: "success",
         displayIcon: true,
       });
@@ -447,7 +450,8 @@ export default {
         ? ClassService.AddTopics
         : ClassService.RemoveTopics)(classId, payload).catch(() => {
         return {
-          error: "Could not update class topic/s!",
+          error:
+            "Sorry, we can't update class topics for now. Please try again later.",
         };
       });
 
@@ -529,16 +533,19 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Delete Class!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Sorry, we can't delete this class at the moment. ",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Class Deleted Successfully!", {
+      notifications.show("Class deleted successfully.", {
         variant: "success",
         displayIcon: true,
       });
@@ -582,7 +589,8 @@ export default {
         payload
       ).catch(() => {
         return {
-          error: "Could not remove student!",
+          error:
+            "Sorry, we can't remove student for now. Please try again later.",
         };
       });
 
@@ -601,7 +609,7 @@ export default {
       this.classStudents = [
         ...this.classStudents.filter((x) => x?.id !== studentId),
       ];
-      notifications.show("Student removed successfully!", {
+      notifications.show("Student removed successfully.", {
         variant: "success",
         displayIcon: true,
       });
@@ -626,7 +634,7 @@ export default {
         payload
       ).catch(() => {
         return {
-          error: "Could not update student password!",
+          error: "Password update failed. Please try again later.",
         };
       });
 
@@ -642,7 +650,7 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Student password updated successfully!", {
+      notifications.show("Password updated successfully.", {
         variant: "success",
         displayIcon: true,
       });
@@ -658,7 +666,7 @@ export default {
       if (name === this.classDetails?.name) {
         this.backdropLoading = false;
         this.editClassMode = false;
-        notifications.show("Class updated successfully!", {
+        notifications.show("Class updated successfully.", {
           variant: "success",
           displayIcon: true,
         });
@@ -672,15 +680,15 @@ export default {
       const response = await ClassService.Update(this.classId, payload).catch(
         (e) => {
           const errorMap = {
-            ['"name" contains bad word']: "Name should not be unethical!",
+            ['"name" contains bad word']: "Please enter an appropriate name",
             ["class already exists in school"]:
-              "Class with same name already exists!",
+              "Oops, this class name already exists. Try another one?",
           };
 
           return {
             error:
               errorMap[e.response.data.message.toLowerCase()] ||
-              "Could not update class!",
+              "Sorry, we can't update your class at the mo. Please try again later.",
           };
         }
       );
@@ -699,7 +707,7 @@ export default {
       this.classDetails.name = name; // update class name in state
       this.backdropLoading = false;
       this.editClassMode = false;
-      notifications.show("Class updated successfully!", {
+      notifications.show("Class updated successfully.", {
         variant: "success",
         displayIcon: true,
       });

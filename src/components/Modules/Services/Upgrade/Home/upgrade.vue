@@ -281,7 +281,8 @@ export default {
     const user = await this.getMyProfile();
     this.user = user;
     if (!user) {
-      this.pageLoadError = "This page is not working correctly, Please reload!";
+      this.pageLoadError =
+        "Hmm.. something has gone wrong. Please reload the page.";
     }
 
     // check if the user has a payment method or bank cards
@@ -388,7 +389,7 @@ export default {
       this.updateUserPaymentMethodsInfo();
       this.hasPaymentMethod = true;
       this.addingPaymentMethod = false;
-      notifications.show("Your bank card was added successfully!", {
+      notifications.show("Success!", {
         variant: "success",
         displayIcon: true,
       });
@@ -477,14 +478,14 @@ export default {
         : SubscriptionService.CreateSubscription)(query).catch((e) => {
         const errorMap = {
           "plan is already subscribed":
-            "You are already subscribed to this plan",
+            "You're already subscribed to this plan :)",
         };
 
         return {
           // todo: added message "user has no payment-method"
           error:
             errorMap?.[e?.response?.data?.message?.toLowerCase()] ||
-            "Failed to create subscription!",
+            "Sorry. we can't subscribe you at the moment. Please try again later.",
         };
       });
 
@@ -499,7 +500,7 @@ export default {
       await this.updateUserProfile();
       this.subscribingToPlan = false;
       this.accountUpgraded = true;
-      notifications.show("Subscription created successfully!", {
+      notifications.show("Your subscription is now active.", {
         variant: "success",
         displayIcon: true,
       });

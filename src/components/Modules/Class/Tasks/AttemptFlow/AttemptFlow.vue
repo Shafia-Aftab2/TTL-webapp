@@ -933,7 +933,7 @@ export default {
         this.currentRecording.blob
       );
       if (!voiceRecording) {
-        notifications.show("Could not add your answer!", {
+        notifications.show("Recording not sent. Please try again.", {
           variant: "error",
           displayIcon: true,
         });
@@ -956,7 +956,7 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Could not add your answer!", {
+        notifications.show("Recording not sent. Please try again.", {
           variant: "error",
           displayIcon: true,
         });
@@ -1012,10 +1012,13 @@ export default {
         // failure case
         if (!response) {
           this.backdropLoading = false;
-          notifications.show("Could not add scores to your answer!", {
-            variant: "error",
-            displayIcon: true,
-          });
+          notifications.show(
+            "Oops, we can't add points at the moment. Please check back later.",
+            {
+              variant: "error",
+              displayIcon: true,
+            }
+          );
           return;
         }
       }

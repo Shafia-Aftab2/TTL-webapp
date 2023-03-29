@@ -320,18 +320,19 @@ export default {
         const errorMap = {
           ['"topic" must be a valid mongo id']: "Invalid Topic",
           ["first column is missing in a row"]:
-            "Invalid CSV, a cell in first column is missing data!",
+            "First column is missing data. Please check and try again.",
           ["second column is missing in a row"]:
-            "Invalid CSV, a cell in second column is missing data!",
+            "Second column is missing data. Please check and try again.",
           ["badwords found in first column"]:
-            "Invalid CSV, a cell in first column has bad words!",
-          ["no data found in csv file"]: "Invalid CSV file",
+            "Please make sure all words are appropriate.",
+          ["no data found in csv file"]:
+            "CSV file has no data. Please try again.",
         };
 
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Failed to create bulk tasks",
+            "Oops! Something has gone wrong... Please try again later.",
         };
       });
 
@@ -351,7 +352,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Tasks created in bulk!",
+        message: "Bulk upload success!",
         animateEllipse: false,
         loading: false,
       };
@@ -384,7 +385,7 @@ export default {
       );
 
       if (!blob) {
-        notifications.show("CSV file broken or no records found!", {
+        notifications.show("CSV file broken or no records found", {
           variant: "error",
           displayIcon: true,
         });
@@ -394,7 +395,7 @@ export default {
       const csvData = await this.readCSV(csvTemplateFile).catch(() => null);
 
       if (!csvData || csvData?.length === 0) {
-        notifications.show("CSV file broken or no records found!", {
+        notifications.show("CSV file broken or no records found", {
           variant: "error",
           displayIcon: true,
         });

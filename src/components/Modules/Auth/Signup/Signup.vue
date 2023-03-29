@@ -260,24 +260,27 @@ export default {
       // api call
       const response = await AuthService.Signup(payload).catch((e) => {
         const errorMap = {
-          ['"name" contains bad word']: "Name should not be unethical!",
-          ['"username" contains bad word']: "Username should not be unethical!",
+          ['"name" contains bad word']: "Please enter an appropriate name",
+          ['"username" contains bad word']:
+            "Please enter an appropriate username",
           ['"displayname" contains bad word']:
-            "Display name should not be unethical!",
+            "Please enter an appropriate display name",
           ['"schoolname" contains bad word']:
-            "School name should not be unethical!",
-          ["email already exists"]: "Email already exists!",
-          ["username already exists"]: "Username already exists!",
+            "Please enter an appropriate school name",
+          ["email already exists"]:
+            "Oops, this email already exists. Try another one?",
+          ["username already exists"]:
+            "Oops, this username already exists. Try another one?",
           ["password must be at least 8 characters"]:
-            "Password must contain at least 8 characters!",
+            "Password must contain at least 8 characters",
           ["password must contain at least 1 letter and 1 number"]:
-            "Password must contain at least 1 letter and 1 number!",
+            "Password must contain at least 1 letter and 1 number",
         };
 
         return {
           error:
             errorMap[e?.response?.data?.message?.toLowerCase()] ||
-            "Could not create account!",
+            "Sorry, we can't create your account at the mo. Please try again later.",
         };
       });
 
@@ -306,7 +309,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Account Created. Redirecting!",
+        message: "Account created.",
       };
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
       this.$store.dispatch("unsetSubscriptionCalculatedStatus");

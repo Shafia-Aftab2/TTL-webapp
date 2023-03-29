@@ -465,7 +465,7 @@ export default {
     },
     async handleRateStudentResponse() {
       if (this.feedbackGiven) {
-        notifications.show("You've already given a star!", {
+        notifications.show("You've already given this student a star!", {
           variant: "error",
           displayIcon: true,
         });
@@ -487,7 +487,7 @@ export default {
 
       // validate form data
       if (!responseId) {
-        notifications.show("No student response to add rating for!", {
+        notifications.show("No response from student.", {
           variant: "error",
           displayIcon: true,
         });
@@ -508,7 +508,7 @@ export default {
         payload
       ).catch(() => {
         return {
-          error: "Could not add response rating!",
+          error: "Could not add rating. Please try again later.",
         };
       });
 
@@ -525,7 +525,7 @@ export default {
       // success case
       this.backdropLoading = false;
       this.feedbackGiven = true;
-      notifications.show("⭐ sent!", {
+      notifications.show("⭐ Feedback sent!", {
         variant: "success",
         displayIcon: true,
       });
@@ -582,7 +582,7 @@ export default {
           loading: false,
           message: {
             type: "error",
-            text: "Failed to load latest inbox messages!",
+            text: "Sorry, we can't seem to load your inbox. Please try again later.",
           },
         };
         return;
@@ -653,7 +653,7 @@ export default {
 
       // if teacher has no response to give feedback for
       if (!this.computedResponseId && this.userMode === rolesList.TEACHER) {
-        notifications.show("No Student Responses To Give Feedback For!", {
+        notifications.show("No response from student.", {
           variant: "error",
           displayIcon: true,
         });
@@ -678,9 +678,10 @@ export default {
           loading: false,
           message: {
             type: "error",
-            text: `Failed To Create ${
-              this.userMode === rolesList.STUDENT ? "Response" : "Feedback"
-            }!`,
+            text: `Failed. Please try again.`,
+            // text: `Failed To Create ${
+            //   this.userMode === rolesList.STUDENT ? "Response" : "Feedback"
+            // }!`,
           },
         };
         return;
@@ -706,9 +707,10 @@ export default {
           loading: false,
           message: {
             type: "error",
-            text: `Failed To Create ${
-              this.userMode === rolesList.STUDENT ? "Response" : "Feedback"
-            }!`,
+            text: `Failed. Please try again.`,
+            // text: `Failed To Create ${
+            //   this.userMode === rolesList.STUDENT ? "Response" : "Feedback"
+            // }!`,
           },
         };
         return;

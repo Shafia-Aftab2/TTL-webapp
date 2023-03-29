@@ -196,7 +196,9 @@ export default {
 
       // api call
       const response = await UserService.RemoveUserById(this.userId).catch(
-        () => ({ error: "Could not remove user!" })
+        () => ({
+          error: "Oops, user cannot be removed. Please try again later.",
+        })
       );
 
       // failure case
@@ -211,7 +213,7 @@ export default {
 
       // success case
       this.isRemovingUser = false;
-      notifications.show("User Removed. Redirecting!", {
+      notifications.show("User removed", {
         variant: "success",
         displayIcon: true,
       });

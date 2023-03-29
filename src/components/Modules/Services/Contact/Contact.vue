@@ -141,7 +141,7 @@ export default {
       // api call
       const response = await ContactService.SendMessage(payload).catch(() => {
         return {
-          error: "Could not deliver your message!",
+          error: "Your message has not been sent. Please try again.",
         };
       });
 

@@ -271,7 +271,7 @@ export default {
           file: file,
         };
         if (!this.isValidMedia(mediaPicked?.file?.type)) {
-          notifications.show("Invalid Media Type!", {
+          notifications.show("Invalid media type.", {
             variant: "error",
             displayIcon: true,
           });
@@ -329,7 +329,7 @@ export default {
       );
 
       if (!csvData || csvData?.length === 0) {
-        notifications.show("CSV file broken or no records found!", {
+        notifications.show("CSV file broken or no records found", {
           variant: "error",
           displayIcon: true,
         });

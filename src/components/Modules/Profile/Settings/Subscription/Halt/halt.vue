@@ -59,7 +59,11 @@
   </div>
   <div class="profile-subscription-halt-success-message" v-if="isHalted">
     <h3 class="h3 text-center">
-      {{ haltMode === "cancel" ? "Sad to see you go! :(" : "See you soon!" }}
+      {{
+        haltMode === "cancel"
+          ? "Subscription cancelled. Sad to see you go!"
+          : "Subscription paused. See you soon!"
+      }}
     </h3>
 
     <img
@@ -235,7 +239,7 @@ export default {
         ? SubscriptionService.ChangeSubscriptionStatus
         : SubscriptionService.CancelSubscription)(payload).catch(() => {
         return {
-          error: `Could not ${this.haltMode} your subscription!`,
+          error: `Oops, we can't seem to ${this.haltMode} your subscription. Please try again later.`,
         };
       });
 
@@ -255,7 +259,7 @@ export default {
       notifications.show(
         `Subscription ${this.haltMode}${
           this.haltMode === "pause" ? "d" : "ed"
-        } successfully!`,
+        } successfully.`,
         {
           variant: "success",
           displayIcon: true,

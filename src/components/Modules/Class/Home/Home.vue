@@ -551,9 +551,10 @@ export default {
       if (!classTasks) {
         this.backdropLoading = false;
         notifications.show(
-          `Failed to get ${
-            showPracticeModeTasks ? "practice" : "class"
-          } mode task!`,
+          `Oops, something went wrong. We're on it! Please check back later.`,
+          // `Failed to get ${
+          //   showPracticeModeTasks ? "practice" : "class"
+          // } mode task!`,
           {
             variant: "error",
             displayIcon: true,
@@ -606,16 +607,19 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Delete Task!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Sorry, we can't delete this at the moment. Please try again later.",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Task Deleted Successfully!", {
+      notifications.show("Task deleted successfully.", {
         variant: "success",
         displayIcon: true,
       });
@@ -665,15 +669,18 @@ export default {
 
       // error case
       if (!isCopiedToClipboard) {
-        notifications.show("Failed to copy to clipboard!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Oops, we can't copy that. Please try again later.",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
-      notifications.show("Copied to clipboard!", {
+      notifications.show("Copied!", {
         variant: "success",
         displayIcon: true,
       });

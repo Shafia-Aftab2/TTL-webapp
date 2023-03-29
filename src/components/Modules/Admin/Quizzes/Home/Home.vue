@@ -233,16 +233,19 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed To Delete Task!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Sorry, we can't delete this at the moment. Please try again later.",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Task Deleted Successfully!", {
+      notifications.show("Task deleted successfully.", {
         variant: "success",
         displayIcon: true,
       });
@@ -264,16 +267,19 @@ export default {
       // failure case
       if (!response) {
         this.backdropLoading = false;
-        notifications.show("Failed to update task status!", {
-          variant: "error",
-          displayIcon: true,
-        });
+        notifications.show(
+          "Sorry, we can't update this at the moment. Please try again later.",
+          {
+            variant: "error",
+            displayIcon: true,
+          }
+        );
         return;
       }
 
       // success case
       this.backdropLoading = false;
-      notifications.show("Task status updated successfully!", {
+      notifications.show("Success! Task is now updated.", {
         variant: "success",
         displayIcon: true,
       });
