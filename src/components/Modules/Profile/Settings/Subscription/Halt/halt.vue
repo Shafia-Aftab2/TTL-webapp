@@ -59,7 +59,11 @@
   </div>
   <div class="profile-subscription-halt-success-message" v-if="isHalted">
     <h3 class="h3 text-center">
-      {{ haltMode === "cancel" ? "Sad to see you go! :(" : "See you soon!" }}
+      {{
+        haltMode === "cancel"
+          ? "Subscription cancelled. Sad to see you go!"
+          : "Subscription paused. See you soon!"
+      }}
     </h3>
 
     <img

@@ -281,7 +281,8 @@ export default {
     const user = await this.getMyProfile();
     this.user = user;
     if (!user) {
-      this.pageLoadError = "This page is not working correctly, Please reload!";
+      this.pageLoadError =
+        "Hmm.. something has gone wrong. Please reload the page.";
     }
 
     // check if the user has a payment method or bank cards

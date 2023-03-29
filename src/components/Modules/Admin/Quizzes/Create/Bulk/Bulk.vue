@@ -379,7 +379,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Quizzes created in bulk!",
+        message: "Bulk upload success!",
         animateEllipse: false,
         loading: false,
       };

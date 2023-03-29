@@ -582,7 +582,7 @@ export default {
           loading: false,
           message: {
             type: "error",
-            text: "Failed to load latest inbox messages!",
+            text: "Sorry, we can't seem to load your inbox. Please try again later.",
           },
         };
         return;

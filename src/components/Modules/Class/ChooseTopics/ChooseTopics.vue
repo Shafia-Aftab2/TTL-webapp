@@ -201,7 +201,7 @@ export default {
         this.loading = false;
         this.formStatus = {
           type: "error",
-          message: "At least one topic must be selected!",
+          message: "Please select at least one topic.",
         };
         return;
       }
@@ -247,7 +247,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Class Topics Added. Redirecting!",
+        message: "Class topics added!",
       };
       this.$router.push(`/classes/${classId}/students/invite`);
     },

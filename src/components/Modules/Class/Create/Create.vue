@@ -197,7 +197,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Class Created. Redirecting!",
+        message: "Class created successfully.",
       };
       const classId = response?.data?.id;
       // update user profile data (+failure case)

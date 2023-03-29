@@ -175,7 +175,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Password reset successful!",
+        message: "Password reset successful.",
       };
       this.isPasswordChanged = true;
     },

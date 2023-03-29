@@ -182,7 +182,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Login Successful. Redirecting!",
+        message: "Login successful.",
       };
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
       this.$store.dispatch("unsetSubscriptionCalculatedStatus");

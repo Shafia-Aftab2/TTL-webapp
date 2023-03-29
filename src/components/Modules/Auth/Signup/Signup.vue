@@ -309,7 +309,7 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message: "Account Created. Redirecting!",
+        message: "Account created.",
       };
       this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
       this.$store.dispatch("unsetSubscriptionCalculatedStatus");
