@@ -693,7 +693,7 @@ export default {
             this.loading = false;
             this.formStatus = {
               type: "error",
-              message: "Could not upload image file!",
+              message: "Oops, we couldn't upload image file. Please try again.",
               loading: false,
             };
             return;

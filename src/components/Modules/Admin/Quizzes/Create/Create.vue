@@ -649,7 +649,7 @@ export default {
             this.loading = false;
             this.formStatus = {
               type: "error",
-              message: "Could not upload image file!",
+              message: "Oops, we couldn't upload image file. Please try again.",
               loading: false,
             };
             return;
@@ -706,8 +706,7 @@ export default {
           ['"questiontext" contains bad word']:
             "Please make sure question is appropriate.",
           ['"topic" must be a valid mongo id']: "Invalid Topic",
-          ["Q&A"]:
-            "Oops! Something has gone wrong... Please try again later.",
+          ["Q&A"]: "Oops! Something has gone wrong... Please try again later.",
           ["Caption-This"]:
             "Oops! Something has gone wrong... Please try again later.",
           ["Translation"]:
@@ -740,16 +739,16 @@ export default {
       this.loading = false;
       this.formStatus = {
         type: "success",
-        message:
-          this.selectedTaskType === TaskTypes.QUESTION_ANSWER
-            ? "Conversation Created. Redirecting!"
-            : this.selectedTaskType === TaskTypes.CAPTION_THIS
-            ? "Caption Task Created. Redirecting!"
-            : this.selectedTaskType === TaskTypes.TRANSLATION
-            ? "Translation Task Created. Redirecting!"
-            : this.selectedTaskType === TaskTypes.EMOJI_STORY
-            ? "Emoji Story Task Created. Redirecting!"
-            : "",
+        message: "Success!",
+        // this.selectedTaskType === TaskTypes.QUESTION_ANSWER
+        //   ? "Conversation Created. Redirecting!"
+        //   : this.selectedTaskType === TaskTypes.CAPTION_THIS
+        //   ? "Caption Task Created. Redirecting!"
+        //   : this.selectedTaskType === TaskTypes.TRANSLATION
+        //   ? "Translation Task Created. Redirecting!"
+        //   : this.selectedTaskType === TaskTypes.EMOJI_STORY
+        //   ? "Emoji Story Task Created. Redirecting!"
+        //   : "",
         animateEllipse: false,
         loading: false,
       };

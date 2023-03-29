@@ -689,7 +689,7 @@ export default {
             this.loading = false;
             this.formStatus = {
               type: "error",
-              message: "Could not upload image file!",
+              message: "Oops, we couldn't upload image file. Please try again.",
               loading: false,
             };
             return;
@@ -778,13 +778,13 @@ export default {
       //   type: "success",
       //   message:
       //     this.selectedTaskType === TaskTypes.QUESTION_ANSWER
-      //       ? "Conversation Created. Redirecting!"
+      //       ? "Success!"
       //       : this.selectedTaskType === TaskTypes.CAPTION_THIS
-      //       ? "Caption Task Created. Redirecting!"
+      //       ? "Success!"
       //       : this.selectedTaskType === TaskTypes.TRANSLATION
-      //       ? "Translation Task Created. Redirecting!"
+      //       ? "Success!"
       //       : this.selectedTaskType === TaskTypes.EMOJI_STORY
-      //       ? "Emoji Story Task Created. Redirecting!"
+      //       ? "Success!"
       //       : "",
       //   animateEllipse: false,
       //   loading: false,
