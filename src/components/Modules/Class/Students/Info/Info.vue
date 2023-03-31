@@ -51,6 +51,10 @@
                 :taskId="attemptedTask?.id"
                 :userMode="'teacher'"
                 :studentId="studentId"
+                :taskTitle="attemptedTask?.title"
+                :textToTranslate="attemptedTask?.text"
+                :captionThisImage="attemptedTask?.photo"
+                :emojiStory="attemptedTask?.emojis"
                 :topicName="attemptedTask?.topicName"
                 :messages="attemptedTask?.messages"
                 :isAudioDownloadable="attemptedTask?.audio"
@@ -92,6 +96,10 @@
                 :taskId="attemptedTask?.id"
                 :userMode="'teacher'"
                 :studentId="studentId"
+                :taskTitle="attemptedTask?.title"
+                :textToTranslate="attemptedTask?.text"
+                :captionThisImage="attemptedTask?.photo"
+                :emojiStory="attemptedTask?.emojis"
                 :topicName="attemptedTask?.topicName"
                 :messages="attemptedTask?.messages"
                 :isAudioDownloadable="attemptedTask?.audio"
@@ -237,7 +245,20 @@ export default {
         allTasks?.map((x) => ({
           id: x?.id,
           topicName: x?.topic?.name,
+          title: x?.title,
           isPracticeMode: x.isPracticeMode,
+          ...(x?.type === TaskTypes.QUESTION_ANSWER && {
+            audio: x?.voiceForQnA,
+          }),
+          ...(x?.type === TaskTypes.CAPTION_THIS && {
+            photo: x?.captionThisImage,
+          }),
+          ...(x?.type === TaskTypes.TRANSLATION && {
+            text: x?.textToTranslate,
+          }),
+          ...(x?.type === TaskTypes.EMOJI_STORY && {
+            emojis: x?.emojiStory,
+          }),
           messages: [
             {
               id: x?.id || x?._id,
