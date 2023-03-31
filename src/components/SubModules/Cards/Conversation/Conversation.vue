@@ -60,9 +60,42 @@
             'talkie-conversation-card-header-row-center',
           ]"
         >
-          <template v-if="topicName">
+          <template v-if="captionThisImage">
+            <img
+              class="talkie-conversation-card-header-image"
+              :src="captionThisImage"
+            />
+            <p v-if="topicName" class="p" style="margin-bottom: 0 !important">
+              Topic: {{ topicName }}
+            </p>
+          </template>
+          <template v-if="textToTranslate">
             <p class="p" style="margin-bottom: 0 !important">
-              {{ topicName }}
+              Translation: {{ textToTranslate }}
+            </p>
+          </template>
+          <div v-if="emojiStory && emojiStory.length">
+            <div style="display: flex; flex-direction: row">
+              <p v-if="topicName" class="p" style="margin-bottom: 0 !important">
+                Topic: {{ topicName }}
+              </p>
+            </div>
+            <div style="display: flex; flex-direction: row; margin-top: 20px">
+              <img
+                v-for="emoji in emojiStory"
+                :key="emoji"
+                :src="emoji"
+                :alt="'Talkie Emoji'"
+                class="talkie-conversation-message-emoji"
+              />
+            </div>
+          </div>
+          <template v-if="!textToTranslate && !captionThisImage && !emojiStory">
+            <p class="p" style="margin-bottom: 0 !important">
+              {{ taskTitle || "No title " }}
+            </p>
+            <p v-if="!taskTitle" class="p" style="margin-bottom: 0 !important">
+              Topic: {{ topicName }}
             </p>
           </template>
           <template v-if="!topicName">
@@ -140,7 +173,7 @@
           >
             <talkie-icon
               :name="'mike-unmuted'"
-              :isActive="true"
+              :isActive="false"
               :variant="'secondary'"
               :size="33"
               :onClick="startRecording"
@@ -148,7 +181,7 @@
             />
             <talkie-icon
               :name="'square'"
-              :isActive="true"
+              :isActive="false"
               :variant="'secondary'"
               :size="33"
               :iconToSizeRatio="1.5"
@@ -158,7 +191,7 @@
             />
             <talkie-icon
               :name="'send'"
-              :isActive="true"
+              :isActive="false"
               :variant="'secondary'"
               :size="33"
               :onClick="handleRecordingSendClick"
@@ -174,7 +207,7 @@
           <!-- Feedback Stars -->
           <talkie-icon
             :name="'star'"
-            :isActive="true"
+            :isActive="false"
             :variant="!feedbackGiven ? 'neutral' : 'primary'"
             :size="33"
             :iconToSizeRatio="1.1"
@@ -351,6 +384,15 @@ export default {
     },
     // student mode
     taskTitle: {
+      type: String,
+    },
+    textToTranslate: {
+      type: String,
+    },
+    captionThisImage: {
+      type: String,
+    },
+    emojiStory: {
       type: String,
     },
     taskDescription: {
@@ -736,6 +778,13 @@ export default {
           text: null,
         },
       };
+      notifications.show(
+        `${this.userMode === "student" ? "Response" : "Feedback"} sent!`,
+        {
+          variant: "success",
+          displayIcon: true,
+        }
+      );
     },
     async getTaskResponses(taskId) {
       const query = {};
@@ -931,5 +980,9 @@ export default {
     gap: var(--t-space-12);
     padding: var(--t-space-12) 0;
   }
+}
+.talkie-conversation-message-emoji {
+  height: var(--t-space-36);
+  width: var(--t-space-36);
 }
 </style>
