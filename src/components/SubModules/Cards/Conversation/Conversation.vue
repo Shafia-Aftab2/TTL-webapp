@@ -43,10 +43,14 @@
             v-if="!taskIsRead"
           ></div>
 
-          <talkie-chip
+          <!-- <talkie-chip
             :label="`${pointsScored}  star${pointsScored > 0 ? 's' : ''}`"
             :variant="'success'"
             v-if="pointsScored != null && pointsScored >= 0"
+          /> -->
+          <talkie-chip
+            :label="`${noOfStarsGiven}  star${noOfStarsGiven > 1 ? 's' : ''}`"
+            :variant="'success'"
           />
         </div>
       </template>
@@ -204,6 +208,7 @@
             />
           </talkie-audio-recorder>
           &nbsp;
+          <h5 style="margin-right: -10px">{{ noOfStarsGiven }}</h5>
           <!-- Feedback Stars -->
           <talkie-icon
             :name="'star'"
@@ -449,8 +454,9 @@ export default {
       // responseRating: 0,
       responseRating: 5, // give fix feedback value = 5 stars
       feedbackGiven: false,
+      noOfStarsGiven: 0,
       backdropLoading: false,
-      pointsScored: null,
+      // pointsScored: null,
       latestStudResponse: null,
       currentRecording: null,
       isSendingRecording: false,
@@ -506,25 +512,27 @@ export default {
       this.responseRating = rating;
     },
     async handleRateStudentResponse() {
-      if (this.feedbackGiven) {
-        notifications.show("You've already given this student a star!", {
-          variant: "error",
-          displayIcon: true,
-        });
-        return;
-      }
+      // if (this.feedbackGiven) {
+      //   notifications.show("You've already given this student a star!", {
+      //     variant: "error",
+      //     displayIcon: true,
+      //   });
+      //   return;
+      // }
 
       // form data
-      const score = this.responseRating;
+      const score = this.feedbackGiven ? 0 : this.responseRating;
       const responseId = (() => {
         const studentResponses = this.computedMessages?.filter(
           (x) => x?.from !== this?.user?.id
         );
-
         // only the first response can be scored
-        const firstStudentResponse = studentResponses?.[0];
+        // const firstStudentResponse = studentResponses?.[0];
 
-        return firstStudentResponse?.id;
+        // every response can be scored but the star will be for last one
+        const lastStudentResponse =
+          studentResponses?.[studentResponses.length - 1];
+        return lastStudentResponse?.id;
       })();
 
       // validate form data
@@ -539,7 +547,7 @@ export default {
       // update page state
       this.backdropLoading = true;
       this.showRatingStarModal = false;
-      this.responseRating = 0;
+      // this.responseRating = 0;
 
       // payload
       const payload = { score };
@@ -566,11 +574,21 @@ export default {
 
       // success case
       this.backdropLoading = false;
-      this.feedbackGiven = true;
-      notifications.show("⭐ Feedback sent!", {
-        variant: "success",
-        displayIcon: true,
-      });
+      if (this.feedbackGiven) {
+        this.noOfStarsGiven -= 1;
+        notifications.show("⭐ Feedback removed!", {
+          variant: "success",
+          displayIcon: true,
+        });
+        this.feedbackGiven = false;
+      } else {
+        this.noOfStarsGiven += 1;
+        notifications.show("⭐ Feedback sent!", {
+          variant: "success",
+          displayIcon: true,
+        });
+        this.feedbackGiven = true;
+      }
     },
     async markMessageRead(messageId) {
       const messages = [...this.messagesFetched];
@@ -651,13 +669,24 @@ export default {
       this.messagesFetched = transformedMessages;
 
       // only allow the teacher to score the first response
-      const scoredByTeacher = response?.data?.messages?.filter(
-        (x) => x?.object === "response" && x.scoreByTeacher
-      )?.[0];
-
-      if (scoredByTeacher) {
+      // const scoredByTeacher = response?.data?.messages?.filter(
+      //   (x) => x?.object === "response" && x.scoreByTeacher
+      // )?.[0];
+      const responseScoredByTeacher = response?.data?.messages
+        ?.filter((x) => x?.object === "response")
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      const lastResponseScoredByTeacher =
+        responseScoredByTeacher[responseScoredByTeacher.length - 1];
+      // count number of stars given to student
+      this.noOfStarsGiven = responseScoredByTeacher.filter(
+        (x) => x.scoreByTeacher
+      ).length;
+      if (
+        lastResponseScoredByTeacher &&
+        lastResponseScoredByTeacher?.scoreByTeacher
+      ) {
         this.feedbackGiven = true;
-        this.pointsScored = scoredByTeacher?.scoreByTeacher;
+        // this.pointsScored = lastResponseScoredByTeacher?.scoreByTeacher;
       }
 
       this.state.messagesFetch = {
