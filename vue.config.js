@@ -5,4 +5,7 @@ module.exports = {
       postcss: {},
     },
   },
+  devServer: {
+    public: "app.talkietheapp.com",
+  },
 };

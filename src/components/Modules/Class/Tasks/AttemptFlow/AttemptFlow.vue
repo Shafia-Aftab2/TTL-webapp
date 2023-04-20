@@ -119,14 +119,20 @@
                     {{ (this.handleVoiceForQnAPlayerToggle = togglePlayer) }}
                   </span>
                   <div
-                    class="class-tasks-attempt-flow-body-audio-player-wrapper translation-audio"
+                    class="
+                      class-tasks-attempt-flow-body-audio-player-wrapper
+                      translation-audio
+                    "
                   >
                     <talkie-audio-timeline
                       :percentage="currentAudioPercentage"
                       :onHeadChange="updateAudioPercentage"
                     />
                     <div
-                      class="class-tasks-attempt-flow-body-audio-player-wrapper-timestamps translation-audio-timestamps"
+                      class="
+                        class-tasks-attempt-flow-body-audio-player-wrapper-timestamps
+                        translation-audio-timestamps
+                      "
                       style="text-align: end"
                     >
                       {{ currentAudioPlaybackTime }} /
@@ -154,7 +160,9 @@
             <div class="class-task-content-wrapper">
               <img
                 :src="currentTask.captionImage"
-                class="class-tasks-attempt-flow-body-content-wrapper-caption-image"
+                class="
+                  class-tasks-attempt-flow-body-content-wrapper-caption-image
+                "
               />
               <h4 class="h4" v-if="currentTask.title">
                 {{ currentTask.title }}
@@ -173,7 +181,9 @@
           >
             <div class="class-task-content-wrapper">
               <div
-                class="class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper"
+                class="
+                  class-tasks-attempt-flow-body-content-wrapper-emojis-wrapper
+                "
               >
                 <template
                   v-for="emojiURL in currentTask.emojis"
@@ -182,7 +192,9 @@
                   <img
                     :draggable="false"
                     :src="emojiURL"
-                    class="class-tasks-attempt-flow-body-content-wrapper-emojis-image-item"
+                    class="
+                      class-tasks-attempt-flow-body-content-wrapper-emojis-image-item
+                    "
                   />
                 </template>
               </div>
@@ -244,14 +256,20 @@
                       {{ (this.handleAudioPlayerToggle = togglePlayer) }}
                     </span>
                     <div
-                      class="class-tasks-attempt-flow-body-audio-player-wrapper translation-audio"
+                      class="
+                        class-tasks-attempt-flow-body-audio-player-wrapper
+                        translation-audio
+                      "
                     >
                       <talkie-audio-timeline
                         :percentage="currentAudioPercentage"
                         :onHeadChange="updateAudioPercentage"
                       />
                       <div
-                        class="class-tasks-attempt-flow-body-audio-player-wrapper-timestamps translation-audio-timestamps"
+                        class="
+                          class-tasks-attempt-flow-body-audio-player-wrapper-timestamps
+                          translation-audio-timestamps
+                        "
                         style="text-align: end"
                       >
                         {{ currentAudioPlaybackTime }} /
@@ -362,7 +380,9 @@
                   :onHeadChange="updateAudioPercentage"
                 />
                 <span
-                  class="class-tasks-attempt-flow-body-audio-player-wrapper-timestamps"
+                  class="
+                    class-tasks-attempt-flow-body-audio-player-wrapper-timestamps
+                  "
                   >{{ currentAudioPlaybackTime }} / {{ totalAudioPlaybackTime }}
                 </span>
               </div>
@@ -389,7 +409,9 @@
               >
                 <!-- if there is self assessment for current(translation for now) task -->
                 <div
-                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
+                  class="
+                    class-tasks-attempt-flow-body-footer-wrapper-options-item
+                  "
                   v-if="
                     currentRecording &&
                     currentTaskAnswered.showTranslationSelfAssessment
@@ -408,7 +430,9 @@
                 </div>
                 <!-- if there is no self assessment for current(translation for now) task -->
                 <div
-                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
+                  class="
+                    class-tasks-attempt-flow-body-footer-wrapper-options-item
+                  "
                   v-if="
                     currentRecording &&
                     !currentTaskAnswered.showTranslationSelfAssessment
@@ -433,7 +457,9 @@
                 </div>
                 <!-- pause/play/record/stop toggle -->
                 <div
-                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
+                  class="
+                    class-tasks-attempt-flow-body-footer-wrapper-options-item
+                  "
                 >
                   <talkie-icon
                     :name="'mike-unmuted'"
@@ -493,7 +519,9 @@
                 </div>
                 <!-- if there is self assessment for current(translation for now) task -->
                 <div
-                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
+                  class="
+                    class-tasks-attempt-flow-body-footer-wrapper-options-item
+                  "
                   v-if="
                     currentRecording &&
                     currentTaskAnswered.showTranslationSelfAssessment
@@ -512,7 +540,9 @@
                 </div>
                 <!-- if there is no self assessment for current(translation for now) task -->
                 <div
-                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
+                  class="
+                    class-tasks-attempt-flow-body-footer-wrapper-options-item
+                  "
                   v-if="
                     currentRecording &&
                     !currentTaskAnswered.showTranslationSelfAssessment
@@ -551,7 +581,9 @@
                 "
               >
                 <div
-                  class="class-tasks-attempt-flow-body-footer-wrapper-options-item"
+                  class="
+                    class-tasks-attempt-flow-body-footer-wrapper-options-item
+                  "
                 >
                   <button
                     class="class-tasks-attempt-flow-body-next-button"
@@ -588,7 +620,10 @@
     <!-- If there are no class tasks for practice -->
     <template v-if="classTasks.length === 0 && !noMoreTasks">
       <div
-        class="class-tasks-attempt-flow-body-wrapper class-tasks-attempt-flow-body-centered-wrapper"
+        class="
+          class-tasks-attempt-flow-body-wrapper
+          class-tasks-attempt-flow-body-centered-wrapper
+        "
       >
         <img
           :src="require(`@/assets/images/warning-logo.png`)"
@@ -606,7 +641,10 @@
     <!-- If there are no more class tasks for practice -->
     <template v-if="noMoreTasks">
       <div
-        class="class-tasks-attempt-flow-body-wrapper class-tasks-attempt-flow-body-centered-wrapper"
+        class="
+          class-tasks-attempt-flow-body-wrapper
+          class-tasks-attempt-flow-body-centered-wrapper
+        "
       >
         <img
           :src="require(`@/assets/images/party-popper.png`)"

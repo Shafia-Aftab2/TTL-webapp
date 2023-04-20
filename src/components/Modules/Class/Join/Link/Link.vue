@@ -3,7 +3,10 @@
     <!-- Class Already Joined -->
     <template v-if="classAlreadyJoined">
       <div
-        class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
+        class="
+          class-join-link-content-wrapper
+          class-join-link-content-centered-wrapper
+        "
       >
         <h3 class="h3">
           You are already a member of
@@ -28,7 +31,10 @@
       "
     >
       <div
-        class="class-join-link-content-wrapper class-join-link-content-centered-wrapper"
+        class="
+          class-join-link-content-wrapper
+          class-join-link-content-centered-wrapper
+        "
       >
         <h3 class="h3" v-if="isJoined">
           Awesome! You're now a member of
@@ -56,7 +62,9 @@
     >
       <h2 class="h2">Leave {{ classToLeaveDetails?.name }}</h2>
       <div
-        class="class-join-link-content-wrapper class-join-link-content-card-wrapper"
+        class="
+          class-join-link-content-wrapper class-join-link-content-card-wrapper
+        "
       >
         <h3 class="h3">Are you sure?</h3>
         <p class="p">
