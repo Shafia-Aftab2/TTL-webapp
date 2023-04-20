@@ -607,7 +607,7 @@ export default {
       },
       taskTypes: taskTypes,
       taskScores: {
-        ["Emoji-Story"]: "10",
+        ["Emoji-Story"]: "5",
         ["Translation"]: {
           correctAnswer: "5",
           wrongAnswer: "0",
@@ -763,7 +763,7 @@ export default {
         }),
       }));
     // Shuffle the un-attempted tasks
-    this.shuffleList(this.classTasks);
+    this.classTasks = this.shuffleList(this.classTasks);
     // Set current task
     this.currentTask =
       this.classTasks.length > 0 ? { ...this.classTasks[0], index: 0 } : {};
@@ -958,13 +958,30 @@ export default {
       return response.data || null;
     },
     shuffleList(array) {
-      /* Fisher Yates Shuffle Algorithm */
-      for (let i = array.length - 1; i > 0; i--) {
-        // take a random index
-        let j = Math.floor(Math.random() * (i + 1));
-        // swap current item with random item
-        [array[i], array[j]] = [array[j], array[i]];
+      const groupByField = (arr, field) => {
+        return arr.reduce((acc, curr) => {
+          const fieldValue = curr[field];
+          if (!acc[fieldValue]) {
+            acc[fieldValue] = [];
+          }
+          acc[fieldValue].push(curr);
+          return acc;
+        }, {});
+      };
+      const groupedList = groupByField(array, "type");
+      const maxLength = Object.values(groupedList).reduce(
+        (max, arr) => Math.max(max, arr.length),
+        0
+      );
+      const newList = [];
+      for (let i = 0; i < maxLength; i++) {
+        // for (const key in groupedList) {
+        newList.push(groupedList["Translation"].pop());
+        newList.push(groupedList["Caption-This"].pop());
+        newList.push(groupedList["Emoji-Story"].pop());
+        // }
       }
+      return newList.filter((x) => x);
     },
   },
 };
