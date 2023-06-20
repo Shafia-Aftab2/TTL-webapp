@@ -92,7 +92,7 @@
 
       <div
         class="profile-account-settings-sectionn layoutPosition"
-        v-if="flage"
+        v-if="teacher"
       >
         <talkie-button
           :variant="'primary'"
@@ -138,7 +138,7 @@ export default {
   },
   data() {
     return {
-      flage: false,
+      teacher: false,
     };
   },
   created() {
@@ -147,7 +147,7 @@ export default {
     const teacherRole = roles.TEACHER;
 
     if (user.role === teacherRole) {
-      this.flage = true;
+      this.teacher = true;
     }
   },
   computed: {
