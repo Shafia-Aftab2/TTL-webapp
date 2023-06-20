@@ -413,7 +413,7 @@
       </div>
     </div>
 
-    <div class="profile-account-settings-section">
+    <!-- <div class="profile-account-settings-section">
       <h5 class="h5">Got a question?</h5>
       <talkie-button
         :variant="'dark'"
@@ -422,7 +422,7 @@
       >
         Ask away!
       </talkie-button>
-    </div>
+    </div> -->
   </div>
 
   <talkie-back-drop-loader
