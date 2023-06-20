@@ -106,6 +106,7 @@
         </talkie-button>
       </div>
     </div>
+
     <div
       :class="[
         'talkie-sidebar-content-wrapper',
@@ -411,7 +412,9 @@ export default {
 
 /*Position to the feedback button*/
 .layoutPosition {
-  margin-top: 120px;
+  position: fixed;
+  bottom: 90px;
+  background: white;
 }
 .feed-back-button-setting {
   display: flex;
