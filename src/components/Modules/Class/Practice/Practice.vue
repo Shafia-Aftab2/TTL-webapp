@@ -106,9 +106,7 @@
                   <img
                     :draggable="false"
                     :src="emojiURL"
-                    class="
-                      class-practice-body-content-wrapper-emojis-image-item
-                    "
+                    class="class-practice-body-content-wrapper-emojis-image-item"
                   />
                 </template>
               </div>
@@ -175,9 +173,7 @@
                         :onHeadChange="updateAudioPercentage"
                       />
                       <span
-                        class="
-                          class-practice-body-audio-player-wrapper-timestamps
-                        "
+                        class="class-practice-body-audio-player-wrapper-timestamps"
                         >{{ currentAudioPlaybackTime }} /
                         {{ totalAudioPlaybackTime }}
                       </span>
@@ -980,9 +976,12 @@ export default {
       const newList = [];
       for (let i = 0; i < maxLength; i++) {
         // for (const key in groupedList) {
-        newList.push(groupedList["Translation"].pop());
-        newList.push(groupedList["Caption-This"].pop());
-        newList.push(groupedList["Emoji-Story"].pop());
+        if (groupedList["Translation"])
+          newList.push(groupedList["Translation"].pop());
+        if (groupedList["Caption-This"])
+          newList.push(groupedList["Caption-This"].pop());
+        if (groupedList["Emoji-Story"])
+          newList.push(groupedList["Emoji-Story"].pop());
         // }
       }
       return newList.filter((x) => x);
