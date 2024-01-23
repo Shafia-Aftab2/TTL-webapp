@@ -6,6 +6,6 @@ module.exports = {
     },
   },
   devServer: {
-    public: "app.talkietheapp.com",
+    public: "demos-talkie-app.techchaps.net",
   },
 };
