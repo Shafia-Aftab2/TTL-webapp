@@ -89,7 +89,24 @@
           </talkie-button>
         </template>
       </ul>
+
+      <div
+        class="profile-account-settings-sectionn layoutPosition"
+        v-if="teacher"
+      >
+        <talkie-button
+          :variant="'primary'"
+          :outlined="true"
+          :onClick="redirectToContactUs"
+        >
+          <div class="feed-back-button-setting">
+            <img src="@/assets/images/chat.png" />
+            Give us your feedback
+          </div>
+        </talkie-button>
+      </div>
     </div>
+
     <div
       :class="[
         'talkie-sidebar-content-wrapper',
@@ -110,12 +127,29 @@ import TalkieIcon from "../UICore/Icon.vue";
 import TalkieButton from "../UICore/Button.vue";
 import TalkieCheckBox from "../UICore/CheckBox.vue";
 
+import authUser from "@/utils/helpers/auth";
+import roles from "@/utils/constants/roles";
+
 export default {
   name: "SidebarLayout",
   components: {
     TalkieIcon,
     TalkieButton,
     TalkieCheckBox,
+  },
+  data() {
+    return {
+      teacher: false,
+    };
+  },
+  created() {
+    // get user
+    const user = authUser.getUser();
+    const teacherRole = roles.TEACHER;
+
+    if (user.role === teacherRole) {
+      this.teacher = true;
+    }
   },
   computed: {
     computedSidebar() {
@@ -134,6 +168,9 @@ export default {
   methods: {
     handleBackLinkClick() {
       this.$router.go(-1);
+    },
+    redirectToContactUs() {
+      this.$router.push("/contact");
     },
   },
 };
@@ -371,5 +408,31 @@ export default {
 /* TEMP */
 .p {
   margin-bottom: 0 !important;
+}
+
+/*Position to the feedback button*/
+.layoutPosition {
+  position: fixed;
+  bottom: 90px;
+  background: white;
+}
+.feed-back-button-setting {
+  display: flex;
+  align-items: center;
+  margin-left: -15px;
+  margin-right: -27px;
+}
+.feed-back-button-setting img {
+  margin-left: -10px;
+  margin-right: 2px;
+  width: 16px;
+  height: 26px;
+}
+
+@media (max-width: 905px) {
+  .feed-back-button-setting {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
 }
 </style>

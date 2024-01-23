@@ -61,9 +61,9 @@
           Send message
         </talkie-button>
       </talkie-form>
-      <div class="talkie-contact-hero">
-        <!-- Image Placeholder -->
-      </div>
+      <!-- <div class="talkie-contact-hero">
+      </div> -->
+      <!-- Image Placeholder -->
     </div>
   </template>
   <template v-if="messageReceived">
@@ -260,7 +260,7 @@ export default {
 @media (min-width: 900px) {
   .talkie-contact-wrapper {
     grid-template-rows: initial;
-    grid-template-columns: 2fr 1fr;
+    /* grid-template-columns: 2fr 1fr; */
     gap: var(--t-space-36);
     padding: var(--t-space-44) var(--t-space-36);
   }
