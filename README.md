@@ -43,3 +43,25 @@ yarn lint
 │   ├── main.js             # Entry point
 ├── tests                   # Unit tests
 ```
+
+## Deploy on server
+
+1. Install packages
+```bash
+# install dependencies
+yarn install
+or
+npm install
+```
+
+### 2. Change API base URL (optional)
+API Base URL can be changed in the given file: `src\api\config.js` 
+And also change api url in the `vue.config.js` file
+
+### 3. Change port (Optional)
+Change PORT in the `ecosystem.config.js` file
+
+### 4. Deploy the app
+```bash
+pm2 start --env production
+```
