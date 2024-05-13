@@ -53,6 +53,8 @@ import roles from "../utils/constants/roles";
 import authUser from "../utils/helpers/auth";
 // global store
 import store from "../store";
+import PaymentMethod from "../components/Modules/PrivateStudent/PaymentMethod";
+import PsLayout from "../components/Modules/PrivateStudent/Layouts/layout.vue";
 
 const routes = [
   {
@@ -72,6 +74,33 @@ const routes = [
       },
     ],
   },
+  /**
+   * START:
+   * Private Student Payment method
+   */
+  {
+    path: "/ps-student",
+    component: PsLayout,
+    props: { variant: "dark" },
+    children: [
+      {
+        name: "PatmentMethod",
+        path: "/ps-student/payment-method/:accessToken",
+        alias: "/ps-student",
+        component: PaymentMethod,
+        // meta: {
+        //   middlewareConfig: {
+        //     requiresAuth: false,
+        //     blockedRoles: [roles.TEACHER, roles.ADMIN],
+        //   },
+        // },
+      },
+    ],
+  },
+  /**
+   * END:
+   * Private Student Payment method
+   */
   {
     path: "/auth",
     component: Layout,
