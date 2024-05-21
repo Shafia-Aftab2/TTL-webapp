@@ -8,20 +8,12 @@
 
     <h2 class="h2">Your Account</h2>
 
-    <div class="profile-account-settings-section">
+    <!-- <div class="profile-account-settings-section">
       <h5 class="h5">Subscription status</h5>
       <div class="profile-account-settings-section-card">
         <template
           v-if="
-            computedSubscription?.isFromFirstNthTeachers &&
-            computedSubscription?.isCalculated
-          "
-        >
-          <p class="p">You're on an unlimited free trial! 🥳</p>
-        </template>
-        <template
-          v-if="
-            !computedSubscription?.isFromFirstNthTeachers &&
+            // !computedSubscription?.isFromFirstNthTeachers &&
             computedSubscription?.isCalculated
           "
         >
@@ -55,7 +47,7 @@
             <talkie-chip
               v-if="userSubscription?.currentPlan"
               :variant="'neutral'"
-              :label="'Change my status'"
+              :label="'Change status'"
               :onClick="
                 () => setShowStatusManageOptions(!showStatusManageOptions)
               "
@@ -106,22 +98,14 @@
           </div>
         </template>
       </div>
-    </div>
+    </div> -->
 
-    <div class="profile-account-settings-section">
+    <!-- <div class="profile-account-settings-section">
       <h5 class="h5">Current Plan</h5>
       <div class="profile-account-settings-section-card">
         <template
           v-if="
-            computedSubscription?.isFromFirstNthTeachers &&
-            computedSubscription?.isCalculated
-          "
-        >
-          <p class="p">Unlimited free trial!</p>
-        </template>
-        <template
-          v-if="
-            !computedSubscription?.isFromFirstNthTeachers &&
+            // !computedSubscription?.isFromFirstNthTeachers &&
             computedSubscription?.isCalculated
           "
         >
@@ -148,12 +132,12 @@
           />
         </template>
       </div>
-    </div>
+    </div> -->
 
     <div
       class="profile-account-settings-section"
       v-if="
-        !computedSubscription?.isFromFirstNthTeachers &&
+        // !computedSubscription?.isFromFirstNthTeachers &&
         computedSubscription?.isCalculated
       "
     >
@@ -339,10 +323,10 @@
       </div>
     </div>
 
-    <div
+    <!-- <div
       class="profile-account-settings-section"
       v-if="
-        !computedSubscription?.isFromFirstNthTeachers &&
+        // !computedSubscription?.isFromFirstNthTeachers &&
         computedSubscription?.isCalculated
       "
     >
@@ -411,7 +395,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- <div class="profile-account-settings-section">
       <h5 class="h5">Got a question?</h5>
@@ -436,7 +420,7 @@ import {
   TalkieModal,
   TalkieChip,
   TalkieAlert,
-  TalkieIcon,
+  // TalkieIcon,
   TalkieLoader,
   TalkieBackDropLoader,
 } from "@/components/UICore";
@@ -451,7 +435,7 @@ export default {
   components: {
     TalkieChip,
     TalkieAlert,
-    TalkieIcon,
+    // TalkieIcon,
     TalkieLoader,
     TalkieBackDropLoader,
     TalkieButton,
@@ -586,7 +570,7 @@ export default {
       this.showBillingHistory = show;
     },
     redirectToPricing() {
-      this.$router.push(`/pricing`);
+      this.$router.push(`/ps-student/upgrade-plans`);
     },
     async getUserSubscription() {
       const periods = { monthly: "month", annually: "year" };
@@ -643,7 +627,7 @@ export default {
       // redirect to upgrade page with the canceled selected plan, to renew
       const currentPlan = this.userSubscription?.currentPlan;
       this.$router.push(
-        `/services/upgrade?plan=${currentPlan?.name}&period=${currentPlan?.period}`
+        `/ps-services/upgrade?plan=${currentPlan?.name}&period=${currentPlan?.period}`
       );
     },
     redirectToHaltSubscription(haltMode) {
