@@ -84,7 +84,7 @@ const routes = [
     props: { variant: "dark" },
     children: [
       {
-        name: "PatmentMethod",
+        name: "PaymentMethod",
         path: "/ps-student/payment-method/:accessToken",
         alias: "/ps-student",
         component: PaymentMethod,
