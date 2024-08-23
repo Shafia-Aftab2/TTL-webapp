@@ -106,7 +106,9 @@
                   <img
                     :draggable="false"
                     :src="emojiURL"
-                    class="class-practice-body-content-wrapper-emojis-image-item"
+                    class="
+                      class-practice-body-content-wrapper-emojis-image-item
+                    "
                   />
                 </template>
               </div>
@@ -173,7 +175,9 @@
                         :onHeadChange="updateAudioPercentage"
                       />
                       <span
-                        class="class-practice-body-audio-player-wrapper-timestamps"
+                        class="
+                          class-practice-body-audio-player-wrapper-timestamps
+                        "
                         >{{ currentAudioPlaybackTime }} /
                         {{ totalAudioPlaybackTime }}
                       </span>

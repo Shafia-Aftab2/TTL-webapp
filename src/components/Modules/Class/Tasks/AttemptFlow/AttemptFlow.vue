@@ -607,11 +607,7 @@
         >
           <h2 class="h2">
             {{ currentTaskAnswered.appericiationMessage }}
-            {{
-              currentTaskAnswered.scores == 0
-                ? ""
-                : `${currentTaskAnswered.scores} pts`
-            }}
+            {{ `You response is being submitted ` }}
           </h2>
         </div>
       </div>

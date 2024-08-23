@@ -5,7 +5,10 @@
     </h3>
 
     <ol
-      class="terms-of-service-content-wrapper terms-of-service-content-list-numbered-decimal"
+      class="
+        terms-of-service-content-wrapper
+        terms-of-service-content-list-numbered-decimal
+      "
     >
       <section class="terms-of-service-content-section">
         <li>

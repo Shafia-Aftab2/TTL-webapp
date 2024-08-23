@@ -56,6 +56,7 @@
         :variant="'primary'"
         :onClick="handleUserRemoveClick"
         :loading="isRemovingUser"
+        style="margin-left: 79.9%"
       >
         Remove User
       </talkie-button>
