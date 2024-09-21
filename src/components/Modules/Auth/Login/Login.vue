@@ -6,7 +6,9 @@
       :validationSchema="loginSchema"
       :onSubmit="handleSubmit"
     >
-      <h3 class="h3">Login With Your Account</h3>
+      <div class="heading" style="padding-left: 100px">
+        <h3 class="h3">Login With Your Account</h3>
+      </div>
       <talkie-input
         :name="'emailOrUsername'"
         :size="'medium'"
@@ -48,6 +50,7 @@
         <div>
           <p class="auth-split-form-options-info">View Talk to Learn</p>
           <p class="auth-split-form-options-info">
+            View Talkie’s
             <router-link
               class="auth-split-form-options-info-link"
               to="/services/terms"

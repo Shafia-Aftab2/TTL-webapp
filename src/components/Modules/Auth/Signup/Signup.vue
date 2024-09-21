@@ -7,7 +7,9 @@
       :onSubmit="handleSubmit"
       :key="computedSignupMode"
     >
-      <h3 class="h3">Create an account</h3>
+      <div class="heading" style="padding-left: 150px">
+        <h3 class="h3">Create an account</h3>
+      </div>
       <div class="signup-option-wrapper">
         <talkie-button
           :type="'button'"
@@ -86,7 +88,7 @@
         <talkie-input
           :name="'username'"
           :size="'medium'"
-          :placeholder="'Username'"
+          :placeholder="'Email'"
           :hint="{
             type: errors.username ? 'error' : null,
             message: errors.username ? errors.username : null,
@@ -115,8 +117,7 @@
         <div>
           <p class="auth-split-form-options-info">
             By signing up, you accept Talkie’s
-          </p>
-          <p class="auth-split-form-options-info">
+
             <router-link
               class="auth-split-form-options-info-link"
               to="/services/terms"
@@ -130,8 +131,20 @@
             >
               Privacy Policy.
             </router-link>
+            <!-- </p> -->
           </p>
         </div>
+        <p class="auth-split-form-options-info">
+          Already have an account?
+          <router-link
+            class="auth-split-form-options-info-link"
+            :to="`/auth/login${
+              redirectRoute ? `?redirect_route=${redirectRoute}` : ''
+            }`"
+          >
+            Log in
+          </router-link>
+        </p>
         <p class="auth-split-form-options-info">
           Are you a
           {{ computedSignupMode === "teacher" ? "student" : "teacher" }}?
@@ -142,17 +155,6 @@
             }`"
           >
             Signup here
-          </router-link>
-        </p>
-        <p class="auth-split-form-options-info">
-          Already have an account?
-          <router-link
-            class="auth-split-form-options-info-link"
-            :to="`/auth/login${
-              redirectRoute ? `?redirect_route=${redirectRoute}` : ''
-            }`"
-          >
-            Log in
           </router-link>
         </p>
       </div>

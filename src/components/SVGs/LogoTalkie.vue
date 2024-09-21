@@ -1,15 +1,17 @@
 <template>
-  <div class="logo-container">
-    <img
-      src="/ttllogo.png"
-      alt="Logo"
-      :class="[customClass.toString()]"
-      class="logo-image"
-    />
-  </div>
+  <!-- <div class="logo"> -->
+  <img
+    :src="logo"
+    :class="customClass"
+    style="width: 80%; margin-left: -30px"
+    alt="Navbar logo"
+  />
+  <!-- </div> -->
 </template>
 
 <script>
+import logo from "@/assets/TTL/TTLNlogo.png"; // Adjust the path according to your project structure
+
 export default {
   name: "LogoTalkie",
   props: {
@@ -17,6 +19,11 @@ export default {
       type: String,
       default: "",
     },
+  },
+  data() {
+    return {
+      logo,
+    };
   },
 };
 </script>

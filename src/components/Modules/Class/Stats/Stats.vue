@@ -1,266 +1,314 @@
 <template>
-  <!-- Content Wrapper -->
-  <div class="class-stats-wrapper" v-if="!computedPageLoading">
-    <div class="class-stats-header-wrapper">
-      <h2 class="h2">My Stats</h2>
-    </div>
-
-    <div class="class-stats-header-student-wrapper">
-      <span
-        v-html="userStats?.image"
-        v-if="userStats?.image"
-        class="class-stats-header-student-avatar"
-      >
-      </span>
-      <h4 class="h4" v-if="userStats?.name">
-        {{ userStats?.name?.split(" ")[0] }}
-      </h4>
-      <h5 class="h5" v-if="userStats?.className">
-        {{ userStats?.className }}
-      </h5>
-    </div>
-
-    <div class="class-stats-content-wrapper">
-      <div class="class-stats-points-content-wrapper">
-        <h5 class="h5">Total Number of points</h5>
-        <h3 class="h3 class-stats-points">{{ userStats?.points }}</h3>
+  <!-- Page Content -->
+  <template v-if="!computedLoading">
+    <div class="class-tasks-inbox-wrapper">
+      <div class="class-tasks-inbox-header-wrapper">
+        <h2 class="h2">Your Scores</h2>
+        <div class="class-tasks-inbox-header-select-wrapper">
+          <talkie-select-group
+            :placeholder="'Filter by question type'"
+            :options="topicsGrouped?.length > 0 ? topicsGrouped : []"
+            :onChange="handleTopicFilterChange"
+          />
+        </div>
       </div>
-      <div class="class-stats-points-content-wrapper">
-        <h5 class="h5">Total Number of quiz attempts</h5>
-        <h3 class="h3 class-stats-points">{{ userStats?.attemptedQuizes }}</h3>
-      </div>
-      <talkie-button :onClick="handleLeaderboardRedirect">
-        View Leaderboard
-      </talkie-button>
-      <talkie-button :onClick="handleHomeRedirect">Go Back </talkie-button>
-    </div>
-  </div>
+      <div class="class-tasks-inbox-task-items-wrapper">
+        <template v-if="tasksList.length > 0">
+          <template v-for="_task in filteredTasksList" :key="_task.id">
+            <div class="task-item">
+              <!-- Task Heading and Topic -->
+              <div class="task-content">
+                <h3 class="task-heading">{{ _task.title }}</h3>
+                <p class="task-topic">{{ _task.topicName }}</p>
 
-  <!-- Load Wrapper -->
-  <div class="class-manage-load-wrapper" v-if="computedPageLoading">
-    <talkie-loader :size="'large'" />
-  </div>
+                <!-- Star Rating Section -->
+                <div class="task-controls">
+                  <!-- View Feedback Button -->
+                  <button
+                    class="feedback-btn"
+                    @click="toggleFeedback(_task.id)"
+                  >
+                    {{ _task.showFeedback ? "Hide Feedback" : "View Feedback" }}
+                  </button>
+                  <div class="stars">
+                    <span
+                      v-for="index in 5"
+                      :key="index"
+                      class="star"
+                      :class="{ filled: index <= _task.rating }"
+                    >
+                      ★
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Feedback Section (Expandable Dropdowns) -->
+              <div class="task-feedback" v-if="_task.showFeedback">
+                <!-- Teacher Feedback -->
+                <div class="feedback-section">
+                  <h4
+                    @click="toggleDropdown('teacher', _task.id)"
+                    class="feedback-heading"
+                  >
+                    Teacher Feedback
+                  </h4>
+                  <div
+                    v-if="_task.showTeacherFeedback"
+                    class="feedback-content"
+                  >
+                    <p>
+                      {{
+                        _task.teacherFeedback || "No teacher feedback available"
+                      }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- AI Feedback -->
+                <div class="feedback-section">
+                  <h4
+                    @click="toggleDropdown('ai', _task.id)"
+                    class="feedback-heading"
+                  >
+                    AI Feedback
+                  </h4>
+                  <div v-if="_task.showAiFeedback" class="feedback-content">
+                    <p>{{ _task.aiFeedback || "No AI feedback available" }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </template>
+      </div>
+    </div>
+  </template>
+
+  <!-- Loading State -->
+  <template v-if="computedLoading">
+    <div class="class-tasks-inbox-loading-wrapper">
+      <talkie-loader :size="'large'" />
+    </div>
+  </template>
 </template>
 
 <script>
-import { TalkieButton, TalkieLoader } from "@/components/UICore";
+import { TalkieLoader, TalkieSelectGroup } from "@/components/UICore";
+import { ClassService, TaskService } from "@/api/services";
 import authUser from "@/utils/helpers/auth";
-import { generateAvatar } from "@/utils/helpers/avatarGenerator";
-import { ClassService, ResponseService } from "@/api/services";
+import topicTypes from "@/utils/constants/topicTypes";
 
 export default {
-  name: "ClassStats",
-  components: { TalkieButton, TalkieLoader },
+  name: "TasksInbox",
+  components: {
+    TalkieLoader,
+    TalkieSelectGroup,
+  },
   data() {
     return {
-      userStats: {
-        name: null,
-        image: null,
-        className: null,
-        points: null,
-        attemptedQuizes: null,
-      },
-      classDetails: {},
+      user: {},
       classId: null,
-      pageLoading: false,
+      tasksList: [],
+      currentTopicFilter: null, // Add topic filter state
+      loading: false,
+      topicsGrouped: [],
     };
   },
   computed: {
-    computedPageLoading() {
-      return this.pageLoading;
+    computedLoading() {
+      return this.loading;
+    },
+    filteredTasksList() {
+      // Filter tasks based on the selected topic
+      if (this.currentTopicFilter) {
+        return this.tasksList.filter(
+          (task) => task.topicName === this.currentTopicFilter
+        );
+      }
+      return this.tasksList;
     },
   },
   async created() {
-    // update page state
-    this.pageLoading = true;
+    this.loading = true;
 
-    // get auth user
     const user = authUser.getUser();
+    this.user = user;
 
-    // class id from user data
     const classId =
       user?.schools?.length > 0 && user?.schools[0]?.classes?.length > 0
         ? user?.schools[0]?.classes[0]
         : null;
+
+    if (!classId) return this.$router.push("/404");
     this.classId = classId;
 
-    // class details (+ failure case)
     const classDetails = await this.getClassDetails(classId);
     if (!classDetails) return this.$router.push("/404");
 
-    // get student stats  (+ failure case)
-    const myStats = await this.getMyStats();
-    if (!myStats) return this.$router.push("/404");
+    const tasksList = await this.getClassTasks(classId);
+    if (!tasksList) return this.$router.push("/404");
 
-    // success case
-    this.classDetails = {
-      id: classDetails?.id,
-      name: classDetails?.name,
-      langugage: classDetails?.langugage,
-    };
-    this.userStats = {
-      name: user?.name,
-      points: (() => {
-        let total = 0;
+    const inboxItems = await this.getMyInbox();
+    if (!inboxItems) return this.$router.push("/404");
 
-        total =
-          myStats?.quizzesTotalScoresMarkedByMePractice +
-          myStats?.QAtotalScoreMarkedByTeacher;
+    // Map inbox items to include ratings for star display and feedback
+    const transformedInboxItems = inboxItems.map((x) => ({
+      id: x?.id,
+      title: x?.title,
+      topicName: x?.topic?.name || "No topic available",
+      rating: x?.rating || 0,
+      teacherFeedback: x?.teacherFeedback || "",
+      aiFeedback: x?.aiFeedback || "",
+      showFeedback: false,
+      showTeacherFeedback: false,
+      showAiFeedback: false,
+    }));
 
-        return total;
-      })(),
-      attemptedQuizes: myStats?.quizzesResponsesMarkedByMePractice,
-      image: user?.image
-        ? generateAvatar(user?.image?.split("-")[1], user?.image)
-        : null,
-      className: classDetails?.name,
-    };
-    this.pageLoading = false;
+    this.tasksList = transformedInboxItems;
+
+    // Group topics for the filter dropdown
+    const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+    this.topicsGrouped = [
+      {
+        title: capitalize(topicTypes.ADVANCED),
+        items: classDetails?.topics
+          ?.filter((x) => x?.type === topicTypes.ADVANCED)
+          ?.map((x) => x?.name),
+      },
+      {
+        title: capitalize(topicTypes.INTERMEDIATE),
+        items: classDetails?.topics
+          ?.filter((x) => x?.type === topicTypes.INTERMEDIATE)
+          ?.map((x) => x?.name),
+      },
+      {
+        title: capitalize(topicTypes.BEGINNER),
+        items: classDetails?.topics
+          ?.filter((x) => x?.type === topicTypes.BEGINNER)
+          ?.map((x) => x?.name),
+      },
+    ];
+
+    this.loading = false;
   },
+
   methods: {
-    async getClassDetails(id) {
-      const response = await ClassService.GetDetails(id).catch(() => null);
-
-      return response.data || null;
+    handleTopicFilterChange(e) {
+      const selectedTopic = e.target.value.trim();
+      this.currentTopicFilter = selectedTopic;
     },
-    async getMyStats() {
-      const query = { isPracticeMode: true };
-
-      const response = await ResponseService.GetMyStats(
-        this.classId,
-        query
-      ).catch(() => null);
-
+    toggleFeedback(taskId) {
+      const task = this.tasksList.find((t) => t.id === taskId);
+      if (task) {
+        task.showFeedback = !task.showFeedback;
+      }
+    },
+    toggleDropdown(type, taskId) {
+      const task = this.tasksList.find((t) => t.id === taskId);
+      if (task) {
+        if (type === "teacher") {
+          task.showTeacherFeedback = !task.showTeacherFeedback;
+        } else if (type === "ai") {
+          task.showAiFeedback = !task.showAiFeedback;
+        }
+      }
+    },
+    async getClassDetails(classId) {
+      const response = await ClassService.GetDetails(classId).catch();
       return response?.data || null;
     },
-    handleHomeRedirect() {
-      this.$router.push("/");
+    async getClassTasks(classId) {
+      const query = {};
+      const response = await TaskService.QueryClassTasks(
+        classId,
+        query
+      ).catch();
+      return response?.data?.results || null;
     },
-    handleLeaderboardRedirect() {
-      this.$router.push(`/classes/${this.classId}/leaderboard`);
+    async getMyInbox() {
+      const response = await TaskService.GetStudentInbox().catch(() => null);
+      return response?.data || null;
     },
   },
 };
 </script>
 
-<style>
-.class-stats-wrapper {
+<style scoped>
+.task-item {
   display: flex;
   flex-direction: column;
-  margin: auto;
-  margin-top: var(--t-space-36);
-  margin-bottom: calc(var(--t-space-70) * 2);
-  background-color: var(--t-white);
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 }
-.class-stats-header-wrapper {
+
+.task-content {
+  margin-bottom: 10px;
+}
+
+.task-heading {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.task-topic {
+  font-size: 14px;
+  color: #555;
+}
+
+.task-controls {
   display: flex;
-  justify-content: center;
+  margin-top: -3%;
   align-items: center;
-  width: 100%;
+  justify-content: flex-end;
 }
-.class-stats-header-student-wrapper {
+
+.stars {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--t-space-12);
+  align-items: right;
 }
-.class-stats-header-student-avatar {
-  height: var(--student-avatar);
-  width: var(--student-avatar);
-  border-style: solid;
-  border-color: var(--t-primary);
-  background-color: var(--t-gray-125);
-  border-radius: 50%;
+
+.star {
+  font-size: 24px;
+  color: #d3d3d3; /* Default color for unfilled stars */
 }
-.class-stats-content-wrapper {
-  flex-direction: column;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+
+.star.filled {
+  color: #ffc107; /* Gold color for filled stars */
 }
-.class-stats-points-content-wrapper {
-  border: var(--t-space-1) solid var(--t-gray-50);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+
+.feedback-btn {
+  background-color: #ffc107;
+  color: #fff;
+  border: none;
+  margin-top: 1%;
+  margin-right: 1%;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
 }
-.class-stats-points {
-  color: var(--t-secondary);
+
+.feedback-btn:hover {
+  background-color: #0056b3;
 }
-/* Responsive variants */
-@media (max-width: 599px) {
-  .class-stats-wrapper {
-    max-width: 100%;
-    padding: var(--t-space-32);
-    border-radius: var(--t-br-medium);
-    gap: calc(var(--t-space-16) * 2);
-  }
-  .class-stats-header-details-wrapper {
-    gap: var(--t-space-8);
-  }
-  .class-stats-header-student-wrapper {
-    gap: var(--t-space-8);
-  }
-  .class-stats-header-student-avatar {
-    --student-avatar: calc(var(--t-space-50) * 1.5);
-    border-width: var(--t-space-2);
-  }
-  .class-stats-content-wrapper {
-    gap: var(--t-space-30);
-  }
-  .class-stats-points-content-wrapper {
-    border-radius: var(--t-br-small);
-    padding: var(--t-space-16) var(--t-space-24);
-    gap: var(--t-space-12);
-  }
+
+.task-feedback {
+  margin-top: 10px;
+  background-color: #f0f8ff;
+  padding: 10px;
+  border-radius: 5px;
 }
-@media (min-width: 600px) {
-  .class-stats-wrapper {
-    max-width: 80%;
-    padding: var(--t-space-48);
-    border-radius: var(--t-br-medium);
-    gap: calc(var(--t-space-16) * 2);
-  }
-  .class-stats-header-details-wrapper {
-    gap: var(--t-space-8);
-  }
-  .class-stats-header-student-wrapper {
-    gap: var(--t-space-10);
-  }
-  .class-stats-header-student-avatar {
-    --student-avatar: calc(var(--t-space-50) * 1.65);
-    border-width: var(--t-space-3);
-  }
-  .class-stats-content-wrapper {
-    gap: var(--t-space-24);
-  }
-  .class-stats-points-content-wrapper {
-    border-radius: var(--t-br-medium);
-    gap: var(--t-space-16);
-    padding: var(--t-space-16) var(--t-space-50);
-  }
+
+.feedback-section {
+  margin-top: 10px;
 }
-@media (min-width: 1200px) {
-  .class-stats-wrapper {
-    max-width: 90%;
-    padding: var(--t-space-48);
-    border-radius: var(--t-br-large);
-    gap: calc(var(--t-space-12) * 2);
-  }
-  .class-stats-header-details-wrapper {
-    gap: var(--t-space-16);
-  }
-  .class-stats-header-student-wrapper {
-    gap: var(--t-space-12);
-  }
-  .class-stats-header-student-avatar {
-    --student-avatar: calc(var(--t-space-50) * 1.75);
-  }
-  .class-stats-points-content-wrapper {
-    padding: var(--t-space-24) calc(var(--t-space-70) * 1.5);
-  }
+
+.feedback-heading {
+  font-size: 16px;
+  /* font-weight: */
 }
 </style>
