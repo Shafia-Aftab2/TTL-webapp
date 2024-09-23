@@ -51,18 +51,10 @@
 
     <!-- On Right of Screen -->
     <div class="create-class-avatar">
-      <logo-class-create
-        v-if="
-          !computedSubscription?.isFromFirstNthTeachers &&
-          computedSubscription?.isCalculated
-        "
-      />
       <img
-        src="/assets/media/pngs/class-unlimited-free-trial.png"
-        v-if="
-          computedSubscription?.isFromFirstNthTeachers &&
-          computedSubscription?.isCalculated
-        "
+        src="/assets/media/pngs/class-unlimited-freetrial.png"
+        alt="Class Unlimited Free Trial"
+        class="class-logo"
       />
     </div>
   </div>
@@ -76,7 +68,6 @@ import {
   TalkieForm,
   TalkieAlert,
 } from "@/components/UICore";
-import LogoClassCreate from "@/components/SVGs/LogoClassCreate.vue";
 import { ClassService, UserService } from "@/api/services";
 import { createClassSchema } from "@/utils/validations/class.validation";
 import supportedLanguages from "@/utils/constants/supportedLanguages";
@@ -92,7 +83,6 @@ export default {
     TalkieButton,
     TalkieForm,
     TalkieAlert,
-    LogoClassCreate,
   },
   data() {
     return {
@@ -163,7 +153,6 @@ export default {
         language,
         schoolId,
       };
-
       // api call
       const response = await ClassService.Create(payload).catch((e) => {
         const errorMap = {
@@ -249,8 +238,13 @@ export default {
   overflow: hidden;
   flex: 1;
   flex-direction: column;
-  --logo-width: 500px;
-  --logo-height: 500px;
+  align-items: center;
+  justify-content: center;
+}
+.class-logo {
+  width: 600px;
+  height: auto;
+  padding-left: 200px;
 }
 
 /* Responsive variants */
@@ -281,16 +275,6 @@ export default {
   .create-class-avatar {
     display: flex;
   }
-  .create-class-avatar > svg {
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    transform: translate(-40%, -50%);
-    opacity: 0.5;
-    z-index: var(--t-zindex-nv-10);
-    width: calc(var(--logo-width) * 0.9);
-    height: calc(var(--logo-height) * 0.9);
-  }
 }
 @media (min-width: 900px) {
   .create-class-wrapper {
@@ -298,14 +282,6 @@ export default {
     gap: var(--t-space-16);
     padding: var(--t-space-58);
     max-width: 100%;
-  }
-  .create-class-avatar > svg {
-    position: static;
-    opacity: 1;
-    transform: translate(0, 0);
-    z-index: var(--t-zindex-10);
-    width: calc(var(--logo-width) * 0.8);
-    height: calc(var(--logo-height) * 0.8);
   }
 }
 @media (min-width: 1200px) {
@@ -315,10 +291,6 @@ export default {
   }
   .create-class-form {
     gap: var(--t-space-16);
-  }
-  .create-class-avatar > svg {
-    width: var(--logo-width);
-    height: var(--logo-height);
   }
 }
 </style>

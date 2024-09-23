@@ -147,9 +147,9 @@ export default {
   filter: opacity(0.8);
 }
 .talkie-button-dark {
-  background-color: var(--t-black);
-  color: var(--t-white);
-  border-color: var(--t-black);
+  background-color: var(--t-primary);
+  color: var(--t-black);
+  border-color: var(--t-primary);
 }
 .talkie-button-dark-outlined {
   color: var(--t-black);
