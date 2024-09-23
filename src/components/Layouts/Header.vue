@@ -238,18 +238,21 @@ export default {
   padding: var(--t-space-8);
   font-size: var(--t-fs-base);
 }
+
 .trial-bar-close {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   right: var(--t-space-8);
 }
+
 .talkie-navbar-wrapper-container {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: var(--t-zindex-80);
 }
+
 .talkie-navbar-wrapper {
   display: flex;
   justify-content: space-between;
@@ -259,14 +262,17 @@ export default {
   width: 100%;
   z-index: var(--t-zindex-80);
 }
+
 .talkie-navbar-brand-wrapper {
   display: flex;
   align-items: center;
 }
+
 .talkie-navbar-brand-logo-link > svg {
   width: calc(var(--logo-svg-size) * 3);
   height: var(--logo-svg-size);
 }
+
 .talkie-navbar-links-wrapper {
   list-style-type: none;
   display: flex;
@@ -274,19 +280,23 @@ export default {
   align-items: center;
   font-size: var(--t-fs-base);
 }
+
 .talkie-navbar-link-item,
 .talkie-navbar-profile-link-item {
   margin-left: var(--t-space-36);
 }
+
 .talkie-navbar-link-item > a {
   text-decoration: none;
 }
+
 .talkie-navbar-link-item > a:hover {
   text-decoration: underline;
   text-decoration-color: var(--t-primary);
   text-underline-offset: var(--t-space-16);
   text-decoration-thickness: var(--t-space-2);
 }
+
 .talkie-navbar-link-item > a:visited {
   color: var(--t-black);
 }
@@ -298,6 +308,7 @@ export default {
   gap: var(--t-space-8);
   position: relative;
 }
+
 .talkie-navbar-profile-wrapper:hover > .talkie-navbar-profile-options-wrapper,
 .talkie-navbar-profile-wrapper:focus > .talkie-navbar-profile-options-wrapper,
 .talkie-navbar-profile-wrapper:focus-within
@@ -308,6 +319,7 @@ export default {
   opacity: 1;
   visibility: visible;
 }
+
 .talkie-navbar-profile-avatar {
   min-height: var(--profile-avatar-size);
   min-width: var(--profile-avatar-size);
@@ -315,16 +327,20 @@ export default {
   max-width: var(--profile-avatar-size);
   cursor: pointer;
 }
+
 .talkie-navbar-profile-name {
   text-decoration: none;
   transition: 0.1s ease;
 }
+
 .talkie-navbar-profile-name:hover {
   filter: opacity(0.8);
 }
+
 .talkie-navbar-profile-name:visited {
   color: var(--t-black);
 }
+
 .talkie-navbar-profile-image-wrapper {
   border-radius: 50%;
   background-color: var(--t-gray-100);
@@ -334,9 +350,11 @@ export default {
   align-items: center;
   transition: 0.1s ease;
 }
+
 .talkie-navbar-profile-image-wrapper:hover {
   filter: opacity(0.8);
 }
+
 .talkie-navbar-profile-options-wrapper {
   box-shadow: 0 10px 30px 0 rgba(22, 22, 11, 0.1);
   width: fit-content;
@@ -351,6 +369,7 @@ export default {
   top: 45px;
   right: 0;
 }
+
 .talkie-navbar-profile-options-list {
   display: flex;
   flex-direction: column;
@@ -359,6 +378,7 @@ export default {
   width: fit-content;
   gap: var(--t-space-4);
 }
+
 .talkie-navbar-profile-options-list-item > a {
   display: flex;
   justify-content: center;
@@ -366,6 +386,7 @@ export default {
   gap: var(--t-space-8);
   color: var(--t-black);
 }
+
 .talkie-navbar-profile-options-list-item > a,
 .talkie-navbar-profile-options-list-item > a:hover,
 .talkie-navbar-profile-options-list-item > a:visited {
@@ -378,136 +399,172 @@ export default {
     padding: var(--t-space-5);
     font-size: var(--t-fs-small);
   }
+
   .talkie-navbar-wrapper-trail-pad {
     margin-top: var(--t-space-24);
   }
+
   .talkie-navbar-wrapper {
     padding: 0 var(--t-space-16);
     min-height: var(--t-space-50);
     max-height: var(--t-space-50);
   }
+
   .talkie-navbar-brand-wrapper {
     gap: var(--t-space-4);
   }
+
   .talkie-navbar-brand-wrapper-toggle-button-phone-hidden {
     display: none !important;
   }
+
   .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-24);
   }
+
   .talkie-navbar-profile-avatar {
     --profile-avatar-size: var(--t-space-38);
   }
+
   .talkie-navbar-link-item {
     display: none;
     font-size: calc(var(--t-fs-small) * 0.85);
   }
+
   .talkie-navbar-link-item-always-visiable {
     display: inherit;
   }
+
   .talkie-navbar-profile-name {
     font-size: calc(var(--t-fs-small) - 2px);
   }
+
   .talkie-navbar-profile-image-wrapper {
     min-width: var(--t-space-36);
     min-height: var(--t-space-36);
   }
+
   .talkie-navbar-profile-options-wrapper {
     border-radius: var(--t-br-medium);
     font-size: calc(var(--t-fs-small) - 2px);
   }
+
   .talkie-navbar-profile-options-list {
     gap: var(--t-space-2);
   }
+
   .talkie-navbar-profile-options-list-link {
     display: inherit;
   }
+
   .talkie-navbar-profile-options-list-item {
     padding: var(--t-space-12) var(--t-space-50);
     padding-left: var(--t-space-24);
   }
 }
+
 @media (min-width: 600px) {
   .trial-bar {
     padding: var(--t-space-8);
     font-size: var(--t-fs-base);
   }
+
   .talkie-navbar-wrapper-trail-pad {
     margin-top: var(--t-space-32);
   }
+
   .talkie-navbar-wrapper {
     padding: 0 var(--t-space-24);
     min-height: var(--t-space-58);
     max-height: var(--t-space-58);
   }
+
   .talkie-navbar-brand-wrapper {
     gap: var(--t-space-8);
   }
+
   .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-28);
   }
+
   .talkie-navbar-profile-avatar {
     --profile-avatar-size: var(--t-space-44);
   }
+
   .talkie-navbar-link-item,
   .talkie-navbar-profile-name {
     font-size: var(--t-fs-small);
   }
+
   .talkie-navbar-profile-image-wrapper {
     min-width: var(--t-space-40);
     min-height: var(--t-space-40);
   }
+
   .talkie-navbar-profile-options-wrapper {
     border-radius: var(--t-br-large);
     font-size: var(--t-fs-small);
     padding: var(--t-space-8);
   }
+
   .talkie-navbar-profile-options-list {
     gap: var(--t-space-4);
   }
+
   .talkie-navbar-profile-options-list-link {
     display: none;
   }
+
   .talkie-navbar-profile-options-list-item {
     padding: var(--t-space-12) var(--t-space-64);
     padding-left: var(--t-space-24);
   }
 }
+
 @media (min-width: 600px) and (max-width: 899px) {
   .talkie-navbar-brand-wrapper-toggle-button-tablet-hidden {
     display: none !important;
   }
 }
+
 @media (min-width: 900px) and (max-width: 1199px) {
   .talkie-navbar-brand-wrapper-toggle-button-tablet-hidden {
     display: none !important;
   }
 }
+
 @media (min-width: 1200px) {
   .talkie-navbar-wrapper {
     padding: 0 var(--t-space-32);
     min-height: var(--t-space-70);
     max-height: var(--t-space-70);
   }
+
   .talkie-navbar-brand-wrapper-toggle-button-desktop-hidden {
     display: none !important;
   }
+
   .talkie-navbar-brand-logo-link > svg {
     --logo-svg-size: var(--t-space-33);
   }
+
   .talkie-navbar-profile-avatar {
     --profile-avatar-size: var(--t-space-50);
   }
+
   .talkie-navbar-link-item {
     font-size: var(--t-fs-base);
   }
+
   .talkie-navbar-profile-name {
     font-size: var(--t-fs-base);
   }
+
   .talkie-navbar-profile-image-wrapper {
     min-width: var(--t-space-44);
     min-height: var(--t-space-44);
   }
+
   .talkie-navbar-profile-options-wrapper {
     font-size: var(--t-fs-base);
   }

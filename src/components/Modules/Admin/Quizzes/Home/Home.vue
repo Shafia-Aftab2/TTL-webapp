@@ -1,5 +1,5 @@
 <template>
-  <div class="class-quizzes-home-wrapper">
+  <div class="class-quizzes--wrapper">
     <div class="class-quizzes-home-header-wrapper">
       <h2 class="h2">Quizzes</h2>
     </div>
