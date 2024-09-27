@@ -7,7 +7,7 @@
         :validationSchema="contactUsSchema"
         :onSubmit="handleSubmit"
       >
-        <h3 class="h3">How can we help you?</h3>
+        <h3 class="h2">How can we help you?</h3>
         <div class="talkie-contact-form-rows-items">
           <talkie-input
             :name="'name'"
@@ -164,6 +164,9 @@ export default {
 </script>
 
 <style scoped>
+.h2 {
+  text-align: center;
+}
 .talkie-contact-wrapper {
   display: grid;
   height: fit-content;
@@ -171,6 +174,8 @@ export default {
 .talkie-contact-form {
   display: flex;
   flex-direction: column;
+  align-self: center;
+  margin-top: 100px;
 }
 .talkie-contact-form-rows-items {
   display: grid;

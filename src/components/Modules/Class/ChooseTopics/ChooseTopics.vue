@@ -2,13 +2,12 @@
   <div class="class-choose-topics-wrapper">
     <!-- on Left of Screen -->
     <div class="class-choose-topics-info">
-      <h3 class="h3">Choose Topics</h3>
-      <p class="class-choose-topics-info-header p">
-        Select as many topics as you want for your class. Don't worry, you can
-        edit this anytime as you cover more topics throughout the year.
-        <!-- This way, we get to
-        tailor the quizzes... -->
-      </p>
+      <!-- Replace the text with the image -->
+      <img
+        src="/assets/media/pngs/choose topics.png"
+        alt="Choose Topics"
+        class="class-choose-topics-image"
+      />
     </div>
 
     <!-- On Right of Screen -->
@@ -273,9 +272,34 @@ export default {
 .class-choose-topics-wrapper {
   display: flex;
   justify-content: space-between;
-  /* align-items: center; */
   width: 100%;
   margin: auto;
+  height: 600px;
+}
+
+.class-choose-topics-info {
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin-right: 90px;
+}
+
+/* Add styling for the image */
+.class-choose-topics-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.class-choose-topics-form,
+.class-choose-topics-sub-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
 }
 .class-choose-topics-info {
   display: flex;

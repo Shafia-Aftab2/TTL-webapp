@@ -462,8 +462,9 @@ export default {
             [this.planTimelines.YEAR]: "annually",
           },
           period: {
-            [pricingPlans.planNames.EXAM_READY]: "exam-ready",
-            [pricingPlans.planNames.BUDDING_SPEAKERS]: "budding-speakers",
+            [pricingPlans.planNames.STANDARED_PLAN]: "standared-plan",
+            // [pricingPlans.planNames.EXAM_READY]: "exam-ready",
+            // [pricingPlans.planNames.BUDDING_SPEAKERS]: "budding-speakers",
           },
         };
         return {

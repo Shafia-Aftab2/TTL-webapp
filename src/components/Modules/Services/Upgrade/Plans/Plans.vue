@@ -140,7 +140,8 @@ export default {
     },
     onPlanSelected(planName) {
       const requiresContact =
-        planName?.toUpperCase()?.trim() === "FOR THE LONG-HAUL";
+        planName?.toUpperCase()?.trim() === "SCHOOL PLAN" ||
+        planName?.toUpperCase()?.trim() === "ACADEMY PLAN";
 
       // check if the custom plan is selected
       if (requiresContact) {

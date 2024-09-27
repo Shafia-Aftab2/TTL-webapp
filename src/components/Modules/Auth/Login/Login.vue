@@ -48,6 +48,7 @@
           Login
         </talkie-button>
         <div>
+          <p class="auth-split-form-options-info">View Talk to Learn</p>
           <p class="auth-split-form-options-info">
             View Talkie’s
             <router-link

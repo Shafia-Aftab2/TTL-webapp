@@ -14,7 +14,6 @@ import logo from "@/assets/TTL/TTLNlogo.png"; // Adjust the path according to yo
 
 export default {
   name: "LogoTalkie",
-  components: {},
   props: {
     customClass: {
       type: String,
@@ -28,3 +27,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.logo-container {
+  width: 250px;
+  height: 60px;
+  overflow: hidden; /* Ensures that only the part of the image within these dimensions is shown */
+}
+
+.logo-image {
+  width: 70%;
+  height: 100%;
+  object-fit: contain; /* Ensures the logo fits within the container */
+}
+</style>
