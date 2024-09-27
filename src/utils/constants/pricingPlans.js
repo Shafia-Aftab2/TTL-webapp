@@ -46,6 +46,15 @@ const planData = [
       " ",
       " ",
       " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
     ],
 
     cta: {
@@ -75,6 +84,7 @@ const planData = [
       "✔ AI Feedback for 1,000 Quizzes per day",
       "✔ 1 class, with 1 teacher and 40 students",
       "✔ Students leaderboard",
+      " ",
       " ",
       " ",
       " ",
