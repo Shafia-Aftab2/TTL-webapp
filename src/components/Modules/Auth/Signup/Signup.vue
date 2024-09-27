@@ -7,25 +7,34 @@
       :onSubmit="handleSubmit"
       :key="computedSignupMode"
     >
-      <div class="heading" style="padding-left: 150px">
+      <div class="heading" style="padding-left: 115px">
         <h3 class="h3">Create an account</h3>
       </div>
+      <h4 class="h">I'm a/an</h4>
       <div class="signup-option-wrapper">
         <talkie-button
           :type="'button'"
           :size="'medium'"
-          :outlined="signupMode === 'teacher'"
+          :outlined="signupMode === 'student'"
           :onClick="() => setSignupMode('student')"
         >
-          I'm a student
+          Student
         </talkie-button>
         <talkie-button
           :type="'button'"
           :size="'medium'"
-          :outlined="signupMode === 'student'"
+          :outlined="signupMode === 'teacher'"
           :onClick="() => setSignupMode('teacher')"
         >
-          I'm a teacher
+          Teacher
+        </talkie-button>
+        <talkie-button
+          :type="'button'"
+          :size="'medium'"
+          :outlined="signupMode === 'learner'"
+          :onClick="() => setSignupMode('learner')"
+        >
+          Individual learner
         </talkie-button>
       </div>
       <template v-if="computedSignupMode === 'teacher'">
@@ -95,6 +104,35 @@
           }"
         />
       </template>
+      <template v-if="computedSignupMode === 'learner'">
+        <talkie-input
+          :name="'firstName'"
+          :size="'medium'"
+          :placeholder="'First Name'"
+          :hint="{
+            type: errors.firstName ? 'error' : null,
+            message: errors.firstName ? errors.firstName : null,
+          }"
+        />
+        <talkie-input
+          :name="'lastName'"
+          :size="'medium'"
+          :placeholder="'Last Name'"
+          :hint="{
+            type: errors.lastName ? 'error' : null,
+            message: errors.lastName ? errors.lastName : null,
+          }"
+        />
+        <talkie-input
+          :name="'learnerEmail'"
+          :size="'medium'"
+          :placeholder="'Email Address'"
+          :hint="{
+            type: errors.learnerEmail ? 'error' : null,
+            message: errors.learnerEmail ? errors.learnerEmail : null,
+          }"
+        />
+      </template>
       <talkie-input
         :type="'password'"
         :name="'password'"
@@ -117,7 +155,6 @@
         <div>
           <p class="auth-split-form-options-info">
             By signing up, you accept Talkie’s
-
             <router-link
               class="auth-split-form-options-info-link"
               to="/services/terms"
@@ -131,7 +168,6 @@
             >
               Privacy Policy.
             </router-link>
-            <!-- </p> -->
           </p>
         </div>
         <p class="auth-split-form-options-info">
@@ -147,11 +183,21 @@
         </p>
         <p class="auth-split-form-options-info">
           Are you a
-          {{ computedSignupMode === "teacher" ? "student" : "teacher" }}?
+          {{
+            computedSignupMode === "teacher"
+              ? "student"
+              : computedSignupMode === "student"
+              ? "learner"
+              : "teacher"
+          }}?
           <router-link
             class="auth-split-form-options-info-link"
             :to="`/auth/signup/${
-              computedSignupMode === 'teacher' ? 'student' : 'teacher'
+              computedSignupMode === 'teacher'
+                ? 'student'
+                : computedSignupMode === 'student'
+                ? 'learner'
+                : 'teacher'
             }`"
           >
             Signup here
@@ -161,7 +207,6 @@
     </talkie-form>
   </talkie-auth-split-wrapper>
 </template>
-
 <script>
 import {
   TalkieInput,
@@ -173,12 +218,12 @@ import { AuthService } from "@/api/services";
 import {
   studentSignupSchema,
   teacherSignupSchema,
-} from "@/utils/validations/auth.validation";
+  learnerSignupSchema, // Import the validation schema for learners
+} from "@/utils/validations/auth.validation"; // Ensure you have a schema for learners
 import { roles } from "@/utils/constants";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
-// import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthSignup",
@@ -191,13 +236,15 @@ export default {
         message: null,
       },
       redirectRoute: null,
-      signupMode: "student",
+      signupMode: "student", // Default mode
     };
   },
   computed: {
     computedSignupSchema() {
       return this.signupMode === "teacher"
         ? teacherSignupSchema
+        : this.signupMode === "learner"
+        ? learnerSignupSchema // Use the learner schema
         : studentSignupSchema;
     },
     computedSignupMode() {
@@ -212,7 +259,6 @@ export default {
     TalkieAuthSplitWrapper,
   },
   created() {
-    // get redirect url from params
     const redirectRoute = this?.$route?.query?.redirect_route;
     this.redirectRoute = redirectRoute;
   },
@@ -220,6 +266,7 @@ export default {
     setSignupMode(mode) {
       this.signupMode = mode;
     },
+
     async handleSubmit(values) {
       // update page state
       this.loading = true;
