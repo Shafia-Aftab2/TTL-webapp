@@ -162,21 +162,23 @@
 </template>
 
 <script>
+import { AuthService, SubscriptionService, UserService } from "@/api/services";
 import {
+  TalkieBankCard,
+  TalkiePricePlanCard,
+} from "@/components/SubModules/Cards";
+import { notifications } from "@/components/UIActions";
+import {
+  TalkieAlert,
+  TalkieBackDropLoader,
   TalkieButton,
   TalkieLoader,
   TalkieTab,
-  TalkieAlert,
-  TalkieBackDropLoader,
 } from "@/components/UICore";
 import { pricingPlans } from "@/utils/constants";
-import { TalkiePricePlanCard } from "@/components/SubModules/Cards";
-import isMobileScreen from "../_common/mixins/isMobileScreen";
-import { getDomain } from "@/utils/helpers/URLModifier";
-import { AuthService, UserService, SubscriptionService } from "@/api/services";
-import { notifications } from "@/components/UIActions";
 import authUser from "@/utils/helpers/auth";
-import { TalkieBankCard } from "@/components/SubModules/Cards";
+import { getDomain } from "@/utils/helpers/URLModifier";
+import isMobileScreen from "../_common/mixins/isMobileScreen";
 import UpgradeSuccess from "../Success";
 
 export default {
@@ -462,7 +464,7 @@ export default {
             [this.planTimelines.YEAR]: "annually",
           },
           period: {
-            [pricingPlans.planNames.STANDARED_PLAN]: "standared-plan",
+            [pricingPlans.planNames.STANDARD_PLAN]: "standard-plan",
             // [pricingPlans.planNames.EXAM_READY]: "exam-ready",
             // [pricingPlans.planNames.BUDDING_SPEAKERS]: "budding-speakers",
           },

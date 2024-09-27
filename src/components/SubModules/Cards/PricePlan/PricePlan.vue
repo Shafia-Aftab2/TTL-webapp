@@ -13,6 +13,10 @@
           {{ payPeriod }}
         </template>
       </p>
+
+      <p class="p talkie-pricing-plan-card-description">
+        {{ description }}
+      </p>
     </div>
 
     <div
@@ -26,10 +30,6 @@
       </ul>
 
       <div class="talkie-pricing-plan-card-divider"></div>
-
-      <p class="p talkie-pricing-plan-card-description">
-        {{ description }}
-      </p>
 
       <talkie-button
         :outlined="true"
@@ -144,10 +144,10 @@ export default {
   background: var(--t-primary);
 }
 .talkie-pricing-secondary-plan-card-header {
-  background: var(--t-secondary);
+  background: var(--t-primary);
 }
 .talkie-pricing-light-plan-card-header {
-  background: var(--t-secondary-100);
+  background: var(--t-primary);
 }
 
 .talkie-pricing-plan-card-content {

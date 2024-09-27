@@ -26,12 +26,17 @@
       </div>
 
       <!-- Submit Button -->
-      <talkie-button @click="proceed" :disabled="!selectedLanguage">
+      <button
+        class="proceed-button"
+        :disabled="!selectedLanguage"
+        @click="proceed"
+      >
         Proceed
-      </talkie-button>
+      </button>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "SelectLanguage",
@@ -57,6 +62,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .select-language-container {
   display: flex;
@@ -112,7 +118,23 @@ export default {
   border-radius: 4px;
 }
 
-button {
-  margin-top: 20px;
+/* Proceed button styles */
+.proceed-button {
+  background-color: yellow; /* Yellow background */
+  color: black;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.proceed-button:disabled {
+  background-color: #ddd; /* Grey background when disabled */
+  cursor: not-allowed;
+}
+
+.proceed-button:not(:disabled):hover {
+  background-color: #fdd835; /* Darker yellow on hover */
 }
 </style>
