@@ -12,11 +12,14 @@ const studentSignupSchema = yup.object({
   password: yup.string().required("Password is required."),
 });
 
-const privatestudentSignupSchema = yup.object({
-  firstName: yup.string().required("First Name is required."),
-  lastName: yup.string().required("Last Name is required."),
-  username: yup.string().required("Username is required."),
-  password: yup.string().required("Password is required."),
+const privatestudentSignupSchema = yup.object().shape({
+  firstName: yup.string().required("First name is required"),
+  username: yup.string().required("Username is required"),
+  learnerEmail: yup
+    .string()
+    .email("Invalid email")
+    .required("Email is required"),
+  password: yup.string().required("Password is required"),
 });
 
 const teacherSignupSchema = yup.object({

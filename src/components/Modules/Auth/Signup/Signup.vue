@@ -306,11 +306,11 @@ export default {
         }
         if (this.signupMode === "learner") {
           return {
-            name: `${firstName}`,
+            name: firstName?.trim(), // Use firstName as name
             username: username?.trim(),
             email: email?.trim(),
             password,
-            role: roles.STUDENT,
+            role: roles.STUDENT, // Make sure the correct role is set
           };
         }
       })();
@@ -377,10 +377,7 @@ export default {
       // Redirect logic based on signup mode
       if (this.signupMode === "learner") {
         // Redirect to OTP verification screen for private students
-        this.$router.push({
-          path: "/auth/verify-otp",
-          query: { email: email?.trim() || email?.trim() }, // Pass the email for OTP verification
-        });
+        this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
       } else {
         this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
         this.$store.dispatch("unsetSubscriptionCalculatedStatus");
