@@ -12,6 +12,13 @@ const studentSignupSchema = yup.object({
   password: yup.string().required("Password is required."),
 });
 
+const privatestudentSignupSchema = yup.object({
+  firstName: yup.string().required("First Name is required."),
+  lastName: yup.string().required("Last Name is required."),
+  username: yup.string().required("Username is required."),
+  password: yup.string().required("Password is required."),
+});
+
 const teacherSignupSchema = yup.object({
   name: yup.string().required("Name is required."),
   displayName: yup.string().required("Display Name is required."),
@@ -45,4 +52,5 @@ export {
   teacherSignupSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  privatestudentSignupSchema,
 };

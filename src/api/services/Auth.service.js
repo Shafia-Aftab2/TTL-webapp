@@ -5,6 +5,10 @@ export default class AuthRoutes {
     return HTTPClient.post(`/auth/signup`, payload);
   }
 
+  static async PrivateStudentSignup(payload) {
+    return HTTPClient.post(`/private-students/signup`, payload);
+  }
+
   static async Login(payload) {
     return HTTPClient.post(`/auth/login`, payload);
   }

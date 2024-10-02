@@ -108,16 +108,16 @@
         <talkie-input
           :name="'firstName'"
           :size="'medium'"
-          :placeholder="'First Name'"
+          :placeholder="'Name'"
           :hint="{
             type: errors.firstName ? 'error' : null,
             message: errors.firstName ? errors.firstName : null,
           }"
         />
         <talkie-input
-          :name="'lastName'"
+          :name="'Username'"
           :size="'medium'"
-          :placeholder="'Last Name'"
+          :placeholder="'Username'"
           :hint="{
             type: errors.lastName ? 'error' : null,
             message: errors.lastName ? errors.lastName : null,
@@ -218,7 +218,7 @@ import { AuthService } from "@/api/services";
 import {
   studentSignupSchema,
   teacherSignupSchema,
-  learnerSignupSchema, // Import the validation schema for learners
+  privatestudentSignupSchema, // Import the validation schema for learners
 } from "@/utils/validations/auth.validation"; // Ensure you have a schema for learners
 import { roles } from "@/utils/constants";
 import authUser from "@/utils/helpers/auth";
@@ -244,7 +244,7 @@ export default {
       return this.signupMode === "teacher"
         ? teacherSignupSchema
         : this.signupMode === "learner"
-        ? learnerSignupSchema // Use the learner schema
+        ? privatestudentSignupSchema // Use the learner schema
         : studentSignupSchema;
     },
     computedSignupMode() {
@@ -304,10 +304,24 @@ export default {
             role: roles.TEACHER,
           };
         }
+        if (this.signupMode === "learner") {
+          return {
+            name: `${firstName}`,
+            username: username?.trim(),
+            email: email?.trim(),
+            password,
+            role: roles.STUDENT,
+          };
+        }
       })();
 
+      const signupService =
+        this.signupMode === "learner"
+          ? AuthService.PrivateStudentSignup
+          : AuthService.Signup;
+
       // api call
-      const response = await AuthService.Signup(payload).catch((e) => {
+      const response = await signupService(payload).catch((e) => {
         const errorMap = {
           ['"name" contains bad word']: "Please enter an appropriate name",
           ['"username" contains bad word']:
@@ -360,9 +374,18 @@ export default {
         type: "success",
         message: "Account created.",
       };
-      this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
-      this.$store.dispatch("unsetSubscriptionCalculatedStatus");
-      this.$store.dispatch("calculateSubscription");
+      // Redirect logic based on signup mode
+      if (this.signupMode === "learner") {
+        // Redirect to OTP verification screen for private students
+        this.$router.push({
+          path: "/auth/verify-otp",
+          query: { email: email?.trim() || email?.trim() }, // Pass the email for OTP verification
+        });
+      } else {
+        this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
+        this.$store.dispatch("unsetSubscriptionCalculatedStatus");
+        this.$store.dispatch("calculateSubscription");
+      }
     },
   },
 };
