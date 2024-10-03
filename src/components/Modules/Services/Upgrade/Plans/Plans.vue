@@ -45,8 +45,8 @@
                 }`
               : ''
           "
-          :features="plan.features"
           :description="plan.description"
+          :features="plan.features"
           :ctaText="
             computedCurrentSubscription?.plan &&
             computedCurrentSubscription?.period
@@ -75,6 +75,15 @@
         />
       </template>
     </div>
+  </div>
+  <!-- Terms and Conditions -->
+  <div class="terms-and-conditions">
+    <p>
+      By choosing a plan, you agree to our
+      <a href="https://talktolearn.cc/Ts&Cs.html" target="_blank"
+        >Terms and Conditions</a
+      >.
+    </p>
   </div>
 </template>
 
@@ -171,6 +180,15 @@ export default {
 </script>
 
 <style scoped>
+.terms-and-conditions {
+  text-align: center;
+  margin-top: var(--t-space-24);
+  font-size: var(--t-font-size-14);
+}
+.terms-and-conditions a {
+  color: var(--t-primary-color);
+  text-decoration: underline;
+}
 .upgrade-wrapper {
   width: 100%;
   display: flex;
@@ -234,7 +252,7 @@ export default {
 @media (min-width: 900px) {
   .upgrade-plan-cards-wrapper {
     grid-template-rows: initial;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     flex-direction: row;
     align-items: flex-start;
     gap: var(--t-space-24);

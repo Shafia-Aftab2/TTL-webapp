@@ -7,25 +7,34 @@
       :onSubmit="handleSubmit"
       :key="computedSignupMode"
     >
-      <div class="heading" style="padding-left: 150px">
+      <div class="heading" style="padding-left: 115px">
         <h3 class="h3">Create an account</h3>
       </div>
+      <h4 class="h">I'm a/an</h4>
       <div class="signup-option-wrapper">
         <talkie-button
           :type="'button'"
           :size="'medium'"
-          :outlined="signupMode === 'teacher'"
+          :outlined="signupMode === 'student'"
           :onClick="() => setSignupMode('student')"
         >
-          I'm a student
+          Student
         </talkie-button>
         <talkie-button
           :type="'button'"
           :size="'medium'"
-          :outlined="signupMode === 'student'"
+          :outlined="signupMode === 'teacher'"
           :onClick="() => setSignupMode('teacher')"
         >
-          I'm a teacher
+          Teacher
+        </talkie-button>
+        <talkie-button
+          :type="'button'"
+          :size="'medium'"
+          :outlined="signupMode === 'learner'"
+          :onClick="() => setSignupMode('learner')"
+        >
+          Individual learner
         </talkie-button>
       </div>
       <template v-if="computedSignupMode === 'teacher'">
@@ -95,6 +104,36 @@
           }"
         />
       </template>
+
+      <template v-if="computedSignupMode === 'learner'">
+        <talkie-input
+          :name="'firstName'"
+          :size="'medium'"
+          :placeholder="'Name'"
+          :hint="{
+            type: errors.firstName ? 'error' : null,
+            message: errors.firstName ? errors.firstName : null,
+          }"
+        />
+        <talkie-input
+          :name="'username'"
+          :size="'medium'"
+          :placeholder="'Username'"
+          :hint="{
+            type: errors.username ? 'error' : null,
+            message: errors.username ? errors.username : null,
+          }"
+        />
+        <talkie-input
+          :name="'email'"
+          :size="'medium'"
+          :placeholder="'Email Address'"
+          :hint="{
+            type: errors.email ? 'error' : null,
+            message: errors.email ? errors.email : null,
+          }"
+        />
+      </template>
       <talkie-input
         :type="'password'"
         :name="'password'"
@@ -117,7 +156,6 @@
         <div>
           <p class="auth-split-form-options-info">
             By signing up, you accept Talkie’s
-
             <router-link
               class="auth-split-form-options-info-link"
               to="/services/terms"
@@ -131,7 +169,6 @@
             >
               Privacy Policy.
             </router-link>
-            <!-- </p> -->
           </p>
         </div>
         <p class="auth-split-form-options-info">
@@ -147,11 +184,21 @@
         </p>
         <p class="auth-split-form-options-info">
           Are you a
-          {{ computedSignupMode === "teacher" ? "student" : "teacher" }}?
+          {{
+            computedSignupMode === "teacher"
+              ? "student"
+              : computedSignupMode === "student"
+              ? "learner"
+              : "teacher"
+          }}?
           <router-link
             class="auth-split-form-options-info-link"
             :to="`/auth/signup/${
-              computedSignupMode === 'teacher' ? 'student' : 'teacher'
+              computedSignupMode === 'teacher'
+                ? 'student'
+                : computedSignupMode === 'student'
+                ? 'learner'
+                : 'teacher'
             }`"
           >
             Signup here
@@ -161,7 +208,6 @@
     </talkie-form>
   </talkie-auth-split-wrapper>
 </template>
-
 <script>
 import {
   TalkieInput,
@@ -173,12 +219,12 @@ import { AuthService } from "@/api/services";
 import {
   studentSignupSchema,
   teacherSignupSchema,
-} from "@/utils/validations/auth.validation";
+  privatestudentSignupSchema, // Import the validation schema for learners
+} from "@/utils/validations/auth.validation"; // Ensure you have a schema for learners
 import { roles } from "@/utils/constants";
 import authUser from "@/utils/helpers/auth";
 import TalkieAuthSplitWrapper from "../Wrappers/SplitWrapper.vue";
 import handleAlreadyLogginIn from "../_common/mixins/handleAlreadyLogginIn";
-// import URLModifier from "@/utils/helpers/URLModifier";
 
 export default {
   name: "AuthSignup",
@@ -191,13 +237,15 @@ export default {
         message: null,
       },
       redirectRoute: null,
-      signupMode: "student",
+      signupMode: "student", // Default mode
     };
   },
   computed: {
     computedSignupSchema() {
       return this.signupMode === "teacher"
         ? teacherSignupSchema
+        : this.signupMode === "learner"
+        ? privatestudentSignupSchema // Use the learner schema
         : studentSignupSchema;
     },
     computedSignupMode() {
@@ -212,15 +260,17 @@ export default {
     TalkieAuthSplitWrapper,
   },
   created() {
-    // get redirect url from params
     const redirectRoute = this?.$route?.query?.redirect_route;
     this.redirectRoute = redirectRoute;
   },
   methods: {
     setSignupMode(mode) {
+      console.log("handling modes", mode);
       this.signupMode = mode;
     },
+
     async handleSubmit(values) {
+      console.log("Handling submit for signupMode:", this.signupMode); // Add this line
       // update page state
       this.loading = true;
       this.formStatus = { type: null, message: null };
@@ -257,10 +307,25 @@ export default {
             role: roles.TEACHER,
           };
         }
+        if (this.signupMode === "learner") {
+          console.log("Learner signup mode detected");
+          return {
+            name: firstName?.trim(), // Use firstName as name
+            username: username?.trim(),
+            email: email?.trim(),
+            password,
+            // role: roles.STUDENT, // Make sure the correct role is set
+          };
+        }
       })();
+      console.log("Type:", this.signupMode);
+      const signupService =
+        this.signupMode === "learner"
+          ? AuthService.PrivateStudentSignup
+          : AuthService.Signup;
 
       // api call
-      const response = await AuthService.Signup(payload).catch((e) => {
+      const response = await signupService(payload).catch((e) => {
         const errorMap = {
           ['"name" contains bad word']: "Please enter an appropriate name",
           ['"username" contains bad word']:
@@ -313,9 +378,15 @@ export default {
         type: "success",
         message: "Account created.",
       };
-      this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
-      this.$store.dispatch("unsetSubscriptionCalculatedStatus");
-      this.$store.dispatch("calculateSubscription");
+      // Redirect logic based on signup mode
+      if (this.signupMode === "learner") {
+        // Redirect to OTP verification screen for private students
+        this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
+      } else {
+        this.$router.push(this.redirectRoute ? this.redirectRoute : "/");
+        this.$store.dispatch("unsetSubscriptionCalculatedStatus");
+        this.$store.dispatch("calculateSubscription");
+      }
     },
   },
 };

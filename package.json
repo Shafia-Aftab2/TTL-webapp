@@ -17,6 +17,7 @@
     "@dicebear/micah": "^4.10.2",
     "@stripe/stripe-js": "^1.22.0",
     "axios": "^0.24.0",
+    "caniuse-lite": "^1.0.30001664",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "js-cookie": "^3.0.1",

@@ -1,60 +1,62 @@
 import { createRouter, createWebHistory } from "vue-router";
 // base
 import Layout from "../components/Layouts/_layout.vue";
-import Home from "../components/Modules/Home";
-import AuthLogin from "../components/Modules/Auth/Login";
-import AuthSignup from "../components/Modules/Auth/Signup";
+import AdminQuizzesCreate from "../components/Modules/Admin/Quizzes/Create";
+import QuizzesCreateBulk from "../components/Modules/Admin/Quizzes/Create/Bulk";
+import AdminQuizzesHome from "../components/Modules/Admin/Quizzes/Home";
+import AdminQuizzesUpdate from "../components/Modules/Admin/Quizzes/Update";
+import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
+import AdminUsersHome from "../components/Modules/Admin/Users/Home";
 import AuthForgotPassword from "../components/Modules/Auth/ForgotPassword";
-import AuthResetPassword from "../components/Modules/Auth/ResetPassword";
+import AuthLogin from "../components/Modules/Auth/Login";
 import AuthLogout from "../components/Modules/Auth/Logout";
+import AuthResetPassword from "../components/Modules/Auth/ResetPassword";
+import AuthSignup from "../components/Modules/Auth/Signup";
 import ClassChooseDefault from "../components/Modules/Class/ChooseDefault";
-import ClassHome from "../components/Modules/Class/Home";
-import ClassJoinModule from "../components/Modules/Class/Join/Module";
-import ClassJoinLink from "../components/Modules/Class/Join/Link";
-import ClassCreate from "../components/Modules/Class/Create";
 import ClassChooseTopics from "../components/Modules/Class/ChooseTopics";
-import ClassStudentsInvite from "../components/Modules/Class/Students/Invite";
+import ClassCreate from "../components/Modules/Class/Create";
+import ClassHome from "../components/Modules/Class/Home";
+import ClassJoinLink from "../components/Modules/Class/Join/Link";
+import ClassJoinModule from "../components/Modules/Class/Join/Module";
+import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
+import ClassManage from "../components/Modules/Class/Manage";
+import ClassPractice from "../components/Modules/Class/Practice";
+import ClassStats from "../components/Modules/Class/Stats";
 import ClassStudentsInfo from "../components/Modules/Class/Students/Info";
+import ClassStudentsInvite from "../components/Modules/Class/Students/Invite";
+import ClassTasksAttemptFlow from "../components/Modules/Class/Tasks/AttemptFlow";
 import ClassTaskChooseDefault from "../components/Modules/Class/Tasks/ChooseDefault";
 import ClassTaskCreate from "../components/Modules/Class/Tasks/Create";
 import ClassCreateBulkTask from "../components/Modules/Class/Tasks/Create/Bulk";
-import ClassTaskEdit from "../components/Modules/Class/Tasks/Update";
-import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
 import ClassTaskHome from "../components/Modules/Class/Tasks/Home";
 import ClassTasksInbox from "../components/Modules/Class/Tasks/Inbox";
-import ClassTasksAttemptFlow from "../components/Modules/Class/Tasks/AttemptFlow";
-import ClassPractice from "../components/Modules/Class/Practice";
-import ClassManage from "../components/Modules/Class/Manage";
-import ClassLeaderboard from "../components/Modules/Class/Leaderboard";
-import ClassStats from "../components/Modules/Class/Stats";
+import ClassTaskStatus from "../components/Modules/Class/Tasks/Status";
+import ClassTaskEdit from "../components/Modules/Class/Tasks/Update";
+import ComingSoon from "../components/Modules/ComingSoon";
+import Error404 from "../components/Modules/Error404";
+import Home from "../components/Modules/Home";
 import ProfileSelf from "../components/Modules/Profile/Self";
 import ProfileSettingsAccount from "../components/Modules/Profile/Settings/Account";
 import ProfileSubscriptionHalt from "../components/Modules/Profile/Settings/Subscription/Halt";
-import ServicesUpgrade from "../components/Modules/Services/Upgrade/Home";
-import ServicesUpgradeSuccess from "../components/Modules/Services/Upgrade/Success";
-import ServicesUpgradePlans from "../components/Modules/Services/Upgrade/Plans";
+import ServicesContact from "../components/Modules/Services/Contact";
 import ServicesPrivacyPolicy from "../components/Modules/Services/PrivacyPolicy";
 import ServicesTermsOfService from "../components/Modules/Services/TermsOfService";
-import ServicesContact from "../components/Modules/Services/Contact";
-import Error404 from "../components/Modules/Error404";
-import ComingSoon from "../components/Modules/ComingSoon";
-import AdminUsersHome from "../components/Modules/Admin/Users/Home";
-import AdminUserAnalytics from "../components/Modules/Admin/Users/Analytics";
-import AdminQuizzesHome from "../components/Modules/Admin/Quizzes/Home";
-import AdminQuizzesUpdate from "../components/Modules/Admin/Quizzes/Update";
-import AdminQuizzesCreate from "../components/Modules/Admin/Quizzes/Create";
-import QuizzesCreateBulk from "../components/Modules/Admin/Quizzes/Create/Bulk";
+import ServicesUpgrade from "../components/Modules/Services/Upgrade/Home";
+import ServicesUpgradePlans from "../components/Modules/Services/Upgrade/Plans";
+import ServicesUpgradeSuccess from "../components/Modules/Services/Upgrade/Success";
 // route middlware
-import authMiddlware from "./middlewares/auth";
 import accessControlMiddleware from "./middlewares/accessControl";
+import authMiddlware from "./middlewares/auth";
 // user roles
 import roles from "../utils/constants/roles";
 // user data
 import authUser from "../utils/helpers/auth";
 // global store
-import store from "../store";
-import PaymentMethod from "../components/Modules/PrivateStudent/PaymentMethod";
 import PsLayout from "../components/Modules/PrivateStudent/Layouts/layout.vue";
+import PaymentMethod from "../components/Modules/PrivateStudent/PaymentMethod";
+import store from "../store";
+
+import SelectLanguage from "../components/Modules/PrivateStudent/Home/SelectLanguage.vue"; // Import your SelectLanguage component
 
 const routes = [
   {
@@ -129,6 +131,11 @@ const routes = [
         name: "AuthResetPassword",
         path: "/auth/reset-password/:resetPasswordToken",
         component: AuthResetPassword,
+      },
+      {
+        path: "/select-language",
+        name: "SelectLanguage",
+        component: SelectLanguage,
       },
     ],
   },

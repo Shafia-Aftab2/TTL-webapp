@@ -1,7 +1,7 @@
 const planNames = {
   FREE_TRIAL: "FREE TRIAL",
-  STANDARED_PLAN: "Standared Plan",
-  EXAM_READY: "Exam Ready",
+  STANDARD_PLAN: "Standard Plan",
+  // EXAM_READY: "Exam Ready",
   SCHOOL_PLAN: "School Plan",
   ACADEMY_PLAN: "Academy Plan",
 };
@@ -13,6 +13,7 @@ const planData = [
       { period: "month", price: "£0", showPeriod: true },
       { period: "year", price: "£0", showPeriod: true },
     ],
+
     features: [
       "✔ Full access to talkie features: Q&A and quizzes",
       "✔ Individual teacher, 4 classes",
@@ -26,12 +27,52 @@ const planData = [
     theme: "primary",
   },
   {
-    // name: "Standared Plan",
-    name: "Exam Ready",
+    name: "Individual Plan",
+    prices: [
+      { period: "month", price: "£14.99", showPeriod: true },
+      { period: "year", price: "£169.99", showPeriod: true },
+    ],
+    description:
+      // "Have your students speaking regularly on the run up to exams or during summer. Here when you need us!",
+      "(Suitable for an indiviual learner)",
+
+    features: [
+      "✔ Quizzes",
+      "✔ Emoji Stories",
+      "✔ Photocard",
+      "✔ AI Feedback for 50 Quizzes per day",
+      " Note: (saving feedback is not for the individual user because it uses AI output which is not being removed)",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+      " ",
+    ],
+
+    cta: {
+      text: "Get Started",
+    },
+    theme: "light",
+  },
+  {
+    name: "Standard Plan",
+    // name: "Exam Ready",
     prices: [
       { period: "month", price: "£149.99", showPeriod: true },
       { period: "year", price: "£1649.99", showPeriod: true },
     ],
+    description:
+      // "Have your students speaking regularly on the run up to exams or during summer. Here when you need us!",
+      "(Suitbale for a Class)",
+
     features: [
       "✔ Quizzes",
       "✔ Emoji Stories",
@@ -48,10 +89,9 @@ const planData = [
       " ",
       " ",
       " ",
+      " ",
     ],
-    description:
-      // "Have your students speaking regularly on the run up to exams or during summer. Here when you need us!",
-      "Suitbale for a Class",
+
     cta: {
       text: "Get Started",
     },
@@ -63,6 +103,9 @@ const planData = [
       { period: "month", price: "Contact Us", showPeriod: false },
       { period: "year", price: "Contact Us", showPeriod: false },
     ],
+    description:
+      // "Keep track of your students’ progress and access their early recordings.",
+      "(Suitable for a School/College)",
     features: [
       "✔ Quizzes",
       "✔ Emoji Stories",
@@ -79,9 +122,7 @@ const planData = [
       " ",
       " ",
     ],
-    description:
-      // "Keep track of your students’ progress and access their early recordings.",
-      "Suitable for a School/College",
+
     cta: {
       text: "Get Started",
     },
@@ -93,6 +134,10 @@ const planData = [
       { period: "month", price: "Contact Us", showPeriod: false },
       { period: "year", price: "Contact Us", showPeriod: false },
     ],
+    description:
+      // "Encourage the habit of speaking. Keep track of your students’ progress and listen to them speak from Day One.",
+      "(Suitable for a group of schools.)",
+
     features: [
       "✔ Quizzes",
       "✔ Emoji Stories",
@@ -108,9 +153,6 @@ const planData = [
       "✔ Custom features and unlimited technical support",
       "✔ Students Leaderboard",
     ],
-    description:
-      // "Encourage the habit of speaking. Keep track of your students’ progress and listen to them speak from Day One.",
-      "suitable for a group of schools.",
     cta: {
       text: "Contact us",
     },
