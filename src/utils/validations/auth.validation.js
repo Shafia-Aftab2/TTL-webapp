@@ -15,10 +15,7 @@ const studentSignupSchema = yup.object({
 const privatestudentSignupSchema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
   username: yup.string().required("Username is required"),
-  learnerEmail: yup
-    .string()
-    .email("Invalid email")
-    .required("Email is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
   password: yup.string().required("Password is required"),
 });
 

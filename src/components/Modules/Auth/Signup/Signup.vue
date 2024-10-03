@@ -104,6 +104,7 @@
           }"
         />
       </template>
+
       <template v-if="computedSignupMode === 'learner'">
         <talkie-input
           :name="'firstName'"
@@ -115,21 +116,21 @@
           }"
         />
         <talkie-input
-          :name="'Username'"
+          :name="'username'"
           :size="'medium'"
           :placeholder="'Username'"
           :hint="{
-            type: errors.lastName ? 'error' : null,
-            message: errors.lastName ? errors.lastName : null,
+            type: errors.username ? 'error' : null,
+            message: errors.username ? errors.username : null,
           }"
         />
         <talkie-input
-          :name="'learnerEmail'"
+          :name="'email'"
           :size="'medium'"
           :placeholder="'Email Address'"
           :hint="{
-            type: errors.learnerEmail ? 'error' : null,
-            message: errors.learnerEmail ? errors.learnerEmail : null,
+            type: errors.email ? 'error' : null,
+            message: errors.email ? errors.email : null,
           }"
         />
       </template>
@@ -264,10 +265,12 @@ export default {
   },
   methods: {
     setSignupMode(mode) {
+      console.log("handling modes", mode);
       this.signupMode = mode;
     },
 
     async handleSubmit(values) {
+      console.log("Handling submit for signupMode:", this.signupMode); // Add this line
       // update page state
       this.loading = true;
       this.formStatus = { type: null, message: null };
@@ -305,16 +308,17 @@ export default {
           };
         }
         if (this.signupMode === "learner") {
+          console.log("Learner signup mode detected");
           return {
             name: firstName?.trim(), // Use firstName as name
             username: username?.trim(),
             email: email?.trim(),
             password,
-            role: roles.STUDENT, // Make sure the correct role is set
+            // role: roles.STUDENT, // Make sure the correct role is set
           };
         }
       })();
-
+      console.log("Type:", this.signupMode);
       const signupService =
         this.signupMode === "learner"
           ? AuthService.PrivateStudentSignup
